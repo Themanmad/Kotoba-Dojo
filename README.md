@@ -17,7 +17,7 @@ every Monday.
 - **Grammar** — JLPT N5–N1 grammar from **hanabira.org**: formation, explanation and example sentences with furigana. Flashcards, fill-in-the-blank quizzes and grammar tests.
 - **Mock exam** — timed, JLPT-style exam per level: 漢字読み, 表記, 文脈規定, 言い換え, 文法形式, 文の組み立て (★) and 聴解 (listening). Scored against the official pass marks, with a review of every mistake and a history of attempts. Reading (読解) isn't included, so the score is an estimate.
 - **Search** — Japanese, romaji or English across all levels: words, kanji and grammar.
-- **Native audio** — about 6,000 word recordings by native speakers from Tofugu & WaniKani. Words without a recording (mostly kana-only words) and full sentences use your device's Japanese voice.
+- **Native audio** — word recordings by native speakers from Tofugu & WaniKani, with Kanji alive filling gaps, and native recordings of example sentences from Tatoeba (each one credited to its recorder). The build prefers example sentences that have a recording, and the mock exam's listening section uses them. Anything without a recording falls back to your device's Japanese voice.
 - **Progress** — per-level progress, reviews today, streak. Export/import to move between devices.
 - Furigana on / tap-to-reveal / off, optional romaji, Japanese audio, light and dark mode.
 
@@ -31,7 +31,7 @@ You need 4 files in your repo: `index.html`, `build-data.mjs`, `LICENSES.md` and
 3. **Add the workflow.** GitHub's web upload doesn't keep folders, so create this one by hand: **Add file → Create new file**, type the name `.github/workflows/deploy.yml` (the slashes make the folders), paste in the contents of `deploy.yml`, and **Commit**.
    On a computer you can instead drag the whole unzipped folder in, or use `git push`.
 4. **Turn on Pages:** **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-5. Go to the **Actions** tab. If the workflow hasn't started, open **Build data and deploy** → **Run workflow**. The first run takes about 5–10 minutes (it downloads ~200 MB of dictionaries). Later runs reuse a cache.
+5. Go to the **Actions** tab. If the workflow hasn't started, open **Build data and deploy** → **Run workflow**. The first run takes about 15–25 minutes (it downloads the dictionaries and a few thousand audio recordings). Later runs reuse a cache and are much quicker.
 6. Your app is live at `https://<username>.github.io/<repo>/`. On your phone, **Add to Home Screen** to open it like an app.
 
 Until the first build finishes, or if you open `index.html` straight from your
@@ -46,9 +46,9 @@ files, the app runs on a small built-in starter set so it still works.
 3. Reads JMdict's priority tags (`nf01`–`nf48`, `news1`, `ichi1`…) for word frequency.
 4. Tops up example sentences from the **Tatoeba** exports, matching by dictionary form with kuromoji, and adds furigana.
 5. Builds kanji from **KANJIDIC2**, with current JLPT levels from kanji-data and stroke paths from **KanjiVG**.
-6. Copies native recordings for matching words from **tofugu/japanese-vocabulary-pronunciation-audio** (sparse git clone of `lib/mp3`, matched on word + reading).
+6. Copies native recordings for matching words from **tofugu/japanese-vocabulary-pronunciation-audio** (sparse git clone of `lib/mp3`, matched on word + reading), then **Kanji alive** for the rest, and downloads Tatoeba recordings for the chosen example sentences (licensed ones only, cached between runs).
 7. Adds JLPT grammar from **hanabira.org**'s content repo (`grammar_ja_N*.json`), with furigana on the examples.
-8. Writes `data/vocab-n5.json … n1`, `data/kanji-*.json`, `data/strokes-*.json`, `data/grammar-*.json`, `data/audio/*.mp3` and `data/meta.json`. The app loads a level only when you select it.
+8. Writes `data/vocab-n5.json … n1`, `data/kanji-*.json`, `data/strokes-*.json`, `data/grammar-*.json`, `data/audio/*.mp3`, `data/saudio/*.mp3` and `data/meta.json`. The app loads a level only when you select it.
 
 Every optional source fails soft. If Tatoeba, KanjiVG or the frequency file is
 unreachable, the build still finishes and notes what's missing under **Settings → Data**.
@@ -60,7 +60,7 @@ node build-data.mjs --out data
 # or, with files you've already downloaded:
 node build-data.mjs --from-dir ./downloads --out data
 ```
-Other flags: `--no-tatoeba`, `--no-freq`, `--no-kuromoji`, `--no-grammar`, `--no-audio`, `--audio-dir DIR`, `--max-examples 3`.
+Other flags: `--no-tatoeba`, `--no-freq`, `--no-kuromoji`, `--no-grammar`, `--no-audio`, `--audio-dir DIR`, `--no-kanjialive`, `--no-sentence-audio`, `--max-sentence-audio 6000`, `--commercial-audio-only`, `--max-examples 3`.
 
 ## Notes
 - Progress is stored in your browser. Use **Settings → Export** to back it up.

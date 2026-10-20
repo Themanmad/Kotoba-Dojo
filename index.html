@@ -223,7 +223,10 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 #sheet.open{display:block}
 .sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,.4)}
 .sheet{position:absolute;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:var(--card);border-radius:20px 20px 0 0;padding:18px 18px calc(24px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto}
-.sheet .close{float:right;font-size:18px}
+.sheet .close{font-size:18px;margin-left:auto}
+.sheet-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-6px -6px 4px}
+.sheet-back{font-size:15px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:4px;padding:6px 8px;border-radius:10px;max-width:70%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.sheet-back:hover{background:var(--chip)}
 .toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;z-index:40;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
 .qnav{display:flex;gap:6px;align-items:center}
@@ -786,7 +789,7 @@ function playAudio(id, fallback) {
   if (curAudio) { try { curAudio.pause(); } catch (e) {} curAudio = null; }
   if (!id || DATA.mode !== 'full') return fallback ? speak(fallback) : undefined;
   let fell = false; const fb = () => { if (!fell) { fell = true; if (fallback) speak(fallback); } };
-  try { const a = new Audio(`data/audio/${id}.mp3`); curAudio = a; a.onerror = fb; const pr = a.play(); if (pr && pr.catch) pr.catch(e => { if (e && e.name !== 'AbortError') fb(); }); } catch (e) { fb(); }
+  try { const a = new Audio(id[0] === 's' ? `data/saudio/${id.slice(1)}.mp3` : `data/audio/${id}.mp3`); curAudio = a; a.onerror = fb; const pr = a.play(); if (pr && pr.catch) pr.catch(e => { if (e && e.name !== 'AbortError') fb(); }); } catch (e) { fb(); }
 }
 const playWord = x => playAudio(x && x.au, x && wordSay(x.r));
 const sayAttrs = x => `data-say="${esc(wordSay(x.r))}"${x.au ? ` data-audio="${esc(x.au)}"` : ''}`;
@@ -1276,7 +1279,7 @@ function sentHtml(m, i, len, html) {
 function exHtml(e, g) {
   let j = e.j.includes('{') ? e.j : autoFuri(e.j);
   if (g) j = markGrammar(j, g);
-  return `<div class="ex"><div style="flex:1"><div class="jp">${ruby(j, true).replace(/\u0001/g, '<mark class="gp">').replace(/\u0002/g, '</mark>')}</div>${e.r ? `<div class="en" style="font-style:italic">${esc(e.r)}</div>` : ''}<div class="en">${esc(e.e)}</div>${e.t ? `<a class="src" href="https://tatoeba.org/en/sentences/show/${encodeURIComponent(e.t)}" target="_blank" rel="noopener">Tatoeba #${esc(e.t)}</a>` : ''}</div><button class="say inl" data-say="${esc(plain(e.j))}" aria-label="Play">🔊</button></div>`;
+  return `<div class="ex"><div style="flex:1"><div class="jp">${ruby(j, true).replace(/\u0001/g, '<mark class="gp">').replace(/\u0002/g, '</mark>')}</div>${e.r ? `<div class="en" style="font-style:italic">${esc(e.r)}</div>` : ''}<div class="en">${esc(e.e)}</div>${e.t ? `<a class="src" href="https://tatoeba.org/en/sentences/show/${encodeURIComponent(e.t)}" target="_blank" rel="noopener">Tatoeba #${esc(e.t)}</a>` : ''}${e.au && DATA.mode === 'full' ? `<span class="src"> · 🎙 <a class="src" href="${esc(e.al || 'https://tatoeba.org/en/user/profile/' + encodeURIComponent(e.by || ''))}" target="_blank" rel="noopener">${esc(e.by || 'Tatoeba')}</a>, ${esc(e.lic || '')}</span>` : ''}</div><button class="say inl" data-say="${esc(plain(e.j))}"${e.au && DATA.mode === 'full' ? ` data-audio="s${esc(e.au)}" title="Native recording"` : ''} aria-label="Play">🔊</button></div>`;
 }
 function vDetail(x) {
   const ks = [...new Set([...x.w].filter(c => KMAP[c]))];
@@ -1898,10 +1901,11 @@ const EXAM_GEN = {
   },
   li(x, l, pool) {
     if (!('speechSynthesis' in window)) return null;
-    const es = (x.ex || []).filter(e => e.e && plain(e.j).length <= 40); if (!es.length) return null; const e = pick(es);
+    const es = (x.ex || []).filter(e => e.e && plain(e.j).length <= 40); if (!es.length) return null;
+    const native = es.filter(e => e.au && DATA.mode === 'full'), e = pick(native.length ? native : es), au = e.au && DATA.mode === 'full' ? 's' + e.au : null;
     const wrong = shuffle(pool.flatMap(y => (y.ex || []).map(z => z.e)).filter(t => t && t !== e.e));
     const f = fillFour(e.e, wrong); if (!f) return null;
-    return { item: x, fullM: exMarkup(e), say: plain(e.j), prompt: `<button class="listen" data-say="${esc(plain(e.j))}">🔊 Play</button><div class="proma">Tap to replay as often as you like.</div>`, opts: f.opts.map(esc), ans: f.ans, raw: f.opts, full: plain(e.j) };
+    return { item: x, fullM: exMarkup(e), say: plain(e.j), au, prompt: `<button class="listen" data-say="${esc(plain(e.j))}"${au ? ` data-audio="${au}"` : ''}>🔊 Play</button><div class="proma">${au ? `Native recording by ${esc(e.by || 'a Tatoeba member')} · ` : ''}Tap to replay as often as you like.</div>`, opts: f.opts.map(esc), ans: f.ans, raw: f.opts, full: plain(e.j) };
   }
 };
 /** Split a sentence into JLPT-style chunks (文節): each chunk is a content word plus the
@@ -1987,7 +1991,7 @@ async function startExam(scope) {
   render(); window.scrollTo(0, 0);
   examAutoplay();
 }
-function examAutoplay() { const s = S.session; const q = s && s.qs[s.idx]; if (q && q.key === 'li' && q.say) setTimeout(() => speak(q.say), 300); }
+function examAutoplay() { const s = S.session; const q = s && s.qs[s.idx]; if (q && q.key === 'li' && q.say) setTimeout(() => playAudio(q.au, q.say), 300); }
 function examPick(i) {
   const s = S.session; if (!s || s.mode !== 'exam' || s.done) return;
   s.ans[s.idx] = i; render();
@@ -2146,12 +2150,38 @@ function applyTheme() {
 if (darkQuery.addEventListener) darkQuery.addEventListener('change', () => { if (settings.theme === 'system') applyTheme(); });
 function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); applyTheme(); }
 const saveSettings = () => store.set('settings', settings);
-function openSheet(id) {
-  const item = id.startsWith('k:') ? KMAP[id.slice(2)] : id.startsWith('g:') ? GMAP[id] : VMAP[id]; if (!item) return;
-  const sh = $('#sheet');
-  sh.innerHTML = `<div class="sheet-bg" onclick="App.closeSheet()"></div><div class="sheet"><button class="ghost close" onclick="App.closeSheet()" aria-label="Close">✕</button>${detail(item)}</div>`;
+/* ---------- detail panel with history ----------
+   Opening a word / kanji / grammar point from inside the panel stacks it, so
+   "‹ Back" (or the phone's back gesture) returns to where you were.          */
+const itemById = id => id.startsWith('k:') ? KMAP[id.slice(2)] : id.startsWith('g:') ? GMAP[id] : VMAP[id];
+const itemLabel = x => !x ? '' : x.kind === 'kanji' ? x.k : x.kind === 'grammar' ? (gSplitTitle(x.t).jp || x.t) : x.w;
+let sheetStack = [], sheetPushed = 0, sheetClosing = false;
+function renderSheet() {
+  const sh = $('#sheet'), top = sheetStack[sheetStack.length - 1]; if (!top) return hideSheet();
+  const item = itemById(top.id), prev = sheetStack[sheetStack.length - 2];
+  sh.innerHTML = `<div class="sheet-bg" onclick="App.closeSheet()"></div><div class="sheet">
+    <div class="sheet-nav">${prev ? `<button class="ghost sheet-back" onclick="App.sheetBack()" aria-label="Back">‹ <span class="jp">${esc(itemLabel(itemById(prev.id)))}</span></button>` : '<span></span>'}
+    <button class="ghost close" onclick="App.closeSheet()" aria-label="Close">✕</button></div>${detail(item)}</div>`;
   sh.classList.add('open'); hydrate(sh);
+  const panel = sh.querySelector('.sheet'); if (panel) panel.scrollTop = top.scroll || 0;
 }
+function hideSheet() { sheetStack = []; const sh = $('#sheet'); sh.classList.remove('open'); sh.innerHTML = ''; }
+function openSheet(id) {
+  if (!itemById(id)) return;
+  const sh = $('#sheet'), open = sh.classList.contains('open');
+  if (!open) { sheetStack = []; sheetPushed = 0; }
+  const top = sheetStack[sheetStack.length - 1];
+  if (top && top.id === id) return;
+  if (top) { const panel = sh.querySelector('.sheet'); top.scroll = panel ? panel.scrollTop : 0; }
+  sheetStack.push({ id, scroll: 0 });
+  try { history.pushState({ kdSheet: sheetStack.length }, ''); sheetPushed++; } catch (e) {}
+  renderSheet();
+}
+function popSheet() { sheetStack.pop(); if (sheetStack.length) renderSheet(); else hideSheet(); }
+window.addEventListener('popstate', () => {
+  if (sheetClosing) { sheetClosing = false; return hideSheet(); }
+  if ($('#sheet').classList.contains('open')) { sheetPushed = Math.max(0, sheetPushed - 1); popSheet(); }
+});
 let searchTimer = null;
 
 const App = {
@@ -2251,7 +2281,12 @@ const App = {
     fr.readAsText(file);
   },
   reset() { if (!confirm('Reset all progress? This cannot be undone.')) return; progress = {}; actLog = {}; save(); store.set('log', actLog); toast('Progress reset'); render(); },
-  closeSheet() { const sh = $('#sheet'); sh.classList.remove('open'); sh.innerHTML = ''; }
+  sheetBack() { if (sheetStack.length < 2) return App.closeSheet(); if (sheetPushed > 0) history.back(); else popSheet(); },
+  closeSheet() {
+    if (!$('#sheet').classList.contains('open')) return;
+    if (sheetPushed > 0) { sheetClosing = true; const n = sheetPushed; sheetPushed = 0; hideSheet(); try { history.go(-n); } catch (e) { sheetClosing = false; } }
+    else hideSheet();
+  }
 };
 
 /* delegated taps: audio, detail sheets, tap-to-reveal furigana */
@@ -2263,7 +2298,12 @@ document.addEventListener('click', e => {
 }, true);
 document.addEventListener('keydown', e => {
   if (e.target.matches('input, textarea')) return;
-  if (e.key === 'Escape') return App.closeSheet();
+  if ($('#sheet').classList.contains('open')) {
+    if (e.key === 'Escape') return App.closeSheet();
+    if ((e.key === 'Backspace' || e.key === 'ArrowLeft') && sheetStack.length > 1) { e.preventDefault(); return App.sheetBack(); }
+    return;
+  }
+  if (e.key === 'Escape') return;
   const s = S.session; if (!s) return;
   if (s.mode === 'exam') { if (s.done) return; if (/^[1-4]$/.test(e.key)) examPick(+e.key - 1); else if (e.key === 'ArrowRight') examGo(1); else if (e.key === 'ArrowLeft') examGo(-1); return; }
   if (s.mode === 'cards' && s.done) { if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); back(); } return; }

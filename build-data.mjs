@@ -19,6 +19,8 @@
  *   Tatoeba sentences   (CC BY 2.0 FR)          linked JMdict examples + Tatoeba exports (optional)
  *   JLPT grammar        (hanabira.org, CC; link back required) hanabira.org-japanese-content grammar JSON (optional)
  *   Word audio          (CC BY-SA 4.0, Tofugu & WaniKani) tofugu/japanese-vocabulary-pronunciation-audio (optional)
+ *   Word audio, more    (CC BY 4.0, Kanji alive)  example-word recordings for 1,235 kanji (optional)
+ *   Sentence audio      (per recording, Tatoeba)   native recordings; only ones with a reuse licence (optional)
  *
  * Usage
  *   node build-data.mjs [--out data] [--cache .cache] [--from-dir DIR]
@@ -50,6 +52,9 @@ const FROM = opt('from-dir', null) ? path.resolve(opt('from-dir')) : null;
 const MAX_EX = Math.max(0, +opt('max-examples', 2));
 const USE_TATOEBA = !flag('no-tatoeba');
 const USE_FREQ = !flag('no-freq');
+const SENT_AUDIO = USE_TATOEBA && !flag('no-sentence-audio');
+const MAX_SAUD = Math.max(0, +opt('max-sentence-audio', 6000));
+const COMMERCIAL_ONLY = flag('commercial-audio-only');
 const LEVELS = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const t0 = Date.now();
 const log = (...a) => console.log(`[${((Date.now() - t0) / 1000).toFixed(1).padStart(6)}s]`, ...a);
@@ -75,8 +80,11 @@ const SOURCES = {
   tatoeba: {
     jpn:   { urls: ['https://downloads.tatoeba.org/exports/per_language/jpn/jpn_sentences.tsv.bz2'], local: /^jpn_sentences\.tsv(\.bz2)?$/i },
     eng:   { urls: ['https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences.tsv.bz2'], local: /^eng_sentences\.tsv(\.bz2)?$/i },
-    links: { urls: ['https://downloads.tatoeba.org/exports/per_language/jpn/jpn-eng_links.tsv.bz2'], local: /^jpn-eng_links\.tsv(\.bz2)?$/i }
-  }
+    links: { urls: ['https://downloads.tatoeba.org/exports/per_language/jpn/jpn-eng_links.tsv.bz2'], local: /^jpn-eng_links\.tsv(\.bz2)?$/i },
+    audio: { urls: ['https://downloads.tatoeba.org/exports/sentences_with_audio.tar.bz2'], local: /^sentences_with_audio\.(tar\.bz2|tsv|csv)$/i }
+  },
+  kaData:  { urls: ['https://raw.githubusercontent.com/kanjialive/kanji-data-media/master/language-data/ka_data.csv'], local: /^ka_data\.csv$/i },
+  kaAudio: { urls: ['https://media.kanjialive.com/examples_audio/audio-mp3.zip'], local: /^audio-mp3\.zip$/i }
 };
 
 /* ---------------------------------------------------------------- download helpers */
@@ -194,6 +202,7 @@ function extractDir(file) {
   fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
   if (/\.zip$/i.test(file)) execFileSync('unzip', ['-q', '-o', file, '-d', dir]);
   else if (/\.(tgz|tar\.gz)$/i.test(file)) execFileSync('tar', ['-xzf', file, '-C', dir]);
+  else if (/\.tar\.bz2$/i.test(file)) execFileSync('tar', ['-xjf', file, '-C', dir]);
   else throw new Error('Unknown archive ' + file);
   fs.writeFileSync(path.join(dir, '.done'), '');
   return dir;
@@ -426,6 +435,28 @@ async function main() {
     return Math.max(1, Math.min(5, (isCommon(w) ? 3 : 2) + (LV_BONUS[level] || 0)));
   }
 
+  /* ---- 4b. Tatoeba sentence audio index (licensed recordings only) */
+  const SAUD = new Map(); // Japanese/any sentence id -> { a: audio id, u: user, l: licence, url }
+  if (SENT_AUDIO) {
+    log('Tatoeba sentence audio index');
+    const sa = await getSource('tatoeba-audio', SOURCES.tatoeba.audio, { required: false });
+    if (sa) {
+      let f = sa.file;
+      if (/\.tar\.bz2$/i.test(f)) f = walk(extractDir(f)).filter(p => /\.(tsv|csv)$/i.test(p))[0];
+      if (f) {
+        let all = 0;
+        await eachLine(f, line => {
+          const [sid, aid, user, lic, url] = line.split('\t'); all++;
+          const L = (lic || '').trim(); if (!sid || !aid || !L || L === '\\N') return;            // empty licence = not reusable
+          if (COMMERCIAL_ONLY && /NC/i.test(L)) return;
+          if (!SAUD.has(sid)) SAUD.set(sid, { a: aid, u: user || '', l: L, url: url && url !== '\\N' ? url : '' });
+        });
+        log(`  ${SAUD.size} reusable recordings (of ${all} listed, all languages)`);
+      }
+    }
+  }
+  const hasAu = t => !!t && SAUD.has(String(t));
+
   /* ---- 5. build vocab entries */
   log('Building vocabulary');
   const vocab = Object.fromEntries(LEVELS.map(l => [l, []]));
@@ -459,13 +490,15 @@ async function main() {
       if (senses.length >= 4) break;
     }
     if (!senses.length) continue;
-    const ex = [];
+    let ex = [];
     if (jmHasExamples) {
       for (const s of w.sense || []) for (const e of s.examples || []) {
         const jp = (e.sentences || []).find(x => (x.land || x.lang) === 'jpn');
         const en = (e.sentences || []).find(x => (x.land || x.lang) === 'eng');
-        if (jp && en && ex.length < MAX_EX && !ex.some(x => x.j === jp.text)) ex.push({ j: jp.text, e: en.text, t: e.source && e.source.type === 'tatoeba' ? String(e.source.value) : null });
+        if (jp && en && !ex.some(x => x.j === jp.text)) ex.push({ j: jp.text, e: en.text, t: e.source && e.source.type === 'tatoeba' ? String(e.source.value) : null });
       }
+      // sentences with a native recording first (stable sort keeps sense order otherwise)
+      ex = ex.map((x, k) => [x, k]).sort((a, b) => (hasAu(b[0].t) - hasAu(a[0].t)) || a[1] - b[1]).map(a => a[0]).slice(0, MAX_EX);
     }
     const level = row.level;
     const entry = {
@@ -488,7 +521,7 @@ async function main() {
   /* ---- 6. Tatoeba supplement */
   if (USE_TATOEBA && MAX_EX > 0) {
     log('Tatoeba sentences');
-    const need = examplePool.filter(e => e.ex.length < MAX_EX);
+    const need = examplePool.filter(e => e.ex.length < MAX_EX || (SAUD.size && !e.ex.some(x => hasAu(x.t))));
     const sj = await getSource('tatoeba-jpn', SOURCES.tatoeba.jpn, { required: false });
     const se = sj && await getSource('tatoeba-eng', SOURCES.tatoeba.eng, { required: false });
     const sl = se && await getSource('tatoeba-links', SOURCES.tatoeba.links, { required: false });
@@ -520,20 +553,63 @@ async function main() {
         }
       }
       let filled = 0; const useCount = new Map();
+      let swapped = 0;
       for (const [f, entries] of want) {
-        const cands = index.get(f) || [];
+        const cands = (index.get(f) || []).map((i, k) => [i, k]).sort((a, b) => (hasAu(jpn[b[0]].id) - hasAu(jpn[a[0]].id)) || a[1] - b[1]).map(a => a[0]);
         for (const e of entries) {
           for (const i of cands) {
-            if (e.ex.length >= MAX_EX) break;
             const s = jpn[i]; const en = eng.get(link.get(s.id));
             if (!en || e.ex.some(x => x.j === s.text) || (useCount.get(i) || 0) >= 3) continue;
+            if (e.ex.length >= MAX_EX) {
+              // full already: swap the last example for one with a native recording, once
+              if (e.ex.some(x => hasAu(x.t)) || !hasAu(s.id)) break;
+              e.ex.pop(); swapped++;
+            }
             e.ex.push({ j: s.text, e: en, t: s.id }); useCount.set(i, (useCount.get(i) || 0) + 1); filled++;
+            if (e.ex.length >= MAX_EX && e.ex.some(x => hasAu(x.t))) break;
           }
         }
       }
+      if (swapped) log(`  ${swapped} examples swapped for ones with native audio`);
       meta.sources.tatoeba = { files: [sj.label, se.label, sl.label], matching: tokenizer ? 'dictionary form (kuromoji)' : 'substring' };
       log(`  added ${filled} sentences`);
     }
+  }
+  /* ---- 6b. download the chosen sentences' recordings */
+  if (SAUD.size) {
+    log('Sentence audio (Tatoeba)');
+    const order = LEVELS.flatMap(l => vocab[l].slice().sort((a, b) => b.q - a.q));
+    const jobs = [], seen = new Set();
+    for (const e of order) for (const x of e.ex) {
+      if (!hasAu(x.t)) continue;
+      const r = SAUD.get(String(x.t));
+      if (!seen.has(r.a)) { if (seen.size >= MAX_SAUD) continue; seen.add(r.a); jobs.push(r.a); }
+      x.au = r.a; x.by = r.u; x.lic = r.l; if (r.url) x.al = r.url;
+    }
+    const dir = path.join(CACHE, 'tatoeba-audio'), outDir = path.join(OUT, 'saudio');
+    fs.mkdirSync(dir, { recursive: true }); fs.mkdirSync(outDir, { recursive: true });
+    const ok = new Set(); let bytes = 0, fetched = 0, k = 0;
+    const one = async id => {
+      const c = path.join(dir, id + '.mp3');
+      if (!(fs.existsSync(c) && fs.statSync(c).size > 500)) {
+        if (FROM) return;
+        for (let t = 0; t < 3; t++) {
+          try {
+            const r = await fetch(`https://tatoeba.org/audio/download/${id}`, { headers: { 'User-Agent': 'kotoba-dojo-data-builder (study app; github pages)' }, redirect: 'follow' });
+            if (r.ok) { const b = Buffer.from(await r.arrayBuffer()); if (b.length > 500) { fs.writeFileSync(c, b); fetched++; break; } }
+            if (r.status === 404) break;
+          } catch (e) {}
+          await new Promise(res => setTimeout(res, 800 * (t + 1)));
+        }
+      }
+      if (fs.existsSync(c) && fs.statSync(c).size > 500) { fs.copyFileSync(c, path.join(outDir, id + '.mp3')); bytes += fs.statSync(c).size; ok.add(id); }
+    };
+    if (FROM) { const local = path.join(FROM, 'tatoeba-audio'); if (fs.existsSync(local)) for (const n of fs.readdirSync(local)) fs.copyFileSync(path.join(local, n), path.join(dir, n)); }
+    await Promise.all(Array.from({ length: 6 }, async () => { while (k < jobs.length) { const id = jobs[k++]; await one(id); await new Promise(r => setTimeout(r, 60)); } }));
+    for (const e of order) for (const x of e.ex) if (x.au && !ok.has(x.au)) { delete x.au; delete x.by; delete x.lic; delete x.al; }
+    meta.counts.saudio = ok.size;
+    meta.sources.sentenceAudio = 'Tatoeba recordings with a reuse licence' + (COMMERCIAL_ONLY ? ' (commercial-use licences only)' : '') + '; each credited in the app';
+    log(`  ${ok.size} sentence recordings (${fetched} downloaded now, ${(bytes / 1e6).toFixed(1)} MB)`);
   }
   // furigana for every example sentence
   for (const e of examplePool) for (const x of e.ex) { x.j = sentenceFurigana(x.j); }
@@ -671,7 +747,43 @@ async function main() {
     meta.counts.audio = n;
     meta.sources.audio = 'tofugu/japanese-vocabulary-pronunciation-audio (native speakers, mp3)';
     log(`  ${n} words with native audio (${(bytes / 1e6).toFixed(1)} MB)`);
-  } else meta.notes.push('Native word audio unavailable in this build; words use the device voice.');
+  } else meta.notes.push('WaniKani word audio unavailable in this build.');
+
+  /* ---- 8d. Kanji alive recordings for words WaniKani doesn't cover */
+  if (!flag('no-audio') && !flag('no-kanjialive')) {
+    log('Word audio (Kanji alive)');
+    const kd = await getSource('ka-data', SOURCES.kaData, { required: false });
+    const kz = kd && await getSource('ka-audio', SOURCES.kaAudio, { required: false });
+    if (kd && kz) {
+      const files = new Map(walk(extractDir(kz.file)).filter(p => /\.mp3$/i.test(p)).map(p => [path.basename(p), p]));
+      const rows = parseCSV(fs.readFileSync(kd.file, 'utf8').replace(/^\uFEFF/, ''));
+      const head = rows[0], ci = n => head.indexOf(n), map = new Map();
+      for (const r of rows.slice(1)) {
+        let list; try { list = JSON.parse(r[ci('examples')]); } catch (e) { continue; }
+        list.forEach((ex, i) => {
+          const m = /^(.+?)（(.+?)）/.exec(String(ex[0] || '')); if (!m) return;
+          const f = files.get(`${r[ci('kname')]}_06_${String.fromCharCode(97 + i)}.mp3`); if (!f) return;
+          const w = m[1].trim(), rd = kata2hira(m[2].trim());
+          for (const [a, b] of [[w, rd], [w.replace(/する$/, ''), rd.replace(/する$/, '')]]) if (a && !map.has(a + '|' + b)) map.set(a + '|' + b, f);
+        });
+      }
+      fs.mkdirSync(path.join(OUT, 'audio'), { recursive: true });
+      let n = 0, bytes = 0;
+      for (const l of LEVELS) for (const e of vocab[l]) {
+        if (e.au) continue;
+        const r = kata2hira(e.r), f = map.get(e.w + '|' + r) || (e.a && map.get(e.a + '|' + r)); if (!f) continue;
+        const id = 'k' + crypto.createHash('sha1').update(f).digest('hex').slice(0, 11);
+        const out = path.join(OUT, 'audio', id + '.mp3');
+        if (!fs.existsSync(out)) { fs.copyFileSync(f, out); bytes += fs.statSync(out).size; }
+        e.au = id; n++;
+      }
+      meta.counts.audioKA = n;
+      meta.sources.audioKA = 'Kanji alive example-word recordings (mp3)';
+      log(`  ${n} more words with native audio (${(bytes / 1e6).toFixed(1)} MB)`);
+    }
+  }
+  const audioTotal = LEVELS.reduce((a, l) => a + vocab[l].filter(e => e.au).length, 0);
+  if (!audioTotal) meta.notes.push('No native word audio in this build; words use the device voice.');
 
   /* ---- 9. write */
   log('Writing files');
@@ -693,7 +805,9 @@ async function main() {
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },
     { name: 'Kanji JLPT levels', by: 'David Luz Gouveia (kanji-data)', license: 'MIT', url: 'https://github.com/davidluzgouveia/kanji-data' },
     { name: 'JLPT grammar', by: 'hanabira.org', license: 'Creative Commons (in-house content)', url: 'https://hanabira.org/' },
-    { name: 'Word pronunciation audio', by: 'Tofugu & WaniKani', license: 'CC BY-SA 4.0', url: 'https://github.com/tofugu/japanese-vocabulary-pronunciation-audio' }
+    { name: 'Word pronunciation audio', by: 'Tofugu & WaniKani', license: 'CC BY-SA 4.0', url: 'https://github.com/tofugu/japanese-vocabulary-pronunciation-audio' },
+    { name: 'Example-word audio', by: 'Kanji alive', license: 'CC BY 4.0', url: 'https://github.com/kanjialive/kanji-data-media' },
+    { name: 'Sentence audio', by: 'Tatoeba contributors (credited on each sentence)', license: 'per recording', url: 'https://tatoeba.org/en/downloads' }
   ];
   total += write('meta.json', meta);
   log(`Done: ${Object.values(meta.counts.vocab).reduce((a, b) => a + b, 0)} words, ${kanjiSet.size} kanji, ${(total / 1e6).toFixed(1)} MB in ${OUT}`);
