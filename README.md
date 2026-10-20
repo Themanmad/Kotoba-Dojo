@@ -14,7 +14,9 @@ every Monday.
 - **Flashcards** — spaced repetition (Again / Hard / Good / Easy). Due cards first, then a daily allowance of new cards.
 - **Learn** — 4-choice quizzes with the full entry after each answer.
 - **Test** — no hints, score and review at the end, retest your mistakes. Works for vocab and kanji.
-- **Search** — Japanese, romaji or English across all levels, plus kanji.
+- **Grammar** — JLPT N5–N1 grammar from **hanabira.org**: formation, explanation and example sentences with furigana. Flashcards, fill-in-the-blank quizzes and grammar tests.
+- **Mock exam** — timed, JLPT-style exam per level: 漢字読み, 表記, 文脈規定, 言い換え, 文法形式, 文の組み立て (★) and 聴解 (listening). Scored against the official pass marks, with a review of every mistake and a history of attempts. Reading (読解) isn't included, so the score is an estimate.
+- **Search** — Japanese, romaji or English across all levels: words, kanji and grammar.
 - **Progress** — per-level progress, reviews today, streak. Export/import to move between devices.
 - Furigana on / tap-to-reveal / off, optional romaji, Japanese audio, light and dark mode.
 
@@ -43,7 +45,8 @@ files, the app runs on a small built-in starter set so it still works.
 3. Reads JMdict's priority tags (`nf01`–`nf48`, `news1`, `ichi1`…) for word frequency.
 4. Tops up example sentences from the **Tatoeba** exports, matching by dictionary form with kuromoji, and adds furigana.
 5. Builds kanji from **KANJIDIC2**, with current JLPT levels from kanji-data and stroke paths from **KanjiVG**.
-6. Writes `data/vocab-n5.json … n1`, `data/kanji-*.json`, `data/strokes-*.json` and `data/meta.json`. The app loads a level only when you select it.
+6. Adds JLPT grammar from **hanabira.org**'s content repo (`grammar_ja_N*.json`), with furigana on the examples.
+7. Writes `data/vocab-n5.json … n1`, `data/kanji-*.json`, `data/strokes-*.json`, `data/grammar-*.json` and `data/meta.json`. The app loads a level only when you select it.
 
 Every optional source fails soft. If Tatoeba, KanjiVG or the frequency file is
 unreachable, the build still finishes and notes what's missing under **Settings → Data**.
@@ -55,7 +58,7 @@ node build-data.mjs --out data
 # or, with files you've already downloaded:
 node build-data.mjs --from-dir ./downloads --out data
 ```
-Other flags: `--no-tatoeba`, `--no-freq`, `--no-kuromoji`, `--max-examples 3`.
+Other flags: `--no-tatoeba`, `--no-freq`, `--no-kuromoji`, `--no-grammar`, `--max-examples 3`.
 
 ## Notes
 - Progress is stored in your browser. Use **Settings → Export** to back it up.

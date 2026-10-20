@@ -227,6 +227,37 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 .toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;z-index:40;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
 .qnav{display:flex;gap:6px;align-items:center}
+.nav-extra{display:none!important}
+.hdr-extra{font-size:14px}
+.gtitle{font-size:28px;line-height:1.5;font-weight:600}
+.pword.gq{font-size:32px;font-weight:600}
+.row .rw.gt{font-size:16px;font-weight:500;line-height:1.5}
+.gform{margin-top:10px;padding:10px 12px;border-radius:12px;border:1px dashed var(--line);font-size:14px}
+.gform b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px}
+.gexpl{margin-top:10px;font-size:14px;line-height:1.6}
+.psent{font-size:22px;line-height:1.9;text-align:left}
+.psent u{text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:var(--accent)}
+.blank{display:inline-block;min-width:3.2em;border-bottom:2px solid var(--accent);margin:0 2px}
+.slot{display:inline-block;width:2.6em;border-bottom:2px solid var(--muted);margin:0 3px;text-align:center;font-size:15px;color:var(--accent);vertical-align:baseline}
+.slot.star{border-bottom-color:var(--accent);font-weight:700}
+.listen{border:0;background:var(--accent);color:#fff;border-radius:999px;padding:16px 28px;font-size:18px;font-weight:600;cursor:pointer}
+.choice.sel{border-color:var(--accent);background:var(--accent-soft)}
+.exsec{display:flex;flex-direction:column;gap:2px;margin:6px 0}
+.exsec span{font-size:12px;color:var(--muted)}
+.exinstr{font-size:15px;margin-top:4px}
+.exinstr-en{font-size:13px;color:var(--muted);margin-bottom:10px}
+.exgrid{display:flex;flex-wrap:wrap;gap:5px;margin-top:16px}
+.exgrid button{width:34px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--card);font-size:12px;cursor:pointer;color:var(--muted)}
+.exgrid button.done{background:var(--chip);color:var(--ink)}
+.exgrid button.cur{border-color:var(--accent);color:var(--accent);font-weight:700}
+#etimer{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+#etimer.low{color:var(--bad)}
+.exparts{display:grid;gap:6px}
+.exparts div{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.okc{color:var(--ok)} .badc{color:var(--bad)}
+.lvrows.wide .lvrow{grid-template-columns:96px 1fr auto}
+.score .big.okc,.score .big.badc{font-family:"Noto Sans JP",sans-serif}
+.exrev .rm{display:block;-webkit-line-clamp:unset;color:var(--ink)}
 .backbtn{color:var(--ink);font-weight:500}
 .themebtn{border:1px solid var(--line);background:var(--card);border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:15px;display:grid;place-items:center;flex:none;padding:0}
 .simlist{display:grid;gap:6px;margin-top:8px}
@@ -235,7 +266,7 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 .simrow .sm{flex:1;min-width:0;display:flex;flex-direction:column;font-size:14px}
 .simrow .sm span{font-size:12px;color:var(--muted)}
 .simrow .lvl{font-size:11px;color:var(--accent);font-weight:600;flex:none}
-@media (min-width:900px){ header.top .themebtn{position:absolute;right:14px;top:22px} header.top .in{padding-right:56px} }
+@media (min-width:900px){ header.top .themebtn{position:absolute;right:14px;top:22px} header.top .in{padding-right:56px} .hdr-extra{display:none!important} .nav-extra{display:flex!important} }
 /* word of the day */
 .wotd{margin-top:16px}
 .wotd .wk{display:flex;justify-content:space-between;align-items:center;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
@@ -285,14 +316,16 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 </style>
 </head>
 <body>
-<header class="top"><div class="in"><div class="logo">語</div><div class="brand">Kotoba Dojo<small>Japanese vocab &amp; kanji · JLPT N5–N1</small></div><div class="streak" id="streak"></div><button class="themebtn" id="themebtn" onclick="App.toggleTheme()" aria-label="Toggle dark mode"></button></div></header>
+<header class="top"><div class="in"><div class="logo">語</div><div class="brand">Kotoba Dojo<small>Japanese vocab &amp; kanji · JLPT N5–N1</small></div><div class="streak" id="streak"></div><button class="themebtn hdr-extra" onclick="App.go('search')" aria-label="Search">🔍</button><button class="themebtn hdr-extra" onclick="App.go('settings')" aria-label="Settings">⚙️</button><button class="themebtn" id="themebtn" onclick="App.toggleTheme()" aria-label="Toggle dark mode"></button></div></header>
 <main id="app"><div class="loading">読み込み中… loading</div></main>
 <nav class="tabs"><div class="in">
   <button data-v="home" onclick="App.go('home')"><b>家</b>Home</button>
   <button data-v="vocab" onclick="App.go('vocab')"><b>語</b>Vocab</button>
   <button data-v="kanji" onclick="App.go('kanji')"><b>字</b>Kanji</button>
-  <button data-v="search" onclick="App.go('search')"><b>探</b>Search</button>
-  <button data-v="settings" onclick="App.go('settings')"><b>設</b>Settings</button>
+  <button data-v="grammar" onclick="App.go('grammar')"><b>文</b>Grammar</button>
+  <button data-v="exam" onclick="App.go('exam')"><b>試</b>Exam</button>
+  <button class="nav-extra" data-v="search" onclick="App.go('search')"><b>探</b>Search</button>
+  <button class="nav-extra" data-v="settings" onclick="App.go('settings')"><b>設</b>Settings</button>
 </div></nav>
 <div id="sheet"></div>
 <div class="toast" id="toast"></div>
@@ -542,6 +575,46 @@ const STARTER_KANJI = [
 ["茶","tea","チャ、サ","","N4",1116,9,"お茶|おちゃ|tea;喫茶店|きっさてん|café"],
 ["耳","ear","ジ","みみ","N4",1328,6,"耳|みみ|ear"]
 ];
+/* Starter grammar (original, written for this app) — used until the build adds hanabira.org grammar.
+   [title, meaning, formation, explanation, [[example, translation], ...]] */
+const STARTER_GRAMMAR = {
+N5: [
+["です","is / am / are (polite)","Noun / な-adj + です","The polite way to say that something is something. The plain form is だ.",[["{私|わたし}は{学生|がくせい}です。","I am a student."],["これは{本|ほん}です。","This is a book."]]],
+["じゃありません / ではありません","is not (polite)","Noun / な-adj + じゃありません","Polite negative of です. ではありません is more formal; じゃないです is more casual.",[["{私|わたし}は{先生|せんせい}じゃありません。","I am not a teacher."]]],
+["は","topic marker: as for …","Noun + は","Marks what the sentence is about. Written は but pronounced わ.",[["{今日|きょう}は{暑|あつ}いです。","It's hot today."],["{私|わたし}は{田中|たなか}です。","I'm Tanaka."]]],
+["が","subject marker","Noun + が","Marks the subject, often when it's new information or with ある / いる / 好き.",[["{猫|ねこ}がいます。","There is a cat."],["{寿司|すし}が{好|す}きです。","I like sushi."]]],
+["を","object marker","Noun + を + verb","Marks the thing the action is done to. Pronounced お.",[["パンを{食|た}べます。","I eat bread."]]],
+["に (time / destination)","at (a time); to (a place)","Time / place + に","Marks a specific time, or where someone is going.",[["{七時|しちじ}に{起|お}きます。","I get up at seven."],["{学校|がっこう}に{行|い}きます。","I go to school."]]],
+["で (place / means)","at (where an action happens); by (means)","Place / tool + で","Marks where an action takes place, or the means used to do it.",[["{図書館|としょかん}で{勉強|べんきょう}します。","I study at the library."],["{電車|でんしゃ}で{行|い}きます。","I'll go by train."]]],
+["ます / ません","polite verb ending (does / doesn't)","Verb ます-stem + ます / ません","Polite present or future. ません is the negative.",[["{毎日|まいにち}コーヒーを{飲|の}みます。","I drink coffee every day."],["{肉|にく}は{食|た}べません。","I don't eat meat."]]],
+["ました / ませんでした","polite past (did / didn't)","Verb ます-stem + ました / ませんでした","Polite past tense and its negative.",[["{昨日|きのう}{映画|えいが}を{見|み}ました。","I watched a movie yesterday."]]],
+["ましょう","let's …","Verb ます-stem + ましょう","A polite suggestion to do something together. ましょうか means \"shall we / shall I?\".",[["{一緒|いっしょ}に{帰|かえ}りましょう。","Let's go home together."]]],
+["たい","want to …","Verb ます-stem + たい","Says what the speaker wants to do. It conjugates like an い-adjective (たくない, たかった).",[["{日本|にほん}に{行|い}きたいです。","I want to go to Japan."]]],
+["てください","please do …","Verb て-form + ください","A polite request.",[["ちょっと{待|ま}ってください。","Please wait a moment."]]],
+["ないでください","please don't …","Verb ない-form + でください","A polite request not to do something.",[["ここで{写真|しゃしん}を{撮|と}らないでください。","Please don't take photos here."]]],
+["ている","is doing; is in a state","Verb て-form + いる","An action in progress, or a continuing state (e.g. 結婚している = is married).",[["{今|いま}、{雨|あめ}が{降|ふ}っています。","It's raining now."]]],
+["から (because)","because …, so …","Clause + から","Gives a reason. The reason comes before から.",[["{疲|つか}れたから、{早|はや}く{寝|ね}ます。","I'm tired, so I'll go to bed early."]]],
+["が (but)","…, but …","Clause + が, clause","Joins two contrasting clauses, politely.",[["この{店|みせ}は{安|やす}いですが、{遠|とお}いです。","This shop is cheap, but it's far."]]],
+["や","A and B (among others)","Noun + や + noun","Lists examples without being complete, unlike と.",[["りんごやバナナを{買|か}いました。","I bought apples, bananas and so on."]]],
+["より … ほうが","B is more … than A","A より B のほうが + adjective","Compares two things.",[["{電車|でんしゃ}よりバスのほうが{安|やす}いです。","The bus is cheaper than the train."]]],
+["の (possessive)","'s; of","Noun + の + noun","Links two nouns, often showing possession.",[["これは{私|わたし}の{傘|かさ}です。","This is my umbrella."]]],
+["も","also; too","Noun + も","Replaces は, が or を to mean \"also\".",[["{私|わたし}も{学生|がくせい}です。","I'm a student too."]]],
+["か (question)","question marker","Sentence + か","Turns a sentence into a question.",[["{駅|えき}はどこですか。","Where is the station?"]]],
+["まだ … ていません","haven't … yet","まだ + verb て-form + いません","Something that hasn't happened yet.",[["まだ{昼|ひる}ご{飯|はん}を{食|た}べていません。","I haven't eaten lunch yet."]]]
+],
+N4: [
+["てもいい","may …; it's OK to …","Verb て-form + もいい","Asks for or gives permission.",[["ここに{座|すわ}ってもいいですか。","May I sit here?"]]],
+["てはいけない","must not …","Verb て-form + はいけない","Says something is not allowed.",[["ここでタバコを{吸|す}ってはいけません。","You must not smoke here."]]],
+["なければならない","have to …; must …","Verb ない-form (drop い) + ければならない","Says something is necessary. Casual forms: なきゃ, なくちゃ.",[["{明日|あした}は{早|はや}く{起|お}きなければなりません。","I have to get up early tomorrow."]]],
+["たことがある","have done … before","Verb た-form + ことがある","Talks about past experience.",[["{富士山|ふじさん}に{登|のぼ}ったことがあります。","I have climbed Mt. Fuji."]]],
+["つもり","intend to …; plan to …","Verb dictionary form + つもり","States a plan or intention.",[["{来年|らいねん}、{日本|にほん}へ{行|い}くつもりです。","I plan to go to Japan next year."]]],
+["ので","because …; since …","Clause + ので (な-adj / noun + なので)","Gives a reason, softer and more objective than から.",[["{雨|あめ}なので、{家|いえ}にいます。","Since it's raining, I'm staying home."]]],
+["ながら","while …","Verb ます-stem + ながら","Two actions done at the same time by the same person.",[["{音楽|おんがく}を{聞|き}きながら{勉強|べんきょう}します。","I study while listening to music."]]],
+["と思う","I think that …","Plain form + と思う","Gives an opinion or guess.",[["{明日|あした}は{晴|は}れると{思|おも}います。","I think it'll be sunny tomorrow."]]],
+["かもしれない","might …; may …","Plain form + かもしれない","Says something is possible but uncertain.",[["{午後|ごご}は{雨|あめ}が{降|ふ}るかもしれません。","It might rain this afternoon."]]],
+["そうだ (looks like)","looks …; seems …","い-adj (drop い) / な-adj / ます-stem + そうだ","Describes how something appears from what you can see.",[["このケーキはおいしそうです。","This cake looks delicious."]]]
+]
+};
 
 /* =====================================================================
    HELPERS
@@ -565,7 +638,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('kd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('kd_' + k, JSON.stringify(v)); } catch (e) {} }
 };
-let settings = Object.assign({ theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'] }, store.get('settings', {}));
+let settings = Object.assign({ theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'], glevels: ['N5'] }, store.get('settings', {}));
 let progress = store.get('progress', {});
 let custom = store.get('custom', []);
 let actLog = store.get('log', {});
@@ -625,7 +698,7 @@ function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.ad
 /* =====================================================================
    DATA LAYER
    ===================================================================== */
-const DATA = { mode: null, meta: null, vocab: {}, kanji: {}, strokes: {}, pending: {}, failed: {} };
+const DATA = { mode: null, meta: null, vocab: {}, kanji: {}, strokes: {}, grammar: {}, pending: {}, failed: {} };
 let V = [], K = [], KMAP = {}, VMAP = {};
 const POS_LABEL = { noun: 'noun', verb: 'verb', 'i-adj': 'い-adjective', 'na-adj': 'な-adjective', adverb: 'adverb', expression: 'expression', pronoun: 'pronoun', particle: 'particle', counter: 'counter / number', other: 'other' };
 const POS_FILTER = [['all', 'All'], ['noun', 'Nouns'], ['verb', 'Verbs'], ['i-adj', 'い-adj'], ['na-adj', 'な-adj'], ['adverb', 'Adverbs'], ['expression', 'Phrases'], ['other', 'Other']];
@@ -666,8 +739,9 @@ async function boot() {
     const st = starterData();
     for (const l of LV) { DATA.vocab[l] = st.vocab[l].map(x => normV(x, l)); DATA.kanji[l] = st.kanji[l].map(x => normK(x, l)); DATA.strokes[l] = {}; }
   }
+  if (!grammarFull()) { const sg = starterGrammar(); for (const l of LV) DATA.grammar[l] = sg[l].map(x => normG(x, l)); }
   rebuild();
-  await loadSel().catch(() => {});
+  await Promise.all([loadSel(), loadGrammar()]).catch(() => {});
 }
 function load(kind, l) {
   if (l === 'MY') return Promise.resolve([]);
@@ -677,7 +751,7 @@ function load(kind, l) {
   return DATA.pending[key] = fetch(`data/${kind}-${l.toLowerCase()}.json`)
     .then(r => { if (!r.ok) throw new Error(`${kind} ${l}: HTTP ${r.status}`); return r.json(); })
     .then(a => {
-      DATA[kind][l] = kind === 'vocab' ? a.map(x => normV(x, l)) : kind === 'kanji' ? a.map(x => normK(x, l)) : a;
+      DATA[kind][l] = kind === 'vocab' ? a.map(x => normV(x, l)) : kind === 'kanji' ? a.map(x => normK(x, l)) : kind === 'grammar' ? a.map(x => normG(x, l)) : a;
       delete DATA.pending[key]; if (kind !== 'strokes') rebuild(); return DATA[kind][l];
     })
     .catch(e => { delete DATA.pending[key]; DATA.failed[key] = true; toast('Could not load ' + l + ' data'); throw e; });
@@ -689,11 +763,12 @@ function rebuild() {
   const my = custom.map(a => normV({ i: null, w: plain(a[0]), r: a[1], f: a[0], m: a[2], s: [{ p: [], g: [a[2]] }], g: 'other', q: a[5] || 3, ex: [] }, 'MY'));
   V = LV.flatMap(l => DATA.vocab[l] || []).concat(my);
   K = LV.flatMap(l => DATA.kanji[l] || []);
+  G = LV.flatMap(l => DATA.grammar[l] || []); GMAP = {}; G.forEach(g => { GMAP[g.id] = g; });
   VMAP = {}; V.forEach(x => { if (!VMAP[x.id]) VMAP[x.id] = x; });
   KMAP = {}; K.forEach(k => { KMAP[k.k] = k; });
   SIMIDX = null; FURIX = null;
 }
-const levelTotal = (kind, l) => l === 'MY' ? custom.length : (DATA.mode === 'full' ? ((DATA.meta.counts || {})[kind] || {})[l] || 0 : (DATA[kind][l] || []).length);
+const levelTotal = (kind, l) => l === 'MY' ? (kind === 'vocab' ? custom.length : 0) : kind === 'grammar' ? (grammarFull() ? DATA.meta.counts.grammar[l] || 0 : (DATA.grammar[l] || []).length) : (DATA.mode === 'full' ? ((DATA.meta.counts || {})[kind] || {})[l] || 0 : (DATA[kind][l] || []).length);
 const levelsAvail = () => [...LV.filter(l => levelTotal('vocab', l) > 0), ...(custom.length ? ['MY'] : [])];
 const lvName = l => l === 'MY' ? 'My words' : l;
 
@@ -708,9 +783,9 @@ function box(p) { if (p.b !== undefined) return p.b; return p.c >= 3 && p.c >= p
 function status(id) { const p = progress[id]; if (!p) return 'new'; return box(p) >= KNOWN_BOX ? 'known' : 'learning'; }
 const isDue = (id, now = Date.now()) => { const p = progress[id]; return !!p && (p.d || 0) <= now; };
 /** r = reviews today; nv / nk = new flashcards introduced today (words / kanji). */
-function logAct(newCard, kind) { const d = today(); const e = actLog[d] || { r: 0 }; e.r = (e.r || 0) + 1; if (newCard) { const k = kind === 'kanji' ? 'nk' : 'nv'; e[k] = (e[k] || 0) + 1; } actLog[d] = e; store.set('log', actLog); }
+function logAct(newCard, kind) { const d = today(); const e = actLog[d] || { r: 0 }; e.r = (e.r || 0) + 1; if (newCard) { const k = kind === 'kanji' ? 'nk' : kind === 'grammar' ? 'ng' : 'nv'; e[k] = (e[k] || 0) + 1; } actLog[d] = e; store.set('log', actLog); }
 const todayLog = () => actLog[today()] || { r: 0 };
-const newLeft = kind => Math.max(0, settings.newPerDay - (todayLog()[kind === 'kanji' ? 'nk' : 'nv'] || 0));
+const newLeft = kind => Math.max(0, settings.newPerDay - (todayLog()[kind === 'kanji' ? 'nk' : kind === 'grammar' ? 'ng' : 'nv'] || 0));
 function streak() {
   let n = 0; const d = new Date();
   if (!actLog[today()]) d.setDate(d.getDate() - 1);
@@ -739,7 +814,7 @@ function schedule(item, g, dry) {
 }
 const fmtIv = ms => ms < 3600e3 ? `${Math.max(1, Math.round(ms / 60e3))}m` : ms < DAY ? `${Math.round(ms / 3600e3)}h` : ms < 30 * DAY ? `${Math.round(ms / DAY)}d` : `${Math.round(ms / (30 * DAY))}mo`;
 function levelStats(kind, l) {
-  const pre = kind === 'vocab' ? 'v:' : 'k:'; let k = 0, n = 0;
+  const pre = kind === 'vocab' ? 'v:' : kind === 'kanji' ? 'k:' : 'g:'; let k = 0, n = 0;
   for (const [id, p] of Object.entries(progress)) if (id.startsWith(pre) && p.l === l) { n++; if (box(p) >= KNOWN_BOX) k++; }
   return { known: k, learning: n - k, total: levelTotal(kind, l) };
 }
@@ -755,6 +830,7 @@ const S = {
   tf: { deck: 'vocab', dir: 'mix', count: 10 },
   browse: { sort: 'freq', limit: 100 },
   search: { q: '', busy: false },
+  gf: { q: '', limit: 100 }, gq: 'gfill', examLv: null,
   session: null
 };
 const vSel = () => V.filter(x => settings.levels.includes(x.lvl) && (S.pos === 'all' || posBucket(x.pos) === S.pos));
@@ -805,10 +881,14 @@ function vHome() {
     <button class="action" onclick="App.go('vocab','learn')"><span class="ic">学</span><div><b>Learn with quizzes</b><span>Pick the answer, then see the full entry</span></div></button>
     <button class="action" onclick="App.go('vocab','test')"><span class="ic">試</span><div><b>Take a test</b><span>No hints, full review at the end</span></div></button>
     <button class="action" onclick="App.go('kanji')"><span class="ic">字</span><div><b>Kanji</b><span>By frequency or JLPT level, with stroke order</span></div></button>
+    <button class="action" onclick="App.go('grammar')"><span class="ic">文</span><div><b>Grammar</b><span>JLPT grammar points with formation and examples</span></div></button>
+    <button class="action" onclick="App.go('exam')"><span class="ic">模</span><div><b>Mock exam</b><span>Timed JLPT-style exam with an estimated score</span></div></button>
   </div>
   </div><div class="home-side">
   <div class="label">Vocabulary progress</div><div class="card lvrows">${vRows || '<span class="muted">No data</span>'}</div>
   <div class="label">Kanji progress</div><div class="card lvrows">${kRows || '<span class="muted">No data</span>'}</div>
+  <div class="label">Grammar progress</div><div class="card lvrows">${LV.filter(l => levelTotal('grammar', l)).map(l => { const s = levelStats('grammar', l); const pk = s.total ? s.known / s.total * 100 : 0, pl = s.total ? s.learning / s.total * 100 : 0;
+    return `<div class="lvrow"><b>${l}</b><div class="pbar"><i style="width:${pk}%"></i><i class="l" style="width:${pl}%"></i></div><span class="muted">${fmtN(s.known)} / ${fmtN(s.total)}</span></div>`; }).join('') || '<span class="muted">No data</span>'}</div>
   <div class="legend"><span><i class="dot known"></i>Known (reviewed at 2+ week intervals)</span><span><i class="dot learning"></i>Learning</span></div>
   </div></div>`;
 }
@@ -877,16 +957,16 @@ function vVocab() {
     <button class="btn" onclick="App.startLearn('vocab')" ${busy || !n ? 'disabled' : ''}>Start learning</button>`;
   }
   if (S.vtab === 'test') {
-    const kanjiDeck = S.tf.deck === 'kanji';
-    const pool = kanjiDeck ? K.filter(k => settings.levels.includes(k.lvl)) : vSel();
-    const dirs = kanjiDeck ? [['k2m', 'Meaning'], ['m2k', 'Pick kanji'], ['k2r', 'Reading'], ['mix', 'Mixed']] : [['jp2en', 'Word → meaning'], ['en2jp', 'Meaning → word'], ['mix', 'Mixed']];
+    const kanjiDeck = S.tf.deck === 'kanji', gramDeck = S.tf.deck === 'grammar';
+    const pool = kanjiDeck ? K.filter(k => settings.levels.includes(k.lvl)) : gramDeck ? G.filter(g => settings.levels.includes(g.lvl)) : vSel();
+    const dirs = kanjiDeck ? [['k2m', 'Meaning'], ['m2k', 'Pick kanji'], ['k2r', 'Reading'], ['mix', 'Mixed']] : gramDeck ? [['gfill', 'Fill the blank'], ['g2m', 'Meaning'], ['m2g', 'Pick grammar'], ['mix', 'Mixed']] : [['jp2en', 'Word → meaning'], ['en2jp', 'Meaning → word'], ['mix', 'Mixed']];
     return `<h1>Test</h1><p class="sub">No hints along the way. You'll get a full review at the end.</p>${tabs}
-    <div class="label">Deck</div>${seg([['vocab', 'Vocabulary'], ['kanji', 'Kanji']], S.tf.deck, 'App.tfDeck')}
+    <div class="label">Deck</div>${seg([['vocab', 'Vocabulary'], ['kanji', 'Kanji'], ['grammar', 'Grammar']], S.tf.deck, 'App.tfDeck')}
     <div class="label">Question type</div>${seg(dirs, S.tf.dir, 'App.tfDir')}
-    ${kanjiDeck ? `<div class="label">JLPT levels</div>${chips(LV.filter(l => levelTotal('kanji', l)).map(l => [l, `${l}<small>${fmtN(levelTotal('kanji', l))}</small>`]), settings.levels, 'App.lvToggle')}` : filters()}
+    ${kanjiDeck || gramDeck ? `<div class="label">JLPT levels</div>${chips(LV.filter(l => levelTotal(gramDeck ? 'grammar' : 'kanji', l)).map(l => [l, `${l}<small>${fmtN(levelTotal(gramDeck ? 'grammar' : 'kanji', l))}</small>`]), settings.levels, 'App.lvToggle')}` : filters()}
     <div class="label">Questions</div>${chips([[10, '10'], [20, '20'], [30, '30'], [50, '50']], S.tf.count, 'App.tfCount')}
-    ${!kanjiDeck && busy ? countNote : `<p class="note">${Math.min(pool.length, S.tf.count)} questions from ${fmtN(pool.length)} available.</p>`}
-    <button class="btn" onclick="App.startTest()" ${(!kanjiDeck && busy) || pool.length < 2 ? 'disabled' : ''}>Start test</button>`;
+    ${S.tf.deck === 'vocab' && busy ? countNote : `<p class="note">${Math.min(pool.length, S.tf.count)} questions from ${fmtN(pool.length)} available.</p>`}
+    <button class="btn" onclick="App.startTest()" ${(S.tf.deck === 'vocab' && busy) || pool.length < 2 ? 'disabled' : ''}>Start test</button>`;
   }
   return `<h1>Word list</h1><p class="sub">Tap any word for its full entry.</p>${tabs}${filters()}
   <div style="margin-top:14px">${seg([['freq', 'Most common'], ['level', 'Level'], ['kana', 'あいうえお']], S.browse.sort, 'App.bSort')}</div>
@@ -959,7 +1039,9 @@ function searchResults() {
   if (jp) kan = [...new Set([...q0].filter(c => KMAP[c]))].map(c => KMAP[c]);
   else if (q.length >= 2) kan = K.filter(k => k.mean.some(m => m.toLowerCase() === q)).slice(0, 12);
   const rows = scored.slice(0, 60).map(([, x]) => vRow(x)).join('');
+  const gram = G.filter(g => jp ? g.t.includes(q0) || plain(g.t).includes(q0) : (q.length >= 3 && g.m.toLowerCase().includes(q))).slice(0, 8);
   return `${kan.length ? `<div class="label">Kanji</div><div class="tiles" style="margin-top:0">${kan.map(k => `<button class="tile" data-open="${esc(k.id)}"><i class="dot ${status(k.id)}"></i><span class="tk jp">${k.k}</span><span class="tm">${esc(k.mean[0] || '')}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>` : ''}
+  ${gram.length ? `<div class="label">Grammar</div><div class="list" style="margin-top:0">${gram.map(gRow).join('')}</div>` : ''}
   <div class="label">Words ${scored.length ? `· ${scored.length > 60 ? 'top 60 of ' : ''}${fmtN(scored.length)}` : ''}</div>
   ${rows ? `<div class="list" style="margin-top:0">${rows}</div>` : '<p class="muted">No words found.</p>'}`;
 }
@@ -1051,7 +1133,7 @@ function autoFuri(t) {
 }
 function exHtml(e) {
   const j = e.j.includes('{') ? e.j : autoFuri(e.j);
-  return `<div class="ex"><div style="flex:1"><div class="jp">${ruby(j, true)}</div><div class="en">${esc(e.e)}</div>${e.t ? `<a class="src" href="https://tatoeba.org/en/sentences/show/${encodeURIComponent(e.t)}" target="_blank" rel="noopener">Tatoeba #${esc(e.t)}</a>` : ''}</div><button class="say inl" data-say="${esc(plain(e.j))}" aria-label="Play">🔊</button></div>`;
+  return `<div class="ex"><div style="flex:1"><div class="jp">${ruby(j, true)}</div>${e.r ? `<div class="en" style="font-style:italic">${esc(e.r)}</div>` : ''}<div class="en">${esc(e.e)}</div>${e.t ? `<a class="src" href="https://tatoeba.org/en/sentences/show/${encodeURIComponent(e.t)}" target="_blank" rel="noopener">Tatoeba #${esc(e.t)}</a>` : ''}</div><button class="say inl" data-say="${esc(plain(e.j))}" aria-label="Play">🔊</button></div>`;
 }
 function vDetail(x) {
   const ks = [...new Set([...x.w].filter(c => KMAP[c]))];
@@ -1087,13 +1169,13 @@ function kDetail(k) {
     <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong · next review ${p.d > Date.now() ? 'in ' + fmtIv(p.d - Date.now()) : 'due now'}` : 'Not studied yet'}${DATA.mode === 'full' ? ' · Stroke order: KanjiVG' : ''}</div>
   </div>`;
 }
-const detail = item => item.kind === 'vocab' ? vDetail(item) : kDetail(item);
+const detail = item => item.kind === 'vocab' ? vDetail(item) : item.kind === 'grammar' ? gDetail(item) : kDetail(item);
 
 /* ---------- similar-meaning kanji ----------
    Built from KANJIDIC meanings: kanji that share a meaning ("river"), a synonym
    group (river / stream / creek), or where one's meaning is the head word of the
    other's ("large river" ~ "river"). */
-const SYN = [['river','stream','creek','brook'],['big','large','great','huge','vast'],['small','little','tiny','minute'],['speak','talk','say','tell','speech','words','discuss'],['see','look','view','watch','observe','glance'],['think','consider','thought','ponder'],['road','way','street','path','route','avenue'],['house','home','dwelling','residence','abode'],['sea','ocean'],['begin','start','commence','beginning','origin'],['end','finish','terminate','conclude','close'],['fast','quick','rapid','swift','speedy'],['old','ancient','aged','former'],['tree','wood','timber','lumber'],['forest','woods','grove','thicket'],['stone','rock','boulder'],['red','crimson','scarlet'],['happy','glad','joy','pleasure','delight','rejoice'],['sad','sorrow','grief','grieve','mourning'],['fear','afraid','dread','fright','frightened'],['love','affection','fond'],['help','assist','aid','rescue','save'],['cold','chilly','frigid','freeze'],['hot','heat','swelter'],['warm','warmth','lukewarm'],['kill','slay','murder'],['buy','purchase'],['night','evening','dusk'],['mountain','peak','summit','hill'],['field','plain','meadow'],['cut','sever','chop','slice'],['wash','rinse','cleanse'],['stop','halt','cease'],['give','bestow','grant','confer'],['meet','encounter','interview'],['pull','tug','drag'],['push','shove','thrust'],['sound','noise','voice'],['country','nation','land','state'],['town','village','hamlet'],['shop','store','stall'],['picture','drawing','painting','paint','draw'],['door','gate','entrance'],['many','numerous','plenty','abundant'],['wide','broad','spacious'],['narrow','tight','cramped'],['deep','profound'],['shallow','superficial'],['fight','battle','war','struggle','combat'],['rule','law','regulation','statute'],['sell','sale'],['wait','await'],['correct','right','proper','justice'],['dark','gloomy','darkness','obscure'],['bright','brilliant','clear'],['hit','strike','beat'],['run','dash','race'],['walk','step','stroll'],['clothes','clothing','garment'],['grain','cereal'],['rice','rice plant'],['bird','fowl','chicken'],['dog','hound'],['jewel','gem','treasure'],['ship','boat','vessel'],['moist','wet','damp'],['dry','parch'],['fire','flame','blaze'],['light','shine','gleam','glitter'],['mind','heart','spirit'],['body','physique'],['wife','spouse'],['husband','man'],['woman','female','lady']];
+const SYN = [['eye','eyeball','eyes'],['tooth','teeth','fang'],['nose','snout'],['hair','fur','hairs'],['blood','gore'],['bone','skeleton'],['river','stream','creek','brook'],['big','large','great','huge','vast'],['small','little','tiny','minute'],['speak','talk','say','tell','speech','words','discuss'],['see','look','view','watch','observe','glance'],['think','consider','thought','ponder'],['road','way','street','path','route','avenue'],['house','home','dwelling','residence','abode'],['sea','ocean'],['begin','start','commence','beginning','origin'],['end','finish','terminate','conclude','close'],['fast','quick','rapid','swift','speedy'],['old','ancient','aged','former'],['tree','wood','timber','lumber'],['forest','woods','grove','thicket'],['stone','rock','boulder'],['red','crimson','scarlet'],['happy','glad','joy','pleasure','delight','rejoice'],['sad','sorrow','grief','grieve','mourning'],['fear','afraid','dread','fright','frightened'],['love','affection','fond'],['help','assist','aid','rescue','save'],['cold','chilly','frigid','freeze'],['hot','heat','swelter'],['warm','warmth','lukewarm'],['kill','slay','murder'],['buy','purchase'],['night','evening','dusk'],['mountain','peak','summit','hill'],['field','plain','meadow'],['cut','sever','chop','slice'],['wash','rinse','cleanse'],['stop','halt','cease'],['give','bestow','grant','confer'],['meet','encounter','interview'],['pull','tug','drag'],['push','shove','thrust'],['sound','noise','voice'],['country','nation','land','state'],['town','village','hamlet'],['shop','store','stall'],['picture','drawing','painting','paint','draw'],['door','gate','entrance'],['many','numerous','plenty','abundant'],['wide','broad','spacious'],['narrow','tight','cramped'],['deep','profound'],['shallow','superficial'],['fight','battle','war','struggle','combat'],['rule','law','regulation','statute'],['sell','sale'],['wait','await'],['correct','right','proper','justice'],['dark','gloomy','darkness','obscure'],['bright','brilliant','clear'],['hit','strike','beat'],['run','dash','race'],['walk','step','stroll'],['clothes','clothing','garment'],['grain','cereal'],['rice','rice plant'],['bird','fowl','chicken'],['dog','hound'],['jewel','gem','treasure'],['ship','boat','vessel'],['moist','wet','damp'],['dry','parch'],['fire','flame','blaze'],['light','shine','gleam','glitter'],['mind','heart','spirit'],['body','physique'],['wife','spouse'],['husband','man'],['woman','female','lady']];
 const SYN_OF = new Map(); SYN.forEach((g, i) => g.forEach(w => SYN_OF.set(w, i)));
 const MSTOP = new Set('a an the of to and or in on at for with by be as is it its one no not radical counter kana prefix suffix honorific sound used make become thing something'.split(' '));
 const normM = m => String(m).toLowerCase().replace(/\(.*?\)/g, '').replace(/^(to|a|an|the)\s+/, '').replace(/[.,;:!?'"]/g, '').replace(/\s+/g, ' ').trim();
@@ -1101,12 +1183,18 @@ function mkeys(k) {
   if (k._mk) return k._mk;
   const full = new Set(), syn = new Set(), weak = new Set();
   for (const m of k.mean) {
+    // bracketed hints count too: "pupil (eye)" is about the eye
+    for (const [, inner] of String(m).toLowerCase().matchAll(/\(([^)]*)\)/g)) {
+      const h = normM(inner);
+      if (h && !/\d/.test(h) && h.split(' ').length <= 2 && !MSTOP.has(h) && !/radical|kana/.test(h)) { weak.add(h); if (SYN_OF.has(h)) syn.add(SYN_OF.get(h)); }
+    }
     const n = normM(m); if (!n || /radical|katakana|hiragana/.test(n)) continue;
     full.add(n);
     const ws = n.split(' ').filter(w => w.length > 2 && !MSTOP.has(w));
     if (SYN_OF.has(n)) syn.add(SYN_OF.get(n));
     else if (ws.length === 1 && SYN_OF.has(ws[0])) syn.add(SYN_OF.get(ws[0]));
-    if (ws.length > 1) weak.add(ws[ws.length - 1]);
+    // the head word of a phrase: "hair of the head" → hair, "large river" → river
+    if (ws.length > 1) { const head = / of /.test(n) ? n.split(' of ')[0].split(' ').pop() : ws[ws.length - 1]; if (head && !MSTOP.has(head)) { weak.add(head); if (SYN_OF.has(head)) syn.add(SYN_OF.get(head)); } }
   }
   return (k._mk = { full, syn, weak });
 }
@@ -1169,13 +1257,14 @@ function hydrate(root = document) {
    ===================================================================== */
 function distract(item, pool, key, same, n = 3) {
   const k0 = key(item), seen = new Set([k0]), out = [];
-  const clash = item.kind === 'kanji' ? x => kanjiOverlap(item, x) : x => vocabOverlap(item, x);
+  const clash = item.kind === 'kanji' ? x => kanjiOverlap(item, x) : item.kind === 'grammar' ? x => grammarOverlap(item, x) : x => vocabOverlap(item, x);
   const others = pool.filter(x => x.id !== item.id && !clash(x));
   const near = shuffle(others.filter(same)).slice(0, 60), far = shuffle(others).slice(0, 60);
   for (const x of near.concat(far)) { if (out.length >= n) break; const kx = key(x); if (!seen.has(kx)) { seen.add(kx); out.push(x); } }
   return out;
 }
 function makeQ(kind, item, dir) {
+  if (kind === 'grammar') return makeGrammarQ(item, dir);
   if (kind === 'vocab') {
     const pool = V.length > 40 ? V.filter(x => x.lvl === item.lvl || Math.abs(LV.indexOf(x.lvl) - LV.indexOf(item.lvl)) <= 1) : V;
     if (dir === 'jp2en') {
@@ -1212,6 +1301,7 @@ function pickWeighted(pool, recent) {
 }
 function learnPool(kind) {
   if (kind === 'kanji') return kSelection();
+  if (kind === 'grammar') return gSel();
   // keep sessions focused: studied-but-not-known words + the most frequent unseen ones
   const sel = vSel(); const seen = sel.filter(x => progress[x.id] && status(x.id) !== 'known'), fresh = sel.filter(x => !progress[x.id]).sort((a, b) => b.freq - a.freq);
   const known = sel.filter(x => status(x.id) === 'known');
@@ -1221,12 +1311,12 @@ function learnPool(kind) {
 function startLearn(kind) {
   const pool = learnPool(kind);
   if (pool.length < 2) return toast('Select at least two items');
-  S.session = { mode: 'learn', kind, pool, dir: kind === 'vocab' ? S.vf.dir : S.kf.qt, seen: 0, correct: 0, streak: 0, recent: [] };
+  S.session = { mode: 'learn', kind, pool, dir: kind === 'vocab' ? S.vf.dir : kind === 'grammar' ? S.gq : S.kf.qt, seen: 0, correct: 0, streak: 0, recent: [] };
   nextQ();
 }
 function startTest(items) {
   const kind = S.tf.deck;
-  const pool = kind === 'vocab' ? vSel() : K.filter(k => settings.levels.includes(k.lvl));
+  const pool = kind === 'vocab' ? vSel() : kind === 'grammar' ? G.filter(g => settings.levels.includes(g.lvl)) : K.filter(k => settings.levels.includes(k.lvl));
   if (pool.length < 2) return toast('Nothing to test');
   S.session = { mode: 'test', kind, pool, queue: items || shuffle(pool).slice(0, S.tf.count), idx: 0, dir: S.tf.dir, results: [] };
   nextQ();
@@ -1236,14 +1326,14 @@ function nextQ() {
   if (s.mode === 'test') { if (s.idx >= s.queue.length) { s.done = true; render(); window.scrollTo(0, 0); return; } item = s.queue[s.idx]; }
   else item = pickWeighted(s.pool, s.recent);
   let dir = s.dir;
-  if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp'] : ['k2m', 'm2k', 'k2r']);
+  if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp'] : s.kind === 'grammar' ? ['gfill', 'gfill', 'g2m', 'm2g'] : ['k2m', 'm2k', 'k2r']);
   s.q = makeQ(s.kind, item, dir); s.answered = false; s.chosen = -1;
   if (s.mode === 'learn') { s.recent.push(item.id); if (s.recent.length > Math.min(5, s.pool.length - 1)) s.recent.shift(); }
   render(); window.scrollTo(0, 0);
   if (settings.autoSpeak && s.q.jp) speak(s.q.say);
 }
 function answer(i) {
-  const s = S.session; if (!s || s.mode === 'cards' || s.answered || s.done || !s.q.opts[i]) return;
+  const s = S.session; if (!s || s.mode === 'cards' || s.mode === 'exam' || s.answered || s.done || !s.q.opts[i]) return;
   s.answered = true; s.chosen = i; const ok = s.q.opts[i].ok;
   rec(s.q.item, ok);
   if (s.mode === 'learn') { s.seen++; if (ok) { s.correct++; s.streak++; } else s.streak = 0; }
@@ -1254,7 +1344,7 @@ function answer(i) {
 function next() { const s = S.session; if (!s) return; if (s.mode === 'test') s.idx++; nextQ(); }
 
 function cardQueue(kind, cram) {
-  const pool = kind === 'vocab' ? vSel() : kSelection();
+  const pool = kind === 'vocab' ? vSel() : kind === 'grammar' ? gSel() : kSelection();
   if (cram) return shuffle(pool).slice(0, 20);
   const now = Date.now();
   const due = pool.filter(x => isDue(x.id, now)).sort((a, b) => progress[a.id].d - progress[b.id].d);
@@ -1305,12 +1395,12 @@ function renderCards() {
   const item = s.queue[s.idx], vocab = s.kind === 'vocab';
   const frontJp = !vocab || settings.cardFront === 'jp';
   const front = vocab ? (frontJp ? `<div class="pword jp">${ruby(item.f)}</div>${settings.romaji ? `<div class="proma">${esc(toRomaji(item.r))}</div>` : ''}` : `<div class="pmean">${esc(item.m)}</div>`)
-    : `<div class="pkanji jp">${item.k}</div>`;
+    : s.kind === 'grammar' ? `<div class="pword jp gq">${esc(item.t)}</div>` : `<div class="pkanji jp">${item.k}</div>`;
   const remaining = s.queue.length - s.idx;
   const head = `<div class="qtop"><span class="qnav"><button class="ghost" onclick="App.endSession()">✕ End</button>${s.hist.length ? `<button class="ghost backbtn" onclick="App.back()" title="Previous card (undo its rating)">‹ Back</button>` : ''}</span><span>${remaining} left · ${progress[item.id] ? (isDue(item.id) ? 'review' : 'again') : '<b style="color:var(--accent)">new</b>'}</span></div>
     <div class="qbar"><i style="width:${(s.idx / s.queue.length) * 100}%"></i></div>`;
-  if (!s.flipped) return `${head}<div class="card fcard" onclick="App.flip()"><span class="side">${vocab ? (frontJp ? 'Word' : 'Meaning') : 'Kanji'}</span>${front}<div class="pmeta"><span class="tag lv">${lvName(item.lvl)}</span>${freqBadge(item.freq)}</div>${frontJp && vocab ? `<button class="say" data-say="${esc(item.r)}" aria-label="Play">🔊</button>` : ''}</div>
-    <p class="hint">${vocab ? (frontJp ? 'Recall the meaning (and reading).' : 'Recall the Japanese word.') : 'Recall the meaning and readings.'}</p>
+  if (!s.flipped) return `${head}<div class="card fcard" onclick="App.flip()"><span class="side">${vocab ? (frontJp ? 'Word' : 'Meaning') : s.kind === 'grammar' ? 'Grammar' : 'Kanji'}</span>${front}<div class="pmeta"><span class="tag lv">${lvName(item.lvl)}</span>${s.kind === 'grammar' ? '' : freqBadge(item.freq)}</div>${frontJp && vocab ? `<button class="say" data-say="${esc(item.r)}" aria-label="Play">🔊</button>` : ''}</div>
+    <p class="hint">${vocab ? (frontJp ? 'Recall the meaning (and reading).' : 'Recall the Japanese word.') : s.kind === 'grammar' ? 'Recall what it means and how it\'s formed.' : 'Recall the meaning and readings.'}</p>
     <button class="btn" onclick="App.flip()">Show answer</button>`;
   const lab = g => fmtIv(schedule(item, g, true));
   return `${head}<div class="card">${detail(item)}</div>
@@ -1324,6 +1414,7 @@ function renderCards() {
 function renderSession() {
   const s = S.session;
   if (s.mode === 'cards') return renderCards();
+  if (s.mode === 'exam') return renderExam();
   if (s.done) return renderResults();
   const q = s.q, test = s.mode === 'test';
   const head = test ? `<span>Question ${s.idx + 1} of ${s.queue.length}</span>` : `<span>🔥 ${s.streak} streak · ${s.correct}/${s.seen} correct</span>`;
@@ -1360,13 +1451,406 @@ function renderResults() {
 }
 
 /* =====================================================================
+   GRAMMAR (hanabira.org when built, starter set otherwise)
+   ===================================================================== */
+let G = [], GMAP = {};
+function normG(x, lvl) {
+  return { id: 'g:' + lvl + ':' + x.t, kind: 'grammar', t: x.t, m: x.m || '', x: x.x || '', fm: x.fm || '', ex: x.ex || [], lvl, freq: 3 };
+}
+function starterGrammar() {
+  const out = {};
+  for (const l of LV) out[l] = (STARTER_GRAMMAR[l] || []).map(a => ({ t: a[0], m: a[1], fm: a[2], x: a[3], ex: a[4].map(([j, e]) => ({ j, e })) }));
+  return out;
+}
+const grammarFull = () => DATA.mode === 'full' && DATA.meta && DATA.meta.counts && DATA.meta.counts.grammar && Object.values(DATA.meta.counts.grammar).some(n => n > 0);
+const gLevels = () => LV.filter(l => levelTotal('grammar', l) > 0);
+const gSelLevels = () => { const a = gLevels().filter(l => settings.glevels.includes(l)); return a.length ? a : gLevels().slice(0, 1); };
+function loadGrammar(levels) { return Promise.all((levels || gSelLevels()).map(l => load('grammar', l))); }
+function gSel() {
+  const lv = gSelLevels(), q = (S.gf.q || '').trim().toLowerCase();
+  return G.filter(g => lv.includes(g.lvl) && (!q || g.t.toLowerCase().includes(q) || g.m.toLowerCase().includes(q) || plain(g.t).includes(q)));
+}
+
+/** Japanese forms of a grammar point that can be found in (and blanked out of) a sentence.
+    "〜てはいけない" → てはいけない, てはいけません; "だ / です" → だ, です; "たことがある" → …あります */
+function gVariants(g) {
+  if (g._v) return g._v;
+  const base = plain(g.t).replace(/[（(][^）)]*[）)]/g, ' ').split(/[\/／・,、;…]|\.\.\.|\s+or\s+/)
+    .map(x => x.replace(/[〜~～…]|[A-Za-z+]+|\s+/g, '').trim()).filter(x => /[぀-ヿ㐀-鿿]/.test(x));
+  const out = [], push = (v, tag) => { if (v && !out.some(o => o.v === v)) out.push({ v, tag }); };
+  const U = { う: 'い', く: 'き', ぐ: 'ぎ', す: 'し', つ: 'ち', ぬ: 'に', ぶ: 'び', む: 'み' };
+  for (const b of base) {
+    push(b, 'plain');
+    if (/(ます|です|ましょう|でしょう|ません|ました|でした)$/.test(b)) continue; // already conjugated
+    if (/ならない$/.test(b)) push(b.replace(/ならない$/, 'なりません'), 'masen');
+    else if (/ない$/.test(b)) push(b.replace(/ない$/, 'ません'), 'masen');
+    if (/だ$/.test(b)) push(b.replace(/だ$/, 'です'), 'desu');
+    if (/ある$/.test(b)) push(b.replace(/ある$/, 'あります'), 'masu');
+    else if (/る$/.test(b)) push(b.slice(0, -1) + 'ます', 'masu');
+    else if (U[b.slice(-1)]) push(b.slice(0, -1) + U[b.slice(-1)] + 'ます', 'masu');
+  }
+  return (g._v = out);
+}
+/** Find an example sentence containing one of the grammar's forms (longest match wins). */
+function gBlank(g) {
+  const vs = gVariants(g).slice().sort((a, b) => b.v.length - a.v.length);
+  for (const e of shuffle(g.ex)) {
+    const p = plain(e.j);
+    for (const v of vs) { const i = p.indexOf(v.v); if (i >= 0) return { e, p, v, i }; }
+  }
+  return null;
+}
+const grammarOverlap = (a, b) => normM(a.m) === normM(b.m) || a.t === b.t;
+/** Wrong options for a fill-in grammar question, in the same politeness as the blank. */
+function gFillOpts(item, v, pool, sentence) {
+  const cands = [], seen = new Set([v.v]), L = v.v.length;
+  for (const x of shuffle(pool)) {
+    if (x === item || grammarOverlap(item, x)) continue;
+    const vs = gVariants(x); const c = vs.find(o => o.tag === v.tag) || vs[0];
+    if (!c || seen.has(c.v) || c.v.includes(v.v) || v.v.includes(c.v)) continue;
+    seen.add(c.v); cands.push({ v: c.v, score: Math.abs(c.v.length - L) + (c.tag === v.tag ? 0 : 2) });
+  }
+  // prefer options that look like the answer: similar length, same politeness
+  return cands.sort((a, b) => a.score - b.score).slice(0, 3).map(c => c.v);
+}
+function gDetail(g) {
+  const p = progress[g.id];
+  return `<div class="detail force">
+    <div class="dtop"><div class="gtitle jp">${esc(g.t)}</div>${gVariants(g)[0] ? `<button class="say inl" data-say="${esc(gVariants(g)[0].v)}" aria-label="Play">🔊</button>` : ''}</div>
+    <div class="tags"><span class="tag lv">${g.lvl}</span><span class="tag">grammar</span></div>
+    <div class="dmean">${esc(g.m)}</div>
+    ${g.fm ? `<div class="gform"><b>Formation</b><div class="jp">${esc(g.fm).replace(/\n/g, '<br>')}</div></div>` : ''}
+    ${g.x ? `<div class="gexpl">${esc(g.x).replace(/\n+/g, '<br>')}</div>` : ''}
+    ${g.ex.length ? `<div class="mini">Examples</div>${g.ex.map(exHtml).join('')}` : ''}
+    <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong · next review ${p.d > Date.now() ? 'in ' + fmtIv(p.d - Date.now()) : 'due now'}` : 'Not studied yet'}${grammarFull() ? ' · Grammar from <a href="https://hanabira.org/" target="_blank" rel="noopener">hanabira.org</a>' : ''}</div>
+  </div>`;
+}
+function gRow(g) {
+  return `<button class="row" data-open="${esc(g.id)}"><i class="dot ${status(g.id)}"></i><span class="rw jp gt">${esc(g.t)}</span><span class="rm">${esc(g.m)}</span><span class="lvl">${g.lvl}</span></button>`;
+}
+function gList() {
+  const rows = gSel();
+  if (!rows.length) return '<p class="muted">No grammar points match.</p>';
+  const shown = rows.slice(0, S.gf.limit);
+  return shown.map(gRow).join('') + (rows.length > shown.length ? `<button class="btn sec" onclick="App.gMore()">Show more (${rows.length - shown.length} left)</button>` : '');
+}
+function vGrammar() {
+  const lv = gLevels();
+  const busy = gSelLevels().some(l => !isLoaded('grammar', l));
+  const sel = busy ? [] : gSel(), now = Date.now(), due = sel.filter(g => isDue(g.id, now)).length;
+  return `<h1>Grammar</h1><p class="sub">${grammarFull() ? `${fmtN(lv.reduce((a, l) => a + levelTotal('grammar', l), 0))} JLPT grammar points from hanabira.org.` : 'Starter grammar set. The full N5–N1 grammar from hanabira.org loads once the GitHub Action has built it.'} Tap one for formation, explanation and examples.</p>
+  <div class="label">JLPT levels</div>${chips(lv.map(l => [l, `${l}<small>${fmtN(levelTotal('grammar', l))}</small>`]), gSelLevels(), 'App.glvToggle')}
+  <div class="label">Quiz type</div>${seg([['gfill', 'Fill the blank'], ['g2m', 'Meaning'], ['m2g', 'Pick grammar'], ['mix', 'Mixed']], S.gq, 'App.gqSet')}
+  <div class="btnrow"><button class="btn" onclick="App.startCards('grammar')" ${busy || !sel.length ? 'disabled' : ''}>Flashcards${due ? ` · ${due} due` : ''}</button><button class="btn sec" onclick="App.startLearn('grammar')" ${busy || sel.length < 2 ? 'disabled' : ''}>Quiz</button></div>
+  <input class="search" style="margin-top:16px" placeholder="Filter, e.g. たい, want, must" value="${esc(S.gf.q)}" oninput="App.gSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span></div>
+  ${busy ? '<div class="loading">Loading grammar…</div>' : `<div class="list" id="glist">${gList()}</div>`}`;
+}
+function makeGrammarQ(item, dir) {
+  const same = G.filter(x => x.lvl === item.lvl), pool = same.length >= 6 ? same : G;
+  const meta = `<span class="tag lv">${item.lvl}</span><span class="tag">grammar</span>`;
+  if (dir === 'gfill') {
+    const b = gBlank(item);
+    if (b) {
+      const wrong = gFillOpts(item, b.v, pool);
+      if (wrong.length >= 2) {
+        const opts = shuffle([{ html: `<span class="jp cjp">${esc(b.v.v)}</span>`, ok: true }, ...wrong.map(w => ({ html: `<span class="jp cjp">${esc(w)}</span>`, ok: false }))]);
+        return { item, dir, jp: true, say: b.p, hint: 'Which grammar fits the blank?', grid: true, meta,
+          prompt: `<div class="psent jp">${esc(b.p.slice(0, b.i))}<span class="blank">　</span>${esc(b.p.slice(b.i + b.v.v.length))}</div>${b.e.e ? `<div class="proma">${esc(b.e.e)}</div>` : ''}`, opts };
+      }
+    }
+    dir = 'g2m';
+  }
+  const others = shuffle(pool.filter(x => x !== item && !grammarOverlap(item, x) && x.m)).slice(0, 3);
+  if (dir === 'm2g') {
+    const opts = shuffle([item, ...others]).map(x => ({ html: `<span class="jp cjp">${esc(x.t)}</span>`, ok: x === item }));
+    return { item, dir, jp: false, say: (gVariants(item)[0] || {}).v || '', hint: 'Which grammar has this meaning?', grid: true, meta, prompt: `<div class="pmean">${esc(item.m)}</div>`, opts };
+  }
+  const opts = shuffle([item, ...others]).map(x => ({ html: esc(x.m), ok: x === item }));
+  return { item, dir, jp: true, say: (gVariants(item)[0] || {}).v || '', hint: 'What does this grammar mean?', grid: false, meta, prompt: `<div class="pword jp gq">${esc(item.t)}</div>`, opts };
+}
+
+/* =====================================================================
+   JLPT-STYLE MOCK EXAM
+   Question types follow the JLPT papers; questions are generated from the
+   app's own dictionary, grammar and Tatoeba data (official papers are the
+   Japan Foundation's copyright). Pass marks are the official ones from
+   jlpt.jp; the score is an estimate because reading (読解) isn't included.
+   ===================================================================== */
+const EXAM_SECTIONS = [
+  { key: 'kr', sec: 'vocab', jp: '漢字読み', en: 'Kanji reading', instr: '＿＿の ことばは ひらがなで どう かきますか。', instrEn: 'How is the underlined word read?' },
+  { key: 'hy', sec: 'vocab', jp: '表記', en: 'Writing', instr: '＿＿の ことばは どう かきますか。', instrEn: 'How is the underlined word written?' },
+  { key: 'bm', sec: 'vocab', jp: '文脈規定', en: 'Word in context', instr: '（　　）に なにを いれますか。', instrEn: 'Which word fits the blank?' },
+  { key: 'ik', sec: 'vocab', jp: '言い換え類義', en: 'Closest meaning', instr: '＿＿の ことばに いちばん ちかい いみは どれですか。', instrEn: 'Which meaning is closest to the underlined word?' },
+  { key: 'gf', sec: 'grammar', jp: '文法形式の判断', en: 'Grammar form', instr: '（　　）に 何を 入れますか。', instrEn: 'Which grammar fits the blank?' },
+  { key: 'ord', sec: 'grammar', jp: '文の組み立て', en: 'Sentence order', instr: '★ に 入る ものは どれですか。', instrEn: 'Put the four parts in order. Which one goes in ★?' },
+  { key: 'li', sec: 'listen', jp: '聴解', en: 'Listening', instr: '音声を 聞いて、正しい いみを えらんで ください。', instrEn: 'Listen, then choose the correct meaning.' }
+];
+const EXAM_COUNTS = {
+  N5: { kr: 7, hy: 5, bm: 6, ik: 3, gf: 9, ord: 4, li: 8 },
+  N4: { kr: 7, hy: 5, bm: 7, ik: 4, gf: 10, ord: 4, li: 8 },
+  N3: { kr: 8, hy: 6, bm: 8, ik: 5, gf: 10, ord: 5, li: 9 },
+  N2: { kr: 5, hy: 5, bm: 7, ik: 5, gf: 10, ord: 5, li: 9 },
+  N1: { kr: 6, hy: 0, bm: 7, ik: 6, gf: 10, ord: 5, li: 9 }
+};
+/* official pass marks (jlpt.jp): N4/N5 language knowledge+reading 0–120 & listening 0–60; N1–N3 three sections of 0–60 */
+const PASS = { N1: { total: 100, two: false }, N2: { total: 90, two: false }, N3: { total: 95, two: false }, N4: { total: 90, two: true }, N5: { total: 80, two: true } };
+const SEC_PER_Q = 55;
+
+const hiraOnly = s => /^[぀-ゟ]+$/.test(s);
+const exPlain = x => { for (const e of x.ex || []) { const p = plain(e.j); if (x.w && p.includes(x.w)) return { p, e }; } return null; };
+const underline = (p, w, shown) => { const i = p.indexOf(w); return esc(p.slice(0, i)) + `<u>${esc(shown ?? w)}</u>` + esc(p.slice(i + w.length)); };
+const DAK = { か: 'が', き: 'ぎ', く: 'ぐ', け: 'げ', こ: 'ご', さ: 'ざ', し: 'じ', す: 'ず', せ: 'ぜ', そ: 'ぞ', た: 'だ', ち: 'ぢ', て: 'で', と: 'ど', は: 'ば', ひ: 'び', ふ: 'ぶ', へ: 'べ', ほ: 'ぼ' };
+const UNDAK = Object.fromEntries(Object.entries(DAK).map(([a, b]) => [b, a]));
+/** Plausible wrong readings, the way JLPT distractors work: voicing, small っ, long vowels. */
+function mutateReading(r) {
+  const out = new Set(), ch = [...r];
+  ch.forEach((c, i) => { const d = DAK[c] || UNDAK[c]; if (d && i < 3) { const a = ch.slice(); a[i] = d; out.add(a.join('')); } });
+  if (r.includes('っ')) out.add(r.replace('っ', ''));
+  else for (let i = 1; i < ch.length; i++) if ('かきくけこさしすせそたちつてとぱぴぷぺぽ'.includes(ch[i])) { out.add(ch.slice(0, i).join('') + 'っ' + ch.slice(i).join('')); break; }
+  if (/ょう|ゅう/.test(r)) out.add(r.replace(/(ょ|ゅ)う/, '$1'));
+  else if (/[ょゅ]/.test(r)) out.add(r.replace(/(ょ|ゅ)/, '$1う'));
+  if (/[こそとのほもよろごぞどぼぽ]う/.test(r)) out.add(r.replace(/([こそとのほもよろごぞどぼぽ])う/, '$1'));
+  else { const m = /[こそとのほもろごぞどぼぽ](?!う)/.exec(r); if (m) out.add(r.slice(0, m.index + 1) + 'う' + r.slice(m.index + 1)); }
+  if (/ょ/.test(r)) out.add(r.replace('ょ', 'ゅ')); else if (/ゅ/.test(r)) out.add(r.replace('ゅ', 'ょ'));
+  out.delete(r);
+  return shuffle([...out]);
+}
+function fillFour(correct, wrong) {
+  const opts = [correct], seen = new Set([correct]);
+  for (const w of wrong) { if (opts.length >= 4) break; if (w && !seen.has(w)) { seen.add(w); opts.push(w); } }
+  if (opts.length < 4) return null;
+  const sh = shuffle(opts); return { opts: sh, ans: sh.indexOf(correct) };
+}
+const EXAM_GEN = {
+  kr(x, l, pool) {
+    if (!x.w || ![...x.w].some(isK) || !hiraOnly(x.r)) return null;
+    const s = exPlain(x);
+    const near = pool.filter(y => y !== x && hiraOnly(y.r) && [...y.w].some(c => isK(c) && x.w.includes(c))).map(y => y.r);
+    const len = pool.filter(y => y !== x && hiraOnly(y.r) && Math.abs(y.r.length - x.r.length) <= 1).map(y => y.r);
+    const f = fillFour(x.r, [...mutateReading(x.r), ...shuffle(near), ...shuffle(len)]); if (!f) return null;
+    return { item: x, prompt: s ? `<div class="psent jp">${underline(s.p, x.w)}</div>` : `<div class="pword jp"><u>${esc(x.w)}</u></div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts };
+  },
+  hy(x, l, pool) {
+    if (!x.w || ![...x.w].some(isK) || !hiraOnly(x.r)) return null;
+    const wrong = [];
+    [...x.w].forEach((c, i) => {
+      const k = KMAP[c]; if (!k) return;
+      const alts = K.filter(o => o !== k && (o.on.some(r => k.on.includes(r)) || o.kun.some(r => k.kun.length && r.split('.')[0] === k.kun[0].split('.')[0])));
+      for (const o of shuffle(alts).slice(0, 2)) { const a = [...x.w]; a[i] = o.k; wrong.push(a.join('')); }
+    });
+    const similar = pool.filter(y => y !== x && [...y.w].some(isK) && y.w.length === x.w.length).map(y => y.w);
+    const f = fillFour(x.w, [...shuffle(wrong), ...shuffle(similar)].filter(w => !VMAP['v:' + w + '|' + x.r])); if (!f) return null;
+    const s = exPlain(x);
+    return { item: x, prompt: s ? `<div class="psent jp">${underline(s.p, x.w, x.r)}</div>` : `<div class="pword jp"><u>${esc(x.r)}</u></div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts };
+  },
+  bm(x, l, pool) {
+    const s = exPlain(x); if (!s) return null;
+    const wrong = shuffle(pool.filter(y => y !== x && y.pos === x.pos && y.w && !s.p.includes(y.w) && !vocabOverlap(x, y))).map(y => y.w);
+    const f = fillFour(x.w, wrong); if (!f) return null;
+    const i = s.p.indexOf(x.w);
+    return { item: x, prompt: `<div class="psent jp">${esc(s.p.slice(0, i))}（　　）${esc(s.p.slice(i + x.w.length))}</div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts };
+  },
+  ik(x, l, pool) {
+    if (!x.m) return null;
+    const s = exPlain(x);
+    const wrong = shuffle(pool.filter(y => y !== x && y.pos === x.pos && !vocabOverlap(x, y))).map(y => y.m);
+    const f = fillFour(x.m, wrong); if (!f) return null;
+    return { item: x, prompt: s ? `<div class="psent jp">${underline(s.p, x.w)}</div>` : `<div class="pword jp"><u>${esc(x.w)}</u></div>`, opts: f.opts.map(esc), ans: f.ans, raw: f.opts };
+  },
+  gf(g, l, pool) {
+    const b = gBlank(g); if (!b) return null;
+    const f = fillFour(b.v.v, gFillOpts(g, b.v, pool)); if (!f) return null;
+    return { item: g, prompt: `<div class="psent jp">${esc(b.p.slice(0, b.i))}（　　）${esc(b.p.slice(b.i + b.v.v.length))}</div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts };
+  },
+  ord(x) {
+    for (const e of shuffle(x.ex || [])) {
+      const c = chunkSentence(plain(e.j)); if (!c || c.parts.length < 4) continue;
+      const start = Math.floor(Math.random() * (c.parts.length - 3));
+      const four = c.parts.slice(start, start + 4);
+      if (new Set(four).size < 4) continue;
+      const star = four[2], sh = shuffle(four);
+      const pre = c.parts.slice(0, start).join(''), post = c.parts.slice(start + 4).join('') + c.end;
+      return { item: x, prompt: `<div class="psent jp">${esc(pre)}<span class="slot"></span><span class="slot"></span><span class="slot star">★</span><span class="slot"></span>${esc(post)}</div>${e.e ? `<div class="proma">${esc(e.e)}</div>` : ''}`,
+        opts: sh.map(o => `<span class="jp">${esc(o)}</span>`), ans: sh.indexOf(star), raw: sh, full: plain(e.j) };
+    }
+    return null;
+  },
+  li(x, l, pool) {
+    if (!('speechSynthesis' in window)) return null;
+    const e = (x.ex || []).find(e => e.e && plain(e.j).length <= 40); if (!e) return null;
+    const wrong = shuffle(pool.flatMap(y => (y.ex || []).map(z => z.e)).filter(t => t && t !== e.e));
+    const f = fillFour(e.e, wrong); if (!f) return null;
+    return { item: x, say: plain(e.j), prompt: `<button class="listen" data-say="${esc(plain(e.j))}">🔊 Play</button><div class="proma">Tap to replay as often as you like.</div>`, opts: f.opts.map(esc), ans: f.ans, raw: f.opts, full: plain(e.j) };
+  }
+};
+/** Split a sentence into JLPT-style chunks (文節): each chunk is a content word plus the
+    particles / endings after it. Content words are found by longest match against the word list. */
+const FUNC = ['なければなりません', 'なければならない', 'なければ', 'ていません', 'ています', 'ている', 'てください', 'ないでください', 'ください', 'ながら', 'かもしれません', 'かもしれない', 'ことがあります', 'ことがある', 'つもり', 'ければ', 'ではありません', 'じゃありません', 'ませんでした', 'ましょう', 'でした', 'ました', 'ません', 'ます', 'です', 'でしょう', 'だった', 'から', 'まで', 'より', 'ので', 'のに', 'けど', 'たい', 'ない', 'たら', 'ても', 'では', 'には', 'とは', 'へは', 'だ', 'は', 'が', 'を', 'に', 'で', 'と', 'へ', 'も', 'の', 'や', 'か', 'ね', 'よ', 'て', 'た', 'ば', '、'].sort((a, b) => b.length - a.length);
+let SEGIDX = null;
+function segIndex() {
+  if (SEGIDX && SEGIDX.n === V.length) return SEGIDX;
+  const words = new Set(); let max = 1;
+  for (const x of V) for (const w of [x.w, x.r]) if (w && (w.length >= 2 || [...w].some(isK))) { words.add(w); max = Math.max(max, w.length); }
+  return (SEGIDX = { words, max: Math.min(max, 10), n: V.length });
+}
+function chunkSentence(p) {
+  const m = /[。！？!?]+$/.exec(p); const end = m ? m[0] : ''; const body = end ? p.slice(0, -end.length) : p;
+  const { words, max } = segIndex(), toks = [];
+  for (let i = 0; i < body.length;) {
+    let t = null;
+    for (let L = Math.min(max, body.length - i); L >= 1 && !t; L--) { const w = body.slice(i, i + L); if (words.has(w)) t = { t: w, f: false }; }
+    if (!t) { const f = FUNC.find(f => body.startsWith(f, i)); if (f && toks.length) t = { t: f, f: true }; }
+    if (!t) t = { t: body[i], f: false, u: true };
+    const last = toks[toks.length - 1];
+    if (t.u && last && last.u) last.t += t.t; else toks.push(t);
+    i += t.t.length;
+  }
+  const parts = []; let cur = '', prevFunc = false;
+  for (const t of toks) {
+    if (!t.f && cur && (prevFunc || /^[\u30a0-\u30ff]/.test(t.t))) { parts.push(cur); cur = ''; }
+    cur += t.t; prevFunc = t.f;
+  }
+  if (cur) parts.push(cur);
+  return { parts: parts.filter(Boolean), end };
+}
+function buildExam(l) {
+  const counts = EXAM_COUNTS[l], words = (DATA.vocab[l] || []).filter(x => x.w), gram = G.filter(g => g.lvl === l);
+  const qs = [], used = new Set();
+  EXAM_SECTIONS.forEach((sec, si) => {
+    let n = counts[sec.key] || 0;
+    const cands = sec.key === 'ord' ? shuffle(gram).concat(shuffle(words)) : sec.sec === 'grammar' ? shuffle(gram) : shuffle(words);
+    const pool = sec.sec === 'grammar' && sec.key === 'gf' ? (gram.length >= 6 ? gram : G) : words;
+    for (const it of cands) {
+      if (n <= 0) break;
+      const tag = it.id + '|' + sec.sec; if (used.has(tag)) continue;
+      const q = EXAM_GEN[sec.key](it, l, pool);
+      if (q) { q.key = sec.key; q.si = si; qs.push(q); used.add(tag); n--; }
+    }
+  });
+  return qs;
+}
+const fmtClock = ms => { const t = Math.max(0, Math.ceil(ms / 1000)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };
+let examTimer = null;
+function stopExamTimer() { if (examTimer) { clearInterval(examTimer); examTimer = null; } }
+async function startExam() {
+  const l = S.examLv;
+  try { await Promise.all([load('vocab', l), load('grammar', l)]); } catch (e) {}
+  const qs = buildExam(l);
+  if (qs.length < 10) return toast(`Not enough ${l} data for a mock exam yet`);
+  S.session = { mode: 'exam', level: l, qs, idx: 0, ans: qs.map(() => -1), start: Date.now(), limit: qs.length * SEC_PER_Q * 1000, done: false,
+    skippedListening: !('speechSynthesis' in window) };
+  stopExamTimer();
+  examTimer = setInterval(() => {
+    const s = S.session; if (!s || s.mode !== 'exam' || s.done) return stopExamTimer();
+    const left = s.limit - (Date.now() - s.start), el = $('#etimer');
+    if (el) { el.textContent = '⏱ ' + fmtClock(left); el.classList.toggle('low', left < 120e3); }
+    if (left <= 0) { toast("Time's up!"); finishExam(true); }
+  }, 1000);
+  render(); window.scrollTo(0, 0);
+  examAutoplay();
+}
+function examAutoplay() { const s = S.session; const q = s && s.qs[s.idx]; if (q && q.key === 'li' && q.say) setTimeout(() => speak(q.say), 300); }
+function examPick(i) {
+  const s = S.session; if (!s || s.mode !== 'exam' || s.done) return;
+  s.ans[s.idx] = i; render();
+  if (s.idx < s.qs.length - 1) setTimeout(() => { if (S.session === s && !s.done && s.ans[s.idx] === i) { s.idx++; render(); window.scrollTo(0, 0); examAutoplay(); } }, 280);
+}
+function examGo(d) { const s = S.session; if (!s || s.mode !== 'exam' || s.done) return; s.idx = Math.max(0, Math.min(s.qs.length - 1, s.idx + d)); render(); window.scrollTo(0, 0); examAutoplay(); }
+function examJump(i) { const s = S.session; if (!s || s.mode !== 'exam' || s.done) return; s.idx = i; render(); window.scrollTo(0, 0); examAutoplay(); }
+function finishExam(force) {
+  const s = S.session; if (!s || s.mode !== 'exam' || s.done) return;
+  const blank = s.ans.filter(a => a < 0).length;
+  if (!force && blank && !confirm(`${blank} question${blank === 1 ? ' is' : 's are'} unanswered. Finish anyway?`)) return;
+  stopExamTimer();
+  s.done = true; s.time = Date.now() - s.start;
+  s.qs.forEach((q, i) => rec(q.item, s.ans[i] === q.ans));
+  s.result = scoreExam(s);
+  const hist = store.get('exams', []); hist.unshift({ d: today(), l: s.level, total: s.result.total, max: s.result.max, need: s.result.need, pass: s.result.pass }); store.set('exams', hist.slice(0, 30));
+  render(); window.scrollTo(0, 0);
+}
+function scoreExam(s) {
+  const by = { vocab: [0, 0], grammar: [0, 0], listen: [0, 0] };
+  s.qs.forEach((q, i) => { const sec = EXAM_SECTIONS[q.si].sec; by[sec][1]++; if (s.ans[i] === q.ans) by[sec][0]++; });
+  const P = PASS[s.level], pct = ([a, b]) => b ? a / b : 0;
+  const lkRaw = [by.vocab[0] + by.grammar[0], by.vocab[1] + by.grammar[1]];
+  const hasLi = by.listen[1] > 0;
+  if (P.two) {
+    const lk = Math.round(pct(lkRaw) * 120), li = hasLi ? Math.round(pct(by.listen) * 60) : null;
+    const max = 120 + (hasLi ? 60 : 0), need = hasLi ? P.total : Math.round(P.total * 120 / 180);
+    const total = lk + (li || 0);
+    return { by, rows: [['Language knowledge (vocab/grammar)・Reading', lk, 120, 38], ...(hasLi ? [['Listening', li, 60, 19]] : [])], total, max, need,
+      pass: total >= need && lk >= 38 && (!hasLi || li >= 19) };
+  }
+  const lk = Math.round(pct(lkRaw) * 60), li = hasLi ? Math.round(pct(by.listen) * 60) : null;
+  const max = 60 + (hasLi ? 60 : 0), need = Math.round(P.total * max / 180);
+  const total = lk + (li || 0);
+  return { by, rows: [['Language knowledge (vocab/grammar)', lk, 60, 19], ...(hasLi ? [['Listening', li, 60, 19]] : [])], total, max, need, readingSkipped: true,
+    pass: total >= need && lk >= 19 && (!hasLi || li >= 19) };
+}
+function vExam() {
+  const lv = LV.filter(l => levelTotal('vocab', l) >= 30);
+  if (!lv.includes(S.examLv)) S.examLv = lv.includes(userLevel()) ? userLevel() : (lv[0] || 'N5');
+  const c = EXAM_COUNTS[S.examLv], n = Object.values(c).reduce((a, b) => a + b, 0);
+  const hist = store.get('exams', []).slice(0, 6);
+  return `<h1>Mock exam</h1><p class="sub">A timed, JLPT-style exam built from your dictionary, grammar and example sentences, scored against the official pass marks.</p>
+  <div class="label">Level</div>${chips(lv.map(l => [l, l]), S.examLv, 'App.examLvSet')}
+  <div class="card" style="margin-top:14px">
+    <div class="exparts">${EXAM_SECTIONS.filter(s => c[s.key]).map((s, i) => `<div><span class="jp">問題${i + 1} ${s.jp}</span><span class="muted">${s.en} · ${c[s.key]}</span></div>`).join('')}</div>
+    <p class="note">About ${n} questions · ${Math.round(n * SEC_PER_Q / 60)} minutes · pass mark ${PASS[S.examLv].total}/180${PASS[S.examLv].two ? ' (sections: 38/120 and 19/60)' : ' (19/60 in every section)'}</p>
+    <button class="btn" onclick="App.startExam()">Start ${S.examLv} mock exam</button>
+  </div>
+  <p class="note">Practice exam, not an official JLPT paper. Reading comprehension (読解) isn't included, so the score is an estimate. Listening uses your device's Japanese voice.</p>
+  ${hist.length ? `<div class="label">Recent attempts</div><div class="card lvrows">${hist.map(h => `<div class="lvrow"><b>${h.l}</b><span class="muted">${esc(h.d)}</span><span class="${h.pass ? 'okc' : 'badc'}">${h.total}/${h.max} · ${h.pass ? '合格 pass' : 'not yet'}</span></div>`).join('')}</div>` : ''}`;
+}
+function renderExam() {
+  const s = S.session;
+  if (s.done) return renderExamResult();
+  const q = s.qs[s.idx], sec = EXAM_SECTIONS[q.si], secNo = [...new Set(s.qs.map(x => x.si))].indexOf(q.si) + 1;
+  const left = s.limit - (Date.now() - s.start), last = s.idx === s.qs.length - 1;
+  const opts = q.opts.map((o, i) => `<button class="choice ${s.ans[s.idx] === i ? 'sel' : ''}" onclick="App.examPick(${i})"><span class="n">${i + 1}</span><span>${o}</span></button>`).join('');
+  return `<div class="qtop"><span class="qnav"><button class="ghost" onclick="App.examQuit()">✕ Quit</button></span><span id="etimer" class="${left < 120e3 ? 'low' : ''}">⏱ ${fmtClock(left)}</span></div>
+  <div class="qbar"><i style="width:${(s.ans.filter(a => a >= 0).length / s.qs.length) * 100}%"></i></div>
+  <div class="exsec"><b class="jp">問題${secNo}　${sec.jp}</b><span>${sec.en} · question ${s.idx + 1} of ${s.qs.length}</span></div>
+  <div class="exinstr jp">${sec.instr}</div><div class="exinstr-en">${sec.instrEn}</div>
+  <div class="card prompt">${q.prompt}</div>
+  <div class="choices ${q.key === 'li' || q.key === 'ik' ? '' : 'grid2'}">${opts}</div>
+  <div class="btnrow"><button class="btn sec" onclick="App.examGo(-1)" ${s.idx ? '' : 'disabled'}>‹ Previous</button>${last ? `<button class="btn" onclick="App.finishExam()">Finish exam</button>` : `<button class="btn" onclick="App.examGo(1)">Next ›</button>`}</div>
+  <div class="exgrid">${s.qs.map((x, i) => `<button class="${i === s.idx ? 'cur' : ''} ${s.ans[i] >= 0 ? 'done' : ''}" onclick="App.examJump(${i})">${i + 1}</button>`).join('')}</div>
+  ${!last ? `<button class="btn line" onclick="App.finishExam()">Finish exam now</button>` : ''}
+  <p class="note kbd">Keys: 1–4 to answer · ← → to move</p>`;
+}
+function renderExamResult() {
+  const s = S.session, r = s.result, P = PASS[s.level];
+  const secRows = EXAM_SECTIONS.map((sec, si) => { const qs = s.qs.map((q, i) => ({ q, i })).filter(o => o.q.si === si); if (!qs.length) return '';
+    const ok = qs.filter(o => s.ans[o.i] === o.q.ans).length; return `<div class="lvrow"><b class="jp" style="font-weight:500">${sec.jp}</b><div class="pbar"><i style="width:${ok / qs.length * 100}%"></i></div><span class="muted">${ok}/${qs.length}</span></div>`; }).join('');
+  const wrong = s.qs.map((q, i) => ({ q, i })).filter(o => s.ans[o.i] !== o.q.ans);
+  return `<div class="card score"><div class="muted">${s.level} mock exam · ${fmtClock(s.time)} used</div>
+    <div class="big ${r.pass ? 'okc' : 'badc'}">${r.pass ? '合格' : '不合格'}</div>
+    <div style="font-weight:600">${r.pass ? 'Estimated pass' : 'Not quite there yet'} · ${r.total} / ${r.max}</div>
+    <div class="muted" style="font-size:13px;margin-top:4px">Pass line on the parts tested: ${r.need}${r.readingSkipped ? ` (scaled from ${P.total}/180, reading not included)` : r.max < 180 ? ` (scaled from ${P.total}/180, listening not included)` : '/180'}</div></div>
+  <div class="label">Scaled section scores</div>
+  <div class="card lvrows">${r.rows.map(([n, v, max, min]) => `<div class="lvrow"><span style="grid-column:1/3">${n}</span><span class="${v >= min ? 'okc' : 'badc'}">${v}/${max} <span class="muted">(min ${min})</span></span></div>`).join('')}
+    ${r.readingSkipped ? '<div class="lvrow"><span style="grid-column:1/3">Reading (読解)</span><span class="muted">not included</span></div>' : ''}</div>
+  <div class="label">By question type</div><div class="card lvrows wide">${secRows}</div>
+  ${s.skippedListening ? '<p class="note">Listening was skipped because this browser has no speech support.</p>' : ''}
+  ${wrong.length ? `<div class="label">Review (${wrong.length}) — tap to study</div><div class="list">${wrong.map(({ q, i }) => {
+    const it = q.item, label = it.kind === 'grammar' ? esc(it.t) : esc(it.w || it.r);
+    return `<button class="row exrev" data-open="${esc(it.id)}"><span class="rm"><b class="jp">${EXAM_SECTIONS[q.si].jp}</b> · ${q.full ? `<span class="jp">${esc(q.full)}</span>` : `<span class="jp">${label}</span>`}<br>
+      <span class="badc">✗ ${s.ans[i] >= 0 ? `<span class="jp">${esc(q.raw[s.ans[i]])}</span>` : 'no answer'}</span> · <span class="okc">✓ <span class="jp">${esc(q.raw[q.ans])}</span></span></span></button>`; }).join('')}</div>` : '<p class="note" style="text-align:center">Every question right!</p>'}
+  <button class="btn" onclick="App.startExam()">Take another ${s.level} exam</button>
+  <button class="btn line" onclick="App.endSession()">Done</button>
+  <p class="note">Estimate only: questions are generated from the app's data, not official JLPT papers. Pass marks from <a href="https://www.jlpt.jp/e/guideline/results.html" target="_blank" rel="noopener">jlpt.jp</a>.</p>`;
+}
+
+/* =====================================================================
    RENDER + ACTIONS
    ===================================================================== */
 function render() {
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === S.view));
   const st = streak(); $('#streak').textContent = st ? `🔥 ${st}` : '';
   const page = S.session ? 'session' : S.view;
-  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, vocab: vVocab, kanji: vKanji, search: vSearch, settings: vSettings })[S.view]()}</div>`;
+  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, vocab: vVocab, kanji: vKanji, grammar: vGrammar, exam: vExam, search: vSearch, settings: vSettings })[S.view]()}</div>`;
   hydrate($('#app'));
 }
 const darkQuery = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : { matches: false };
@@ -1381,7 +1865,7 @@ if (darkQuery.addEventListener) darkQuery.addEventListener('change', () => { if 
 function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); applyTheme(); }
 const saveSettings = () => store.set('settings', settings);
 function openSheet(id) {
-  const item = id.startsWith('k:') ? KMAP[id.slice(2)] : VMAP[id]; if (!item) return;
+  const item = id.startsWith('k:') ? KMAP[id.slice(2)] : id.startsWith('g:') ? GMAP[id] : VMAP[id]; if (!item) return;
   const sh = $('#sheet');
   sh.innerHTML = `<div class="sheet-bg" onclick="App.closeSheet()"></div><div class="sheet"><button class="ghost close" onclick="App.closeSheet()" aria-label="Close">✕</button>${detail(item)}</div>`;
   sh.classList.add('open'); hydrate(sh);
@@ -1389,7 +1873,8 @@ function openSheet(id) {
 let searchTimer = null;
 
 const App = {
-  go(v, tab) { S.session = null; S.view = v; if (tab) S.vtab = tab; App.closeSheet(); render(); window.scrollTo(0, 0); if (v === 'search') { const q = $('#q'); if (q && !S.search.q) q.focus(); } },
+  leaveExam() { const s = S.session; if (s && s.mode === 'exam' && !s.done && !confirm('Leave the exam? Your answers will be lost.')) return false; stopExamTimer(); return true; },
+  go(v, tab) { if (!App.leaveExam()) return; S.session = null; S.view = v; if (tab) S.vtab = tab; App.closeSheet(); render(); window.scrollTo(0, 0); if (v === 'search') { const q = $('#q'); if (q && !S.search.q) q.focus(); } },
   vtab(t) { S.vtab = t; S.browse.limit = 100; render(); },
   lvToggle(l) {
     const set = new Set(settings.levels);
@@ -1400,7 +1885,7 @@ const App = {
   posSet(p) { S.pos = p; S.browse.limit = 100; render(); },
   cardFront(f) { settings.cardFront = f; saveSettings(); render(); },
   vfDir(d) { S.vf.dir = d; render(); },
-  tfDeck(d) { S.tf.deck = d; S.tf.dir = 'mix'; render(); }, tfDir(d) { S.tf.dir = d; render(); }, tfCount(c) { S.tf.count = +c; render(); },
+  tfDeck(d) { S.tf.deck = d; S.tf.dir = 'mix'; render(); if (d === 'grammar') loadGrammar(LV.filter(l => settings.levels.includes(l) && levelTotal('grammar', l))).then(render, render); }, tfDir(d) { S.tf.dir = d; render(); }, tfCount(c) { S.tf.count = +c; render(); },
   bSort(s) { S.browse.sort = s; S.browse.limit = 100; render(); },
   more() { S.browse.limit += 200; render(); },
   kOrder(o) { S.kf.order = o; render(); }, kRange(r) { S.kf.range = r === 'all' ? 'all' : +r; render(); },
@@ -1410,7 +1895,7 @@ const App = {
     searchTimer = setTimeout(async () => {
       if (DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) {
         S.search.busy = true; $('#sres').innerHTML = searchResults();
-        try { await loadAllVocab(); } catch (e) {}
+        try { await Promise.all([loadAllVocab(), loadGrammar(gLevels())]); } catch (e) {}
         S.search.busy = false;
       }
       const r = $('#sres'); if (r && S.view === 'search' && !S.session) r.innerHTML = searchResults();
@@ -1425,7 +1910,17 @@ const App = {
   startCards: kind => startCards(kind), cram: kind => startCards(kind, true), flip, rate, back,
   retry() { const s = S.session; const items = shuffle(s.results.filter(r => !r.ok).map(r => r.item)); S.session = { mode: 'test', kind: s.kind, pool: s.pool, queue: items, idx: 0, dir: s.dir, results: [] }; nextQ(); },
   newTest() { S.session = null; S.view = 'vocab'; S.vtab = 'test'; render(); },
-  endSession() { const s = S.session; S.session = null; if (s && s.kind === 'kanji' && s.mode !== 'test') S.view = 'kanji'; else if (s) { S.view = 'vocab'; S.vtab = s.mode === 'cards' ? 'cards' : s.mode; } render(); window.scrollTo(0, 0); },
+  endSession() {
+    const s = S.session; if (!App.leaveExam()) return; S.session = null;
+    if (s) { if (s.mode === 'exam') S.view = 'exam'; else if (s.mode === 'test') { S.view = 'vocab'; S.vtab = 'test'; } else if (s.kind === 'kanji') S.view = 'kanji'; else if (s.kind === 'grammar') S.view = 'grammar'; else { S.view = 'vocab'; S.vtab = s.mode; } }
+    render(); window.scrollTo(0, 0);
+  },
+  glvToggle(l) { const set = new Set(gSelLevels()); if (set.has(l)) { if (set.size > 1) set.delete(l); } else set.add(l); settings.glevels = LV.filter(x => set.has(x)); saveSettings(); S.gf.limit = 100; render(); loadGrammar().then(render, render); },
+  gqSet(q) { S.gq = q; render(); },
+  gSearch(v) { S.gf.q = v; const el = $('#glist'); if (el) el.innerHTML = gList(); },
+  gMore() { S.gf.limit += 200; render(); },
+  examLvSet(l) { S.examLv = l; render(); },
+  startExam: () => startExam(), examPick, examGo, examJump, finishExam: () => finishExam(false), examQuit() { App.endSession(); },
   set(k, v) { settings[k] = v; saveSettings(); applySettings(); render(); },
   furi(v) { App.set('furigana', v); },
   theme(v) { App.set('theme', v); },
@@ -1483,6 +1978,7 @@ document.addEventListener('keydown', e => {
   if (e.target.matches('input, textarea')) return;
   if (e.key === 'Escape') return App.closeSheet();
   const s = S.session; if (!s) return;
+  if (s.mode === 'exam') { if (s.done) return; if (/^[1-4]$/.test(e.key)) examPick(+e.key - 1); else if (e.key === 'ArrowRight') examGo(1); else if (e.key === 'ArrowLeft') examGo(-1); return; }
   if (s.mode === 'cards' && s.done) { if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); back(); } return; }
   if (s.done) return;
   if (s.mode === 'cards') {

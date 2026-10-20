@@ -17,6 +17,7 @@
  *   JLPT vocab lists    (Jonathan Waller, CC BY) stephenmk/yomitan-jlpt-vocab, fallback jamsinclair/open-anki-jlpt-decks
  *   Kanji JLPT levels   (MIT)                   davidluzgouveia/kanji-data
  *   Tatoeba sentences   (CC BY 2.0 FR)          linked JMdict examples + Tatoeba exports (optional)
+ *   JLPT grammar        (hanabira.org, CC; link back required) hanabira.org-japanese-content grammar JSON (optional)
  *
  * Usage
  *   node build-data.mjs [--out data] [--cache .cache] [--from-dir DIR]
@@ -129,6 +130,35 @@ async function getSource(key, src, { required = true } = {}) {
   if (required) throw new Error(`Could not obtain ${key}`);
   warn(`${key} unavailable, continuing without it`);
   return null;
+}
+
+/* ---------------------------------------------------------------- grammar files (hanabira) */
+const GRAMMAR_REPO = 'tristcoil/hanabira.org-japanese-content';
+const GRAMMAR_FILE = /(^|\/)grammar_ja_N([1-5])[^/]*\.json$/i;
+async function getGrammarFiles() {
+  if (flag('no-grammar')) return [];
+  const out = [];
+  if (FROM) {
+    for (const n of fs.readdirSync(FROM)) { const m = GRAMMAR_FILE.exec(n); if (m) out.push({ level: 'N' + m[2], file: path.join(FROM, n) }); }
+    if (!out.length) warn('no local grammar_ja_N*.json files, skipping grammar');
+    return out;
+  }
+  let paths = [], branch = 'main';
+  try {
+    const r = await fetch(`https://api.github.com/repos/${GRAMMAR_REPO}`, { headers: ghHeaders() });
+    if (r.ok) branch = (await r.json()).default_branch || 'main';
+    const t = await fetch(`https://api.github.com/repos/${GRAMMAR_REPO}/git/trees/${branch}?recursive=1`, { headers: ghHeaders() });
+    if (!t.ok) throw new Error('GitHub API ' + t.status);
+    paths = (await t.json()).tree.filter(x => x.type === 'blob' && GRAMMAR_FILE.test(x.path)).map(x => x.path);
+  } catch (e) { warn('grammar: ' + e.message); }
+  if (!paths.length) paths = [5, 4, 3, 2, 1].map(n => `grammar_json/grammar_ja_N${n}_full_alphabetical_0001.json`);
+  for (const p of paths) {
+    try {
+      const file = await download(`https://raw.githubusercontent.com/${GRAMMAR_REPO}/${branch}/${p.split('/').map(encodeURIComponent).join('/')}`, 'grammar--' + p.replace(/[\/]/g, '_'));
+      out.push({ level: 'N' + GRAMMAR_FILE.exec(p)[2], file });
+    } catch (e) { warn(`grammar ${p}: ${e.message}`); }
+  }
+  return out;
 }
 
 /* ---------------------------------------------------------------- file helpers */
@@ -550,6 +580,47 @@ async function main() {
     log(`  stroke data for ${n} kanji`);
   } else meta.notes.push('KanjiVG unavailable: no stroke-order diagrams in this build.');
 
+  /* ---- 8b. Grammar (hanabira.org, MIT) */
+  log('Grammar (hanabira.org)');
+  const grammar = Object.fromEntries(LEVELS.map(l => [l, []]));
+  const gFiles = await getGrammarFiles();
+  const strip = v => v == null ? '' : String(Array.isArray(v) ? v.join('\n') : v).replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
+  const pickF = (o, names) => { for (const n of names) if (o && o[n] != null && o[n] !== '') return o[n]; return null; };
+  const listOf = j => {
+    if (Array.isArray(j)) return j;
+    if (j && typeof j === 'object') {
+      for (const v of Object.values(j)) if (Array.isArray(v) && v.length && typeof v[0] === 'object') return v;
+      const ks = Object.keys(j);
+      if (ks.length && ks.every(k => j[k] && typeof j[k] === 'object' && !Array.isArray(j[k]))) return ks.map(k => ({ title: k, ...j[k] }));
+    }
+    return [];
+  };
+  let gCount = 0;
+  for (const { level, file } of gFiles) {
+    let j; try { j = JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '')); } catch (e) { warn(`grammar ${path.basename(file)}: ${e.message}`); continue; }
+    for (const o of listOf(j)) {
+      const t = strip(pickF(o, ['title', 'grammar', 'grammar_point', 'name', 'point', 'pattern']));
+      if (!t) continue;
+      const tag = String(pickF(o, ['p_tag', 'jlpt', 'level', 'jlpt_level']) || '');
+      const lv = (/N([1-5])/i.exec(tag) || /^([1-5])$/.exec(tag) || [])[1] ? 'N' + ((/N([1-5])/i.exec(tag) || /^([1-5])$/.exec(tag))[1]) : level;
+      if (!grammar[lv] || grammar[lv].some(g => g.t === t)) continue;
+      const rawEx = pickF(o, ['examples', 'example_sentences', 'sentences', 'example']) || [];
+      const ex = (Array.isArray(rawEx) ? rawEx : [rawEx]).map(e => typeof e === 'string' ? { jp: e } : e || {})
+        .map(e => ({ j: strip(pickF(e, ['jp', 'japanese', 'ja', 'sentence', 'jpn', 'text'])), e: strip(pickF(e, ['en', 'english', 'translation', 'eng', 'meaning'])), r: strip(pickF(e, ['romaji', 'romanization', 'romanized'])) }))
+        .filter(e => e.j).slice(0, 6);
+      const entry = { t, m: strip(pickF(o, ['short_explanation', 'meaning', 'short', 'summary', 'english', 'translation'])),
+        x: strip(pickF(o, ['long_explanation', 'explanation', 'description', 'details', 'long', 'notes'])),
+        fm: strip(pickF(o, ['formation', 'structure', 'form', 'usage', 'construction', 'conjugation'])),
+        ex: ex.map(e => { const o2 = { j: sentenceFurigana(e.j), e: e.e }; if (e.r) o2.r = e.r; return o2; }) };
+      if (!entry.m && !entry.x) continue;
+      grammar[lv].push(entry); gCount++;
+    }
+  }
+  if (gFiles.length) {
+    meta.sources.grammar = 'hanabira.org-japanese-content (' + gFiles.map(f => path.basename(f.file).replace(/^grammar--.*?--/, '')).join(', ') + ')';
+    log(`  ${gCount} grammar points`);
+  } else meta.notes.push('Grammar data unavailable in this build; the app uses its built-in starter grammar.');
+
   /* ---- 9. write */
   log('Writing files');
   let total = 0;
@@ -559,6 +630,7 @@ async function main() {
     total += write(`vocab-${l.toLowerCase()}.json`, vocab[l]);
     total += write(`kanji-${l.toLowerCase()}.json`, kanji[l]);
     total += write(`strokes-${l.toLowerCase()}.json`, strokes[l]);
+    if (gCount) { (meta.counts.grammar = meta.counts.grammar || {})[l] = grammar[l].length; total += write(`grammar-${l.toLowerCase()}.json`, grammar[l]); }
   }
   meta.tags = Object.fromEntries([...usedTags].filter(t => tagNames[t]).map(t => [t, tagNames[t]]));
   meta.licenses = [
@@ -567,7 +639,8 @@ async function main() {
     { name: 'KanjiVG', by: 'Ulrich Apel and contributors', license: 'CC BY-SA 3.0', url: 'https://kanjivg.tagaini.net/' },
     { name: 'Tatoeba', by: 'Tatoeba contributors', license: 'CC BY 2.0 FR', url: 'https://tatoeba.org/' },
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },
-    { name: 'Kanji JLPT levels', by: 'David Luz Gouveia (kanji-data)', license: 'MIT', url: 'https://github.com/davidluzgouveia/kanji-data' }
+    { name: 'Kanji JLPT levels', by: 'David Luz Gouveia (kanji-data)', license: 'MIT', url: 'https://github.com/davidluzgouveia/kanji-data' },
+    { name: 'JLPT grammar', by: 'hanabira.org', license: 'Creative Commons (in-house content)', url: 'https://hanabira.org/' }
   ];
   total += write('meta.json', meta);
   log(`Done: ${Object.values(meta.counts.vocab).reduce((a, b) => a + b, 0)} words, ${kanjiSet.size} kanji, ${(total / 1e6).toFixed(1)} MB in ${OUT}`);
