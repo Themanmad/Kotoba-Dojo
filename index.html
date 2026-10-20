@@ -230,6 +230,8 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 .toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;z-index:40;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
 .qnav{display:flex;gap:6px;align-items:center}
+.verdict{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.vplay{border:0;background:var(--card);color:inherit;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer;flex:none}
 .nav-extra{display:none!important}
 .hdr-extra{font-size:14px}
 .gtitle{font-size:28px;line-height:1.5;font-weight:600}
@@ -734,7 +736,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('kd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('kd_' + k, JSON.stringify(v)); } catch (e) {} }
 };
-let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'], glevels: ['N5'] }, store.get('settings', {}));
+let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'], glevels: ['N5'] }, store.get('settings', {}));
 let progress = store.get('progress', {});
 let custom = store.get('custom', []);
 let actLog = store.get('log', {});
@@ -1174,6 +1176,7 @@ function vSettings() {
     <div class="set" style="display:block"><b>Furigana</b><span>Reading shown above kanji</span>
       <div style="margin-top:10px">${seg([['on', 'Show'], ['tap', 'Tap to reveal'], ['off', 'Hide']], settings.furigana, 'App.furi')}</div></div>
     <div class="set"><div><b>Show romaji</b><span>Latin letters under words in questions</span></div>${sw('romaji')}</div>
+    <div class="set"><div><b>Play the word on a correct answer</b><span>In tests and quizzes, hear the native recording when you get it right</span></div>${sw('playOnCorrect')}</div>
     <div class="set"><div><b>Auto-play recordings</b><span>Play native-speaker audio automatically when a word has a recording</span></div>${sw('autoSpeak')}</div>
     <div class="set"><div><b>Stroke numbers</b><span>Number each stroke in kanji diagrams</span></div>${sw('strokeNums')}</div>
     <div class="set" style="display:block"><b>New flashcards per day</b>
@@ -1483,6 +1486,9 @@ function answer(i) {
   const s = S.session; if (!s || s.mode === 'cards' || s.mode === 'exam' || s.answered || s.done || !s.q.opts[i]) return;
   s.answered = true; s.chosen = i; const ok = s.q.opts[i].ok;
   rec(s.q.item, ok);
+  // a correct answer plays the native recording of the word (tests & quizzes; not the mock exam)
+  const sayNow = ok && settings.playOnCorrect && s.q.au;
+  if (sayNow) playAudio(s.q.au);
   if (s.mode === 'learn') {
     s.seen++; if (ok) { s.correct++; s.streak++; } else s.streak = 0;
     const id = s.q.item.id; if (!s.first.has(id)) s.first.set(id, ok);
@@ -1491,7 +1497,7 @@ function answer(i) {
   }
   else s.results.push({ item: s.q.item, ok });
   render();
-  if (s.mode === 'learn') { const a = $('.after'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (settings.autoSpeak && !s.q.jp) playAudio(s.q.au); }
+  if (s.mode === 'learn') { const a = $('.after'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (settings.autoSpeak && !s.q.jp && !sayNow) playAudio(s.q.au); }
 }
 function next() { const s = S.session; if (!s) return; s.idx++; nextQ(); }
 
@@ -1579,7 +1585,7 @@ function renderSession() {
   let after = '';
   if (s.answered) {
     const ok = q.opts[s.chosen].ok, last = s.idx + 1 >= list.length;
-    after = `<div class="verdict ${ok ? 'good' : 'bad'}">${ok ? pick(['正解! Correct', 'いいね! Nice one', 'すごい! Great']) : 'おしい! Not quite — the right answer is highlighted'}</div>
+    after = `<div class="verdict ${ok ? 'good' : 'bad'}">${ok ? pick(['正解! Correct', 'いいね! Nice one', 'すごい! Great']) : 'おしい! Not quite — the right answer is highlighted'}${hasRec(q.au) ? `<button class="vplay" data-audio="${esc(q.au)}" aria-label="Play the word">🔊 ${ok && settings.playOnCorrect ? 'playing' : 'hear it'}</button>` : ''}</div>
       ${test ? '' : `<div class="card" style="margin-top:12px">${detail(q.item)}</div>`}
       <button class="btn" onclick="App.next()">${last ? 'See results' : 'Next'} →</button>`;
   }
