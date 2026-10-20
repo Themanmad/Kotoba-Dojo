@@ -265,6 +265,8 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 .gtitle .gpat{font-size:30px;line-height:1.4}
 .gtitle .gnote{font-size:14px}
 .row .rw.gt{min-width:120px;max-width:50%}
+.exrev .exs{line-height:2}
+.psent ruby rt{font-size:.45em}
 .row .rw.gt .gpat{font-size:18px;line-height:1.4}
 .pword.gq .gpat{font-size:36px;justify-content:center}
 .cjp .gpat{font-size:20px;justify-content:center}
@@ -1226,6 +1228,33 @@ function autoFuri(t) {
   }
   return out;
 }
+/* ---------- sentences with furigana and one special range ----------
+   Quizzes and the exam blank out or underline part of a sentence. These keep the
+   furigana on every other kanji (honouring the Show / Tap / Hide setting).        */
+function rubyTag(t, r) { return settings.furigana === 'off' ? esc(t) : `<ruby>${esc(t)}<rt>${esc(r)}</rt></ruby>`; }
+function segsOf(m) {
+  const out = []; let last = 0;
+  for (const x of String(m).matchAll(MARK)) { if (x.index > last) out.push({ t: m.slice(last, x.index), r: null }); out.push({ t: x[1], r: x[2] }); last = x.index + x[0].length; }
+  if (last < m.length) out.push({ t: m.slice(last), r: null });
+  return out;
+}
+const exMarkup = e => e.j.includes('{') ? e.j : autoFuri(e.j);
+/** html of plain range [a, b) of a markup sentence, ruby on segments that lie fully inside it */
+function rangeHtml(m, a, b) {
+  let pos = 0, out = '';
+  for (const sg of segsOf(m)) {
+    const s0 = pos, s1 = pos + sg.t.length; pos = s1;
+    if (s1 <= a || s0 >= b) continue;
+    if (sg.r && s0 >= a && s1 <= b) out += rubyTag(sg.t, sg.r);
+    else out += esc(sg.t.slice(Math.max(0, a - s0), Math.min(sg.t.length, b - s0)));
+  }
+  return out;
+}
+/** Sentence html with plain range [i, i+len) replaced by `html` (or by fn(rangeHtml) when html is a function). */
+function sentHtml(m, i, len, html) {
+  const total = plain(m).length, mid = typeof html === 'function' ? html(rangeHtml(m, i, i + len)) : html;
+  return rangeHtml(m, 0, i) + mid + rangeHtml(m, i + len, total);
+}
 function exHtml(e, g) {
   let j = e.j.includes('{') ? e.j : autoFuri(e.j);
   if (g) j = markGrammar(j, g);
@@ -1693,7 +1722,7 @@ function makeGrammarQ(item, dir) {
       if (wrong.length >= 2) {
         const opts = shuffle([{ html: `<span class="jp cjp">${esc(b.v.v)}</span>`, ok: true }, ...wrong.map(w => ({ html: `<span class="jp cjp">${esc(w)}</span>`, ok: false }))]);
         return { item, dir, jp: true, say: b.p, hint: 'Which grammar fits the blank?', grid: true, meta,
-          prompt: `<div class="psent jp">${esc(b.p.slice(0, b.i))}<span class="blank">　</span>${esc(b.p.slice(b.i + b.v.v.length))}</div>${b.e.e ? `<div class="proma">${esc(b.e.e)}</div>` : ''}`, opts };
+          prompt: `<div class="psent jp">${sentHtml(exMarkup(b.e), b.i, b.v.v.length, '<span class="blank">　</span>')}</div>${b.e.e ? `<div class="proma">${esc(b.e.e)}</div>` : ''}`, opts };
       }
     }
     dir = 'g2m';
@@ -1735,7 +1764,7 @@ const PASS = { N1: { total: 100, two: false }, N2: { total: 90, two: false }, N3
 const SEC_PER_Q = 55;
 
 const hiraOnly = s => /^[぀-ゟ]+$/.test(s);
-const exPlain = x => { const m = []; for (const e of x.ex || []) { const p = plain(e.j); if (x.w && p.includes(x.w)) m.push({ p, e }); } return m.length ? pick(m) : null; };
+const exPlain = x => { const m = []; for (const e of x.ex || []) { const p = plain(e.j); if (x.w && p.includes(x.w)) m.push({ p, e, m: exMarkup(e) }); } return m.length ? pick(m) : null; };
 /* Rotation: remember when each item was last asked, and favour ones you haven't seen recently. */
 const SEEN_KEY = 'seenQ';
 function freshFirst(arr, ns) {
@@ -1779,7 +1808,7 @@ const EXAM_GEN = {
     const near = pool.filter(y => y !== x && hiraOnly(y.r) && [...y.w].some(c => isK(c) && x.w.includes(c))).map(y => y.r);
     const len = pool.filter(y => y !== x && hiraOnly(y.r) && Math.abs(y.r.length - x.r.length) <= 1).map(y => y.r);
     const f = fillFour(x.r, [...mutateReading(x.r), ...shuffle(near), ...shuffle(len)]); if (!f) return null;
-    return { item: x, prompt: s ? `<div class="psent jp">${underline(s.p, x.w)}</div>` : `<div class="pword jp"><u>${esc(x.w)}</u></div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts };
+    return { item: x, prompt: s ? `<div class="psent jp">${sentHtml(s.m, s.p.indexOf(x.w), x.w.length, `<u>${esc(x.w)}</u>`)}</div>` : `<div class="pword jp"><u>${esc(x.w)}</u></div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts, fullM: s && s.m };
   },
   hy(x, l, pool) {
     if (!x.w || ![...x.w].some(isK) || !hiraOnly(x.r)) return null;
@@ -1792,26 +1821,26 @@ const EXAM_GEN = {
     const similar = pool.filter(y => y !== x && [...y.w].some(isK) && y.w.length === x.w.length).map(y => y.w);
     const f = fillFour(x.w, [...shuffle(wrong), ...shuffle(similar)].filter(w => !VMAP['v:' + w + '|' + x.r])); if (!f) return null;
     const s = exPlain(x);
-    return { item: x, prompt: s ? `<div class="psent jp">${underline(s.p, x.w, x.r)}</div>` : `<div class="pword jp"><u>${esc(x.r)}</u></div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts };
+    return { item: x, prompt: s ? `<div class="psent jp">${sentHtml(s.m, s.p.indexOf(x.w), x.w.length, `<u>${esc(x.r)}</u>`)}</div>` : `<div class="pword jp"><u>${esc(x.r)}</u></div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts, fullM: s && s.m };
   },
   bm(x, l, pool) {
     const s = exPlain(x); if (!s) return null;
-    const wrong = shuffle(pool.filter(y => y !== x && y.pos === x.pos && y.w && !s.p.includes(y.w) && !vocabOverlap(x, y))).map(y => y.w);
-    const f = fillFour(x.w, wrong); if (!f) return null;
-    const i = s.p.indexOf(x.w);
-    return { item: x, prompt: `<div class="psent jp">${esc(s.p.slice(0, i))}（　　）${esc(s.p.slice(i + x.w.length))}</div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts };
+    const cand = shuffle(pool.filter(y => y !== x && y.pos === x.pos && y.w && !s.p.includes(y.w) && !vocabOverlap(x, y)));
+    const f = fillFour(x.w, cand.map(y => y.w)); if (!f) return null;
+    const fOf = w => (w === x.w ? x : cand.find(y => y.w === w) || {}).f || w;
+    return { item: x, prompt: `<div class="psent jp">${sentHtml(s.m, s.p.indexOf(x.w), x.w.length, '（　　）')}</div>`, opts: f.opts.map(o => `<span class="jp cjp">${ruby(fOf(o))}</span>`), ans: f.ans, raw: f.opts, fullM: s.m };
   },
   ik(x, l, pool) {
     if (!x.m) return null;
     const s = exPlain(x);
     const wrong = shuffle(pool.filter(y => y !== x && y.pos === x.pos && !vocabOverlap(x, y))).map(y => y.m);
     const f = fillFour(x.m, wrong); if (!f) return null;
-    return { item: x, prompt: s ? `<div class="psent jp">${underline(s.p, x.w)}</div>` : `<div class="pword jp"><u>${esc(x.w)}</u></div>`, opts: f.opts.map(esc), ans: f.ans, raw: f.opts };
+    return { item: x, prompt: s ? `<div class="psent jp">${sentHtml(s.m, s.p.indexOf(x.w), x.w.length, h => `<u>${h}</u>`)}</div>` : `<div class="pword jp"><u>${ruby(x.f)}</u></div>`, opts: f.opts.map(esc), ans: f.ans, raw: f.opts, fullM: s && s.m };
   },
   gf(g, l, pool) {
     const b = gBlank(g); if (!b) return null;
     const f = fillFour(b.v.v, gFillOpts(g, b.v, pool)); if (!f) return null;
-    return { item: g, prompt: `<div class="psent jp">${esc(b.p.slice(0, b.i))}（　　）${esc(b.p.slice(b.i + b.v.v.length))}</div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts };
+    return { item: g, prompt: `<div class="psent jp">${sentHtml(exMarkup(b.e), b.i, b.v.v.length, '（　　）')}</div>`, opts: f.opts.map(o => `<span class="jp">${esc(o)}</span>`), ans: f.ans, raw: f.opts, fullM: exMarkup(b.e) };
   },
   ord(x) {
     for (const e of shuffle(x.ex || [])) {
@@ -1820,9 +1849,11 @@ const EXAM_GEN = {
       const four = c.parts.slice(start, start + 4);
       if (new Set(four).size < 4) continue;
       const star = four[2], sh = shuffle(four);
-      const pre = c.parts.slice(0, start).join(''), post = c.parts.slice(start + 4).join('') + c.end;
-      return { item: x, prompt: `<div class="psent jp">${esc(pre)}<span class="slot"></span><span class="slot"></span><span class="slot star">★</span><span class="slot"></span>${esc(post)}</div>${e.e ? `<div class="proma">${esc(e.e)}</div>` : ''}`,
-        opts: sh.map(o => `<span class="jp">${esc(o)}</span>`), ans: sh.indexOf(star), raw: sh, full: plain(e.j) };
+      const m = exMarkup(e), off = []; let pos = 0; c.parts.forEach(pt => { off.push(pos); pos += pt.length; });
+      const a = off[start], len = four.join('').length;
+      const chunkHtml = o => { const k = c.parts.indexOf(o, start); return rangeHtml(m, off[k], off[k] + o.length); };
+      return { item: x, prompt: `<div class="psent jp">${sentHtml(m, a, len, '<span class="slot"></span><span class="slot"></span><span class="slot star">★</span><span class="slot"></span>')}</div>${e.e ? `<div class="proma">${esc(e.e)}</div>` : ''}`,
+        opts: sh.map(o => `<span class="jp cjp">${chunkHtml(o)}</span>`), ans: sh.indexOf(star), raw: sh, full: plain(e.j), fullM: m };
     }
     return null;
   },
@@ -1831,7 +1862,7 @@ const EXAM_GEN = {
     const es = (x.ex || []).filter(e => e.e && plain(e.j).length <= 40); if (!es.length) return null; const e = pick(es);
     const wrong = shuffle(pool.flatMap(y => (y.ex || []).map(z => z.e)).filter(t => t && t !== e.e));
     const f = fillFour(e.e, wrong); if (!f) return null;
-    return { item: x, say: plain(e.j), prompt: `<button class="listen" data-say="${esc(plain(e.j))}">🔊 Play</button><div class="proma">Tap to replay as often as you like.</div>`, opts: f.opts.map(esc), ans: f.ans, raw: f.opts, full: plain(e.j) };
+    return { item: x, fullM: exMarkup(e), say: plain(e.j), prompt: `<button class="listen" data-say="${esc(plain(e.j))}">🔊 Play</button><div class="proma">Tap to replay as often as you like.</div>`, opts: f.opts.map(esc), ans: f.ans, raw: f.opts, full: plain(e.j) };
   }
 };
 /** Split a sentence into JLPT-style chunks (文節): each chunk is a content word plus the
@@ -2008,7 +2039,7 @@ function examReview(s) {
   if (!wrong.length) return '<p class="note" style="text-align:center">Every question right!</p>';
   return `<div class="label">Review (${wrong.length}) — tap to study</div><div class="list">${wrong.map(({ q, i }) => {
     const it = q.item, label = it.kind === 'grammar' ? esc(it.t) : esc(it.w || it.r);
-    return `<button class="row exrev" data-open="${esc(it.id)}"><span class="rm"><b class="jp">${EXAM_SECTIONS[q.si].jp}</b> · ${q.full ? `<span class="jp">${esc(q.full)}</span>` : `<span class="jp">${label}</span>`}<br>
+    return `<button class="row exrev force" data-open="${esc(it.id)}"><span class="rm"><b class="jp">${EXAM_SECTIONS[q.si].jp}</b> · ${q.fullM ? `<span class="jp exs">${ruby(q.fullM, true)}</span>` : `<span class="jp">${label}</span>`}<br>
       <span class="badc">✗ ${s.ans[i] >= 0 ? `<span class="jp">${esc(q.raw[s.ans[i]])}</span>` : 'no answer'}</span> · <span class="okc">✓ <span class="jp">${esc(q.raw[q.ans])}</span></span></span></button>`; }).join('')}</div>`;
 }
 function renderSectionResult() {
@@ -2040,10 +2071,7 @@ function renderExamResult() {
     ${r.readingSkipped ? '<div class="lvrow"><span style="grid-column:1/3">Reading (読解)</span><span class="muted">not included</span></div>' : ''}</div>
   <div class="label">By question type</div><div class="card lvrows wide">${secRows}</div>
   ${s.skippedListening ? '<p class="note">Listening was skipped because this browser has no speech support.</p>' : ''}
-  ${wrong.length ? `<div class="label">Review (${wrong.length}) — tap to study</div><div class="list">${wrong.map(({ q, i }) => {
-    const it = q.item, label = it.kind === 'grammar' ? esc(it.t) : esc(it.w || it.r);
-    return `<button class="row exrev" data-open="${esc(it.id)}"><span class="rm"><b class="jp">${EXAM_SECTIONS[q.si].jp}</b> · ${q.full ? `<span class="jp">${esc(q.full)}</span>` : `<span class="jp">${label}</span>`}<br>
-      <span class="badc">✗ ${s.ans[i] >= 0 ? `<span class="jp">${esc(q.raw[s.ans[i]])}</span>` : 'no answer'}</span> · <span class="okc">✓ <span class="jp">${esc(q.raw[q.ans])}</span></span></span></button>`; }).join('')}</div>` : '<p class="note" style="text-align:center">Every question right!</p>'}
+  ${examReview(s)}
   <button class="btn" onclick="App.startExam()">Take another ${s.level} exam</button>
   <button class="btn line" onclick="App.endSession()">Done</button>
   <p class="note">Estimate only: questions are generated from the app's data, not official JLPT papers. Pass marks from <a href="https://www.jlpt.jp/e/guideline/results.html" target="_blank" rel="noopener">jlpt.jp</a>.</p>`;
