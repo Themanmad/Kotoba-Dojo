@@ -772,6 +772,24 @@ function toRomaji(s) {
   }
   return out;
 }
+/* Device voices often read a hiragana word starting with は / へ / を as a particle
+   (はし → "washi"). Single words are therefore spoken in katakana (ハシ → "hashi");
+   full sentences stay as written, where the voice reads particles correctly. */
+const hira2kata = s => String(s).replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+const wordSay = r => hira2kata(String(r || '').replace(/[.\-]/g, ''));
+const grammarSay = v => ({ は: 'わ', へ: 'え', を: 'お' })[v] || String(v || '').replace(/([てでにと])は/g, '$1わ');
+/* Native recordings (Tofugu / WaniKani) when the build found one for the word;
+   the device voice otherwise, or if the file can't be played. */
+let curAudio = null;
+function playAudio(id, fallback) {
+  try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
+  if (curAudio) { try { curAudio.pause(); } catch (e) {} curAudio = null; }
+  if (!id || DATA.mode !== 'full') return fallback ? speak(fallback) : undefined;
+  let fell = false; const fb = () => { if (!fell) { fell = true; if (fallback) speak(fallback); } };
+  try { const a = new Audio(`data/audio/${id}.mp3`); curAudio = a; a.onerror = fb; const pr = a.play(); if (pr && pr.catch) pr.catch(e => { if (e && e.name !== 'AbortError') fb(); }); } catch (e) { fb(); }
+}
+const playWord = x => playAudio(x && x.au, x && wordSay(x.r));
+const sayAttrs = x => `data-say="${esc(wordSay(x.r))}"${x.au ? ` data-audio="${esc(x.au)}"` : ''}`;
 function speak(t) {
   try {
     if (!('speechSynthesis' in window)) return toast('Audio not supported in this browser');
@@ -800,7 +818,7 @@ const posBucket = g => ['noun', 'verb', 'i-adj', 'na-adj', 'adverb', 'expression
 function normV(x, lvl) {
   const id = 'v:' + x.w + '|' + x.r;
   return { id, kind: 'vocab', seq: x.i, w: x.w, r: x.r, f: x.f || furi(x.w, x.r), m: x.m, senses: x.s || [{ p: [], g: [x.m] }], pos: x.g || 'other',
-    lvl, freq: x.q || 2, common: !!x.c, ex: x.ex || [], alt: x.a || null };
+    lvl, freq: x.q || 2, common: !!x.c, ex: x.ex || [], alt: x.a || null, au: x.au || null };
 }
 function normK(x, lvl) {
   const clean = x.m.filter(m => !/radical\s*\(no\.?\s*\d+\)/i.test(m)), mean = clean.length ? clean : x.m;
@@ -1014,7 +1032,7 @@ function wotdCard() {
   const { x, l } = w, st = levelStats('vocab', l), pct = st.total ? Math.round(st.known / st.total * 100) : 0, isNew = !progress[x.id];
   return `<div class="card wotd force">
     <div class="wk"><span>Word of the day</span><span class="tag lv">${l}</span></div>
-    <div class="dtop"><div class="w jp">${ruby(x.f, true)}</div><button class="say inl" data-say="${esc(x.r)}" aria-label="Play">🔊</button></div>
+    <div class="dtop"><div class="w jp">${ruby(x.f, true)}</div><button class="say inl" ${sayAttrs(x)} aria-label="Play">🔊</button></div>
     <div class="wm"><b>${esc(x.m)}</b> <span class="muted">· ${esc(x.r)} · ${esc(toRomaji(x.r))}</span></div>
     <div class="tags"><span class="tag">${esc(POS_LABEL[x.pos] || x.pos)}</span>${freqBadge(x.freq)}</div>
     ${x.ex[0] ? exHtml(x.ex[0]) : ''}
@@ -1265,7 +1283,7 @@ function vDetail(x) {
   const p = progress[x.id];
   const uk = x.senses.some(s => (s.x || []).includes('uk'));
   return `<div class="detail force">
-    <div class="dtop"><div class="dword jp">${ruby(x.f, true)}</div><button class="say inl" data-say="${esc(x.r)}" aria-label="Play">🔊</button></div>
+    <div class="dtop"><div class="dword jp">${ruby(x.f, true)}</div><button class="say inl" ${sayAttrs(x)} aria-label="Play">🔊</button></div>
     <div class="dread jp">${esc(x.r)} · ${esc(toRomaji(x.r))}${x.alt ? ` · also written <span class="jp">${esc(x.alt)}</span>` : ''}</div>
     <div class="tags"><span class="tag lv">${lvName(x.lvl)}</span><span class="tag">${esc(POS_LABEL[x.pos] || x.pos)}</span>${x.common ? '<span class="tag cm">common word</span>' : ''}${uk ? '<span class="tag">usually kana</span>' : ''}${freqBadge(x.freq)}</div>
     ${x.senses.length > 1 ? `<ol class="senses">${x.senses.map((s, i) => `<li>${s.p && s.p.length && (i === 0 || s.p.join() !== x.senses[i - 1].p.join()) ? `<span class="pos">${esc(posLabel(s.p))}</span>` : ''}${esc(s.g.join('; '))}${s.i ? ` <span class="muted">(${esc(s.i)})</span>` : ''}</li>`).join('')}</ol>`
@@ -1290,7 +1308,7 @@ function kDetail(k) {
     ${(() => { const sim = similarKanji(k); return sim.length ? `<div class="mini">Different kanji with similar meaning</div><div class="simlist">${sim.map(({ x }) => `<button class="simrow" data-open="k:${esc(x.k)}"><span class="sk jp">${x.k}</span><span class="sm"><b>${esc(x.mean.slice(0, 3).join('; '))}</b><span>${esc(kRead(x))}${x.ex[0] ? ` · e.g. <span class="jp">${esc(x.ex[0].w)}</span> ${esc(x.ex[0].m)}` : ''}</span></span><span class="lvl">${x.lvl}</span></button>`).join('')}</div>
       <p class="note" style="margin-top:6px">Compare the example words to see how each one is used.</p>` : ''; })()}
     ${words.length ? `<div class="mini">Words using ${k.k}</div><div class="exlist">${words.map(e => { const v = VMAP['v:' + e.w + '|' + e.r];
-      return `<button class="exrow" ${v ? `data-open="${esc(v.id)}"` : `data-say="${esc(e.r)}"`}><span class="jp">${ruby(furi(e.w, e.r), true)}</span><span class="m">${esc(e.m)}</span>${e.l ? `<span class="lvl" style="font-size:11px;color:var(--accent);font-weight:600">${e.l}</span>` : ''}</button>`; }).join('')}</div>` : ''}
+      return `<button class="exrow" ${v ? `data-open="${esc(v.id)}"` : `data-say="${esc(wordSay(e.r))}"`}><span class="jp">${ruby(furi(e.w, e.r), true)}</span><span class="m">${esc(e.m)}</span>${e.l ? `<span class="lvl" style="font-size:11px;color:var(--accent);font-weight:600">${e.l}</span>` : ''}</button>`; }).join('')}</div>` : ''}
     <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong · next review ${p.d > Date.now() ? 'in ' + fmtIv(p.d - Date.now()) : 'due now'}` : 'Not studied yet'}${DATA.mode === 'full' ? ' · Stroke order: KanjiVG' : ''}</div>
   </div>`;
 }
@@ -1394,49 +1412,53 @@ function makeQ(kind, item, dir) {
     const pool = V.length > 40 ? V.filter(x => x.lvl === item.lvl || Math.abs(LV.indexOf(x.lvl) - LV.indexOf(item.lvl)) <= 1) : V;
     if (dir === 'jp2en') {
       const opts = shuffle([item, ...distract(item, pool, x => x.m, x => x.pos === item.pos)]);
-      return { item, dir, jp: true, say: item.r, hint: 'What does this mean?',
+      return { item, dir, jp: true, say: wordSay(item.r), au: item.au, hint: 'What does this mean?',
         prompt: `<div class="pword jp">${ruby(item.f)}</div>${settings.romaji ? `<div class="proma">${esc(toRomaji(item.r))}</div>` : ''}`,
         meta: `<span class="tag lv">${lvName(item.lvl)}</span>${freqBadge(item.freq)}`, grid: false, opts: opts.map(x => ({ html: esc(x.m), ok: x === item })) };
     }
     const opts = shuffle([item, ...distract(item, pool, x => x.w, x => x.pos === item.pos)]);
-    return { item, dir, jp: false, say: item.r, hint: 'Which word means this?',
+    return { item, dir, jp: false, say: wordSay(item.r), au: item.au, hint: 'Which word means this?',
       prompt: `<div class="pmean">${esc(item.m)}</div>`, meta: `<span class="tag lv">${lvName(item.lvl)}</span>${freqBadge(item.freq)}`, grid: true,
       opts: opts.map(x => ({ html: `<span class="jp cjp">${ruby(x.f)}</span>${settings.romaji ? `<span class="proma">${esc(toRomaji(x.r))}</span>` : ''}`, ok: x === item })) };
   }
-  const meta = `<span class="tag lv">${item.lvl}</span>${freqBadge(item.freq)}`, say = item.ex[0] ? item.ex[0].r : (item.kun[0] || item.on[0] || '').replace(/[.\-]/g, '');
+  const meta = `<span class="tag lv">${item.lvl}</span>${freqBadge(item.freq)}`, say = wordSay(item.ex[0] ? item.ex[0].r : (item.kun.find(k => !k.startsWith('-')) || item.on[0] || '').split('.').join('')), au = item.ex[0] ? ((VMAP['v:' + item.ex[0].w + '|' + item.ex[0].r] || {}).au || null) : null;
   const pool = K.filter(x => x.lvl === item.lvl).length > 10 ? K.filter(x => x.lvl === item.lvl) : K;
   if (dir === 'm2k') {
     const opts = shuffle([item, ...distract(item, pool, x => x.k, () => true)]);
-    return { item, dir, jp: false, say, hint: 'Which kanji has this meaning?', prompt: `<div class="pmean">${esc(item.m)}</div>`, meta, grid: true, opts: opts.map(x => ({ html: `<span class="jp ckanji">${x.k}</span>`, ok: x === item })) };
+    return { item, dir, jp: false, say, au, hint: 'Which kanji has this meaning?', prompt: `<div class="pmean">${esc(item.m)}</div>`, meta, grid: true, opts: opts.map(x => ({ html: `<span class="jp ckanji">${x.k}</span>`, ok: x === item })) };
   }
   if (dir === 'k2r') {
     const opts = shuffle([item, ...distract(item, pool, kRead, () => true)]);
-    return { item, dir, jp: false, say, hint: 'Which readings belong to this kanji?', prompt: `<div class="pkanji jp">${item.k}</div>`, meta, grid: false, opts: opts.map(x => ({ html: `<span class="jp">${esc(kRead(x))}</span>`, ok: x === item })) };
+    return { item, dir, jp: false, say, au, hint: 'Which readings belong to this kanji?', prompt: `<div class="pkanji jp">${item.k}</div>`, meta, grid: false, opts: opts.map(x => ({ html: `<span class="jp">${esc(kRead(x))}</span>`, ok: x === item })) };
   }
   const opts = shuffle([item, ...distract(item, pool, x => x.m, () => true)]);
-  return { item, dir, jp: false, say, hint: 'What does this kanji mean?', prompt: `<div class="pkanji jp">${item.k}</div>`, meta, grid: false, opts: opts.map(x => ({ html: esc(x.m), ok: x === item })) };
+  return { item, dir, jp: false, say, au, hint: 'What does this kanji mean?', prompt: `<div class="pkanji jp">${item.k}</div>`, meta, grid: false, opts: opts.map(x => ({ html: esc(x.m), ok: x === item })) };
 }
-function pickWeighted(pool, recent) {
-  const c = pool.filter(x => !recent.includes(x.id)); const list = (c.length ? c : pool).slice(0, 400);
-  const now = Date.now();
-  const w = list.map(x => { const p = progress[x.id]; if (!p) return 2; if (box(p) >= KNOWN_BOX) return now >= p.d ? 2 : 0.3; return Math.max(1, 2 + p.w - p.c * 0.3) + (now >= p.d ? 1 : 0); });
-  let r = Math.random() * w.reduce((a, b) => a + b, 0);
-  for (let i = 0; i < list.length; i++) { r -= w[i]; if (r <= 0) return list[i]; }
-  return list[list.length - 1];
+/* ---------- Learn sessions ----------
+   Each round is a deck of distinct items: words you're learning (most overdue first),
+   then new ones (most common first), then a few known ones to keep them fresh.
+   Nothing repeats in a round except an item you got wrong, which comes back a few
+   questions later so you can try it again. Later rounds skip everything already shown. */
+const ROUND = 20;
+function learnDeck(kind, exclude) {
+  const all = (kind === 'kanji' ? kSelection() : kind === 'grammar' ? gSel() : vSel()).filter(x => !exclude.has(x.id));
+  const now = Date.now(), byDue = (a, b) => (progress[a.id].d || 0) - (progress[b.id].d || 0);
+  const learning = all.filter(x => progress[x.id] && status(x.id) !== 'known').sort(byDue);
+  const knownDue = all.filter(x => status(x.id) === 'known' && (progress[x.id].d || 0) <= now).sort(byDue);
+  const fresh = freshFirst(all.filter(x => !progress[x.id]), 'learn').sort((a, b) => b.freq - a.freq);
+  const known = freshFirst(all.filter(x => status(x.id) === 'known' && (progress[x.id].d || 0) > now), 'learn');
+  const deck = [], add = list => { for (const x of list) { if (deck.length >= ROUND) break; if (!deck.includes(x)) deck.push(x); } };
+  add(learning.slice(0, 12)); add(knownDue.slice(0, 4)); add(fresh); add(learning); add(knownDue); add(known);
+  return shuffle(deck);
 }
-function learnPool(kind) {
-  if (kind === 'kanji') return kSelection();
-  if (kind === 'grammar') return gSel();
-  // keep sessions focused: studied-but-not-known words + the most frequent unseen ones
-  const sel = vSel(); const seen = sel.filter(x => progress[x.id] && status(x.id) !== 'known'), fresh = sel.filter(x => !progress[x.id]).sort((a, b) => b.freq - a.freq);
-  const known = sel.filter(x => status(x.id) === 'known');
-  const pool = seen.concat(fresh.slice(0, Math.max(20, 60 - seen.length)), shuffle(known).slice(0, 20));
-  return pool.length ? pool : sel;
-}
-function startLearn(kind) {
-  const pool = learnPool(kind);
-  if (pool.length < 2) return toast('Select at least two items');
-  S.session = { mode: 'learn', kind, pool, dir: kind === 'vocab' ? S.vf.dir : kind === 'grammar' ? S.gq : S.kf.qt, seen: 0, correct: 0, streak: 0, recent: [] };
+function startLearn(kind, carry) {
+  const used = carry ? carry.used : new Set();
+  const deck = learnDeck(kind, used);
+  if (deck.length < 2 && !carry) return toast('Select at least two items');
+  if (!deck.length) { toast("You've been through everything in this selection"); return; }
+  deck.forEach(x => used.add(x.id)); markSeen(deck.map(x => ['learn', x.id]));
+  S.session = { mode: 'learn', kind, deck, idx: 0, unique: deck.length, dir: kind === 'vocab' ? S.vf.dir : kind === 'grammar' ? S.gq : S.kf.qt,
+    seen: 0, correct: 0, streak: 0, first: new Map(), retries: new Map(), used, round: carry ? carry.round + 1 : 1 };
   nextQ();
 }
 function startTest(items) {
@@ -1450,25 +1472,30 @@ function startTest(items) {
 }
 function nextQ() {
   const s = S.session; let item;
-  if (s.mode === 'test') { if (s.idx >= s.queue.length) { s.done = true; render(); window.scrollTo(0, 0); return; } item = s.queue[s.idx]; }
-  else item = pickWeighted(s.pool, s.recent);
+  const list = s.mode === 'test' ? s.queue : s.deck;
+  if (s.idx >= list.length) { s.done = true; render(); window.scrollTo(0, 0); return; }
+  item = list[s.idx];
   let dir = s.dir;
   if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp'] : s.kind === 'grammar' ? ['gfill', 'gfill', 'g2m', 'm2g'] : ['k2m', 'm2k', 'k2r']);
   s.q = makeQ(s.kind, item, dir); s.answered = false; s.chosen = -1;
-  if (s.mode === 'learn') { s.recent.push(item.id); if (s.recent.length > Math.min(5, s.pool.length - 1)) s.recent.shift(); }
   render(); window.scrollTo(0, 0);
-  if (settings.autoSpeak && s.q.jp) speak(s.q.say);
+  if (settings.autoSpeak && s.q.jp) playAudio(s.q.au, s.q.say);
 }
 function answer(i) {
   const s = S.session; if (!s || s.mode === 'cards' || s.mode === 'exam' || s.answered || s.done || !s.q.opts[i]) return;
   s.answered = true; s.chosen = i; const ok = s.q.opts[i].ok;
   rec(s.q.item, ok);
-  if (s.mode === 'learn') { s.seen++; if (ok) { s.correct++; s.streak++; } else s.streak = 0; }
+  if (s.mode === 'learn') {
+    s.seen++; if (ok) { s.correct++; s.streak++; } else s.streak = 0;
+    const id = s.q.item.id; if (!s.first.has(id)) s.first.set(id, ok);
+    // a missed item comes back a few questions later (at most twice), so you can try again
+    if (!ok && (s.retries.get(id) || 0) < 2) { s.retries.set(id, (s.retries.get(id) || 0) + 1); s.deck.splice(Math.min(s.deck.length, s.idx + 4), 0, s.q.item); }
+  }
   else s.results.push({ item: s.q.item, ok });
   render();
-  if (s.mode === 'learn') { const a = $('.after'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (settings.autoSpeak && !s.q.jp) speak(s.q.say); }
+  if (s.mode === 'learn') { const a = $('.after'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (settings.autoSpeak && !s.q.jp) playAudio(s.q.au, s.q.say); }
 }
-function next() { const s = S.session; if (!s) return; if (s.mode === 'test') s.idx++; nextQ(); }
+function next() { const s = S.session; if (!s) return; s.idx++; nextQ(); }
 
 function cardQueue(kind, cram) {
   const pool = kind === 'vocab' ? vSel() : kind === 'grammar' ? gSel() : kSelection();
@@ -1484,9 +1511,9 @@ function startCards(kind, cram) {
   if (!queue.length) { S.session = null; toast('All caught up — nothing due and no new cards left today'); render(); return; }
   S.session = { mode: 'cards', kind, queue, idx: 0, flipped: false, counts: [0, 0, 0, 0], total: queue.length, hist: [] };
   render(); window.scrollTo(0, 0);
-  const c = queue[0]; if (settings.autoSpeak && kind === 'vocab' && settings.cardFront === 'jp') speak(c.r);
+  const c = queue[0]; if (settings.autoSpeak && kind === 'vocab' && settings.cardFront === 'jp') playWord(c);
 }
-function flip() { const s = S.session; if (!s || s.mode !== 'cards' || s.flipped || s.done) return; s.flipped = true; render(); if (settings.autoSpeak && s.kind === 'vocab') speak(s.queue[s.idx].r); }
+function flip() { const s = S.session; if (!s || s.mode !== 'cards' || s.flipped || s.done) return; s.flipped = true; render(); if (settings.autoSpeak && s.kind === 'vocab') playWord(s.queue[s.idx]); }
 function rate(g) {
   const s = S.session; if (!s || s.mode !== 'cards' || !s.flipped) return;
   const item = s.queue[s.idx], day = today();
@@ -1498,7 +1525,7 @@ function rate(g) {
   s.idx++; s.flipped = false;
   if (s.idx >= s.queue.length) s.done = true;
   render(); window.scrollTo(0, 0);
-  if (!s.done && settings.autoSpeak && s.kind === 'vocab' && settings.cardFront === 'jp') speak(s.queue[s.idx].r);
+  if (!s.done && settings.autoSpeak && s.kind === 'vocab' && settings.cardFront === 'jp') playWord(s.queue[s.idx]);
 }
 
 /** Go back to the previous card and undo its rating, so it can be rated again. */
@@ -1526,7 +1553,7 @@ function renderCards() {
   const remaining = s.queue.length - s.idx;
   const head = `<div class="qtop"><span class="qnav"><button class="ghost" onclick="App.endSession()">✕ End</button>${s.hist.length ? `<button class="ghost backbtn" onclick="App.back()" title="Previous card (undo its rating)">‹ Back</button>` : ''}</span><span>${remaining} left · ${progress[item.id] ? (isDue(item.id) ? 'review' : 'again') : '<b style="color:var(--accent)">new</b>'}</span></div>
     <div class="qbar"><i style="width:${(s.idx / s.queue.length) * 100}%"></i></div>`;
-  if (!s.flipped) return `${head}<div class="card fcard" onclick="App.flip()"><span class="side">${vocab ? (frontJp ? 'Word' : 'Meaning') : s.kind === 'grammar' ? 'Grammar' : 'Kanji'}</span>${front}<div class="pmeta"><span class="tag lv">${lvName(item.lvl)}</span>${s.kind === 'grammar' ? '' : freqBadge(item.freq)}</div>${frontJp && vocab ? `<button class="say" data-say="${esc(item.r)}" aria-label="Play">🔊</button>` : ''}</div>
+  if (!s.flipped) return `${head}<div class="card fcard" onclick="App.flip()"><span class="side">${vocab ? (frontJp ? 'Word' : 'Meaning') : s.kind === 'grammar' ? 'Grammar' : 'Kanji'}</span>${front}<div class="pmeta"><span class="tag lv">${lvName(item.lvl)}</span>${s.kind === 'grammar' ? '' : freqBadge(item.freq)}</div> ${frontJp && vocab ? `<button class="say" ${sayAttrs(item)} aria-label="Play">🔊</button>` : ''}</div>
     <p class="hint">${vocab ? (frontJp ? 'Recall the meaning (and reading).' : 'Recall the Japanese word.') : s.kind === 'grammar' ? 'Recall what it means and how it\'s formed.' : 'Recall the meaning and readings.'}</p>
     <button class="btn" onclick="App.flip()">Show answer</button>`;
   const lab = g => fmtIv(schedule(item, g, true));
@@ -1542,9 +1569,10 @@ function renderSession() {
   const s = S.session;
   if (s.mode === 'cards') return renderCards();
   if (s.mode === 'exam') return renderExam();
-  if (s.done) return renderResults();
-  const q = s.q, test = s.mode === 'test';
-  const head = test ? `<span>Question ${s.idx + 1} of ${s.queue.length}</span>` : `<span>🔥 ${s.streak} streak · ${s.correct}/${s.seen} correct</span>`;
+  if (s.done) return s.mode === 'learn' ? renderLearnDone() : renderResults();
+  const q = s.q, test = s.mode === 'test', list = test ? s.queue : s.deck;
+  const retry = !test && s.first.has(q.item.id) && !s.answered;
+  const head = test ? `<span>Question ${s.idx + 1} of ${s.queue.length}</span>` : `<span>${retry ? '<b style="color:var(--warn)">↻ try again</b> · ' : ''}${Math.min(s.first.size + (s.first.has(q.item.id) ? 0 : 1), s.unique)} of ${s.unique} · 🔥 ${s.streak}</span>`;
   const opts = q.opts.map((o, i) => {
     let c = 'choice';
     if (s.answered) c += o.ok ? ' ok' : i === s.chosen ? ' bad' : ' dim';
@@ -1552,17 +1580,28 @@ function renderSession() {
   }).join('');
   let after = '';
   if (s.answered) {
-    const ok = q.opts[s.chosen].ok, last = test && s.idx + 1 >= s.queue.length;
+    const ok = q.opts[s.chosen].ok, last = s.idx + 1 >= list.length;
     after = `<div class="verdict ${ok ? 'good' : 'bad'}">${ok ? pick(['正解! Correct', 'いいね! Nice one', 'すごい! Great']) : 'おしい! Not quite — the right answer is highlighted'}</div>
       ${test ? '' : `<div class="card" style="margin-top:12px">${detail(q.item)}</div>`}
       <button class="btn" onclick="App.next()">${last ? 'See results' : 'Next'} →</button>`;
   }
   return `<div class="qtop"><button class="ghost" onclick="App.endSession()">✕ End</button>${head}</div>
-  ${test ? `<div class="qbar"><i style="width:${(s.idx / s.queue.length) * 100}%"></i></div>` : ''}
-  <div class="card prompt">${q.prompt}<div class="pmeta">${q.meta}</div>${q.jp || s.answered ? `<button class="say" data-say="${esc(q.say)}" aria-label="Play">🔊</button>` : ''}</div>
+  <div class="qbar"><i style="width:${(test ? s.idx / s.queue.length : s.first.size / s.unique) * 100}%"></i></div>
+  <div class="card prompt">${q.prompt}<div class="pmeta">${q.meta}</div>${q.jp || s.answered ? `<button class="say" data-say="${esc(q.say)}"${q.au ? ` data-audio="${esc(q.au)}"` : ''} aria-label="Play">🔊</button>` : ''}</div>
   <div class="hint">${q.hint}</div>
   <div class="choices ${q.grid ? 'grid2' : ''}">${opts}</div>
   <div class="after">${after}</div>`;
+}
+function renderLearnDone() {
+  const s = S.session, n = s.first.size, ok = [...s.first.values()].filter(Boolean).length;
+  const missed = [...s.first].filter(([, v]) => !v).map(([id]) => s.deck.find(x => x.id === id));
+  const row = x => x.kind === 'vocab' ? vRow(x) : x.kind === 'grammar' ? gRow(x) : `<button class="row" data-open="${esc(x.id)}"><span class="rw jp" style="font-size:28px;min-width:44px">${x.k}</span><span class="rm">${esc(x.m)}</span></button>`;
+  const left = learnDeck(s.kind, s.used).length;
+  return `<div class="card score"><div class="muted">Round ${s.round} complete · ${n} ${s.kind === 'kanji' ? 'kanji' : s.kind === 'grammar' ? 'grammar points' : 'words'}</div>
+    <div class="big">${n ? Math.round(ok / n * 100) : 0}%</div><div>${ok} of ${n} right first time</div></div>
+  ${missed.length ? `<div class="label">Missed this round (${missed.length}) — tap to review</div><div class="list">${missed.map(row).join('')}</div>` : '<p class="note" style="text-align:center">No misses this round.</p>'}
+  ${left ? `<button class="btn" onclick="App.learnMore()">Next round · ${Math.min(left, ROUND)} new ${s.kind === 'vocab' ? 'words' : 'items'}</button>` : `<p class="note" style="text-align:center">You've been through every item in this selection.</p>`}
+  <button class="btn line" onclick="App.endSession()">Done</button>`;
 }
 function renderResults() {
   const s = S.session, n = s.results.length, ok = s.results.filter(r => r.ok).length, pct = n ? Math.round(ok / n * 100) : 0;
@@ -1682,7 +1721,7 @@ function markGrammar(j, g) {
 function gDetail(g) {
   const p = progress[g.id], v0 = gVariants(g)[0];
   return `<div class="detail force">
-    <div class="dtop"><div class="gtitle">${gTitleHtml(g.t)}</div>${v0 ? `<button class="say inl" data-say="${esc(v0.v)}" aria-label="Play">🔊</button>` : ''}</div>
+    <div class="dtop"><div class="gtitle">${gTitleHtml(g.t)}</div>${v0 ? `<button class="say inl" data-say="${esc(grammarSay(v0.v))}" aria-label="Play">🔊</button>` : ''}</div>
     <div class="tags"><span class="tag lv">${g.lvl}</span><span class="tag">grammar</span></div>
     <div class="dmean">${esc(g.m)}</div>
     ${g.fm ? `<div class="gform"><b>Formation</b>${gFormHtml(g.fm)}</div>` : ''}
@@ -1730,10 +1769,10 @@ function makeGrammarQ(item, dir) {
   const others = shuffle(pool.filter(x => x !== item && !grammarOverlap(item, x) && x.m)).slice(0, 3);
   if (dir === 'm2g') {
     const opts = shuffle([item, ...others]).map(x => ({ html: `<span class="cjp">${gTitleHtml(x.t, false)}</span>`, ok: x === item }));
-    return { item, dir, jp: false, say: (gVariants(item)[0] || {}).v || '', hint: 'Which grammar has this meaning?', grid: true, meta, prompt: `<div class="pmean">${esc(item.m)}</div>`, opts };
+    return { item, dir, jp: false, say: grammarSay((gVariants(item)[0] || {}).v), hint: 'Which grammar has this meaning?', grid: true, meta, prompt: `<div class="pmean">${esc(item.m)}</div>`, opts };
   }
   const opts = shuffle([item, ...others]).map(x => ({ html: esc(x.m), ok: x === item }));
-  return { item, dir, jp: true, say: (gVariants(item)[0] || {}).v || '', hint: 'What does this grammar mean?', grid: false, meta, prompt: `<div class="pword gq">${gTitleHtml(item.t, false)}</div>`, opts };
+  return { item, dir, jp: true, say: grammarSay((gVariants(item)[0] || {}).v), hint: 'What does this grammar mean?', grid: false, meta, prompt: `<div class="pword gq">${gTitleHtml(item.t, false)}</div>`, opts };
 }
 
 /* =====================================================================
@@ -2149,7 +2188,8 @@ const App = {
     progress[w.x.id] = { c: 0, w: 0, b: 0, d: Date.now(), t: Date.now(), l: w.x.lvl }; save();
     toast('Added: it\'s due in your next flashcard session'); render();
   },
-  startLearn, startTest: () => startTest(), answer, next,
+  startLearn: kind => startLearn(kind), learnMore() { const s = S.session; if (s && s.mode === 'learn') startLearn(s.kind, { used: s.used, round: s.round }); },
+  startTest: () => startTest(), answer, next,
   startCards: kind => startCards(kind), cram: kind => startCards(kind, true), flip, rate, back,
   retry() { const s = S.session; const items = shuffle(s.results.filter(r => !r.ok).map(r => r.item)); S.session = { mode: 'test', kind: s.kind, pool: s.pool, queue: items, idx: 0, dir: s.dir, results: [] }; nextQ(); },
   newTest() { S.session = null; S.view = 'vocab'; S.vtab = 'test'; render(); },
@@ -2216,7 +2256,7 @@ const App = {
 
 /* delegated taps: audio, detail sheets, tap-to-reveal furigana */
 document.addEventListener('click', e => {
-  const say = e.target.closest('[data-say]'); if (say && !say.dataset.open) { e.stopPropagation(); speak(say.dataset.say); return; }
+  const say = e.target.closest('[data-say]'); if (say && !say.dataset.open) { e.stopPropagation(); playAudio(say.dataset.audio, say.dataset.say); return; }
   const op = e.target.closest('[data-open]'); if (op) { openSheet(op.dataset.open); return; }
   const rb = e.target.closest('ruby');
   if (rb && document.body.classList.contains('furi-tap') && !e.target.closest('.choice')) { rb.classList.toggle('show'); e.stopPropagation(); }

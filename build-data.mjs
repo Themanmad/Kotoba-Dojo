@@ -18,6 +18,7 @@
  *   Kanji JLPT levels   (MIT)                   davidluzgouveia/kanji-data
  *   Tatoeba sentences   (CC BY 2.0 FR)          linked JMdict examples + Tatoeba exports (optional)
  *   JLPT grammar        (hanabira.org, CC; link back required) hanabira.org-japanese-content grammar JSON (optional)
+ *   Word audio          (CC BY-SA 4.0, Tofugu & WaniKani) tofugu/japanese-vocabulary-pronunciation-audio (optional)
  *
  * Usage
  *   node build-data.mjs [--out data] [--cache .cache] [--from-dir DIR]
@@ -37,6 +38,7 @@ import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import crypto from 'node:crypto';
 
 /* ---------------------------------------------------------------- args */
 const argv = process.argv.slice(2);
@@ -159,6 +161,30 @@ async function getGrammarFiles() {
     } catch (e) { warn(`grammar ${p}: ${e.message}`); }
   }
   return out;
+}
+
+/* ---------------------------------------------------------------- word audio (WaniKani / Tofugu) */
+const AUDIO_REPO = 'https://github.com/tofugu/japanese-vocabulary-pronunciation-audio';
+/** Folder of mp3 files named like 読む【よむ】.mp3. Uses --audio-dir, a folder in --from-dir, or a sparse git clone. */
+function getAudioDir() {
+  if (flag('no-audio')) return null;
+  const look = base => {
+    for (const d of [base, path.join(base, 'lib', 'mp3'), path.join(base, 'mp3'), path.join(base, 'japanese-vocabulary-pronunciation-audio', 'lib', 'mp3')])
+      if (fs.existsSync(d) && fs.statSync(d).isDirectory() && fs.readdirSync(d).some(n => /【.+】\.mp3$/.test(n))) return d;
+    return null;
+  };
+  if (opt('audio-dir')) return look(path.resolve(opt('audio-dir')));
+  if (FROM) { const d = look(FROM); if (!d) warn('no audio folder in --from-dir, skipping word audio'); return d; }
+  const dest = path.join(CACHE, 'wk-audio');
+  try {
+    if (!look(dest)) {
+      fs.rmSync(dest, { recursive: true, force: true });
+      log('  cloning word audio (mp3 only)');
+      execFileSync('git', ['clone', '--depth', '1', '--filter=blob:none', '--sparse', AUDIO_REPO, dest], { stdio: 'inherit' });
+      execFileSync('git', ['-C', dest, 'sparse-checkout', 'set', 'lib/mp3'], { stdio: 'inherit' });
+    } else log('  cached word audio');
+    return look(dest);
+  } catch (e) { warn('word audio: ' + e.message); return null; }
 }
 
 /* ---------------------------------------------------------------- file helpers */
@@ -621,6 +647,32 @@ async function main() {
     log(`  ${gCount} grammar points`);
   } else meta.notes.push('Grammar data unavailable in this build; the app uses its built-in starter grammar.');
 
+  /* ---- 8c. Word audio (native recordings) */
+  log('Word audio (WaniKani / Tofugu)');
+  const audioDir = getAudioDir();
+  if (audioDir) {
+    const files = new Map();
+    for (const n of fs.readdirSync(audioDir)) {
+      const m = /^(.+?)【(.+)】\.mp3$/.exec(n); if (!m) continue;
+      const key = m[1].replace(/^[〜~～]/, '') + '|' + kata2hira(m[2]);
+      if (!files.has(key)) files.set(key, n);
+    }
+    fs.mkdirSync(path.join(OUT, 'audio'), { recursive: true });
+    let n = 0, bytes = 0;
+    for (const l of LEVELS) for (const e of vocab[l]) {
+      const r = kata2hira(e.r);
+      const f = files.get(e.w + '|' + r) || (e.a && files.get(e.a + '|' + r));
+      if (!f) continue;
+      const id = crypto.createHash('sha1').update(f).digest('hex').slice(0, 12);
+      const out = path.join(OUT, 'audio', id + '.mp3');
+      if (!fs.existsSync(out)) { fs.copyFileSync(path.join(audioDir, f), out); bytes += fs.statSync(out).size; }
+      e.au = id; n++;
+    }
+    meta.counts.audio = n;
+    meta.sources.audio = 'tofugu/japanese-vocabulary-pronunciation-audio (native speakers, mp3)';
+    log(`  ${n} words with native audio (${(bytes / 1e6).toFixed(1)} MB)`);
+  } else meta.notes.push('Native word audio unavailable in this build; words use the device voice.');
+
   /* ---- 9. write */
   log('Writing files');
   let total = 0;
@@ -640,7 +692,8 @@ async function main() {
     { name: 'Tatoeba', by: 'Tatoeba contributors', license: 'CC BY 2.0 FR', url: 'https://tatoeba.org/' },
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },
     { name: 'Kanji JLPT levels', by: 'David Luz Gouveia (kanji-data)', license: 'MIT', url: 'https://github.com/davidluzgouveia/kanji-data' },
-    { name: 'JLPT grammar', by: 'hanabira.org', license: 'Creative Commons (in-house content)', url: 'https://hanabira.org/' }
+    { name: 'JLPT grammar', by: 'hanabira.org', license: 'Creative Commons (in-house content)', url: 'https://hanabira.org/' },
+    { name: 'Word pronunciation audio', by: 'Tofugu & WaniKani', license: 'CC BY-SA 4.0', url: 'https://github.com/tofugu/japanese-vocabulary-pronunciation-audio' }
   ];
   total += write('meta.json', meta);
   log(`Done: ${Object.values(meta.counts.vocab).reduce((a, b) => a + b, 0)} words, ${kanjiSet.size} kanji, ${(total / 1e6).toFixed(1)} MB in ${OUT}`);

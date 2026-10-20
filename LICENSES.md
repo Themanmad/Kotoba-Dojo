@@ -15,6 +15,7 @@ generated `data/` files are distributed under **CC BY-SA 4.0**.
 | [JLPT vocabulary lists](https://www.tanos.co.uk/jlpt/) | Jonathan Waller | [CC BY](https://creativecommons.org/licenses/by/4.0/) | Which words belong to N5–N1 (via [yomitan-jlpt-vocab](https://github.com/stephenmk/yomitan-jlpt-vocab) or [open-anki-jlpt-decks](https://github.com/jamsinclair/open-anki-jlpt-decks)) |
 | [kanji-data](https://github.com/davidluzgouveia/kanji-data) | David Luz Gouveia | MIT | Current (post-2010) JLPT levels for kanji |
 | [hanabira.org](https://hanabira.org/) grammar ([content repo](https://github.com/tristcoil/hanabira.org-japanese-content)) | hanabira.org | Creative Commons (in-house content; link back to hanabira.org required). Code: MIT | JLPT N5–N1 grammar points, formation, explanations, examples |
+| [Japanese vocabulary pronunciation audio](https://github.com/tofugu/japanese-vocabulary-pronunciation-audio) | [Tofugu](https://www.tofugu.com) & [WaniKani](https://www.wanikani.com) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Native-speaker word recordings in `data/audio/` (copied unchanged, renamed by hash) |
 | [kuromoji.js](https://github.com/takuyaa/kuromoji.js) (build tool only) | Takuya Asano | Apache 2.0 | Furigana for example sentences |
 
 The mock exam's questions are generated from the data above, not taken from JLPT papers (those are the Japan Foundation's copyright). Pass marks are the official ones published at [jlpt.jp](https://www.jlpt.jp/e/guideline/results.html).
