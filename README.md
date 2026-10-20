@@ -17,9 +17,9 @@ every Monday.
 - **Grammar** — JLPT N5–N1 grammar from **hanabira.org**: formation, explanation and example sentences with furigana. Flashcards, fill-in-the-blank quizzes and grammar tests.
 - **Mock exam** — timed, JLPT-style exam per level: 漢字読み, 表記, 文脈規定, 言い換え, 文法形式, 文の組み立て (★) and 聴解 (listening). Scored against the official pass marks, with a review of every mistake and a history of attempts. Reading (読解) isn't included, so the score is an estimate.
 - **Search** — Japanese, romaji or English across all levels: words, kanji and grammar.
-- **Native audio** — word recordings by native speakers from Tofugu & WaniKani, with Kanji alive filling gaps, and native recordings of example sentences from Tatoeba (each one credited to its recorder). The build prefers example sentences that have a recording, and the mock exam's listening section uses them. Anything without a recording falls back to your device's Japanese voice.
+- **Native audio** — word recordings by native speakers from Tofugu & WaniKani, with Kanji alive filling gaps, and native recordings of example sentences from Tatoeba (each one credited to its recorder). The build prefers example sentences that have a recording, and the mock exam's listening section uses them. There's no synthetic voice: items without a recording simply have no play button, and the listening section uses recorded sentences only.
 - **Progress** — per-level progress, reviews today, streak. Export/import to move between devices.
-- Furigana on / tap-to-reveal / off, optional romaji, Japanese audio, light and dark mode.
+- Furigana on / tap-to-reveal / off, optional romaji, native-speaker audio, light and dark mode.
 
 ## Set it up (about 5 minutes)
 

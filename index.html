@@ -781,26 +781,21 @@ function toRomaji(s) {
 const hira2kata = s => String(s).replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
 const wordSay = r => hira2kata(String(r || '').replace(/[.\-]/g, ''));
 const grammarSay = v => ({ は: 'わ', へ: 'え', を: 'お' })[v] || String(v || '').replace(/([てでにと])は/g, '$1わ');
-/* Native recordings (Tofugu / WaniKani) when the build found one for the word;
-   the device voice otherwise, or if the file can't be played. */
+/* Audio = native recordings only (Tofugu / WaniKani, Kanji alive, Tatoeba).
+   No synthetic device voice: where there is no recording, no play button is shown. */
 let curAudio = null;
-function playAudio(id, fallback) {
-  try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
+const hasRec = id => !!id && DATA.mode === 'full';
+function playAudio(id) {
   if (curAudio) { try { curAudio.pause(); } catch (e) {} curAudio = null; }
-  if (!id || DATA.mode !== 'full') return fallback ? speak(fallback) : undefined;
-  let fell = false; const fb = () => { if (!fell) { fell = true; if (fallback) speak(fallback); } };
-  try { const a = new Audio(id[0] === 's' ? `data/saudio/${id.slice(1)}.mp3` : `data/audio/${id}.mp3`); curAudio = a; a.onerror = fb; const pr = a.play(); if (pr && pr.catch) pr.catch(e => { if (e && e.name !== 'AbortError') fb(); }); } catch (e) { fb(); }
-}
-const playWord = x => playAudio(x && x.au, x && wordSay(x.r));
-const sayAttrs = x => `data-say="${esc(wordSay(x.r))}"${x.au ? ` data-audio="${esc(x.au)}"` : ''}`;
-function speak(t) {
+  if (!hasRec(id)) return;
   try {
-    if (!('speechSynthesis' in window)) return toast('Audio not supported in this browser');
-    const u = new SpeechSynthesisUtterance(plain(t)); u.lang = 'ja-JP'; u.rate = 0.9;
-    const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith('ja')); if (v) u.voice = v;
-    speechSynthesis.cancel(); speechSynthesis.speak(u);
+    const a = new Audio(id[0] === 's' ? `data/saudio/${id.slice(1)}.mp3` : `data/audio/${id}.mp3`); curAudio = a;
+    a.onerror = () => toast('Recording unavailable');
+    const pr = a.play(); if (pr && pr.catch) pr.catch(e => { if (e && e.name === 'NotSupportedError') toast('Recording unavailable'); });
   } catch (e) {}
 }
+const playWord = x => x && playAudio(x.au);
+const sayBtn = (id, cls = 'say inl') => hasRec(id) ? `<button class="${cls}" data-audio="${esc(id)}" aria-label="Play recording" title="Native recording">🔊</button>` : '';
 const FREQ_LABEL = ['', 'Rare', 'Uncommon', 'Common', 'Very common', 'Essential'];
 function freqBadge(n, compact) {
   n = Math.max(1, Math.min(5, n | 0));
@@ -1035,7 +1030,7 @@ function wotdCard() {
   const { x, l } = w, st = levelStats('vocab', l), pct = st.total ? Math.round(st.known / st.total * 100) : 0, isNew = !progress[x.id];
   return `<div class="card wotd force">
     <div class="wk"><span>Word of the day</span><span class="tag lv">${l}</span></div>
-    <div class="dtop"><div class="w jp">${ruby(x.f, true)}</div><button class="say inl" ${sayAttrs(x)} aria-label="Play">🔊</button></div>
+    <div class="dtop"><div class="w jp">${ruby(x.f, true)}</div>${sayBtn(x.au)}</div>
     <div class="wm"><b>${esc(x.m)}</b> <span class="muted">· ${esc(x.r)} · ${esc(toRomaji(x.r))}</span></div>
     <div class="tags"><span class="tag">${esc(POS_LABEL[x.pos] || x.pos)}</span>${freqBadge(x.freq)}</div>
     ${x.ex[0] ? exHtml(x.ex[0]) : ''}
@@ -1179,7 +1174,7 @@ function vSettings() {
     <div class="set" style="display:block"><b>Furigana</b><span>Reading shown above kanji</span>
       <div style="margin-top:10px">${seg([['on', 'Show'], ['tap', 'Tap to reveal'], ['off', 'Hide']], settings.furigana, 'App.furi')}</div></div>
     <div class="set"><div><b>Show romaji</b><span>Latin letters under words in questions</span></div>${sw('romaji')}</div>
-    <div class="set"><div><b>Auto-play audio</b><span>Speak Japanese prompts aloud</span></div>${sw('autoSpeak')}</div>
+    <div class="set"><div><b>Auto-play recordings</b><span>Play native-speaker audio automatically when a word has a recording</span></div>${sw('autoSpeak')}</div>
     <div class="set"><div><b>Stroke numbers</b><span>Number each stroke in kanji diagrams</span></div>${sw('strokeNums')}</div>
     <div class="set" style="display:block"><b>New flashcards per day</b>
       <div style="margin-top:10px">${chips([[5, '5'], [10, '10'], [20, '20'], [30, '30'], [50, '50']], settings.newPerDay, 'App.newPerDay')}</div></div>
@@ -1279,14 +1274,14 @@ function sentHtml(m, i, len, html) {
 function exHtml(e, g) {
   let j = e.j.includes('{') ? e.j : autoFuri(e.j);
   if (g) j = markGrammar(j, g);
-  return `<div class="ex"><div style="flex:1"><div class="jp">${ruby(j, true).replace(/\u0001/g, '<mark class="gp">').replace(/\u0002/g, '</mark>')}</div>${e.r ? `<div class="en" style="font-style:italic">${esc(e.r)}</div>` : ''}<div class="en">${esc(e.e)}</div>${e.t ? `<a class="src" href="https://tatoeba.org/en/sentences/show/${encodeURIComponent(e.t)}" target="_blank" rel="noopener">Tatoeba #${esc(e.t)}</a>` : ''}${e.au && DATA.mode === 'full' ? `<span class="src"> · 🎙 <a class="src" href="${esc(e.al || 'https://tatoeba.org/en/user/profile/' + encodeURIComponent(e.by || ''))}" target="_blank" rel="noopener">${esc(e.by || 'Tatoeba')}</a>, ${esc(e.lic || '')}</span>` : ''}</div><button class="say inl" data-say="${esc(plain(e.j))}"${e.au && DATA.mode === 'full' ? ` data-audio="s${esc(e.au)}" title="Native recording"` : ''} aria-label="Play">🔊</button></div>`;
+  return `<div class="ex"><div style="flex:1"><div class="jp">${ruby(j, true).replace(/\u0001/g, '<mark class="gp">').replace(/\u0002/g, '</mark>')}</div>${e.r ? `<div class="en" style="font-style:italic">${esc(e.r)}</div>` : ''}<div class="en">${esc(e.e)}</div>${e.t ? `<a class="src" href="https://tatoeba.org/en/sentences/show/${encodeURIComponent(e.t)}" target="_blank" rel="noopener">Tatoeba #${esc(e.t)}</a>` : ''}${e.au && DATA.mode === 'full' ? `<span class="src"> · 🎙 <a class="src" href="${esc(e.al || 'https://tatoeba.org/en/user/profile/' + encodeURIComponent(e.by || ''))}" target="_blank" rel="noopener">${esc(e.by || 'Tatoeba')}</a>, ${esc(e.lic || '')}</span>` : ''}</div>${e.au ? sayBtn('s' + e.au) : ''}</div>`;
 }
 function vDetail(x) {
   const ks = [...new Set([...x.w].filter(c => KMAP[c]))];
   const p = progress[x.id];
   const uk = x.senses.some(s => (s.x || []).includes('uk'));
   return `<div class="detail force">
-    <div class="dtop"><div class="dword jp">${ruby(x.f, true)}</div><button class="say inl" ${sayAttrs(x)} aria-label="Play">🔊</button></div>
+    <div class="dtop"><div class="dword jp">${ruby(x.f, true)}</div>${sayBtn(x.au)}</div>
     <div class="dread jp">${esc(x.r)} · ${esc(toRomaji(x.r))}${x.alt ? ` · also written <span class="jp">${esc(x.alt)}</span>` : ''}</div>
     <div class="tags"><span class="tag lv">${lvName(x.lvl)}</span><span class="tag">${esc(POS_LABEL[x.pos] || x.pos)}</span>${x.common ? '<span class="tag cm">common word</span>' : ''}${uk ? '<span class="tag">usually kana</span>' : ''}${freqBadge(x.freq)}</div>
     ${x.senses.length > 1 ? `<ol class="senses">${x.senses.map((s, i) => `<li>${s.p && s.p.length && (i === 0 || s.p.join() !== x.senses[i - 1].p.join()) ? `<span class="pos">${esc(posLabel(s.p))}</span>` : ''}${esc(s.g.join('; '))}${s.i ? ` <span class="muted">(${esc(s.i)})</span>` : ''}</li>`).join('')}</ol>`
@@ -1311,7 +1306,7 @@ function kDetail(k) {
     ${(() => { const sim = similarKanji(k); return sim.length ? `<div class="mini">Different kanji with similar meaning</div><div class="simlist">${sim.map(({ x }) => `<button class="simrow" data-open="k:${esc(x.k)}"><span class="sk jp">${x.k}</span><span class="sm"><b>${esc(x.mean.slice(0, 3).join('; '))}</b><span>${esc(kRead(x))}${x.ex[0] ? ` · e.g. <span class="jp">${esc(x.ex[0].w)}</span> ${esc(x.ex[0].m)}` : ''}</span></span><span class="lvl">${x.lvl}</span></button>`).join('')}</div>
       <p class="note" style="margin-top:6px">Compare the example words to see how each one is used.</p>` : ''; })()}
     ${words.length ? `<div class="mini">Words using ${k.k}</div><div class="exlist">${words.map(e => { const v = VMAP['v:' + e.w + '|' + e.r];
-      return `<button class="exrow" ${v ? `data-open="${esc(v.id)}"` : `data-say="${esc(wordSay(e.r))}"`}><span class="jp">${ruby(furi(e.w, e.r), true)}</span><span class="m">${esc(e.m)}</span>${e.l ? `<span class="lvl" style="font-size:11px;color:var(--accent);font-weight:600">${e.l}</span>` : ''}</button>`; }).join('')}</div>` : ''}
+      return `<button class="exrow" ${v ? `data-open="${esc(v.id)}"` : ''}><span class="jp">${ruby(furi(e.w, e.r), true)}</span><span class="m">${esc(e.m)}</span>${e.l ? `<span class="lvl" style="font-size:11px;color:var(--accent);font-weight:600">${e.l}</span>` : ''}</button>`; }).join('')}</div>` : ''}
     <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong · next review ${p.d > Date.now() ? 'in ' + fmtIv(p.d - Date.now()) : 'due now'}` : 'Not studied yet'}${DATA.mode === 'full' ? ' · Stroke order: KanjiVG' : ''}</div>
   </div>`;
 }
@@ -1482,7 +1477,7 @@ function nextQ() {
   if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp'] : s.kind === 'grammar' ? ['gfill', 'gfill', 'g2m', 'm2g'] : ['k2m', 'm2k', 'k2r']);
   s.q = makeQ(s.kind, item, dir); s.answered = false; s.chosen = -1;
   render(); window.scrollTo(0, 0);
-  if (settings.autoSpeak && s.q.jp) playAudio(s.q.au, s.q.say);
+  if (settings.autoSpeak && s.q.jp) playAudio(s.q.au);
 }
 function answer(i) {
   const s = S.session; if (!s || s.mode === 'cards' || s.mode === 'exam' || s.answered || s.done || !s.q.opts[i]) return;
@@ -1496,7 +1491,7 @@ function answer(i) {
   }
   else s.results.push({ item: s.q.item, ok });
   render();
-  if (s.mode === 'learn') { const a = $('.after'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (settings.autoSpeak && !s.q.jp) playAudio(s.q.au, s.q.say); }
+  if (s.mode === 'learn') { const a = $('.after'); if (a && a.scrollIntoView) a.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (settings.autoSpeak && !s.q.jp) playAudio(s.q.au); }
 }
 function next() { const s = S.session; if (!s) return; s.idx++; nextQ(); }
 
@@ -1556,7 +1551,7 @@ function renderCards() {
   const remaining = s.queue.length - s.idx;
   const head = `<div class="qtop"><span class="qnav"><button class="ghost" onclick="App.endSession()">✕ End</button>${s.hist.length ? `<button class="ghost backbtn" onclick="App.back()" title="Previous card (undo its rating)">‹ Back</button>` : ''}</span><span>${remaining} left · ${progress[item.id] ? (isDue(item.id) ? 'review' : 'again') : '<b style="color:var(--accent)">new</b>'}</span></div>
     <div class="qbar"><i style="width:${(s.idx / s.queue.length) * 100}%"></i></div>`;
-  if (!s.flipped) return `${head}<div class="card fcard" onclick="App.flip()"><span class="side">${vocab ? (frontJp ? 'Word' : 'Meaning') : s.kind === 'grammar' ? 'Grammar' : 'Kanji'}</span>${front}<div class="pmeta"><span class="tag lv">${lvName(item.lvl)}</span>${s.kind === 'grammar' ? '' : freqBadge(item.freq)}</div> ${frontJp && vocab ? `<button class="say" ${sayAttrs(item)} aria-label="Play">🔊</button>` : ''}</div>
+  if (!s.flipped) return `${head}<div class="card fcard" onclick="App.flip()"><span class="side">${vocab ? (frontJp ? 'Word' : 'Meaning') : s.kind === 'grammar' ? 'Grammar' : 'Kanji'}</span>${front}<div class="pmeta"><span class="tag lv">${lvName(item.lvl)}</span>${s.kind === 'grammar' ? '' : freqBadge(item.freq)}</div> ${frontJp && vocab ? sayBtn(item.au, 'say') : ''}</div>
     <p class="hint">${vocab ? (frontJp ? 'Recall the meaning (and reading).' : 'Recall the Japanese word.') : s.kind === 'grammar' ? 'Recall what it means and how it\'s formed.' : 'Recall the meaning and readings.'}</p>
     <button class="btn" onclick="App.flip()">Show answer</button>`;
   const lab = g => fmtIv(schedule(item, g, true));
@@ -1590,7 +1585,7 @@ function renderSession() {
   }
   return `<div class="qtop"><button class="ghost" onclick="App.endSession()">✕ End</button>${head}</div>
   <div class="qbar"><i style="width:${(test ? s.idx / s.queue.length : s.first.size / s.unique) * 100}%"></i></div>
-  <div class="card prompt">${q.prompt}<div class="pmeta">${q.meta}</div>${q.jp || s.answered ? `<button class="say" data-say="${esc(q.say)}"${q.au ? ` data-audio="${esc(q.au)}"` : ''} aria-label="Play">🔊</button>` : ''}</div>
+  <div class="card prompt">${q.prompt}<div class="pmeta">${q.meta}</div>${q.jp || s.answered ? sayBtn(q.au, 'say') : ''}</div>
   <div class="hint">${q.hint}</div>
   <div class="choices ${q.grid ? 'grid2' : ''}">${opts}</div>
   <div class="after">${after}</div>`;
@@ -1724,7 +1719,7 @@ function markGrammar(j, g) {
 function gDetail(g) {
   const p = progress[g.id], v0 = gVariants(g)[0];
   return `<div class="detail force">
-    <div class="dtop"><div class="gtitle">${gTitleHtml(g.t)}</div>${v0 ? `<button class="say inl" data-say="${esc(grammarSay(v0.v))}" aria-label="Play">🔊</button>` : ''}</div>
+    <div class="dtop"><div class="gtitle">${gTitleHtml(g.t)}</div></div>
     <div class="tags"><span class="tag lv">${g.lvl}</span><span class="tag">grammar</span></div>
     <div class="dmean">${esc(g.m)}</div>
     ${g.fm ? `<div class="gform"><b>Formation</b>${gFormHtml(g.fm)}</div>` : ''}
@@ -1900,12 +1895,12 @@ const EXAM_GEN = {
     return null;
   },
   li(x, l, pool) {
-    if (!('speechSynthesis' in window)) return null;
     const es = (x.ex || []).filter(e => e.e && plain(e.j).length <= 40); if (!es.length) return null;
-    const native = es.filter(e => e.au && DATA.mode === 'full'), e = pick(native.length ? native : es), au = e.au && DATA.mode === 'full' ? 's' + e.au : null;
+    const native = es.filter(e => hasRec(e.au)); if (!native.length) return null;
+    const e = pick(native), au = 's' + e.au;
     const wrong = shuffle(pool.flatMap(y => (y.ex || []).map(z => z.e)).filter(t => t && t !== e.e));
     const f = fillFour(e.e, wrong); if (!f) return null;
-    return { item: x, fullM: exMarkup(e), say: plain(e.j), au, prompt: `<button class="listen" data-say="${esc(plain(e.j))}"${au ? ` data-audio="${au}"` : ''}>🔊 Play</button><div class="proma">${au ? `Native recording by ${esc(e.by || 'a Tatoeba member')} · ` : ''}Tap to replay as often as you like.</div>`, opts: f.opts.map(esc), ans: f.ans, raw: f.opts, full: plain(e.j) };
+    return { item: x, fullM: exMarkup(e), say: plain(e.j), au, prompt: `<button class="listen" data-audio="${au}">🔊 Play</button><div class="proma">Native recording by ${esc(e.by || 'a Tatoeba member')} · tap to replay as often as you like.</div>`, opts: f.opts.map(esc), ans: f.ans, raw: f.opts, full: plain(e.j) };
   }
 };
 /** Split a sentence into JLPT-style chunks (文節): each chunk is a content word plus the
@@ -1976,11 +1971,11 @@ function stopExamTimer() { if (examTimer) { clearInterval(examTimer); examTimer 
 async function startExam(scope) {
   const l = S.examLv; scope = scope || { type: 'full' };
   try { await Promise.all([load('vocab', l), load('grammar', l)]); } catch (e) {}
-  if (scope.type !== 'full' && (scope.id === 'listen' || scope.id === 'li') && !('speechSynthesis' in window)) return toast('Listening needs a browser with speech support');
   const qs = buildExam(l, scope, S.examN);
+  if ((scope.id === 'listen' || scope.id === 'li') && qs.length < 3) return toast(`No native ${l} sentence recordings yet — listening practice appears once the full data is built`);
   if (qs.length < (scope.type === 'full' ? 10 : 3)) return toast(`Not enough ${l} data for this ${scope.type === 'full' ? 'exam' : 'section'} yet`);
   S.session = { mode: 'exam', level: l, scope, qs, idx: 0, ans: qs.map(() => -1), start: Date.now(), limit: qs.length * SEC_PER_Q * 1000, done: false,
-    skippedListening: !('speechSynthesis' in window) };
+    skippedListening: scope.type === 'full' && !qs.some(q => q.key === 'li') };
   stopExamTimer();
   examTimer = setInterval(() => {
     const s = S.session; if (!s || s.mode !== 'exam' || s.done) return stopExamTimer();
@@ -1991,7 +1986,7 @@ async function startExam(scope) {
   render(); window.scrollTo(0, 0);
   examAutoplay();
 }
-function examAutoplay() { const s = S.session; const q = s && s.qs[s.idx]; if (q && q.key === 'li' && q.say) setTimeout(() => playAudio(q.au, q.say), 300); }
+function examAutoplay() { const s = S.session; const q = s && s.qs[s.idx]; if (q && q.key === 'li' && q.say) setTimeout(() => playAudio(q.au), 300); }
 function examPick(i) {
   const s = S.session; if (!s || s.mode !== 'exam' || s.done) return;
   s.ans[s.idx] = i; render();
@@ -2055,7 +2050,7 @@ function vExam() {
   <div class="label">Level</div>${chips(lv.map(l => [l, l]), S.examLv, 'App.examLvSet')}
   <div style="margin-top:14px">${seg([['full', 'Full exam'], ['section', 'By section']], S.examMode, 'App.examModeSet')}</div>
   ${body}
-  <p class="note">Practice exam, not an official JLPT paper. Reading comprehension (読解) isn't included, so scores are estimates. Listening uses your device's Japanese voice.</p>
+  <p class="note">Practice exam, not an official JLPT paper. Reading comprehension (読解) isn't included, so scores are estimates. Listening uses native-speaker recordings only.</p>
   ${hist.length ? `<div class="label">Recent attempts</div><div class="card lvrows">${hist.map(h => h.part
     ? `<div class="lvrow"><b>${h.l}</b><span class="muted jp">${esc(h.part)}</span><span>${h.ok}/${h.n} · ${Math.round(h.ok / h.n * 100)}%</span></div>`
     : `<div class="lvrow"><b>${h.l}</b><span class="muted">${esc(h.d)} · full exam</span><span class="${h.pass ? 'okc' : 'badc'}">${h.total}/${h.max} · ${h.pass ? '合格 pass' : 'not yet'}</span></div>`).join('')}</div>` : ''}`;
@@ -2113,7 +2108,7 @@ function renderExamResult() {
   <div class="card lvrows">${r.rows.map(([n, v, max, min]) => `<div class="lvrow"><span style="grid-column:1/3">${n}</span><span class="${v >= min ? 'okc' : 'badc'}">${v}/${max} <span class="muted">(min ${min})</span></span></div>`).join('')}
     ${r.readingSkipped ? '<div class="lvrow"><span style="grid-column:1/3">Reading (読解)</span><span class="muted">not included</span></div>' : ''}</div>
   <div class="label">By question type</div><div class="card lvrows wide">${secRows}</div>
-  ${s.skippedListening ? '<p class="note">Listening was skipped because this browser has no speech support.</p>' : ''}
+  ${s.skippedListening ? '<p class="note">Listening wasn\'t included: there are no native sentence recordings for this level in the current data.</p>' : ''}
   ${examReview(s)}
   <button class="btn" onclick="App.startExam()">Take another ${s.level} exam</button>
   <button class="btn line" onclick="App.endSession()">Done</button>
@@ -2291,7 +2286,7 @@ const App = {
 
 /* delegated taps: audio, detail sheets, tap-to-reveal furigana */
 document.addEventListener('click', e => {
-  const say = e.target.closest('[data-say]'); if (say && !say.dataset.open) { e.stopPropagation(); playAudio(say.dataset.audio, say.dataset.say); return; }
+  const say = e.target.closest('[data-audio]'); if (say && !say.dataset.open) { e.stopPropagation(); playAudio(say.dataset.audio); return; }
   const op = e.target.closest('[data-open]'); if (op) { openSheet(op.dataset.open); return; }
   const rb = e.target.closest('ruby');
   if (rb && document.body.classList.contains('furi-tap') && !e.target.closest('.choice')) { rb.classList.toggle('show'); e.stopPropagation(); }
@@ -2319,7 +2314,6 @@ document.addEventListener('keydown', e => {
 });
 
 applySettings();
-if ('speechSynthesis' in window) speechSynthesis.getVoices();
 boot().then(render, err => { console.error(err); render(); });
 </script>
 </body>
