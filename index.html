@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kotoba Dojo</title>
+<meta name="description" content="Learn Japanese vocabulary and kanji with multiple-choice practice, tests, furigana and frequency info.">
+<meta name="theme-color" content="#c8102e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf7f2;--card:#ffffff;--ink:#1d1b19;--muted:#6f675e;--line:#e8e1d7;--chip:#f2ede5;
+  --accent:#c8102e;--accent-soft:#fbe9ec;--ok:#1f8a4c;--ok-soft:#e6f5ec;--bad:#c62828;--bad-soft:#fdeceb;
+  --warn:#b7791f;--shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141312;--card:#1e1c1a;--ink:#f2ede7;--muted:#a69e94;--line:#34302c;--chip:#292623;
+    --accent:#ff5a6e;--accent-soft:#3a1d22;--ok:#4cc483;--ok-soft:#163023;--bad:#ff6b6b;--bad-soft:#3a1b1b;
+    --warn:#e2b04a;--shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141312;--card:#1e1c1a;--ink:#f2ede7;--muted:#a69e94;--line:#34302c;--chip:#292623;
+  --accent:#ff5a6e;--accent-soft:#3a1d22;--ok:#4cc483;--ok-soft:#163023;--bad:#ff6b6b;--bad-soft:#3a1b1b;
+  --warn:#e2b04a;--shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans JP",system-ui,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;padding-bottom:calc(76px + env(safe-area-inset-bottom));-webkit-tap-highlight-color:transparent}
+.jp{font-family:"Noto Sans JP",sans-serif}
+button{font:inherit;color:inherit}
+header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .in{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:12px 16px}
+.logo{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:"Noto Sans JP";font-weight:700;font-size:15px}
+.brand{font-weight:700;letter-spacing:-.01em}
+.brand small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:-2px}
+main{max-width:640px;margin:0 auto;padding:16px}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:10}
+nav.tabs .in{max-width:640px;margin:0 auto;display:flex}
+nav.tabs button{flex:1;background:none;border:0;padding:7px 0 9px;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer}
+nav.tabs button b{font-family:"Noto Sans JP";font-size:20px;font-weight:500;line-height:1.3}
+nav.tabs button.on{color:var(--accent)}
+h1{font-size:23px;margin:4px 0 4px;letter-spacing:-.01em}
+h1 .muted{font-weight:500}
+.sub{color:var(--muted);margin:0 0 16px}
+.muted{color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+.btn{appearance:none;border:0;background:var(--accent);color:#fff;font-weight:600;padding:13px 18px;border-radius:12px;cursor:pointer;width:100%;font-size:15px;margin-top:14px}
+.btn:active{transform:scale(.99)}
+.btn.sec{background:var(--chip);color:var(--ink)}
+.btn.line{background:none;border:1.5px solid var(--line);color:var(--ink)}
+.btn.danger{background:none;border:1.5px solid var(--bad);color:var(--bad)}
+.ghost{background:none;border:0;color:var(--muted);cursor:pointer;padding:6px 4px}
+.seg{display:flex;background:var(--chip);border-radius:12px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:none;padding:9px 6px;border-radius:9px;font-size:14px;color:var(--muted);cursor:pointer;line-height:1.2}
+.seg button.on{background:var(--card);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 0 8px;font-weight:600}
+.note{font-size:13px;color:var(--muted);margin-top:12px}
+/* home */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat b{display:block;font-size:24px;letter-spacing:-.02em}
+.stat span{font-size:12px;color:var(--muted)}
+.pbar{height:8px;background:var(--chip);border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.actions{display:grid;gap:10px;margin-top:16px}
+.action{display:flex;align-items:center;gap:14px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;cursor:pointer;box-shadow:var(--shadow)}
+.action .ic{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-family:"Noto Sans JP";font-size:22px;font-weight:700;flex:none}
+.action b{display:block}
+.action span{font-size:13px;color:var(--muted)}
+.wotd{margin-top:16px}
+.wotd .k{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.wotd .w{font-size:30px;margin:6px 0 2px}
+/* frequency */
+.freq{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);vertical-align:middle;white-space:nowrap}
+.bars{display:inline-flex;gap:2px;align-items:flex-end;height:13px}
+.bars i{width:4px;background:var(--line);border-radius:1px}
+.bars i:nth-child(1){height:5px}.bars i:nth-child(2){height:7px}.bars i:nth-child(3){height:9px}.bars i:nth-child(4){height:11px}.bars i:nth-child(5){height:13px}
+.f5 .bars i.on,.f4 .bars i.on{background:var(--accent)}
+.f3 .bars i.on{background:var(--warn)}
+.f2 .bars i.on,.f1 .bars i.on{background:var(--muted)}
+/* ruby */
+ruby rt{font-size:.48em;color:var(--muted);font-weight:400}
+body.furi-tap ruby:not(.show) rt{visibility:hidden}
+body.furi-tap .force ruby rt{visibility:visible}
+body.furi-tap .prompt ruby{cursor:pointer}
+/* quiz */
+.qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:14px;color:var(--muted)}
+.qbar{height:5px;background:var(--chip);border-radius:99px;overflow:hidden;margin-bottom:12px}
+.qbar i{display:block;height:100%;background:var(--accent)}
+.prompt{text-align:center;padding:30px 16px 18px;position:relative}
+.pword{font-size:42px;font-weight:500;line-height:1.7}
+.pkanji{font-size:80px;line-height:1.2;font-weight:500}
+.pmean{font-size:24px;font-weight:600;line-height:1.3;padding:10px 0}
+.proma{color:var(--muted);font-size:14px;margin-top:-4px}
+.pmeta{margin-top:12px}
+.say{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:16px;display:grid;place-items:center}
+.say.inl{position:static;width:32px;height:32px;font-size:14px;flex:none}
+.hint{text-align:center;color:var(--muted);font-size:14px;margin:14px 0 4px}
+.choices{display:grid;gap:10px;margin-top:10px}
+.choices.grid2{grid-template-columns:1fr 1fr}
+.choice{text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:14px;font-size:16px;cursor:pointer;display:flex;gap:12px;align-items:center;min-height:56px;transition:border-color .15s,background .15s}
+.choice:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+.choices.grid2 .choice{flex-direction:column;justify-content:center;gap:6px;text-align:center;min-height:92px}
+.choice .n{width:22px;height:22px;border-radius:50%;background:var(--chip);display:grid;place-items:center;font-size:11px;color:var(--muted);flex:none}
+.choices.grid2 .choice .n{display:none}
+.cjp{font-size:22px;line-height:1.7}
+.ckanji{font-size:40px;line-height:1.2}
+.choice.ok{border-color:var(--ok);background:var(--ok-soft)}
+.choice.bad{border-color:var(--bad);background:var(--bad-soft)}
+.choice.dim{opacity:.5}
+.verdict{margin-top:16px;padding:12px 14px;border-radius:12px;font-weight:600}
+.verdict.good{background:var(--ok-soft);color:var(--ok)}
+.verdict.bad{background:var(--bad-soft);color:var(--bad)}
+/* detail */
+.detail{margin-top:12px}
+.dtop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dword{font-size:34px;line-height:1.7;font-weight:500}
+.dread{color:var(--muted);font-size:14px}
+.dmean{font-size:19px;font-weight:600;margin:8px 0}
+.tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+.tag{font-size:12px;background:var(--chip);border-radius:6px;padding:3px 8px;color:var(--muted)}
+.tag.lv{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.ex{margin-top:12px;padding:12px;border-radius:12px;background:var(--chip);display:flex;gap:10px;align-items:flex-start}
+.ex .jp{font-size:17px;line-height:1.9}
+.ex .en{font-size:13px;color:var(--muted)}
+.kchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.kchip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 10px;cursor:pointer;font-size:13px}
+.kchip b{font-family:"Noto Sans JP";font-size:20px;font-weight:500}
+.mini{font-size:12px;color:var(--muted);margin-top:10px}
+.khead{display:flex;gap:16px;align-items:center}
+.kbig{font-size:76px;line-height:1.1;width:104px;height:104px;border-radius:18px;background:var(--chip);display:grid;place-items:center;flex:none}
+.reads{display:grid;gap:8px;margin-top:14px}
+.read{display:flex;gap:10px;align-items:baseline;font-size:15px}
+.read b{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;width:76px;flex:none}
+.oku{color:var(--muted)}
+.exlist{display:grid;gap:8px;margin-top:8px}
+.exrow{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--chip);border-radius:10px}
+.exrow .jp{font-size:19px;line-height:1.8;min-width:80px}
+.exrow .m{flex:1;font-size:14px;color:var(--muted)}
+/* lists */
+.search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;margin-top:14px}
+.list{display:grid;gap:6px;margin-top:12px}
+.row{display:flex;align-items:center;gap:10px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;cursor:pointer}
+.row .rw{font-size:19px;line-height:1.8;min-width:96px}
+.row .rm{flex:1;font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--line);flex:none}
+.dot.learning{background:var(--warn)}
+.dot.known{background:var(--ok)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:10px;align-items:center;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin-top:14px}
+.tile{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 4px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tile .tk{font-size:32px;line-height:1.2}
+.tile .tm{font-size:11px;color:var(--muted);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 4px}
+.tile .dot{position:absolute;top:7px;right:7px}
+/* results */
+.score{text-align:center;padding:24px 16px}
+.score .big{font-size:52px;font-weight:700;letter-spacing:-.03em}
+/* settings */
+.set{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.set:last-child{border-bottom:0}
+.set b{display:block;font-weight:600}
+.set span{font-size:13px;color:var(--muted)}
+.sw{position:relative;width:46px;height:28px;flex:none}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:var(--line);border-radius:99px;transition:.2s;cursor:pointer}
+.sw span:before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked+span{background:var(--accent)}
+.sw input:checked+span:before{transform:translateX(18px)}
+textarea{width:100%;min-height:110px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-family:"Noto Sans JP",Inter,sans-serif;margin-top:8px}
+code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
+/* sheet */
+#sheet{position:fixed;inset:0;z-index:30;display:none}
+#sheet.open{display:block}
+.sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:var(--card);border-radius:20px 20px 0 0;padding:18px 18px calc(24px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto}
+.sheet .close{float:right;font-size:18px}
+.toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;z-index:40;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header class="top"><div class="in"><div class="logo">語</div><div class="brand">Kotoba Dojo<small>Japanese vocab &amp; kanji trainer</small></div></div></header>
+<main id="app"></main>
+<nav class="tabs"><div class="in">
+  <button data-v="home" onclick="App.go('home')"><b>家</b>Home</button>
+  <button data-v="vocab" onclick="App.go('vocab')"><b>語</b>Vocab</button>
+  <button data-v="kanji" onclick="App.go('kanji')"><b>字</b>Kanji</button>
+  <button data-v="settings" onclick="App.go('settings')"><b>設</b>Settings</button>
+</div></nav>
+<div id="sheet"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   DATA
+   Vocab: [word, reading, meaning, part of speech, JLPT, frequency 1-5, topic, example, example translation]
+   Furigana markup: {漢字|かんじ}
+   Frequency: 5 = essential, 4 = very common, 3 = common, 2 = uncommon, 1 = rare
+   ========================================================= */
+const VOCAB = [
+["こんにちは","こんにちは","hello; good afternoon","expression","N5",5,"Basics","こんにちは、{田中|たなか}さん。","Hello, Mr. Tanaka."],
+["おはよう","おはよう","good morning","expression","N5",4,"Basics","おはようございます。","Good morning. (polite)"],
+["こんばんは","こんばんは","good evening","expression","N5",4,"Basics","こんばんは。お{元気|げんき}ですか。","Good evening. How are you?"],
+["ありがとう","ありがとう","thank you","expression","N5",5,"Basics","どうもありがとうございます。","Thank you very much."],
+["すみません","すみません","excuse me; sorry","expression","N5",5,"Basics","すみません、{駅|えき}はどこですか。","Excuse me, where is the station?"],
+["はい","はい","yes","expression","N5",5,"Basics","はい、そうです。","Yes, that's right."],
+["いいえ","いいえ","no","expression","N5",4,"Basics","いいえ、{違|ちが}います。","No, that's wrong."],
+["お{願|ねが}いします","おねがいします","please (when requesting)","expression","N5",5,"Basics","{水|みず}をお{願|ねが}いします。","Water, please."],
+["{大丈夫|だいじょうぶ}","だいじょうぶ","okay; all right","na-adj","N5",5,"Basics","{大丈夫|だいじょうぶ}ですか。","Are you okay?"],
+["{私|わたし}","わたし","I; me","pronoun","N5",5,"People","{私|わたし}は{学生|がくせい}です。","I am a student."],
+["{人|ひと}","ひと","person","noun","N5",5,"People","あの{人|ひと}は{誰|だれ}ですか。","Who is that person?"],
+["{友達|ともだち}","ともだち","friend","noun","N5",4,"People","{友達|ともだち}と{映画|えいが}を{見|み}ます。","I watch a movie with a friend."],
+["{先生|せんせい}","せんせい","teacher","noun","N5",4,"People","{先生|せんせい}に{聞|き}きます。","I'll ask the teacher."],
+["{学生|がくせい}","がくせい","student","noun","N5",4,"People","{弟|おとうと}は{学生|がくせい}です。","My younger brother is a student."],
+["{家族|かぞく}","かぞく","family","noun","N5",4,"People","{家族|かぞく}は{四人|よにん}です。","There are four people in my family."],
+["{子供|こども}","こども","child","noun","N5",4,"People","{子供|こども}が{公園|こうえん}で{遊|あそ}んでいます。","Children are playing in the park."],
+["{名前|なまえ}","なまえ","name","noun","N5",4,"People","お{名前|なまえ}は{何|なん}ですか。","What is your name?"],
+["{水|みず}","みず","water","noun","N5",5,"Food","{水|みず}を{飲|の}みます。","I drink water."],
+["ご{飯|はん}","ごはん","cooked rice; meal","noun","N5",4,"Food","ご{飯|はん}を{食|た}べましょう。","Let's eat."],
+["{朝|あさ}ご{飯|はん}","あさごはん","breakfast","noun","N5",3,"Food","{朝|あさ}ご{飯|はん}はパンです。","Breakfast is bread."],
+["{肉|にく}","にく","meat","noun","N5",3,"Food","{肉|にく}が{好|す}きです。","I like meat."],
+["{鶏肉|とりにく}","とりにく","chicken (meat)","noun","N4",2,"Food","{鶏肉|とりにく}とご{飯|はん}を{食|た}べます。","I eat chicken and rice."],
+["{魚|さかな}","さかな","fish","noun","N5",3,"Food","この{魚|さかな}はおいしいです。","This fish is tasty."],
+["{卵|たまご}","たまご","egg","noun","N5",3,"Food","{毎朝|まいあさ}{卵|たまご}を{食|た}べます。","I eat eggs every morning."],
+["{野菜|やさい}","やさい","vegetables","noun","N5",3,"Food","{野菜|やさい}を{買|か}います。","I buy vegetables."],
+["お{茶|ちゃ}","おちゃ","tea; green tea","noun","N5",4,"Food","お{茶|ちゃ}をどうぞ。","Please have some tea."],
+["コーヒー","こーひー","coffee","noun","N5",3,"Food","コーヒーを{一|ひと}つください。","One coffee, please."],
+["ビール","びーる","beer","noun","N5",3,"Food","ビールはいりません。","I don't need beer."],
+["おいしい","おいしい","delicious","i-adj","N5",4,"Food","このラーメンはおいしい!","This ramen is delicious!"],
+["{駅|えき}","えき","station","noun","N5",4,"Travel","{駅|えき}はどこですか。","Where is the station?"],
+["{電車|でんしゃ}","でんしゃ","train","noun","N5",4,"Travel","{電車|でんしゃ}で{行|い}きます。","I'll go by train."],
+["{空港|くうこう}","くうこう","airport","noun","N4",3,"Travel","{空港|くうこう}まで{一時間|いちじかん}かかります。","It takes an hour to get to the airport."],
+["{切符|きっぷ}","きっぷ","ticket","noun","N5",2,"Travel","{切符|きっぷ}を{二枚|にまい}ください。","Two tickets, please."],
+["ホテル","ほてる","hotel","noun","N5",3,"Travel","ホテルはどこですか。","Where is the hotel?"],
+["{地図|ちず}","ちず","map","noun","N5",2,"Travel","{地図|ちず}を{見|み}せてください。","Please show me the map."],
+["{右|みぎ}","みぎ","right (direction)","noun","N5",3,"Travel","{右|みぎ}に{曲|ま}がってください。","Please turn right."],
+["{左|ひだり}","ひだり","left (direction)","noun","N5",3,"Travel","{左|ひだり}に{銀行|ぎんこう}があります。","There's a bank on the left."],
+["まっすぐ","まっすぐ","straight ahead","adverb","N5",2,"Travel","まっすぐ{行|い}ってください。","Please go straight ahead."],
+["トイレ","といれ","toilet; restroom","noun","N5",3,"Travel","トイレはどこですか。","Where is the toilet?"],
+["いくら","いくら","how much","question","N5",4,"Travel","これはいくらですか。","How much is this?"],
+["{旅行|りょこう}","りょこう","travel; trip","noun","N5",3,"Travel","{日本|にほん}へ{旅行|りょこう}します。","I'm travelling to Japan."],
+["{予約|よやく}","よやく","reservation; booking","noun","N4",3,"Travel","{予約|よやく}しています。","I have a reservation."],
+["{道|みち}","みち","road; way","noun","N5",3,"Travel","{道|みち}に{迷|まよ}いました。","I got lost."],
+["{家|いえ}","いえ","house; home","noun","N5",4,"Places","{家|いえ}に{帰|かえ}ります。","I'm going home."],
+["{店|みせ}","みせ","shop; store","noun","N5",4,"Places","この{店|みせ}は{安|やす}いです。","This shop is cheap."],
+["{病院|びょういん}","びょういん","hospital","noun","N5",3,"Places","{病院|びょういん}はどこですか。","Where is the hospital?"],
+["{学校|がっこう}","がっこう","school","noun","N5",4,"Places","{学校|がっこう}は{近|ちか}いです。","The school is close."],
+["{会社|かいしゃ}","かいしゃ","company; office","noun","N5",4,"Places","{会社|かいしゃ}で{働|はたら}いています。","I work at a company."],
+["{日本|にほん}","にほん","Japan","noun","N5",5,"Places","{日本|にほん}が{大好|だいす}きです。","I love Japan."],
+["{国|くに}","くに","country","noun","N5",4,"Places","どこの{国|くに}から{来|き}ましたか。","Which country are you from?"],
+["{部屋|へや}","へや","room","noun","N5",4,"Places","{部屋|へや}はきれいです。","The room is clean."],
+["{公園|こうえん}","こうえん","park","noun","N5",3,"Places","{公園|こうえん}を{散歩|さんぽ}します。","I take a walk in the park."],
+["{銀行|ぎんこう}","ぎんこう","bank","noun","N5",3,"Places","{銀行|ぎんこう}は{九時|くじ}からです。","The bank opens at nine."],
+["コンビニ","こんびに","convenience store","noun","N4",3,"Places","{近|ちか}くにコンビニがあります。","There's a convenience store nearby."],
+["{町|まち}","まち","town","noun","N5",3,"Places","{静|しず}かな{町|まち}です。","It's a quiet town."],
+["{今日|きょう}","きょう","today","noun","N5",5,"Time","{今日|きょう}は{暑|あつ}いです。","It's hot today."],
+["{明日|あした}","あした","tomorrow","noun","N5",4,"Time","{明日|あした}{会|あ}いましょう。","Let's meet tomorrow."],
+["{昨日|きのう}","きのう","yesterday","noun","N5",4,"Time","{昨日|きのう}{東京|とうきょう}に{着|つ}きました。","I arrived in Tokyo yesterday."],
+["{今|いま}","いま","now","noun","N5",5,"Time","{今|いま}{何時|なんじ}ですか。","What time is it now?"],
+["{時間|じかん}","じかん","time; hour","noun","N5",5,"Time","{時間|じかん}がありません。","I don't have time."],
+["{朝|あさ}","あさ","morning","noun","N5",4,"Time","{朝|あさ}はコーヒーを{飲|の}みます。","I drink coffee in the morning."],
+["{夜|よる}","よる","night; evening","noun","N5",4,"Time","{夜|よる}は{寒|さむ}いです。","It's cold at night."],
+["{毎日|まいにち}","まいにち","every day","noun","N5",4,"Time","{毎日|まいにち}ジムに{行|い}きます。","I go to the gym every day."],
+["{週末|しゅうまつ}","しゅうまつ","weekend","noun","N4",3,"Time","{週末|しゅうまつ}は{何|なに}をしますか。","What do you do on weekends?"],
+["{来年|らいねん}","らいねん","next year","noun","N5",3,"Time","{来年|らいねん}{日本|にほん}に{行|い}きます。","I'm going to Japan next year."],
+["{一月|いちがつ}","いちがつ","January","noun","N5",3,"Time","{一月|いちがつ}は{寒|さむ}いです。","January is cold."],
+["{食|た}べる","たべる","to eat","verb","N5",5,"Verbs","{何|なに}を{食|た}べますか。","What will you eat?"],
+["{飲|の}む","のむ","to drink","verb","N5",4,"Verbs","お{茶|ちゃ}を{飲|の}みます。","I drink tea."],
+["{行|い}く","いく","to go","verb","N5",5,"Verbs","{東京|とうきょう}に{行|い}きたいです。","I want to go to Tokyo."],
+["{来|く}る","くる","to come","verb","N5",5,"Verbs","{友達|ともだち}が{来|き}ます。","A friend is coming."],
+["{見|み}る","みる","to see; to watch","verb","N5",5,"Verbs","テレビを{見|み}ます。","I watch TV."],
+["{聞|き}く","きく","to listen; to ask","verb","N5",4,"Verbs","{音楽|おんがく}を{聞|き}きます。","I listen to music."],
+["{話|はな}す","はなす","to speak","verb","N5",4,"Verbs","{日本語|にほんご}を{話|はな}します。","I speak Japanese."],
+["{分|わ}かる","わかる","to understand","verb","N5",5,"Verbs","{分|わ}かりません。","I don't understand."],
+["{買|か}う","かう","to buy","verb","N5",4,"Verbs","お{土産|みやげ}を{買|か}います。","I'll buy souvenirs."],
+["{待|ま}つ","まつ","to wait","verb","N5",4,"Verbs","ちょっと{待|ま}ってください。","Please wait a moment."],
+["{書|か}く","かく","to write","verb","N5",4,"Verbs","{名前|なまえ}を{書|か}いてください。","Please write your name."],
+["{読|よ}む","よむ","to read","verb","N5",4,"Verbs","{本|ほん}を{読|よ}みます。","I read a book."],
+["{寝|ね}る","ねる","to sleep; to go to bed","verb","N5",4,"Verbs","{早|はや}く{寝|ね}ます。","I go to bed early."],
+["{起|お}きる","おきる","to wake up; to get up","verb","N5",4,"Verbs","{六時|ろくじ}に{起|お}きます。","I get up at six."],
+["{帰|かえ}る","かえる","to return home","verb","N5",4,"Verbs","{何時|なんじ}に{帰|かえ}りますか。","What time will you go home?"],
+["する","する","to do","verb","N5",5,"Verbs","{宿題|しゅくだい}をします。","I do homework."],
+["ある","ある","to exist; to have (things)","verb","N5",5,"Verbs","{時間|じかん}があります。","I have time."],
+["いる","いる","to exist (people, animals)","verb","N5",5,"Verbs","{猫|ねこ}がいます。","There's a cat."],
+["{思|おも}う","おもう","to think","verb","N4",5,"Verbs","いいと{思|おも}います。","I think it's good."],
+["{使|つか}う","つかう","to use","verb","N5",4,"Verbs","{箸|はし}を{使|つか}います。","I use chopsticks."],
+["{働|はたら}く","はたらく","to work","verb","N5",3,"Verbs","{銀行|ぎんこう}で{働|はたら}いています。","I work at a bank."],
+["{歩|ある}く","あるく","to walk","verb","N5",3,"Verbs","{駅|えき}まで{歩|ある}きます。","I walk to the station."],
+["{教|おし}える","おしえる","to teach; to tell","verb","N5",4,"Verbs","{道|みち}を{教|おし}えてください。","Please tell me the way."],
+["{休|やす}む","やすむ","to rest; to take a day off","verb","N5",3,"Verbs","{今日|きょう}は{休|やす}みます。","I'll rest today."],
+["{大|おお}きい","おおきい","big","i-adj","N5",4,"Adjectives","{大|おお}きい{駅|えき}ですね。","It's a big station, isn't it?"],
+["{小|ちい}さい","ちいさい","small","i-adj","N5",4,"Adjectives","{小|ちい}さいかばんです。","It's a small bag."],
+["{高|たか}い","たかい","expensive; tall","i-adj","N5",4,"Adjectives","このカメラは{高|たか}いです。","This camera is expensive."],
+["{安|やす}い","やすい","cheap","i-adj","N5",3,"Adjectives","この{店|みせ}は{安|やす}いです。","This shop is cheap."],
+["{新|あたら}しい","あたらしい","new","i-adj","N5",4,"Adjectives","{新|あたら}しい{靴|くつ}を{買|か}いました。","I bought new shoes."],
+["{古|ふる}い","ふるい","old (things)","i-adj","N5",3,"Adjectives","{古|ふる}いお{寺|てら}です。","It's an old temple."],
+["{暑|あつ}い","あつい","hot (weather)","i-adj","N5",3,"Adjectives","{夏|なつ}は{暑|あつ}いです。","Summer is hot."],
+["{寒|さむ}い","さむい","cold (weather)","i-adj","N5",3,"Adjectives","{東京|とうきょう}の{一月|いちがつ}は{寒|さむ}いです。","January in Tokyo is cold."],
+["{好|す}き","すき","liked; favourite","na-adj","N5",5,"Adjectives","{寿司|すし}が{好|す}きです。","I like sushi."],
+["{有名|ゆうめい}","ゆうめい","famous","na-adj","N5",3,"Adjectives","ここは{有名|ゆうめい}なお{寺|てら}です。","This is a famous temple."],
+["{元気|げんき}","げんき","healthy; energetic","na-adj","N5",4,"Adjectives","お{元気|げんき}ですか。","How are you?"],
+["{近|ちか}い","ちかい","near; close","i-adj","N5",3,"Adjectives","ホテルは{駅|えき}から{近|ちか}いです。","The hotel is close to the station."],
+["{遠|とお}い","とおい","far","i-adj","N5",3,"Adjectives","{空港|くうこう}は{遠|とお}いです。","The airport is far."],
+["{難|むずか}しい","むずかしい","difficult","i-adj","N5",3,"Adjectives","{漢字|かんじ}は{難|むずか}しいです。","Kanji is difficult."],
+["{簡単|かんたん}","かんたん","easy; simple","na-adj","N4",3,"Adjectives","このテストは{簡単|かんたん}です。","This test is easy."],
+["{楽|たの}しい","たのしい","fun; enjoyable","i-adj","N5",3,"Adjectives","{旅行|りょこう}は{楽|たの}しかったです。","The trip was fun."],
+["{忙|いそが}しい","いそがしい","busy","i-adj","N5",3,"Adjectives","{今週|こんしゅう}は{忙|いそが}しいです。","I'm busy this week."],
+["{強|つよ}い","つよい","strong","i-adj","N5",3,"Adjectives","{彼|かれ}はとても{強|つよ}いです。","He is very strong."],
+["{体|からだ}","からだ","body","noun","N5",4,"Body & Fitness","{体|からだ}に{気|き}をつけてください。","Please take care of yourself."],
+["{運動|うんどう}","うんどう","exercise","noun","N4",3,"Body & Fitness","{毎日|まいにち}{運動|うんどう}します。","I exercise every day."],
+["{筋肉|きんにく}","きんにく","muscle","noun","N2",2,"Body & Fitness","{筋肉|きんにく}が{痛|いた}いです。","My muscles hurt."],
+["{痛|いた}い","いたい","painful; sore","i-adj","N5",3,"Body & Fitness","{足|あし}が{痛|いた}いです。","My leg hurts."],
+["{疲|つか}れる","つかれる","to get tired","verb","N4",3,"Body & Fitness","{今日|きょう}はとても{疲|つか}れました。","I got really tired today."],
+["{何|なに}","なに","what","question","N5",5,"Questions","これは{何|なん}ですか。","What is this?"],
+["どこ","どこ","where","question","N5",5,"Questions","トイレはどこですか。","Where is the toilet?"],
+["{誰|だれ}","だれ","who","question","N5",4,"Questions","あの{人|ひと}は{誰|だれ}ですか。","Who is that person?"],
+["いつ","いつ","when","question","N5",4,"Questions","いつ{日本|にほん}に{行|い}きますか。","When are you going to Japan?"],
+["どう","どう","how; in what way","question","N5",4,"Questions","{日本|にほん}はどうでしたか。","How was Japan?"]
+];
+
+/* Kanji: [kanji, meaning, on'yomi, kun'yomi, JLPT, approx. newspaper frequency rank, strokes, examples "word|reading|meaning;..."] */
+const KANJI = [
+["日","day; sun; Japan","ニチ、ジツ","ひ、か","N5",1,4,"日本|にほん|Japan;毎日|まいにち|every day"],
+["一","one","イチ、イツ","ひと.つ","N5",2,1,"一つ|ひとつ|one (thing);一月|いちがつ|January"],
+["国","country","コク","くに","N5",3,8,"外国|がいこく|foreign country;国|くに|country"],
+["会","meet; association","カイ","あ.う","N4",4,6,"会う|あう|to meet;会社|かいしゃ|company"],
+["人","person","ジン、ニン","ひと","N5",5,2,"日本人|にほんじん|Japanese person;三人|さんにん|three people"],
+["年","year","ネン","とし","N5",6,6,"来年|らいねん|next year;今年|ことし|this year"],
+["大","big; large","ダイ、タイ","おお.きい","N5",7,3,"大きい|おおきい|big;大学|だいがく|university"],
+["十","ten","ジュウ","とお","N5",8,2,"十|じゅう|ten;十月|じゅうがつ|October"],
+["二","two","ニ","ふた.つ","N5",9,2,"二つ|ふたつ|two (things);二月|にがつ|February"],
+["本","book; origin","ホン","もと","N5",10,5,"本|ほん|book;日本|にほん|Japan"],
+["中","middle; inside","チュウ","なか","N5",11,4,"中|なか|inside;中国|ちゅうごく|China"],
+["長","long; chief","チョウ","なが.い","N5",12,8,"長い|ながい|long;社長|しゃちょう|company president"],
+["出","exit; go out","シュツ","で.る、だ.す","N5",13,5,"出口|でぐち|exit;出る|でる|to leave"],
+["三","three","サン","み、みっ.つ","N5",14,3,"三つ|みっつ|three (things);三月|さんがつ|March"],
+["時","time; hour","ジ","とき","N5",16,10,"時間|じかん|time;何時|なんじ|what time"],
+["事","thing; matter","ジ","こと","N4",18,8,"仕事|しごと|work, job;食事|しょくじ|meal"],
+["自","self","ジ、シ","みずか.ら","N4",19,6,"自分|じぶん|oneself"],
+["行","go; carry out","コウ、ギョウ","い.く、おこな.う","N5",20,6,"行く|いく|to go;銀行|ぎんこう|bank"],
+["社","company; shrine","シャ","やしろ","N4",21,7,"会社|かいしゃ|company;神社|じんじゃ|shrine"],
+["見","see; look","ケン","み.る","N5",22,7,"見る|みる|to see;花見|はなみ|flower viewing"],
+["月","moon; month","ゲツ、ガツ","つき","N5",23,4,"月曜日|げつようび|Monday;一月|いちがつ|January"],
+["分","minute; part; understand","ブン、フン","わ.かる、わ.ける","N5",24,4,"分かる|わかる|to understand;五分|ごふん|five minutes"],
+["後","after; behind","ゴ、コウ","あと、うし.ろ","N5",26,9,"午後|ごご|afternoon, p.m.;後ろ|うしろ|behind"],
+["前","before; front","ゼン","まえ","N5",27,9,"名前|なまえ|name;午前|ごぜん|morning, a.m."],
+["生","life; birth","セイ、ショウ","い.きる、う.まれる","N5",29,5,"先生|せんせい|teacher;学生|がくせい|student"],
+["五","five","ゴ","いつ.つ","N5",31,4,"五つ|いつつ|five (things);五月|ごがつ|May"],
+["間","interval; between","カン、ケン","あいだ、ま","N5",33,12,"時間|じかん|time;間|あいだ|between"],
+["上","up; above","ジョウ","うえ、あ.がる","N5",35,3,"上|うえ|above;上手|じょうず|skilful"],
+["東","east","トウ","ひがし","N5",37,8,"東京|とうきょう|Tokyo;東|ひがし|east"],
+["地","ground; earth","チ、ジ","","N4",40,6,"地図|ちず|map;地下鉄|ちかてつ|subway"],
+["方","direction; way; person","ホウ","かた","N4",46,4,"方|かた|person (polite);夕方|ゆうがた|evening"],
+["四","four","シ","よ、よっ.つ、よん","N5",47,5,"四つ|よっつ|four (things);四月|しがつ|April"],
+["今","now","コン、キン","いま","N5",49,4,"今|いま|now;今日|きょう|today"],
+["新","new","シン","あたら.しい","N5",51,13,"新しい|あたらしい|new;新聞|しんぶん|newspaper"],
+["場","place","ジョウ","ば","N4",52,12,"場所|ばしょ|place"],
+["金","gold; money","キン、コン","かね","N5",53,8,"お金|おかね|money;金曜日|きんようび|Friday"],
+["九","nine","キュウ、ク","ここの.つ","N5",55,2,"九つ|ここのつ|nine (things);九月|くがつ|September"],
+["入","enter","ニュウ","い.る、はい.る","N5",56,2,"入口|いりぐち|entrance;入る|はいる|to enter"],
+["開","open","カイ","ひら.く、あ.ける","N4",59,12,"開ける|あける|to open"],
+["手","hand","シュ","て","N5",60,4,"手|て|hand;上手|じょうず|skilful"],
+["力","power; strength","リョク、リキ","ちから","N4",62,2,"力|ちから|strength"],
+["学","study; learning","ガク","まな.ぶ","N5",63,8,"学校|がっこう|school;大学|だいがく|university"],
+["高","tall; high; expensive","コウ","たか.い","N5",65,10,"高い|たかい|tall, expensive;高校|こうこう|high school"],
+["円","yen; circle","エン","まる.い","N5",69,4,"百円|ひゃくえん|100 yen;円|えん|yen"],
+["子","child","シ、ス","こ","N5",72,3,"子供|こども|child;女の子|おんなのこ|girl"],
+["動","move","ドウ","うご.く","N4",73,11,"動く|うごく|to move;運動|うんどう|exercise"],
+["京","capital city","キョウ、ケイ","","N4",74,8,"東京|とうきょう|Tokyo;京都|きょうと|Kyoto"],
+["目","eye","モク","め","N4",76,5,"目|め|eye"],
+["外","outside; foreign","ガイ、ゲ","そと、ほか","N5",81,5,"外|そと|outside;外国|がいこく|foreign country"],
+["言","say; word","ゲン、ゴン","い.う、こと","N5",83,7,"言う|いう|to say;言葉|ことば|word"],
+["体","body","タイ","からだ","N4",88,7,"体|からだ|body"],
+["田","rice field","デン","た","N4",90,5,"田中|たなか|Tanaka (surname)"],
+["八","eight","ハチ","や、やっ.つ","N5",92,2,"八つ|やっつ|eight (things);八月|はちがつ|August"],
+["六","six","ロク","む、むっ.つ","N5",93,4,"六つ|むっつ|six (things);六月|ろくがつ|June"],
+["下","down; below","カ、ゲ","した、さ.がる、くだ.さる","N5",97,3,"下|した|below;地下鉄|ちかてつ|subway"],
+["来","come; next","ライ","く.る","N5",102,7,"来る|くる|to come;来年|らいねん|next year"],
+["気","spirit; mind; air","キ、ケ","","N5",113,6,"元気|げんき|healthy, energetic;天気|てんき|weather"],
+["小","small","ショウ","ちい.さい、こ","N5",114,3,"小さい|ちいさい|small;小学校|しょうがっこう|elementary school"],
+["七","seven","シチ","なな、なな.つ","N5",115,2,"七つ|ななつ|seven (things);七月|しちがつ|July"],
+["山","mountain","サン","やま","N5",131,3,"山|やま|mountain;富士山|ふじさん|Mt. Fuji"],
+["思","think","シ","おも.う","N4",132,9,"思う|おもう|to think"],
+["話","talk; story","ワ","はな.す、はなし","N5",134,13,"話す|はなす|to speak;電話|でんわ|telephone"],
+["使","use","シ","つか.う","N4",142,8,"使う|つかう|to use"],
+["女","woman","ジョ、ニョ","おんな","N5",151,3,"女の人|おんなのひと|woman;彼女|かのじょ|she, girlfriend"],
+["北","north","ホク","きた","N5",153,5,"北|きた|north;北海道|ほっかいどう|Hokkaido"],
+["午","noon","ゴ","","N5",154,4,"午前|ごぜん|a.m.;午後|ごご|p.m."],
+["道","road; way","ドウ","みち","N4",155,12,"道|みち|road;北海道|ほっかいどう|Hokkaido"],
+["百","hundred","ヒャク","","N5",163,6,"百|ひゃく|hundred;三百|さんびゃく|300"],
+["書","write","ショ","か.く","N5",169,10,"書く|かく|to write;図書館|としょかん|library"],
+["先","ahead; previous","セン","さき","N5",173,6,"先生|せんせい|teacher;先週|せんしゅう|last week"],
+["名","name; famous","メイ、ミョウ","な","N5",177,6,"名前|なまえ|name;有名|ゆうめい|famous"],
+["川","river","セン","かわ","N5",181,3,"川|かわ|river;小川|おがわ|stream"],
+["千","thousand","セン","ち","N5",195,3,"千円|せんえん|1,000 yen;三千|さんぜん|3,000"],
+["水","water","スイ","みず","N5",223,4,"水|みず|water;水曜日|すいようび|Wednesday"],
+["半","half","ハン","なか.ば","N5",224,5,"半分|はんぶん|half;三時半|さんじはん|3:30"],
+["男","man; male","ダン、ナン","おとこ","N5",240,7,"男の人|おとこのひと|man;男性|だんせい|male"],
+["私","I; private","シ","わたし","N4",242,7,"私|わたし|I, me"],
+["西","west","セイ、サイ","にし","N5",259,6,"西|にし|west;関西|かんさい|Kansai region"],
+["電","electricity","デン","","N5",268,13,"電車|でんしゃ|train;電話|でんわ|telephone"],
+["口","mouth","コウ","くち","N4",284,3,"口|くち|mouth;出口|でぐち|exit"],
+["校","school","コウ","","N5",294,10,"学校|がっこう|school;高校|こうこう|high school"],
+["語","language; word","ゴ","かた.る","N5",301,14,"日本語|にほんご|Japanese language;英語|えいご|English"],
+["空","sky; empty","クウ","そら、あ.く","N4",304,8,"空|そら|sky;空港|くうこう|airport"],
+["土","soil; earth","ド、ト","つち","N5",307,3,"土曜日|どようび|Saturday;土|つち|soil"],
+["木","tree; wood","ボク、モク","き","N5",317,4,"木|き|tree;木曜日|もくようび|Thursday"],
+["聞","hear; ask","ブン、モン","き.く","N5",319,14,"聞く|きく|to listen, to ask;新聞|しんぶん|newspaper"],
+["食","eat; food","ショク","た.べる","N5",328,9,"食べる|たべる|to eat;食事|しょくじ|meal"],
+["車","car; vehicle","シャ","くるま","N5",333,7,"車|くるま|car;電車|でんしゃ|train"],
+["何","what","カ","なに、なん","N5",340,7,"何|なに|what;何時|なんじ|what time"],
+["南","south","ナン","みなみ","N5",341,9,"南|みなみ|south;南口|みなみぐち|south exit"],
+["足","foot; leg; enough","ソク","あし、た.りる","N4",343,7,"足|あし|foot, leg"],
+["楽","fun; music; comfort","ガク、ラク","たの.しい","N4",373,13,"楽しい|たのしい|fun;音楽|おんがく|music"],
+["万","ten thousand","マン、バン","","N5",375,3,"一万円|いちまんえん|10,000 yen"],
+["毎","every","マイ","","N5",436,6,"毎日|まいにち|every day;毎朝|まいあさ|every morning"],
+["店","shop; store","テン","みせ","N4",470,8,"店|みせ|shop;喫茶店|きっさてん|café"],
+["白","white","ハク","しろ、しろ.い","N5",483,5,"白い|しろい|white"],
+["天","heaven; sky","テン","あめ","N5",512,4,"天気|てんき|weather"],
+["買","buy","バイ","か.う","N4",520,12,"買う|かう|to buy;買い物|かいもの|shopping"],
+["母","mother","ボ","はは","N5",570,5,"母|はは|(my) mother;お母さん|おかあさん|mother"],
+["火","fire","カ","ひ","N5",574,4,"火曜日|かようび|Tuesday;火|ひ|fire"],
+["花","flower","カ","はな","N4",578,7,"花|はな|flower;花見|はなみ|flower viewing"],
+["右","right","ウ、ユウ","みぎ","N5",602,5,"右|みぎ|right;右手|みぎて|right hand"],
+["読","read","ドク","よ.む","N5",618,14,"読む|よむ|to read"],
+["休","rest","キュウ","やす.む","N5",642,6,"休む|やすむ|to rest;休み|やすみ|holiday, break"],
+["駅","station","エキ","","N4",643,14,"駅|えき|station"],
+["父","father","フ","ちち","N5",646,4,"父|ちち|(my) father;お父さん|おとうさん|father"],
+["友","friend","ユウ","とも","N5",669,4,"友達|ともだち|friend"],
+["左","left","サ","ひだり","N5",685,5,"左|ひだり|left;左手|ひだりて|left hand"],
+["旅","trip; travel","リョ","たび","N4",788,10,"旅行|りょこう|travel"],
+["雨","rain","ウ","あめ","N5",950,8,"雨|あめ|rain"],
+["好","like; fond of","コウ","す.き、この.む","N4",966,6,"好き|すき|liked"],
+["肉","meat","ニク","","N4",968,6,"肉|にく|meat;牛肉|ぎゅうにく|beef"],
+["飲","drink","イン","の.む","N4",969,12,"飲む|のむ|to drink;飲み物|のみもの|a drink"],
+["茶","tea","チャ、サ","","N4",1116,9,"お茶|おちゃ|tea;喫茶店|きっさてん|café"],
+["耳","ear","ジ","みみ","N4",1328,6,"耳|みみ|ear"]
+];
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KANJI_RE = /[\u3400-\u4dbf\u4e00-\u9fff々]/;
+const MARK = /\{([^|}]+)\|([^}]+)\}/g;
+const plain = s => String(s).replace(MARK, '$1');
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = a => a[Math.random() * a.length | 0];
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('kd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('kd_' + k, JSON.stringify(v)); } catch (e) {} }
+};
+let settings = Object.assign({ furigana: 'on', romaji: false, autoSpeak: false }, store.get('settings', {}));
+let progress = store.get('progress', {});
+let custom = store.get('custom', []);
+
+function ruby(s, force) {
+  const h = esc(s);
+  if (settings.furigana === 'off' && !force) return h.replace(MARK, '$1');
+  return h.replace(MARK, '<ruby>$1<rt>$2</rt></ruby>');
+}
+
+const ROMA = {あ:'a',い:'i',う:'u',え:'e',お:'o',か:'ka',き:'ki',く:'ku',け:'ke',こ:'ko',さ:'sa',し:'shi',す:'su',せ:'se',そ:'so',た:'ta',ち:'chi',つ:'tsu',て:'te',と:'to',な:'na',に:'ni',ぬ:'nu',ね:'ne',の:'no',は:'ha',ひ:'hi',ふ:'fu',へ:'he',ほ:'ho',ま:'ma',み:'mi',む:'mu',め:'me',も:'mo',や:'ya',ゆ:'yu',よ:'yo',ら:'ra',り:'ri',る:'ru',れ:'re',ろ:'ro',わ:'wa',を:'o',ん:'n',が:'ga',ぎ:'gi',ぐ:'gu',げ:'ge',ご:'go',ざ:'za',じ:'ji',ず:'zu',ぜ:'ze',ぞ:'zo',だ:'da',ぢ:'ji',づ:'zu',で:'de',ど:'do',ば:'ba',び:'bi',ぶ:'bu',べ:'be',ぼ:'bo',ぱ:'pa',ぴ:'pi',ぷ:'pu',ぺ:'pe',ぽ:'po',ぁ:'a',ぃ:'i',ぅ:'u',ぇ:'e',ぉ:'o',ゔ:'vu'};
+const YOON = {ゃ:'ya',ゅ:'yu',ょ:'yo'};
+function toRomaji(s) {
+  s = String(s).replace(/\./g, '').replace(/[\u30a1-\u30f6]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+  let out = '';
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i], n = s[i + 1];
+    if (c === 'っ') { const nx = toRomaji(s.slice(i + 1, i + 2)); out += nx && /[a-z]/.test(nx[0]) ? (nx.startsWith('ch') ? 't' : nx[0]) : ''; continue; }
+    if (c === 'ー') { const v = out.match(/[aeiou]$/); out += v ? v[0] : ''; continue; }
+    let r = ROMA[c];
+    if (r === undefined) { out += c === '、' ? ', ' : c; continue; }
+    if (n && YOON[n] && r.length > 1) {
+      const y = YOON[n];
+      if (r === 'shi') r = 'sh' + y[1]; else if (r === 'chi') r = 'ch' + y[1]; else if (r === 'ji') r = 'j' + y[1]; else r = r.slice(0, -1) + y;
+      i++;
+    }
+    out += r;
+  }
+  return out;
+}
+
+function speak(t) {
+  try {
+    if (!('speechSynthesis' in window)) return toast('Audio not supported in this browser');
+    const u = new SpeechSynthesisUtterance(t); u.lang = 'ja-JP'; u.rate = 0.9;
+    const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith('ja')); if (v) u.voice = v;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+const FREQ_LABEL = ['', 'Rare', 'Uncommon', 'Common', 'Very common', 'Essential'];
+function freqBadge(n, compact) {
+  n = Math.max(1, Math.min(5, n | 0));
+  let b = ''; for (let i = 1; i <= 5; i++) b += `<i class="${i <= n ? 'on' : ''}"></i>`;
+  return `<span class="freq f${n}" title="Frequency: ${FREQ_LABEL[n]}"><span class="bars">${b}</span>${compact ? '' : `<span>${FREQ_LABEL[n]}</span>`}</span>`;
+}
+const kTier = r => r <= 50 ? 5 : r <= 150 ? 4 : r <= 350 ? 3 : r <= 700 ? 2 : 1;
+
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 1800); }
+
+/* progress */
+function rec(id, ok) { const p = progress[id] || { c: 0, w: 0 }; ok ? p.c++ : p.w++; p.t = Date.now(); progress[id] = p; store.set('progress', progress); }
+function status(id) { const p = progress[id]; if (!p) return 'new'; if (p.c >= 3 && p.c >= p.w * 2) return 'known'; return 'learning'; }
+function counts(items) { let k = 0, l = 0; items.forEach(i => { const s = status(i.id); if (s === 'known') k++; else if (s === 'learning') l++; }); return { k, l, t: items.length }; }
+
+/* data build */
+let V = [], K = [], KMAP = {};
+function buildData() {
+  V = VOCAB.concat(custom).map(a => ({ id: 'v:' + plain(a[0]), word: a[0], reading: a[1], meaning: a[2], pos: a[3], jlpt: a[4], freq: a[5], cat: a[6], ex: a[7], exEn: a[8] }));
+  K = KANJI.map(a => ({ id: 'k:' + a[0], k: a[0], m: a[1], on: a[2], kun: a[3], jlpt: a[4], r: a[5], s: a[6], freq: kTier(a[5]),
+    ex: (a[7] || '').split(';').filter(Boolean).map(e => { const [w, r, m] = e.split('|'); return { w, r, m }; }) }));
+  KMAP = {}; K.forEach((k, i) => KMAP[k.k] = i);
+}
+const kRead = x => { const on = x.on.split('、')[0]; const kun = x.kun ? x.kun.split('、')[0].replace(/\.(.+)$/, '($1)') : ''; return kun ? `${on} · ${kun}` : on; };
+const kunHtml = kun => kun ? kun.split('、').map(r => { const [a, b] = r.split('.'); return esc(a) + (b ? `<span class="oku">${esc(b)}</span>` : ''); }).join('、') : '—';
+const LV_ORDER = ['N5', 'N4', 'N3', 'N2', 'N1', '—'];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const S = {
+  view: 'home', vtab: 'learn',
+  vf: { jlpt: 'All', cat: 'All', dir: 'jp2en' },
+  kf: { order: 'freq', range: 0, jlpt: 'N5', qt: 'k2m' },
+  tf: { deck: 'vocab', dir: 'mix', count: 10, jlpt: 'All' },
+  browse: { q: '', sort: 'freq' },
+  session: null
+};
+let wotd = null;
+
+function vSelection() { return V.filter(x => (S.vf.jlpt === 'All' || x.jlpt === S.vf.jlpt) && (S.vf.cat === 'All' || x.cat === S.vf.cat)); }
+function kSorted() { return K.slice().sort((a, b) => a.r - b.r); }
+function kSelection() {
+  if (S.kf.order === 'freq') { const s = kSorted(); return S.kf.range === 'all' ? s : s.slice(S.kf.range * 25, S.kf.range * 25 + 25); }
+  return kSorted().filter(k => k.jlpt === S.kf.jlpt);
+}
+
+/* =========================================================
+   VIEWS
+   ========================================================= */
+const seg = (opts, cur, fn) => `<div class="seg">${opts.map(([v, l]) => `<button class="${v === cur ? 'on' : ''}" onclick="${fn}('${v}')">${l}</button>`).join('')}</div>`;
+const chips = (opts, cur, fn) => `<div class="chips">${opts.map(([v, l]) => `<button class="chip ${String(v) === String(cur) ? 'on' : ''}" onclick="${fn}('${v}')">${l}</button>`).join('')}</div>`;
+
+function vHome() {
+  const v = counts(V), k = counts(K);
+  const pv = Math.round(v.k / v.t * 100) || 0, pk = Math.round(k.k / k.t * 100) || 0;
+  const w = wotd;
+  return `<h1>おかえり<span class="muted"> · welcome back</span></h1>
+  <p class="sub">Little and often beats long and rare.</p>
+  <div class="stats">
+    <div class="stat"><b>${v.k}</b><span>words known</span></div>
+    <div class="stat"><b>${v.l}</b><span>words learning</span></div>
+    <div class="stat"><b>${k.k}</b><span>kanji known</span></div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Vocabulary</span><span class="muted">${v.k} / ${v.t}</span></div>
+    <div class="pbar" style="margin:6px 0 12px"><i style="width:${pv}%"></i></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px"><span>Kanji</span><span class="muted">${k.k} / ${k.t}</span></div>
+    <div class="pbar" style="margin-top:6px"><i style="width:${pk}%"></i></div>
+  </div>
+  <div class="actions">
+    <button class="action" onclick="App.go('vocab','learn')"><span class="ic">学</span><div><b>Learn vocabulary</b><span>Pick the meaning, then see the full breakdown</span></div></button>
+    <button class="action" onclick="App.go('vocab','test')"><span class="ic">試</span><div><b>Take a test</b><span>Word → meaning, meaning → word, or mixed</span></div></button>
+    <button class="action" onclick="App.go('kanji')"><span class="ic">字</span><div><b>Study kanji</b><span>By how common they are, or by JLPT level</span></div></button>
+  </div>
+  ${w ? `<div class="card wotd force"><div class="k">Word of the moment</div>
+    <div class="w jp">${ruby(w.x.word, true)}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div><b>${esc(w.x.meaning)}</b> <span class="muted">· ${esc(w.x.reading)}</span></div>${freqBadge(w.x.freq, true)}</div>
+    <button class="btn sec" data-open="v:${w.i}">See details</button></div>` : ''}`;
+}
+
+function vVocab() {
+  const tabs = seg([['learn', 'Learn'], ['test', 'Test'], ['browse', 'Browse']], S.vtab, 'App.vtab');
+  if (S.vtab === 'learn') {
+    const lvls = ['All', ...LV_ORDER.filter(l => V.some(x => x.jlpt === l))];
+    const cats = ['All', ...[...new Set(V.map(x => x.cat))]];
+    const n = vSelection().length;
+    return `<h1>Vocabulary</h1><p class="sub">Answer, then learn more about each word.</p>${tabs}
+    <div class="label">Question type</div>
+    ${seg([['jp2en', 'Word → meaning'], ['en2jp', 'Meaning → word'], ['mix', 'Mixed']], S.vf.dir, 'App.vfDir')}
+    <div class="label">JLPT level</div>${chips(lvls.map(l => [l, l === '—' ? 'Unlevelled' : l]), S.vf.jlpt, 'App.vfLv')}
+    <div class="label">Topic</div>${chips(cats.map(c => [c, c]), S.vf.cat, 'App.vfCat')}
+    <p class="note">${n} word${n === 1 ? '' : 's'} selected. New and missed words come up more often.</p>
+    <button class="btn" onclick="App.startLearn('vocab')" ${n ? '' : 'disabled'}>Start learning</button>`;
+  }
+  if (S.vtab === 'test') {
+    const pool = S.tf.deck === 'vocab' ? V : K;
+    const lvls = ['All', ...LV_ORDER.filter(l => pool.some(x => x.jlpt === l))];
+    const dirs = S.tf.deck === 'vocab'
+      ? [['jp2en', 'Word → meaning'], ['en2jp', 'Meaning → word'], ['mix', 'Mixed']]
+      : [['k2m', 'Meaning'], ['m2k', 'Pick kanji'], ['k2r', 'Reading'], ['mix', 'Mixed']];
+    const avail = pool.filter(x => S.tf.jlpt === 'All' || x.jlpt === S.tf.jlpt).length;
+    return `<h1>Test</h1><p class="sub">No hints along the way. You'll get a full review at the end.</p>${tabs}
+    <div class="label">Deck</div>${seg([['vocab', 'Vocabulary'], ['kanji', 'Kanji']], S.tf.deck, 'App.tfDeck')}
+    <div class="label">Question type</div>${seg(dirs, S.tf.dir, 'App.tfDir')}
+    <div class="label">JLPT level</div>${chips(lvls.map(l => [l, l === '—' ? 'Unlevelled' : l]), S.tf.jlpt, 'App.tfLv')}
+    <div class="label">Questions</div>${chips([[10, '10'], [20, '20'], [30, '30'], [999, 'All']], S.tf.count, 'App.tfCount')}
+    <p class="note">${Math.min(avail, S.tf.count)} questions from ${avail} available.</p>
+    <button class="btn" onclick="App.startTest()" ${avail ? '' : 'disabled'}>Start test</button>`;
+  }
+  return `<h1>Word list</h1><p class="sub">Tap any word for details.</p>${tabs}
+  <input class="search" placeholder="Search Japanese, romaji or English…" value="${esc(S.browse.q)}" oninput="App.search(this.value)">
+  <div style="margin-top:10px">${seg([['freq', 'Most common'], ['jlpt', 'JLPT level'], ['topic', 'Topic']], S.browse.sort, 'App.bSort')}</div>
+  <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span><span>${freqBadge(5, true)} frequency</span></div>
+  <div class="list" id="blist">${browseList()}</div>`;
+}
+
+function browseList() {
+  const q = S.browse.q.trim().toLowerCase();
+  let rows = V.map((x, i) => ({ x, i }));
+  if (q) rows = rows.filter(({ x }) => plain(x.word).includes(q) || x.reading.includes(q) || toRomaji(x.reading).includes(q) || x.meaning.toLowerCase().includes(q));
+  const lv = x => LV_ORDER.indexOf(x.jlpt);
+  if (S.browse.sort === 'freq') rows.sort((a, b) => b.x.freq - a.x.freq);
+  else if (S.browse.sort === 'jlpt') rows.sort((a, b) => lv(a.x) - lv(b.x) || b.x.freq - a.x.freq);
+  else rows.sort((a, b) => a.x.cat.localeCompare(b.x.cat) || b.x.freq - a.x.freq);
+  if (!rows.length) return `<p class="muted">No matches.</p>`;
+  return rows.map(({ x, i }) => `<button class="row" data-open="v:${i}"><i class="dot ${status(x.id)}"></i><span class="rw jp">${ruby(x.word)}</span><span class="rm">${esc(x.meaning)}</span>${freqBadge(x.freq, true)}</button>`).join('');
+}
+
+function vKanji() {
+  const sel = kSelection();
+  const sorted = kSorted();
+  const ranges = [];
+  for (let i = 0; i * 25 < sorted.length; i++) ranges.push([i, `${i * 25 + 1}–${Math.min(sorted.length, i * 25 + 25)}`]);
+  ranges.push(['all', 'All']);
+  const lvls = LV_ORDER.filter(l => K.some(k => k.jlpt === l));
+  return `<h1>Kanji</h1><p class="sub">Choose how to work through them.</p>
+  <div class="label">Order</div>${seg([['freq', 'Most frequent first'], ['jlpt', 'JLPT level']], S.kf.order, 'App.kOrder')}
+  <div class="label">${S.kf.order === 'freq' ? 'Frequency rank' : 'Level'}</div>
+  ${S.kf.order === 'freq' ? chips(ranges, S.kf.range, 'App.kRange') : chips(lvls.map(l => [l, l]), S.kf.jlpt, 'App.kLv')}
+  <div class="label">Practise</div>
+  ${seg([['k2m', 'Meaning'], ['m2k', 'Pick kanji'], ['k2r', 'Reading'], ['mix', 'Mixed']], S.kf.qt, 'App.kQt')}
+  <button class="btn" onclick="App.startLearn('kanji')">Practise these ${sel.length}</button>
+  <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span></div>
+  <div class="tiles">${sel.map(k => `<button class="tile" data-open="k:${KMAP[k.k]}"><i class="dot ${status(k.id)}"></i><span class="tk jp">${k.k}</span><span class="tm">${esc(k.m.split(';')[0])}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>`;
+}
+
+function vSettings() {
+  const sw = (k) => `<label class="sw"><input type="checkbox" ${settings[k] ? 'checked' : ''} onchange="App.set('${k}',this.checked)"><span></span></label>`;
+  return `<h1>Settings</h1><p class="sub">Saved on this device.</p>
+  <div class="card">
+    <div class="set" style="display:block"><b>Furigana</b><span>Reading shown above kanji</span>
+      <div style="margin-top:10px">${seg([['on', 'Show'], ['tap', 'Tap to reveal'], ['off', 'Hide']], settings.furigana, 'App.furi')}</div></div>
+    <div class="set"><div><b>Show romaji</b><span>Latin letters under words in questions</span></div>${sw('romaji')}</div>
+    <div class="set"><div><b>Auto-play audio</b><span>Speak Japanese prompts aloud</span></div>${sw('autoSpeak')}</div>
+  </div>
+  <div class="label">My words</div>
+  <div class="card">
+    <span class="muted" style="font-size:13px">One word per line: <code>word, reading, meaning</code> — e.g. <code>筋肉痛, きんにくつう, muscle soreness</code>. Use <code>;</code> or tabs if your meaning has commas, and add a 4th field for JLPT level.</span>
+    <textarea id="cw" placeholder="筋肉痛, きんにくつう, muscle soreness"></textarea>
+    <button class="btn" onclick="App.addWords()">Add words</button>
+    <p class="note">${custom.length} custom word${custom.length === 1 ? '' : 's'} added. They appear under the topic “My words”.</p>
+    ${custom.length ? `<button class="btn line" onclick="App.clearWords()">Remove my words</button>` : ''}
+  </div>
+  <div class="label">Progress</div>
+  <div class="card"><span class="muted" style="font-size:13px">A word counts as <b>known</b> after 3+ correct answers with at least twice as many right as wrong.</span>
+  <button class="btn danger" onclick="App.reset()">Reset all progress</button></div>
+  <p class="note">Kanji frequency ranks are approximate (based on newspaper usage). JLPT levels follow common unofficial lists, since the official lists aren't published. Audio uses your device's Japanese voice.</p>`;
+}
+
+/* detail cards */
+function vDetail(x) {
+  const ks = [...new Set([...plain(x.word)].filter(c => KMAP[c] !== undefined))];
+  const p = progress[x.id];
+  return `<div class="detail force">
+    <div class="dtop"><div class="dword jp">${ruby(x.word, true)}</div><button class="say inl" data-say="${esc(x.reading)}" aria-label="Play">🔊</button></div>
+    <div class="dread jp">${esc(x.reading)} · ${esc(toRomaji(x.reading))}</div>
+    <div class="dmean">${esc(x.meaning)}</div>
+    <div class="tags"><span class="tag lv">${esc(x.jlpt)}</span><span class="tag">${esc(x.pos)}</span><span class="tag">${esc(x.cat)}</span>${freqBadge(x.freq)}</div>
+    ${x.ex ? `<div class="ex"><div style="flex:1"><div class="jp">${ruby(x.ex, true)}</div><div class="en">${esc(x.exEn)}</div></div><button class="say inl" data-say="${esc(plain(x.ex))}" aria-label="Play">🔊</button></div>` : ''}
+    ${ks.length ? `<div class="mini">Kanji in this word</div><div class="kchips">${ks.map(c => `<button class="kchip" data-open="k:${KMAP[c]}"><b>${c}</b>${esc(K[KMAP[c]].m.split(';')[0])}</button>`).join('')}</div>` : ''}
+    <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong` : 'Not practised yet'}</div>
+  </div>`;
+}
+function kDetail(k) {
+  const p = progress[k.id];
+  const words = V.map((x, i) => ({ x, i })).filter(({ x }) => plain(x.word).includes(k.k)).slice(0, 4);
+  return `<div class="detail force">
+    <div class="khead"><div class="kbig jp">${k.k}</div><div><div class="dmean" style="margin-top:0">${esc(k.m)}</div>
+      <div class="tags"><span class="tag lv">${k.jlpt}</span><span class="tag">${k.s} strokes</span></div>
+      <div>${freqBadge(k.freq)} <span class="muted" style="font-size:12px">· ~#${k.r} most used</span></div></div></div>
+    <div class="reads">
+      <div class="read"><b>On'yomi</b><span class="jp">${esc(k.on)}</span><span class="muted" style="font-size:13px">${esc(toRomaji(k.on))}</span></div>
+      <div class="read"><b>Kun'yomi</b><span class="jp">${kunHtml(k.kun)}</span><span class="muted" style="font-size:13px">${k.kun ? esc(toRomaji(k.kun)) : ''}</span></div>
+    </div>
+    ${k.ex.length ? `<div class="mini">Examples</div><div class="exlist">${k.ex.map(e => `<div class="exrow"><span class="jp">${ruby(`{${e.w}|${e.r}}`, true)}</span><span class="m">${esc(e.m)}</span><button class="say inl" data-say="${esc(e.r)}" aria-label="Play">🔊</button></div>`).join('')}</div>` : ''}
+    ${words.length ? `<div class="mini">In your word list</div><div class="kchips">${words.map(({ x, i }) => `<button class="kchip" data-open="v:${i}"><span class="jp">${esc(plain(x.word))}</span>${esc(x.meaning.split(';')[0])}</button>`).join('')}</div>` : ''}
+    <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong` : 'Not practised yet'}</div>
+  </div>`;
+}
+const detail = (kind, item) => kind === 'vocab' ? vDetail(item) : kDetail(item);
+
+/* =========================================================
+   QUIZ ENGINE
+   ========================================================= */
+function distract(item, pool, key, same, n = 3) {
+  const k0 = key(item), seen = new Set([k0]), out = [];
+  const others = pool.filter(x => x.id !== item.id);
+  for (const x of shuffle(others.filter(same)).concat(shuffle(others))) {
+    if (out.length >= n) break;
+    const kx = key(x); if (!seen.has(kx)) { seen.add(kx); out.push(x); }
+  }
+  return out;
+}
+function makeQ(kind, item, dir) {
+  if (kind === 'vocab') {
+    if (dir === 'jp2en') {
+      const opts = shuffle([item, ...distract(item, V, x => x.meaning, x => x.pos === item.pos)]);
+      return { item, dir, jp: true, say: item.reading, hint: 'What does this mean?',
+        prompt: `<div class="pword jp">${ruby(item.word)}</div>${settings.romaji ? `<div class="proma">${esc(toRomaji(item.reading))}</div>` : ''}`,
+        meta: freqBadge(item.freq), grid: false, opts: opts.map(x => ({ html: esc(x.meaning), ok: x === item })) };
+    }
+    const opts = shuffle([item, ...distract(item, V, x => plain(x.word), x => x.pos === item.pos)]);
+    return { item, dir, jp: false, say: item.reading, hint: 'Which word means this?',
+      prompt: `<div class="pmean">${esc(item.meaning)}</div>`, meta: freqBadge(item.freq), grid: true,
+      opts: opts.map(x => ({ html: `<span class="jp cjp">${ruby(x.word)}</span>${settings.romaji ? `<span class="proma">${esc(toRomaji(x.reading))}</span>` : ''}`, ok: x === item })) };
+  }
+  const meta = freqBadge(item.freq);
+  if (dir === 'm2k') {
+    const opts = shuffle([item, ...distract(item, K, x => x.k, x => x.jlpt === item.jlpt)]);
+    return { item, dir, jp: false, say: item.ex[0] ? item.ex[0].r : item.k, hint: 'Which kanji has this meaning?',
+      prompt: `<div class="pmean">${esc(item.m)}</div>`, meta, grid: true, opts: opts.map(x => ({ html: `<span class="jp ckanji">${x.k}</span>`, ok: x === item })) };
+  }
+  if (dir === 'k2r') {
+    const opts = shuffle([item, ...distract(item, K, kRead, x => x.jlpt === item.jlpt)]);
+    return { item, dir, jp: false, say: item.ex[0] ? item.ex[0].r : item.k, hint: 'Which readings belong to this kanji?',
+      prompt: `<div class="pkanji jp">${item.k}</div>`, meta, grid: false, opts: opts.map(x => ({ html: `<span class="jp">${esc(kRead(x))}</span>`, ok: x === item })) };
+  }
+  const opts = shuffle([item, ...distract(item, K, x => x.m, x => x.jlpt === item.jlpt)]);
+  return { item, dir, jp: false, say: item.ex[0] ? item.ex[0].r : item.k, hint: 'What does this kanji mean?',
+    prompt: `<div class="pkanji jp">${item.k}</div>`, meta, grid: false, opts: opts.map(x => ({ html: esc(x.m), ok: x === item })) };
+}
+function pickWeighted(pool, recent) {
+  const c = pool.filter(x => !recent.includes(x.id)); const list = c.length ? c : pool;
+  const w = list.map(x => { const p = progress[x.id]; if (!p) return 3; if (status(x.id) === 'known') return 0.4; return Math.max(1, 2 + p.w - p.c * 0.4); });
+  let r = Math.random() * w.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < list.length; i++) { r -= w[i]; if (r <= 0) return list[i]; }
+  return list[list.length - 1];
+}
+function startLearn(kind) {
+  const pool = kind === 'vocab' ? vSelection() : kSelection();
+  if (!pool.length) return toast('Nothing selected');
+  S.session = { mode: 'learn', kind, pool, dir: kind === 'vocab' ? S.vf.dir : S.kf.qt, seen: 0, correct: 0, streak: 0, recent: [] };
+  nextQ();
+}
+function startTest(items) {
+  const kind = S.tf.deck;
+  let pool = kind === 'vocab' ? V : K;
+  if (S.tf.jlpt !== 'All') pool = pool.filter(x => x.jlpt === S.tf.jlpt);
+  if (!pool.length) return toast('Nothing to test');
+  S.session = { mode: 'test', kind, pool, queue: items || shuffle(pool).slice(0, S.tf.count), idx: 0, dir: S.tf.dir, results: [] };
+  nextQ();
+}
+function nextQ() {
+  const s = S.session; let item;
+  if (s.mode === 'test') { if (s.idx >= s.queue.length) { s.done = true; render(); window.scrollTo(0, 0); return; } item = s.queue[s.idx]; }
+  else item = pickWeighted(s.pool, s.recent);
+  let dir = s.dir;
+  if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp'] : ['k2m', 'm2k', 'k2r']);
+  s.q = makeQ(s.kind, item, dir); s.answered = false; s.chosen = -1;
+  if (s.mode === 'learn') { s.recent.push(item.id); if (s.recent.length > Math.min(4, s.pool.length - 1)) s.recent.shift(); }
+  render(); window.scrollTo(0, 0);
+  if (settings.autoSpeak && s.q.jp) speak(s.q.say);
+}
+function answer(i) {
+  const s = S.session; if (!s || s.answered || s.done || !s.q.opts[i]) return;
+  s.answered = true; s.chosen = i; const ok = s.q.opts[i].ok;
+  rec(s.q.item.id, ok);
+  if (s.mode === 'learn') { s.seen++; if (ok) { s.correct++; s.streak++; } else s.streak = 0; }
+  else s.results.push({ item: s.q.item, ok });
+  render();
+  if (s.mode === 'learn') { const a = $('.after'); if (a) a.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (settings.autoSpeak && !s.q.jp) speak(s.q.say); }
+}
+function next() { const s = S.session; if (!s) return; if (s.mode === 'test') s.idx++; nextQ(); }
+
+function renderSession() {
+  const s = S.session;
+  if (s.done) return renderResults();
+  const q = s.q, test = s.mode === 'test';
+  const head = test ? `<span>Question ${s.idx + 1} of ${s.queue.length}</span>` : `<span>🔥 ${s.streak} streak · ${s.correct}/${s.seen} correct</span>`;
+  const opts = q.opts.map((o, i) => {
+    let c = 'choice';
+    if (s.answered) c += o.ok ? ' ok' : i === s.chosen ? ' bad' : ' dim';
+    return `<button class="${c}" onclick="App.answer(${i})"><span class="n">${i + 1}</span><span>${o.html}</span></button>`;
+  }).join('');
+  let after = '';
+  if (s.answered) {
+    const ok = q.opts[s.chosen].ok;
+    const last = test && s.idx + 1 >= s.queue.length;
+    after = `<div class="verdict ${ok ? 'good' : 'bad'}">${ok ? pick(['正解! Correct', 'いいね! Nice one', 'すごい! Great']) : 'おしい! Not quite — the right answer is highlighted'}</div>
+      ${test ? '' : `<div class="card" style="margin-top:12px">${detail(s.kind, q.item)}</div>`}
+      <button class="btn" onclick="App.next()">${last ? 'See results' : 'Next'} →</button>`;
+  }
+  const canSay = q.jp || s.answered;
+  return `<div class="qtop"><button class="ghost" onclick="App.endSession()">✕ End</button>${head}</div>
+  ${test ? `<div class="qbar"><i style="width:${(s.idx / s.queue.length) * 100}%"></i></div>` : ''}
+  <div class="card prompt">${q.prompt}<div class="pmeta">${q.meta}</div>${canSay ? `<button class="say" data-say="${esc(q.say)}" aria-label="Play">🔊</button>` : ''}</div>
+  <div class="hint">${q.hint}</div>
+  <div class="choices ${q.grid ? 'grid2' : ''}">${opts}</div>
+  <div class="after">${after}</div>`;
+}
+function renderResults() {
+  const s = S.session, n = s.results.length, ok = s.results.filter(r => r.ok).length, pct = n ? Math.round(ok / n * 100) : 0;
+  const msg = pct >= 90 ? '素晴らしい! Excellent' : pct >= 70 ? 'いいね! Good work' : pct >= 50 ? 'もう少し! Getting there' : 'がんばって! Keep practising';
+  const missed = s.results.filter(r => !r.ok);
+  const rows = missed.map(({ item: x }) => s.kind === 'vocab'
+    ? `<button class="row" data-open="v:${V.indexOf(x)}"><span class="rw jp force">${ruby(x.word, true)}</span><span class="rm">${esc(x.meaning)}</span>${freqBadge(x.freq, true)}</button>`
+    : `<button class="row" data-open="k:${KMAP[x.k]}"><span class="rw jp" style="font-size:28px;min-width:44px">${x.k}</span><span class="rm">${esc(x.m)} · <span class="jp">${esc(kRead(x))}</span></span>${freqBadge(x.freq, true)}</button>`).join('');
+  return `<div class="card score"><div class="muted">Your score</div><div class="big">${pct}%</div><div>${ok} of ${n} correct</div><div style="margin-top:6px;font-weight:600">${msg}</div></div>
+  ${missed.length ? `<div class="label">To review (${missed.length}) — tap for details</div><div class="list">${rows}</div>
+  <button class="btn" onclick="App.retry()">Retest my mistakes</button>` : `<p class="note" style="text-align:center">Perfect run — nothing to review.</p>`}
+  <button class="btn sec" onclick="App.newTest()">New test</button>
+  <button class="btn line" onclick="App.endSession()">Done</button>`;
+}
+
+/* =========================================================
+   RENDER + ACTIONS
+   ========================================================= */
+function render() {
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === S.view));
+  $('#app').innerHTML = S.session ? renderSession() : ({ home: vHome, vocab: vVocab, kanji: vKanji, settings: vSettings })[S.view]();
+}
+function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); }
+function openSheet(kind, idx) {
+  const item = kind === 'v' ? V[idx] : K[idx]; if (!item) return;
+  $('#sheet').innerHTML = `<div class="sheet-bg" onclick="App.closeSheet()"></div><div class="sheet"><button class="ghost close" onclick="App.closeSheet()" aria-label="Close">✕</button>${detail(kind === 'v' ? 'vocab' : 'kanji', item)}</div>`;
+  $('#sheet').classList.add('open');
+}
+
+const App = {
+  go(v, tab) { S.session = null; S.view = v; if (tab) S.vtab = tab; App.closeSheet(); render(); window.scrollTo(0, 0); },
+  vtab(t) { S.vtab = t; render(); },
+  vfDir(d) { S.vf.dir = d; render(); }, vfLv(l) { S.vf.jlpt = l; render(); }, vfCat(c) { S.vf.cat = c; render(); },
+  tfDeck(d) { S.tf.deck = d; S.tf.dir = 'mix'; S.tf.jlpt = 'All'; render(); }, tfDir(d) { S.tf.dir = d; render(); },
+  tfLv(l) { S.tf.jlpt = l; render(); }, tfCount(c) { S.tf.count = +c; render(); },
+  bSort(s) { S.browse.sort = s; render(); },
+  search(v) { S.browse.q = v; $('#blist').innerHTML = browseList(); },
+  kOrder(o) { S.kf.order = o; render(); }, kRange(r) { S.kf.range = r === 'all' ? 'all' : +r; render(); },
+  kLv(l) { S.kf.jlpt = l; render(); }, kQt(q) { S.kf.qt = q; render(); },
+  startLearn, startTest: () => startTest(), answer, next,
+  retry() { const s = S.session; const items = shuffle(s.results.filter(r => !r.ok).map(r => r.item)); S.session = { mode: 'test', kind: s.kind, pool: s.pool, queue: items, idx: 0, dir: s.dir, results: [] }; nextQ(); },
+  newTest() { S.session = null; S.view = 'vocab'; S.vtab = 'test'; render(); },
+  endSession() { const s = S.session; S.session = null; if (s && s.mode === 'test') { S.view = 'vocab'; S.vtab = 'test'; } render(); window.scrollTo(0, 0); },
+  set(k, v) { settings[k] = v; store.set('settings', settings); applySettings(); render(); },
+  furi(v) { App.set('furigana', v); },
+  addWords() {
+    const t = $('#cw').value.trim(); if (!t) return;
+    let added = 0;
+    t.split(/\n+/).forEach(line => {
+      let p;
+      if (/\t|;/.test(line)) p = line.split(/\t|;/);
+      else { const a = line.split(','); p = a.length > 3 ? [a[0], a[1], a.slice(2).join(',')] : a; }
+      p = p.map(s => s.trim());
+      const [w, r, m, j] = p; if (!w || !m) return;
+      const word = KANJI_RE.test(w) && r && !w.includes('{') ? `{${w}|${r}}` : w;
+      custom.push([word, r || w, m, 'custom', (j || '').toUpperCase() || '—', 3, 'My words', '', '']);
+      added++;
+    });
+    store.set('custom', custom); buildData(); toast(added ? `Added ${added} word${added === 1 ? '' : 's'}` : 'Nothing added — check the format'); render();
+  },
+  clearWords() { if (!confirm('Remove all your custom words?')) return; custom = []; store.set('custom', custom); buildData(); render(); },
+  reset() { if (!confirm('Reset all progress? This cannot be undone.')) return; progress = {}; store.set('progress', progress); toast('Progress reset'); render(); },
+  closeSheet() { $('#sheet').classList.remove('open'); $('#sheet').innerHTML = ''; }
+};
+
+/* delegated taps: audio, detail sheets, tap-to-reveal furigana */
+document.addEventListener('click', e => {
+  const say = e.target.closest('[data-say]'); if (say) { e.stopPropagation(); speak(say.dataset.say); return; }
+  const op = e.target.closest('[data-open]'); if (op) { const [k, i] = op.dataset.open.split(':'); openSheet(k, +i); return; }
+  const rb = e.target.closest('ruby'); if (rb && document.body.classList.contains('furi-tap') && !e.target.closest('.choice')) rb.classList.toggle('show');
+});
+/* keyboard: 1-4 to answer, Enter/Space for next, Esc closes details */
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input, textarea')) return;
+  if (e.key === 'Escape') return App.closeSheet();
+  const s = S.session; if (!s || s.done) return;
+  if (/^[1-4]$/.test(e.key) && !s.answered) answer(+e.key - 1);
+  else if ((e.key === 'Enter' || e.key === ' ') && s.answered) { e.preventDefault(); next(); }
+});
+
+buildData();
+applySettings();
+(() => { const c = V.map((x, i) => ({ x, i })).filter(({ x }) => x.freq >= 4 && KANJI_RE.test(plain(x.word))); wotd = c.length ? pick(c) : null; })();
+if ('speechSynthesis' in window) speechSynthesis.getVoices();
+render();
+</script>
+</body>
+</html>
