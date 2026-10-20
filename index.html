@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Kotoba Dojo</title>
 <meta name="description" content="Learn Japanese vocabulary and kanji (JLPT N5–N1) with flashcards, quizzes, tests, furigana, stroke order and example sentences.">
-<meta name="theme-color" content="#c8102e">
+<meta name="theme-color" content="#faf7f2">
+<script>/* apply the saved theme before first paint (no flash) */
+try { var t = (JSON.parse(localStorage.getItem('kd_settings') || '{}').theme) || 'system'; if (t !== 'system') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -223,6 +226,16 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 .sheet .close{float:right;font-size:18px}
 .toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;z-index:40;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
+.qnav{display:flex;gap:6px;align-items:center}
+.backbtn{color:var(--ink);font-weight:500}
+.themebtn{border:1px solid var(--line);background:var(--card);border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:15px;display:grid;place-items:center;flex:none;padding:0}
+.simlist{display:grid;gap:6px;margin-top:8px}
+.simrow{display:flex;align-items:center;gap:12px;text-align:left;width:100%;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:8px 12px;cursor:pointer}
+.simrow .sk{font-size:30px;line-height:1.2;width:40px;text-align:center;flex:none}
+.simrow .sm{flex:1;min-width:0;display:flex;flex-direction:column;font-size:14px}
+.simrow .sm span{font-size:12px;color:var(--muted)}
+.simrow .lvl{font-size:11px;color:var(--accent);font-weight:600;flex:none}
+@media (min-width:900px){ header.top .themebtn{position:absolute;right:14px;top:22px} header.top .in{padding-right:56px} }
 /* word of the day */
 .wotd{margin-top:16px}
 .wotd .wk{display:flex;justify-content:space-between;align-items:center;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
@@ -272,7 +285,7 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 </style>
 </head>
 <body>
-<header class="top"><div class="in"><div class="logo">語</div><div class="brand">Kotoba Dojo<small>Japanese vocab &amp; kanji · JLPT N5–N1</small></div><div class="streak" id="streak"></div></div></header>
+<header class="top"><div class="in"><div class="logo">語</div><div class="brand">Kotoba Dojo<small>Japanese vocab &amp; kanji · JLPT N5–N1</small></div><div class="streak" id="streak"></div><button class="themebtn" id="themebtn" onclick="App.toggleTheme()" aria-label="Toggle dark mode"></button></div></header>
 <main id="app"><div class="loading">読み込み中… loading</div></main>
 <nav class="tabs"><div class="in">
   <button data-v="home" onclick="App.go('home')"><b>家</b>Home</button>
@@ -552,7 +565,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('kd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('kd_' + k, JSON.stringify(v)); } catch (e) {} }
 };
-let settings = Object.assign({ furigana: 'on', romaji: false, autoSpeak: false, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'] }, store.get('settings', {}));
+let settings = Object.assign({ theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'] }, store.get('settings', {}));
 let progress = store.get('progress', {});
 let custom = store.get('custom', []);
 let actLog = store.get('log', {});
@@ -624,7 +637,8 @@ function normV(x, lvl) {
     lvl, freq: x.q || 2, common: !!x.c, ex: x.ex || [], alt: x.a || null };
 }
 function normK(x, lvl) {
-  return { id: 'k:' + x.k, kind: 'kanji', k: x.k, mean: x.m, m: x.m.slice(0, 3).join('; '), on: x.on || [], kun: x.kun || [], s: x.s, r: x.r, freq: x.q || 1, lvl, ex: x.ex || [], gr: x.gr };
+  const clean = x.m.filter(m => !/radical\s*\(no\.?\s*\d+\)/i.test(m)), mean = clean.length ? clean : x.m;
+  return { id: 'k:' + x.k, kind: 'kanji', k: x.k, mean, m: mean.slice(0, 3).join('; '), on: x.on || [], kun: x.kun || [], s: x.s, r: x.r, freq: x.q || 1, lvl, ex: x.ex || [], gr: x.gr };
 }
 function starterData() {
   const posMap = { expression: 'expression', noun: 'noun', pronoun: 'pronoun', verb: 'verb', 'i-adj': 'i-adj', 'na-adj': 'na-adj', adverb: 'adverb', question: 'pronoun', custom: 'other' };
@@ -677,6 +691,7 @@ function rebuild() {
   K = LV.flatMap(l => DATA.kanji[l] || []);
   VMAP = {}; V.forEach(x => { if (!VMAP[x.id]) VMAP[x.id] = x; });
   KMAP = {}; K.forEach(k => { KMAP[k.k] = k; });
+  SIMIDX = null; FURIX = null;
 }
 const levelTotal = (kind, l) => l === 'MY' ? custom.length : (DATA.mode === 'full' ? ((DATA.meta.counts || {})[kind] || {})[l] || 0 : (DATA[kind][l] || []).length);
 const levelsAvail = () => [...LV.filter(l => levelTotal('vocab', l) > 0), ...(custom.length ? ['MY'] : [])];
@@ -959,6 +974,8 @@ function vSettings() {
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' }];
   return `<h1>Settings</h1><p class="sub">Saved on this device.</p>
   <div class="card">
+    <div class="set" style="display:block"><b>Appearance</b><span>System follows your phone or computer setting</span>
+      <div style="margin-top:10px">${seg([['system', 'System'], ['light', '☀️ Light'], ['dark', '🌙 Dark']], settings.theme, 'App.theme')}</div></div>
     <div class="set" style="display:block"><b>Furigana</b><span>Reading shown above kanji</span>
       <div style="margin-top:10px">${seg([['on', 'Show'], ['tap', 'Tap to reveal'], ['off', 'Hide']], settings.furigana, 'App.furi')}</div></div>
     <div class="set"><div><b>Show romaji</b><span>Latin letters under words in questions</span></div>${sw('romaji')}</div>
@@ -995,8 +1012,46 @@ function vSettings() {
 }
 
 /* ---------- detail cards ---------- */
+/* Example sentences normally arrive with furigana from the build (kuromoji).
+   If a sentence has none, annotate its kanji using readings from the word list:
+   longest dictionary match first, verb/adjective stems (食べ-, 行-), and single
+   kanji only when they stand alone (so 山 in 富士山 isn't read やま). */
+let FURIX = null;
+function furiIndex() {
+  if (FURIX) return FURIX;
+  const words = new Map(), stems = new Map(); let maxLen = 1;
+  const add = (w, f) => { if (!words.has(w)) { words.set(w, f); maxLen = Math.max(maxLen, w.length); } };
+  for (const x of V) {
+    if (![...x.w].some(isK) || !x.f.includes('{')) continue;
+    add(x.w, x.f);
+    if ((x.pos === 'verb' || x.pos === 'i-adj') && /[ぁ-ん]$/.test(x.w) && x.f.endsWith(x.w.slice(-1))) {
+      const stem = x.w.slice(0, -1), fs = x.f.slice(0, -1);
+      if (stem.length >= 2 && /[ぁ-ん]$/.test(stem)) add(stem, fs);
+      const m = /^\{(.)\|([^}]+)\}[ぁ-ん]/.exec(x.f);
+      if (m && x.w[0] === m[1] && !'来'.includes(m[1]) && !stems.has(m[1])) stems.set(m[1], `{${m[1]}|${m[2]}}`);
+    }
+  }
+  return (FURIX = { words, stems, maxLen });
+}
+function autoFuri(t) {
+  if (![...t].some(isK)) return t;
+  const { words, stems, maxLen } = furiIndex(); let out = '';
+  for (let i = 0; i < t.length;) {
+    if (!isK(t[i])) { out += t[i++]; continue; }
+    let hit = null;
+    for (let L = Math.min(maxLen, t.length - i); L >= 1 && !hit; L--) {
+      const sub = t.slice(i, i + L), f = words.get(sub); if (!f) continue;
+      if (L === 1 && ((i > 0 && isK(t[i - 1])) || (t[i + 1] && isK(t[i + 1])))) continue;
+      hit = [L, f];
+    }
+    if (!hit && stems.has(t[i]) && /[ぁ-ん]/.test(t[i + 1] || '') && !(i > 0 && isK(t[i - 1]))) hit = [1, stems.get(t[i])];
+    if (hit) { out += hit[1]; i += hit[0]; } else out += t[i++];
+  }
+  return out;
+}
 function exHtml(e) {
-  return `<div class="ex"><div style="flex:1"><div class="jp">${ruby(e.j, true)}</div><div class="en">${esc(e.e)}</div>${e.t ? `<a class="src" href="https://tatoeba.org/en/sentences/show/${encodeURIComponent(e.t)}" target="_blank" rel="noopener">Tatoeba #${esc(e.t)}</a>` : ''}</div><button class="say inl" data-say="${esc(plain(e.j))}" aria-label="Play">🔊</button></div>`;
+  const j = e.j.includes('{') ? e.j : autoFuri(e.j);
+  return `<div class="ex"><div style="flex:1"><div class="jp">${ruby(j, true)}</div><div class="en">${esc(e.e)}</div>${e.t ? `<a class="src" href="https://tatoeba.org/en/sentences/show/${encodeURIComponent(e.t)}" target="_blank" rel="noopener">Tatoeba #${esc(e.t)}</a>` : ''}</div><button class="say inl" data-say="${esc(plain(e.j))}" aria-label="Play">🔊</button></div>`;
 }
 function vDetail(x) {
   const ks = [...new Set([...x.w].filter(c => KMAP[c]))];
@@ -1025,12 +1080,61 @@ function kDetail(k) {
       <div class="read"><b>On'yomi</b><span class="jp">${k.on.length ? esc(k.on.join('、')) : '—'}</span><span class="muted" style="font-size:13px">${esc(k.on.map(toRomaji).join(', '))}</span></div>
       <div class="read"><b>Kun'yomi</b><span class="jp">${kunHtml(k.kun)}</span><span class="muted" style="font-size:13px">${esc(k.kun.map(toRomaji).join(', '))}</span></div>
     </div>
+    ${(() => { const sim = similarKanji(k); return sim.length ? `<div class="mini">Different kanji with similar meaning</div><div class="simlist">${sim.map(({ x }) => `<button class="simrow" data-open="k:${esc(x.k)}"><span class="sk jp">${x.k}</span><span class="sm"><b>${esc(x.mean.slice(0, 3).join('; '))}</b><span>${esc(kRead(x))}${x.ex[0] ? ` · e.g. <span class="jp">${esc(x.ex[0].w)}</span> ${esc(x.ex[0].m)}` : ''}</span></span><span class="lvl">${x.lvl}</span></button>`).join('')}</div>
+      <p class="note" style="margin-top:6px">Compare the example words to see how each one is used.</p>` : ''; })()}
     ${words.length ? `<div class="mini">Words using ${k.k}</div><div class="exlist">${words.map(e => { const v = VMAP['v:' + e.w + '|' + e.r];
       return `<button class="exrow" ${v ? `data-open="${esc(v.id)}"` : `data-say="${esc(e.r)}"`}><span class="jp">${ruby(furi(e.w, e.r), true)}</span><span class="m">${esc(e.m)}</span>${e.l ? `<span class="lvl" style="font-size:11px;color:var(--accent);font-weight:600">${e.l}</span>` : ''}</button>`; }).join('')}</div>` : ''}
     <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong · next review ${p.d > Date.now() ? 'in ' + fmtIv(p.d - Date.now()) : 'due now'}` : 'Not studied yet'}${DATA.mode === 'full' ? ' · Stroke order: KanjiVG' : ''}</div>
   </div>`;
 }
 const detail = item => item.kind === 'vocab' ? vDetail(item) : kDetail(item);
+
+/* ---------- similar-meaning kanji ----------
+   Built from KANJIDIC meanings: kanji that share a meaning ("river"), a synonym
+   group (river / stream / creek), or where one's meaning is the head word of the
+   other's ("large river" ~ "river"). */
+const SYN = [['river','stream','creek','brook'],['big','large','great','huge','vast'],['small','little','tiny','minute'],['speak','talk','say','tell','speech','words','discuss'],['see','look','view','watch','observe','glance'],['think','consider','thought','ponder'],['road','way','street','path','route','avenue'],['house','home','dwelling','residence','abode'],['sea','ocean'],['begin','start','commence','beginning','origin'],['end','finish','terminate','conclude','close'],['fast','quick','rapid','swift','speedy'],['old','ancient','aged','former'],['tree','wood','timber','lumber'],['forest','woods','grove','thicket'],['stone','rock','boulder'],['red','crimson','scarlet'],['happy','glad','joy','pleasure','delight','rejoice'],['sad','sorrow','grief','grieve','mourning'],['fear','afraid','dread','fright','frightened'],['love','affection','fond'],['help','assist','aid','rescue','save'],['cold','chilly','frigid','freeze'],['hot','heat','swelter'],['warm','warmth','lukewarm'],['kill','slay','murder'],['buy','purchase'],['night','evening','dusk'],['mountain','peak','summit','hill'],['field','plain','meadow'],['cut','sever','chop','slice'],['wash','rinse','cleanse'],['stop','halt','cease'],['give','bestow','grant','confer'],['meet','encounter','interview'],['pull','tug','drag'],['push','shove','thrust'],['sound','noise','voice'],['country','nation','land','state'],['town','village','hamlet'],['shop','store','stall'],['picture','drawing','painting','paint','draw'],['door','gate','entrance'],['many','numerous','plenty','abundant'],['wide','broad','spacious'],['narrow','tight','cramped'],['deep','profound'],['shallow','superficial'],['fight','battle','war','struggle','combat'],['rule','law','regulation','statute'],['sell','sale'],['wait','await'],['correct','right','proper','justice'],['dark','gloomy','darkness','obscure'],['bright','brilliant','clear'],['hit','strike','beat'],['run','dash','race'],['walk','step','stroll'],['clothes','clothing','garment'],['grain','cereal'],['rice','rice plant'],['bird','fowl','chicken'],['dog','hound'],['jewel','gem','treasure'],['ship','boat','vessel'],['moist','wet','damp'],['dry','parch'],['fire','flame','blaze'],['light','shine','gleam','glitter'],['mind','heart','spirit'],['body','physique'],['wife','spouse'],['husband','man'],['woman','female','lady']];
+const SYN_OF = new Map(); SYN.forEach((g, i) => g.forEach(w => SYN_OF.set(w, i)));
+const MSTOP = new Set('a an the of to and or in on at for with by be as is it its one no not radical counter kana prefix suffix honorific sound used make become thing something'.split(' '));
+const normM = m => String(m).toLowerCase().replace(/\(.*?\)/g, '').replace(/^(to|a|an|the)\s+/, '').replace(/[.,;:!?'"]/g, '').replace(/\s+/g, ' ').trim();
+function mkeys(k) {
+  if (k._mk) return k._mk;
+  const full = new Set(), syn = new Set(), weak = new Set();
+  for (const m of k.mean) {
+    const n = normM(m); if (!n || /radical|katakana|hiragana/.test(n)) continue;
+    full.add(n);
+    const ws = n.split(' ').filter(w => w.length > 2 && !MSTOP.has(w));
+    if (SYN_OF.has(n)) syn.add(SYN_OF.get(n));
+    else if (ws.length === 1 && SYN_OF.has(ws[0])) syn.add(SYN_OF.get(ws[0]));
+    if (ws.length > 1) weak.add(ws[ws.length - 1]);
+  }
+  return (k._mk = { full, syn, weak });
+}
+let SIMIDX = null;
+function simIndex() {
+  if (SIMIDX) return SIMIDX;
+  const full = new Map(), syn = new Map(), weak = new Map();
+  const put = (m, key, k) => { const a = m.get(key); if (a) a.push(k); else m.set(key, [k]); };
+  for (const k of K) { const mk = mkeys(k); mk.full.forEach(x => put(full, x, k)); mk.syn.forEach(x => put(syn, x, k)); mk.weak.forEach(x => put(weak, x, k)); }
+  return (SIMIDX = { full, syn, weak });
+}
+function similarKanji(k, n = 6) {
+  const idx = simIndex(), mk = mkeys(k), score = new Map();
+  const add = (list, s) => (list || []).forEach(x => { if (x !== k) score.set(x, (score.get(x) || 0) + s); });
+  mk.full.forEach(m => { add(idx.full.get(m), 3); add(idx.weak.get(m), 1); });
+  mk.syn.forEach(g => add(idx.syn.get(g), 2));
+  mk.weak.forEach(w => add(idx.full.get(w), 1));
+  return [...score].sort((a, b) => b[1] - a[1] || (a[0].r || 9999) - (b[0].r || 9999)).slice(0, n).map(([x, s]) => ({ x, s }));
+}
+/** True when two kanji share a meaning closely enough to make a quiz ambiguous. */
+function kanjiOverlap(a, b) {
+  const A = mkeys(a), B = mkeys(b);
+  for (const m of A.full) if (B.full.has(m)) return true;
+  for (const g of A.syn) if (B.syn.has(g)) return true;
+  return false;
+}
+const vgl = x => x._ng || (x._ng = new Set(x.senses.flatMap(s => s.g).map(normM).filter(Boolean)));
+function vocabOverlap(a, b) { const B = vgl(b); for (const g of vgl(a)) if (B.has(g)) return true; return normM(a.m) === normM(b.m); }
 
 /* ---------- KanjiVG stroke order ---------- */
 const SVGNS = 'http://www.w3.org/2000/svg';
@@ -1065,7 +1169,8 @@ function hydrate(root = document) {
    ===================================================================== */
 function distract(item, pool, key, same, n = 3) {
   const k0 = key(item), seen = new Set([k0]), out = [];
-  const others = pool.filter(x => x.id !== item.id);
+  const clash = item.kind === 'kanji' ? x => kanjiOverlap(item, x) : x => vocabOverlap(item, x);
+  const others = pool.filter(x => x.id !== item.id && !clash(x));
   const near = shuffle(others.filter(same)).slice(0, 60), far = shuffle(others).slice(0, 60);
   for (const x of near.concat(far)) { if (out.length >= n) break; const kx = key(x); if (!seen.has(kx)) { seen.add(kx); out.push(x); } }
   return out;
@@ -1160,34 +1265,49 @@ function cardQueue(kind, cram) {
 function startCards(kind, cram) {
   const queue = cardQueue(kind, cram);
   if (!queue.length) { S.session = null; toast('All caught up — nothing due and no new cards left today'); render(); return; }
-  S.session = { mode: 'cards', kind, queue, idx: 0, flipped: false, counts: [0, 0, 0, 0], total: queue.length };
+  S.session = { mode: 'cards', kind, queue, idx: 0, flipped: false, counts: [0, 0, 0, 0], total: queue.length, hist: [] };
   render(); window.scrollTo(0, 0);
   const c = queue[0]; if (settings.autoSpeak && kind === 'vocab' && settings.cardFront === 'jp') speak(c.r);
 }
 function flip() { const s = S.session; if (!s || s.mode !== 'cards' || s.flipped || s.done) return; s.flipped = true; render(); if (settings.autoSpeak && s.kind === 'vocab') speak(s.queue[s.idx].r); }
 function rate(g) {
   const s = S.session; if (!s || s.mode !== 'cards' || !s.flipped) return;
-  const item = s.queue[s.idx]; schedule(item, g); s.counts[g]++;
-  if (g === 0) s.queue.splice(Math.min(s.queue.length, s.idx + 4), 0, item);
+  const item = s.queue[s.idx], day = today();
+  // remember everything this rating changes, so "Back" can undo it exactly
+  const h = { idx: s.idx, id: item.id, g, day, prev: progress[item.id] ? { ...progress[item.id] } : null, log: actLog[day] ? { ...actLog[day] } : null, inserted: -1 };
+  schedule(item, g); s.counts[g]++;
+  if (g === 0) { h.inserted = Math.min(s.queue.length, s.idx + 4); s.queue.splice(h.inserted, 0, item); }
+  s.hist.push(h);
   s.idx++; s.flipped = false;
   if (s.idx >= s.queue.length) s.done = true;
   render(); window.scrollTo(0, 0);
   if (!s.done && settings.autoSpeak && s.kind === 'vocab' && settings.cardFront === 'jp') speak(s.queue[s.idx].r);
 }
 
+/** Go back to the previous card and undo its rating, so it can be rated again. */
+function back() {
+  const s = S.session; if (!s || s.mode !== 'cards' || !s.hist || !s.hist.length) return;
+  const h = s.hist.pop();
+  if (h.prev) progress[h.id] = h.prev; else delete progress[h.id];
+  if (h.log) actLog[h.day] = h.log; else delete actLog[h.day];
+  save(); store.set('log', actLog);
+  if (h.inserted >= 0) s.queue.splice(h.inserted, 1);
+  s.counts[h.g]--; s.idx = h.idx; s.flipped = true; s.done = false;
+  render(); window.scrollTo(0, 0);
+}
 function renderCards() {
   const s = S.session;
   if (s.done) {
     const [a, h, g, e] = s.counts;
     return `<div class="card score"><div class="muted">Session complete</div><div class="big">お疲れ様!</div><div>${s.total} card${s.total === 1 ? '' : 's'} · ${g + e} good/easy · ${h} hard · ${a} again</div></div>
-    <button class="btn" onclick="App.startCards('${s.kind}')">Check for more</button><button class="btn line" onclick="App.endSession()">Done</button>`;
+    <button class="btn" onclick="App.startCards('${s.kind}')">Check for more</button>${s.hist.length ? `<button class="btn sec" onclick="App.back()">‹ Back to last card</button>` : ''}<button class="btn line" onclick="App.endSession()">Done</button>`;
   }
   const item = s.queue[s.idx], vocab = s.kind === 'vocab';
   const frontJp = !vocab || settings.cardFront === 'jp';
   const front = vocab ? (frontJp ? `<div class="pword jp">${ruby(item.f)}</div>${settings.romaji ? `<div class="proma">${esc(toRomaji(item.r))}</div>` : ''}` : `<div class="pmean">${esc(item.m)}</div>`)
     : `<div class="pkanji jp">${item.k}</div>`;
   const remaining = s.queue.length - s.idx;
-  const head = `<div class="qtop"><button class="ghost" onclick="App.endSession()">✕ End</button><span>${remaining} left · ${progress[item.id] ? (isDue(item.id) ? 'review' : 'again') : '<b style="color:var(--accent)">new</b>'}</span></div>
+  const head = `<div class="qtop"><span class="qnav"><button class="ghost" onclick="App.endSession()">✕ End</button>${s.hist.length ? `<button class="ghost backbtn" onclick="App.back()" title="Previous card (undo its rating)">‹ Back</button>` : ''}</span><span>${remaining} left · ${progress[item.id] ? (isDue(item.id) ? 'review' : 'again') : '<b style="color:var(--accent)">new</b>'}</span></div>
     <div class="qbar"><i style="width:${(s.idx / s.queue.length) * 100}%"></i></div>`;
   if (!s.flipped) return `${head}<div class="card fcard" onclick="App.flip()"><span class="side">${vocab ? (frontJp ? 'Word' : 'Meaning') : 'Kanji'}</span>${front}<div class="pmeta"><span class="tag lv">${lvName(item.lvl)}</span>${freqBadge(item.freq)}</div>${frontJp && vocab ? `<button class="say" data-say="${esc(item.r)}" aria-label="Play">🔊</button>` : ''}</div>
     <p class="hint">${vocab ? (frontJp ? 'Recall the meaning (and reading).' : 'Recall the Japanese word.') : 'Recall the meaning and readings.'}</p>
@@ -1199,7 +1319,7 @@ function renderCards() {
     <button class="rate" onclick="App.rate(1)">Hard<small>${lab(1)}</small></button>
     <button class="rate good" onclick="App.rate(2)">Good<small>${lab(2)}</small></button>
     <button class="rate easy" onclick="App.rate(3)">Easy<small>${lab(3)}</small></button>
-  </div><p class="note kbd" style="text-align:center">Keys: space to flip · 1–4 to rate</p>`;
+  </div><p class="note kbd" style="text-align:center">Keys: space to flip · 1–4 to rate · ← back</p>`;
 }
 function renderSession() {
   const s = S.session;
@@ -1249,7 +1369,16 @@ function render() {
   $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, vocab: vVocab, kanji: vKanji, search: vSearch, settings: vSettings })[S.view]()}</div>`;
   hydrate($('#app'));
 }
-function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); }
+const darkQuery = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : { matches: false };
+const isDark = () => settings.theme === 'dark' || (settings.theme === 'system' && darkQuery.matches);
+function applyTheme() {
+  const r = document.documentElement;
+  if (settings.theme === 'system') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', settings.theme);
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = isDark() ? '#141312' : '#faf7f2';
+  const b = $('#themebtn'); if (b) { b.textContent = isDark() ? '☀️' : '🌙'; b.title = isDark() ? 'Switch to light mode' : 'Switch to dark mode'; }
+}
+if (darkQuery.addEventListener) darkQuery.addEventListener('change', () => { if (settings.theme === 'system') applyTheme(); });
+function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); applyTheme(); }
 const saveSettings = () => store.set('settings', settings);
 function openSheet(id) {
   const item = id.startsWith('k:') ? KMAP[id.slice(2)] : VMAP[id]; if (!item) return;
@@ -1293,12 +1422,14 @@ const App = {
     toast('Added: it\'s due in your next flashcard session'); render();
   },
   startLearn, startTest: () => startTest(), answer, next,
-  startCards: kind => startCards(kind), cram: kind => startCards(kind, true), flip, rate,
+  startCards: kind => startCards(kind), cram: kind => startCards(kind, true), flip, rate, back,
   retry() { const s = S.session; const items = shuffle(s.results.filter(r => !r.ok).map(r => r.item)); S.session = { mode: 'test', kind: s.kind, pool: s.pool, queue: items, idx: 0, dir: s.dir, results: [] }; nextQ(); },
   newTest() { S.session = null; S.view = 'vocab'; S.vtab = 'test'; render(); },
   endSession() { const s = S.session; S.session = null; if (s && s.kind === 'kanji' && s.mode !== 'test') S.view = 'kanji'; else if (s) { S.view = 'vocab'; S.vtab = s.mode === 'cards' ? 'cards' : s.mode; } render(); window.scrollTo(0, 0); },
   set(k, v) { settings[k] = v; saveSettings(); applySettings(); render(); },
   furi(v) { App.set('furigana', v); },
+  theme(v) { App.set('theme', v); },
+  toggleTheme() { App.set('theme', isDark() ? 'light' : 'dark'); },
   newPerDay(n) { App.set('newPerDay', +n); },
   addWords() {
     const t = $('#cw').value.trim(); if (!t) return;
@@ -1351,10 +1482,13 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', e => {
   if (e.target.matches('input, textarea')) return;
   if (e.key === 'Escape') return App.closeSheet();
-  const s = S.session; if (!s || s.done) return;
+  const s = S.session; if (!s) return;
+  if (s.mode === 'cards' && s.done) { if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); back(); } return; }
+  if (s.done) return;
   if (s.mode === 'cards') {
     if ((e.key === ' ' || e.key === 'Enter') && !s.flipped) { e.preventDefault(); flip(); }
     else if (/^[1-4]$/.test(e.key) && s.flipped) rate(+e.key - 1);
+    else if (e.key === 'ArrowLeft' || e.key === 'Backspace' || e.key === 'z') { e.preventDefault(); back(); }
     return;
   }
   if (/^[1-4]$/.test(e.key) && !s.answered) answer(+e.key - 1);

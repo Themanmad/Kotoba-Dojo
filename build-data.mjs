@@ -261,6 +261,7 @@ async function main() {
   const meta = { built: new Date().toISOString(), sources: {}, counts: { vocab: {}, kanji: {} }, notes: [] };
   tokenizer = await loadTokenizer();
   meta.sources.furigana = tokenizer ? 'kuromoji (IPADIC)' : null;
+  if (!tokenizer) meta.notes.push('kuromoji was not installed, so example sentences use the app\'s built-in furigana fallback.');
 
   /* ---- 1. JLPT vocabulary lists */
   log('JLPT vocabulary lists');
