@@ -1334,14 +1334,14 @@ function vHome() {
     <div class="route${draw ? ' draw' : ''}" style="--run:calc((100% - 44px) * ${frac})"><span class="run"></span>
       ${stops.map((x, i) => `<button class="stop ${x.done ? 'done' : i === nextI && !allDone ? 'next' : ''}" onclick="${x.act}"><span class="pin">${x.done ? '✓' : i + 1}</span><span class="sb"><span class="t"><b>${x.title}</b><span>${x.sub}</span></span>${x.done ? '' : `<span class="go">${x.go}</span>`}</span></button>`).join('')}
     </div>
+    <div class="label">Jump to</div>
+    <div class="elsewhere"><button onclick="App.go('kanji')"><b>字</b>Kanji</button><button onclick="App.go('grammar')"><b>文</b>Grammar</button><button onclick="App.go('vocab','browse')"><b>一</b>Word list</button><button onclick="App.go('search')"><b>探</b>Search</button></div>
   </div><div class="home-side">
     ${wotdCard()}
     ${quoteCard()}
     <div class="label">Your lines</div>
     <div class="card lines">${lineRows('vocab', 'Words')}${lineRows('kanji', 'Kanji')}<div><h3>Kana</h3>${kanaRows}</div>${lineRows('grammar', 'Grammar')}</div>
     <div class="legend"><span><i class="dot known"></i>Known: reviewed at 2+ week intervals</span><span><i class="dot learning"></i>Learning</span></div>
-    <div class="label">Jump to</div>
-    <div class="elsewhere"><button onclick="App.go('kanji')"><b>字</b>Kanji</button><button onclick="App.go('grammar')"><b>文</b>Grammar</button><button onclick="App.go('vocab','browse')"><b>一</b>Word list</button><button onclick="App.go('search')"><b>探</b>Search</button></div>
   </div></div>`;
 }
 
