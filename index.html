@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Kotoba Dojo</title>
 <meta name="description" content="Learn Japanese vocabulary and kanji (JLPT N5–N1) with flashcards, quizzes, tests, furigana, stroke order and example sentences.">
-<meta name="theme-color" content="#faf7f2">
+<meta name="theme-color" content="#F5F7F6">
 <script>/* apply the saved theme before first paint (no flash) */
 try { var st = JSON.parse(localStorage.getItem('kd_settings') || '{}'), t = st.theme || 'system'; if (t !== 'system') document.documentElement.setAttribute('data-theme', t); if (st.skin && st.skin !== 'washi') document.documentElement.setAttribute('data-skin', st.skin); } catch (e) {}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600;700&family=M+PLUS+1+Code:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600;700&family=M+PLUS+1+Code:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#faf7f2;--card:#ffffff;--ink:#1d1b19;--muted:#6f675e;--line:#e8e1d7;--chip:#f2ede5;
@@ -250,6 +250,15 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 .verdict{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .vplay{border:0;background:var(--card);color:inherit;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer;flex:none}
 .nav-extra{display:none!important}
+.nav-foot{display:none;margin-top:auto;padding:14px 16px 6px;border-top:1px solid var(--line)}
+.nav-foot .nf-head{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin-bottom:12px}
+.nav-foot .nf-head i{width:12px;height:12px;border-radius:50%;background:var(--lc)}
+.nav-foot .nf-row{display:grid;grid-template-columns:66px 1fr 40px;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);margin:8px 0}
+.nav-foot .nf-bar{height:8px;border-radius:4px;background:var(--chip);overflow:hidden}
+.nav-foot .nf-bar span{display:block;height:100%;background:var(--lc);border-radius:4px}
+.nav-foot .nf-row b{text-align:right;color:var(--ink);font-weight:600}
+.nav-foot .nf-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.nav-foot .nf-meta span{font-size:13px;background:var(--chip);border-radius:999px;padding:4px 10px}
 .hdr-extra{font-size:14px}
 .gtitle{font-size:28px;line-height:1.5;font-weight:600}
 .pword.gq{font-size:32px;font-weight:600}
@@ -277,6 +286,36 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 .exparts{display:grid;gap:6px}
 .exparts div{display:flex;justify-content:space-between;gap:10px;font-size:14px}
 .okc{color:var(--ok)} .badc{color:var(--bad)}
+.pic{display:inline-block;flex:none;object-fit:contain}
+.pic.emo{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;line-height:1;text-align:center}
+.pic.sm{width:36px;height:36px;font-size:29px}
+.pic.sm.none{visibility:hidden}
+.pic.xs{width:24px;height:24px;font-size:18px;position:absolute;top:6px;left:6px}
+.pic.md{width:64px;height:64px;font-size:52px}
+.pic.lg{width:108px;height:108px;font-size:88px}
+.pic.xl{width:156px;height:156px;font-size:128px}
+.sign-pic{display:flex;justify-content:center;padding-top:6px}
+.kpic{margin-bottom:4px}
+.ppic{display:flex;justify-content:center;margin-bottom:6px}
+.pic.icon{padding:.12em;box-sizing:border-box;background:linear-gradient(150deg,#F2F5FD,#D3DCF4);border-radius:24%;box-shadow:inset 0 -.04em 0 rgba(34,64,143,.18),0 .03em .08em rgba(20,30,60,.18)}
+img.pic.p3d{filter:drop-shadow(0 .03em .05em rgba(0,0,0,.18))}
+.pic-credit{font-size:11px;color:var(--muted);text-align:center;margin-top:2px}
+.kpic .pic-credit{display:block;text-align:left}
+/* dark mode: pictures sit on a light tile so their black outlines and ink-coloured icons stay visible */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) img.pic:not(.p3d):not(.icon){background:#EDF0F5;border-radius:22%;padding:.1em;box-sizing:border-box} }
+:root[data-theme="dark"] img.pic:not(.p3d):not(.icon){background:#EDF0F5;border-radius:22%;padding:.1em;box-sizing:border-box}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) img.pic:is(.xs,.sm){padding:1px;border-radius:6px} }
+:root[data-theme="dark"] img.pic:is(.xs,.sm){padding:1px;border-radius:6px}
+.page-home .pic-credit{display:none}
+.quote{margin:0;border-radius:var(--r-sign,12px);background:var(--card);border:1px solid var(--line);padding:18px 18px 12px;position:relative;border-left:6px solid var(--yellow,var(--accent))}
+.quote .qj{margin:0;font-size:22px;line-height:2.05;font-weight:700}
+.quote .qe{margin:6px 0 10px;font-size:16px;line-height:1.5}
+.quote figcaption{font-size:14px;font-weight:600;color:var(--ink)}
+.quote .qsrc{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:2px}
+.quote .qcopy{font-size:12px;color:var(--muted);margin:8px 0 0}
+.quote .qnote{font-size:13px;color:var(--muted);margin:10px 0 0;padding-top:10px;border-top:1px dashed var(--line)}
+.quote .qnext{font-size:13px;font-weight:600;color:var(--accent);padding:8px 0 0}
+.lcdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}
 /* neat grammar */
 .gpat{display:inline-flex;flex-wrap:wrap;align-items:center;gap:2px;font-weight:600;color:var(--ink)}
 .gnote{display:block;font-size:12px;font-weight:400;color:var(--muted);font-family:Inter,sans-serif;margin-top:2px;line-height:1.3}
@@ -344,11 +383,11 @@ mark.gp rt{color:var(--accent)}
 }
 /* ---------- desktop: sidebar navigation, wider grids, centred dialogs ---------- */
 @media (min-width:900px){
-  body{padding-bottom:32px;padding-left:236px}
-  header.top{position:fixed;left:0;top:0;width:236px;background:none;backdrop-filter:none;border-bottom:0;z-index:11}
+  body{padding-bottom:32px;padding-left:260px}
+  header.top{position:fixed;left:0;top:0;width:260px;background:none;backdrop-filter:none;border-bottom:0;z-index:11}
   header.top .in{padding:20px 18px;max-width:none}
   header.top .streak{display:none}
-  nav.tabs{top:0;right:auto;width:236px;border-top:0;border-right:1px solid var(--line);padding:84px 12px 16px}
+  nav.tabs{top:0;right:auto;width:260px;border-top:0;border-right:1px solid var(--line);padding:84px 12px 16px}
   nav.tabs .in{flex-direction:column;gap:4px;max-width:none}
   nav.tabs button{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;padding:8px 14px;border-radius:12px;font-size:15px;font-weight:500;color:var(--ink)}
   nav.tabs button b{font-size:19px;width:24px;text-align:center;color:var(--muted)}
@@ -372,6 +411,215 @@ mark.gp rt{color:var(--accent)}
 }
 @media (min-width:1300px){ .tiles{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))} }
 
+
+/* =====================================================================
+   STATION — default design. Japanese rail signage: platform white,
+   asphalt ink, Shinkansen indigo for actions, JLPT levels as line colours.
+   Skins (Terminal / Sakura / Ocean) below override the tokens.
+   ===================================================================== */
+:root{
+  --bg:#F5F7F6;--card:#FFFFFF;--ink:#1C2127;--muted:#5D6670;--line:#E3E7E5;--chip:#EDF0EE;
+  --accent:#22408F;--accent-soft:#E7ECF8;--ok:#2B9348;--ok-soft:#E3F3E7;--bad:#D7263D;--bad-soft:#FBE7EA;
+  --warn:#B98000;--warn-soft:#FFF3CF;--yellow:#F2C200;
+  --n5:#4DAF4A;--n4:#F0802A;--n3:#1BA1D8;--n2:#D9A800;--n1:#C2337A;--lc:var(--accent);
+  --shadow:0 1px 0 rgba(28,33,39,.06);--lift:0 10px 28px -12px rgba(28,33,39,.28);
+  --r-sign:8px;--r-tile:14px;--r-pill:999px;
+  --ff:"Barlow",system-ui,sans-serif;--ffj:"Zen Kaku Gothic New","Noto Sans JP",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1317;--card:#171C22;--ink:#E8ECEF;--muted:#98A2AC;--line:#28303A;--chip:#1E242B;
+    --accent:#86A2FF;--accent-soft:#1C2645;--ok:#4CC47A;--ok-soft:#13301F;--bad:#FF5D6E;--bad-soft:#3A1820;
+    --warn:#F2C200;--warn-soft:#30280B;--shadow:none;--lift:0 10px 28px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1317;--card:#171C22;--ink:#E8ECEF;--muted:#98A2AC;--line:#28303A;--chip:#1E242B;
+  --accent:#86A2FF;--accent-soft:#1C2645;--ok:#4CC47A;--ok-soft:#13301F;--bad:#FF5D6E;--bad-soft:#3A1820;
+  --warn:#F2C200;--warn-soft:#30280B;--shadow:none;--lift:0 10px 28px -12px rgba(0,0,0,.6);
+}
+body{font-family:var(--ff);font-size:16px;line-height:1.45;letter-spacing:.005em}
+.jp,nav.tabs button b,.logo{font-family:var(--ffj)}
+h1{font-family:var(--ffj);font-weight:900;font-size:26px;letter-spacing:-.01em;line-height:1.25;margin:2px 0 6px}
+h1 .muted{font-weight:500;font-family:var(--ff)}
+.sub{font-size:15px;max-width:60ch}
+.label{text-transform:none;letter-spacing:0;font-size:14px;font-weight:700;color:var(--ink);margin:22px 0 8px}
+.note{font-size:13px}
+.muted{color:var(--muted)}
+
+/* header + navigation */
+header.top{background:color-mix(in srgb,var(--bg) 88%,transparent);border-bottom:1px solid var(--line)}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#fff;font-weight:900;font-size:17px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.18)}
+.brand{font-weight:700;font-size:16px}
+.brand small{font-size:12px}
+nav.tabs{background:var(--card);border-top:1px solid var(--line)}
+nav.tabs button{position:relative;font-weight:600;font-size:11px;padding:8px 0 10px}
+nav.tabs button b{font-size:19px;font-weight:700}
+nav.tabs button.on{color:var(--ink)}
+nav.tabs button.on::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--accent)}
+nav.tabs button.on b{color:var(--accent)}
+
+/* controls */
+.btn{border-radius:12px;font-weight:700;font-size:16px;padding:14px 18px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18);transition:transform .08s}
+.btn:active{transform:translateY(1px);box-shadow:inset 0 -1px 0 rgba(0,0,0,.18)}
+.btn.sec{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.line{background:none;box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn:focus-visible,.choice:focus-visible,.row:focus-visible,.chip:focus-visible,.seg button:focus-visible,summary:focus-visible,.mode:focus-visible,.stop:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.seg{background:var(--chip);border-radius:12px;padding:4px}
+.seg button{font-weight:600;font-size:14px;border-radius:9px}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 0 rgba(0,0,0,.08),0 0 0 1px var(--line)}
+.chip{font-weight:600;font-size:14px;padding:7px 13px;background:var(--card);border-color:var(--line)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip.on small{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.card{border-radius:var(--r-tile);box-shadow:var(--shadow)}
+
+/* level badges = line colours (set by paintLevels) */
+.tag{font-weight:600;border-radius:6px}
+.tag.lv{background:var(--lc);color:#fff;font-weight:700;letter-spacing:.02em;border-radius:5px;padding:3px 7px}
+.lvl{color:var(--lc)!important}
+.pbar{background:var(--chip);border-radius:99px;height:8px}
+.pbar i{background:var(--lc)}
+.pbar i.l{background:color-mix(in srgb,var(--lc) 35%,var(--chip))}
+
+/* options drawer: settings tucked behind one summary row */
+details.opts{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+details.opts>summary{list-style:none;display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;font-size:14px}
+details.opts>summary::-webkit-details-marker{display:none}
+details.opts>summary .ot{font-weight:700}
+details.opts>summary .os{flex:1;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
+details.opts>summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translateY(-2px);transition:transform .15s;flex:none}
+details.opts[open]>summary::after{transform:rotate(-135deg) translateY(-2px)}
+details.opts .ob{padding:0 14px 14px;border-top:1px solid var(--line)}
+details.opts .ob>.label:first-child{margin-top:12px}
+
+/* vocab modes */
+.vtabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:4px -16px 0;padding:2px 16px 6px}
+.vtabs::-webkit-scrollbar{display:none}
+.mode{flex:none;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:var(--r-pill);padding:8px 14px 8px 8px;font-weight:600;font-size:14px;cursor:pointer;color:var(--ink)}
+.mode b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--chip);font-family:var(--ffj);font-size:14px}
+.mode.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mode.on b{background:var(--accent);color:#fff}
+
+/* ---------- station sign (駅名標): words on Home and in details ---------- */
+.sign{border-radius:var(--r-sign);background:var(--card);border:1px solid var(--line);overflow:hidden;box-shadow:var(--shadow);position:relative}
+.sign-top{display:flex;align-items:center;gap:10px;padding:12px 14px 0}
+.sign-no{font-family:var(--ff);font-weight:700;font-size:12px;color:#fff;background:var(--lc);border-radius:5px;padding:3px 7px;letter-spacing:.02em}
+.sign-kana{color:var(--muted);font-size:15px;flex:1}
+.sign-word{font-family:var(--ffj);font-weight:900;font-size:46px;line-height:1.15;text-align:center;padding:6px 14px 12px;letter-spacing:.04em;word-break:keep-all}
+.sign-band{background:var(--lc);color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;padding:6px 14px;font-weight:600;font-size:15px;min-height:34px;position:relative}
+.sign-band::before,.sign-band::after{content:"";position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:#fff;transform:translateY(-50%);opacity:.9}
+.sign-band::before{left:12px}.sign-band::after{right:12px}
+.sign-mean{padding:12px 14px 14px;font-size:18px;font-weight:600;text-align:center}
+.sign .say{top:8px;right:8px}
+.sign .say.inl{position:absolute}
+.detail .sign{margin:4px 0 10px}
+
+/* ---------- Home: today's line ---------- */
+.hello{font-size:30px;margin-bottom:2px}
+.hello small{display:block;font-family:var(--ff);font-weight:500;font-size:15px;color:var(--muted);letter-spacing:0;margin-top:2px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);background:var(--card);border:1px solid var(--line);padding:6px 12px;font-weight:600;font-size:14px}
+.badge b{font-size:16px}
+.route{position:relative;margin:18px 0 6px;padding-left:4px}
+.route::before{content:"";position:absolute;left:19px;top:22px;bottom:22px;width:6px;border-radius:3px;background:var(--line)}
+.route .run{position:absolute;left:19px;top:22px;width:6px;border-radius:3px;background:var(--accent);transform-origin:top;height:var(--run,0)}
+.route.draw .run{animation:kd-run .9s cubic-bezier(.2,.7,.2,1) both}
+@keyframes kd-run{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.stop{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:none;border:0;padding:8px 0;cursor:pointer;color:var(--ink)}
+.stop .pin{flex:none;width:36px;height:36px;border-radius:50%;background:var(--card);border:4px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:13px;z-index:1;color:var(--muted)}
+.stop.done .pin{background:var(--accent);border-color:var(--accent);color:#fff}
+.stop.next .pin{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.stop .sb{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r-tile);padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)}
+.stop.next .sb{border-color:var(--accent);box-shadow:var(--lift)}
+.stop .sb .t{flex:1;min-width:0}
+.stop .sb b{display:block;font-size:16px}
+.stop .sb span{display:block;font-size:13px;color:var(--muted)}
+.stop .go{font-weight:700;font-size:14px;color:var(--accent);flex:none}
+.stop.done .sb{opacity:.75}
+.lines{display:grid;gap:12px}
+.lines h3{font-size:14px;margin:0 0 6px;font-weight:700}
+.lnrow{display:grid;grid-template-columns:40px 1fr 74px;align-items:center;gap:10px;font-size:13px;margin:6px 0}
+.lnrow .tag.lv{text-align:center}
+.lnrow span:last-child{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.elsewhere{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.elsewhere button{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600;font-size:14px;color:var(--ink);text-align:left}
+.elsewhere button b{font-family:var(--ffj);font-size:18px;color:var(--accent);width:22px;text-align:center}
+
+/* ---------- study screens ---------- */
+.qtop{gap:10px}
+.qtitle{flex:1;text-align:center;font-weight:700;font-size:14px;color:var(--ink);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.combo{display:inline-flex;align-items:center;gap:4px;border-radius:var(--r-pill);background:var(--yellow);color:#1C2127;font-weight:800;font-size:13px;padding:3px 10px}
+.combo.bump{animation:kd-bump .35s ease-out}
+@keyframes kd-bump{40%{transform:scale(1.18)}}
+.track{display:flex;align-items:center;gap:0;margin:2px 0 14px;height:14px}
+.track i{flex:1;height:4px;background:var(--line);position:relative}
+.track i::after{content:"";position:absolute;right:-5px;top:50%;width:10px;height:10px;border-radius:50%;background:var(--card);border:2px solid var(--line);transform:translateY(-50%);z-index:1;box-sizing:border-box}
+.track i.ok{background:var(--ok)}.track i.ok::after{background:var(--ok);border-color:var(--ok)}
+.track i.bad{background:var(--bad)}.track i.bad::after{background:var(--bad);border-color:var(--bad)}
+.track i.cur::after{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);width:12px;height:12px;right:-6px}
+.track i:first-child{flex:.3}
+.prompt{border-radius:var(--r-sign);padding:34px 16px 22px}
+.prompt .pmeta{margin-top:14px}
+.pword,.pkanji{font-family:var(--ffj);font-weight:700}
+.pmean{font-weight:700}
+.choice{border-radius:var(--r-tile);border-width:2px;font-weight:600;min-height:60px;box-shadow:0 2px 0 var(--line)}
+.choice .n{width:26px;height:26px;border-radius:7px;font-weight:700;font-size:12px;background:var(--chip);color:var(--ink)}
+.choice:hover{border-color:var(--accent)}
+.choice.ok{border-color:var(--ok);background:var(--ok-soft);box-shadow:0 2px 0 var(--ok)}
+.choice.bad{border-color:var(--bad);background:var(--bad-soft);box-shadow:0 2px 0 var(--bad)}
+.choice.ok.picked{animation:kd-pop .32s ease-out}
+.choice.bad{animation:kd-shake .3s ease-in-out}
+@keyframes kd-pop{50%{transform:scale(1.03)}}
+@keyframes kd-shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.feedback{position:sticky;bottom:calc(80px + env(safe-area-inset-bottom));z-index:6;margin-top:14px;border-radius:var(--r-tile);padding:12px;display:flex;align-items:center;gap:10px;box-shadow:var(--lift);animation:kd-rise .22s ease-out}
+.feedback.good{background:var(--ok);color:#fff}
+.feedback.bad{background:var(--bad);color:#fff}
+.feedback .fv{flex:1;font-weight:700;font-size:15px;line-height:1.25}
+.feedback .fv small{display:block;font-weight:500;opacity:.9;font-size:13px}
+.feedback .btn{margin:0;width:auto;background:#fff;color:var(--ink);box-shadow:inset 0 -3px 0 rgba(0,0,0,.12);padding:11px 18px}
+.feedback .vplay{background:rgba(255,255,255,.22);color:#fff}
+@keyframes kd-rise{from{transform:translateY(12px);opacity:0}}
+.verdict{display:none}
+.fcard{border-radius:var(--r-sign)}
+.rate{border-radius:12px;border-width:2px}
+.score{border-radius:var(--r-sign)}
+.score .big{font-family:var(--ffj);font-weight:900}
+.arrive{font-family:var(--ffj);font-weight:900;font-size:22px}
+
+/* lists, tiles, panels */
+.row{border-radius:12px}
+.row .rw{font-family:var(--ffj);font-weight:500}
+.tile,.kcell,.sitcard,.action{border-radius:var(--r-tile)}
+.sitcard{box-shadow:var(--shadow)}
+.sheet{border-radius:18px 18px 0 0}
+.kbig{border-radius:var(--r-sign)}
+.toast{font-weight:600}
+.banner{border-radius:12px;border:1px solid color-mix(in srgb,var(--warn) 40%,transparent)}
+.stats .stat{border-radius:var(--r-tile)}
+
+@media (max-width:599px){
+  .vtabs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:4px 0 0;padding:2px 0 4px;overflow:visible}
+  .mode{flex-direction:column;gap:4px;padding:8px 2px 7px;border-radius:12px;font-size:11.5px;line-height:1.15;text-align:center}
+  .mode b{width:30px;height:30px;font-size:15px}
+}
+@media (min-width:900px){
+  .hello{font-size:36px}
+  nav.tabs{padding-top:96px;display:flex;flex-direction:column;overflow-y:auto}
+  nav.tabs .in{gap:6px;width:100%;margin:0;align-items:stretch}
+  nav.tabs button{padding:12px 16px 12px 18px;gap:16px;font-size:16.5px;font-weight:600;letter-spacing:.01em;border-radius:14px}
+  nav.tabs button b{font-size:24px;width:30px;line-height:1.2}
+  .nav-foot{display:block}
+  .home-grid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+  .feedback{bottom:20px}
+  .vtabs{margin:4px 0 0;padding:2px 0 6px;flex-wrap:wrap}
+  nav.tabs button.on{background:var(--accent-soft)}
+  nav.tabs button.on::before{left:0;right:auto;top:20%;bottom:20%;width:3px;height:auto;border-radius:0 3px 3px 0}
+  .sign-word{font-size:54px}
+}
+@media (prefers-reduced-motion:reduce){
+  .route.draw .run,.combo.bump,.choice.ok.picked,.choice.bad,.feedback{animation:none!important}
+}
+
 /* =====================================================================
    DESIGN TEMPLATES (Settings → Design). Washi is the default above.
    ===================================================================== */
@@ -381,7 +629,9 @@ mark.gp rt{color:var(--accent)}
   --accent:#39ff14;--accent-soft:#0a3315;--ok:#39ff14;--ok-soft:#08300f;--bad:#ff3b5c;--bad-soft:#2e0a12;
   --warn:#e6ff3b;--warn-soft:#262b08;--shadow:0 0 0 1px rgba(57,255,20,.05),0 0 18px rgba(57,255,20,.06);color-scheme:dark;
 }
+:root[data-skin="terminal"]{--ff:"JetBrains Mono","M PLUS 1 Code",ui-monospace,monospace;--ffj:"M PLUS 1 Code","Noto Sans JP",monospace;--yellow:#e6ff3b}
 :root[data-skin="terminal"] body{font-family:"JetBrains Mono","M PLUS 1 Code",ui-monospace,monospace;letter-spacing:.01em}
+:root[data-skin="terminal"] .sign-band,:root[data-skin="terminal"] .feedback.good{color:#011006}
 :root[data-skin="terminal"] .jp,:root[data-skin="terminal"] nav.tabs button b,:root[data-skin="terminal"] .logo{font-family:"M PLUS 1 Code","Noto Sans JP",monospace}
 :root[data-skin="terminal"] *{border-radius:2px!important}
 :root[data-skin="terminal"] .dot{border-radius:0!important}
@@ -397,6 +647,7 @@ mark.gp rt{color:var(--accent)}
 :root[data-skin="terminal"] h1::after{content:"_";color:var(--accent);animation:kd-blink 1.1s steps(1) infinite;margin-left:2px}
 :root[data-skin="terminal"] h1,:root[data-skin="terminal"] .pword,:root[data-skin="terminal"] .pkanji,:root[data-skin="terminal"] .dword,:root[data-skin="terminal"] .score .big,:root[data-skin="terminal"] .kbig{text-shadow:0 0 10px rgba(57,255,20,.45)}
 :root[data-skin="terminal"] .label::before{content:"// ";opacity:.6}
+:root[data-skin="terminal"] .hello::after{content:none}
 :root[data-skin="terminal"] .card,:root[data-skin="terminal"] .action,:root[data-skin="terminal"] .row,:root[data-skin="terminal"] .tile,:root[data-skin="terminal"] .choice{border-color:var(--line)}
 :root[data-skin="terminal"] .choice:hover,:root[data-skin="terminal"] .row:hover,:root[data-skin="terminal"] .tile:hover,:root[data-skin="terminal"] .action:hover{border-color:var(--accent);box-shadow:0 0 10px rgba(57,255,20,.18)}
 :root[data-skin="terminal"] .sheet-bg{background:rgba(0,10,3,.75)}
@@ -431,7 +682,7 @@ mark.gp rt{color:var(--accent)}
 </style>
 </head>
 <body>
-<header class="top"><div class="in"><div class="logo">語</div><div class="brand">Kotoba Dojo<small>Japanese vocab &amp; kanji · JLPT N5–N1</small></div><div class="streak" id="streak"></div><button class="themebtn hdr-extra" onclick="App.go('search')" aria-label="Search">🔍</button><button class="themebtn hdr-extra" onclick="App.go('settings')" aria-label="Settings">⚙️</button><button class="themebtn" id="themebtn" onclick="App.toggleTheme()" aria-label="Toggle dark mode"></button></div></header>
+<header class="top"><div class="in"><div class="logo">語</div><div class="brand">Kotoba Dojo<small>JLPT N5–N1 trainer</small></div><div class="streak" id="streak"></div><button class="themebtn hdr-extra" onclick="App.go('search')" aria-label="Search">🔍</button><button class="themebtn hdr-extra" onclick="App.go('settings')" aria-label="Settings">⚙️</button><button class="themebtn" id="themebtn" onclick="App.toggleTheme()" aria-label="Toggle dark mode"></button></div></header>
 <main id="app"><div class="loading">読み込み中… loading</div></main>
 <nav class="tabs"><div class="in">
   <button data-v="home" onclick="App.go('home')"><b>家</b>Home</button>
@@ -442,7 +693,7 @@ mark.gp rt{color:var(--accent)}
   <button data-v="exam" onclick="App.go('exam')"><b>試</b>Exam</button>
   <button class="nav-extra" data-v="search" onclick="App.go('search')"><b>探</b>Search</button>
   <button class="nav-extra" data-v="settings" onclick="App.go('settings')"><b>設</b>Settings</button>
-</div></nav>
+</div><div class="nav-foot" id="navfoot"></div></nav>
 <div id="sheet"></div>
 <div class="toast" id="toast"></div>
 
@@ -732,6 +983,11 @@ N4: [
 ]
 };
 
+/* OpenMoji picture codes for the starter set (the build adds them to the full data) */
+const STARTER_PICS = {"v":{"はい":"2B55","いいえ":"274C","大丈夫":"1F44C","人":"1F9D1","友達":"1F9D1-200D-1F91D-200D-1F9D1","先生":"1F9D1-200D-1F3EB","学生":"1F9D1-200D-1F393","家族":"1F46A","子供":"1F9D2","名前":"1F4DB","水":"1F4A7","ご飯":"1F35A","朝ご飯":"1F373","肉":"1F356","鶏肉":"1F357","魚":"1F41F","卵":"1F95A","野菜":"1F966","お茶":"1F375","コーヒー":"2615","ビール":"1F37A","おいしい":"1F60B","駅":"1F689","電車":"1F683","空港":"1F6EB","切符":"1F3AB","ホテル":"1F3E8","地図":"1F5FA","右":"27A1","左":"2B05","トイレ":"1F6BB","旅行":"2708","予約":"1F4CB","道":"1F6E3","家":"1F3E0","店":"1F3EA","病院":"1F3E5","学校":"1F3EB","会社":"1F3E2","日本":"1F5FE","部屋":"1F6AA","公園":"1F3DE","銀行":"1F3E6","コンビニ":"1F3EA","町":"1F3D8","今日":"1F4C5","明日":"1F4C5","昨日":"1F4C5","時間":"23F0","朝":"1F305","夜":"1F319","食べる":"1F37D","飲む":"1F964","見る":"1F440","聞く":"1F3A7","話す":"1F5E3","買う":"1F6D2","待つ":"23F3","書く":"270D","読む":"1F4D6","寝る":"1F634","起きる":"23F0","思う":"1F914","働く":"1F4BC","歩く":"1F6B6","教える":"1F9D1-200D-1F3EB","休む":"1F6CC","大きい":"1F418","小さい":"1F41C","高い":"1F4B0","安い":"1F3F7","新しい":"1F195","古い":"1F3DA","暑い":"1F975","寒い":"1F976","有名":"2B50","元気":"1F4AA","近い":"1F4CD","遠い":"1F52D","難しい":"1F9E9","簡単":"1F44C","楽しい":"1F389","忙しい":"23F1","強い":"1F4AA","体":"1F9CD","運動":"1F3CB","筋肉":"1F4AA","痛い":"1F915","疲れる":"1F629"},"k":{"日":"2600","一":"0031-FE0F-20E3","会":"1F91D","人":"1F9D1","年":"1F5D3","大":"1F418","十":"1F51F","二":"0032-FE0F-20E3","本":"1F4D5","長":"1F4CF","出":"1F6AA","三":"0033-FE0F-20E3","時":"23F0","社":"1F3E2","見":"1F440","月":"1F319","五":"0035-FE0F-20E3","上":"2B06","東":"1F9ED","地":"1F30D","方":"1F9ED","四":"0034-FE0F-20E3","新":"1F195","金":"1F4B0","九":"0039-FE0F-20E3","開":"1F513","手":"270B","力":"1F4AA","学":"1F4DA","高":"1F992","円":"1F4B4","子":"1F9D2","目":"1F441","言":"1F4AC","体":"1F9CD","田":"1F33E","八":"0038-FE0F-20E3","六":"0036-FE0F-20E3","下":"2B07","小":"1F41C","七":"0037-FE0F-20E3","山":"26F0","思":"1F914","話":"1F4AC","女":"1F469","北":"1F9ED","道":"1F6E3","百":"1F4AF","書":"270D","名":"1F4DB","川":"1F3DE","千":"1F4B4","水":"1F4A7","半":"1F317","男":"1F468","西":"1F9ED","電":"26A1","口":"1F444","校":"1F3EB","語":"1F5E3","空":"1F324","土":"1F331","木":"1F333","聞":"1F442","食":"1F37D","車":"1F697","南":"1F9ED","足":"1F9B6","楽":"1F389","万":"1F4B4","店":"1F3EA","白":"26AA","天":"1F324","買":"1F6D2","母":"1F469","火":"1F525","花":"1F338","右":"27A1","読":"1F4D6","休":"1F6CC","駅":"1F689","父":"1F468","友":"1F9D1-200D-1F91D-200D-1F9D1","左":"2B05","旅":"1F9F3","雨":"1F327","好":"1F44D","肉":"1F356","飲":"1F964","茶":"1F375","耳":"1F442"}};
+/* pictures for Situations phrases; the build copies these SVGs too */
+const SIT_PICS = {"はい|はい":"2B55","いいえ|いいえ":"274C","水|みず":"1F4A7","メニュー|めにゅー":"1F4CB","注文|ちゅうもん":"1F4DD","お会計|おかいけい":"1F9FE","お茶|おちゃ":"1F375","席|せき":"1F4BA","予約|よやく":"1F4CB","おいしい|おいしい":"1F60B","ビール|びーる":"1F37A","ご飯|ごはん":"1F35A","辛い|からい":"1F336","甘い|あまい":"1F36C","箸|はし":"1F962","現金|げんきん":"1F4B4","カード|かーど":"1F4B3","領収書|りょうしゅうしょ":"1F9FE","袋|ふくろ":"1F45C","お箸|おはし":"1F962","レシート|れしーと":"1F9FE","お弁当|おべんとう":"1F371","おにぎり|おにぎり":"1F359","円|えん":"1F4B4","高い|たかい":"1F4B0","安い|やすい":"1F3F7","サイズ|さいず":"1F4CF","色|いろ":"1F3A8","セール|せーる":"1F3F7","割引|わりびき":"1F3F7","大きい|おおきい":"1F418","小さい|ちいさい":"1F41C","買う|かう":"1F6D2","値段|ねだん":"1F3F7","お土産|おみやげ":"1F381","駅|えき":"1F689","電車|でんしゃ":"1F683","乗る|のる":"1F683","出口|でぐち":"1F6AA","切符|きっぷ":"1F3AB","入口|いりぐち":"1F6AA","バス|ばす":"1F68C","タクシー|たくしー":"1F695","新幹線|しんかんせん":"1F685","空港|くうこう":"1F6EB","部屋|へや":"1F6AA","パスポート|ぱすぽーと":"1F6C2","鍵|かぎ":"1F511","朝食|ちょうしょく":"1F373","荷物|にもつ":"1F9F3","フロント|ふろんと":"1F6CE","エレベーター|えれべーたー":"1F6D7","タオル|たおる":"1F9FA","温泉|おんせん":"2668","右|みぎ":"27A1","左|ひだり":"2B05","近い|ちかい":"1F4CD","遠い|とおい":"1F52D","曲がる|まがる":"21AA","信号|しんごう":"1F6A6","渡る|わたる":"1F6B8","道|みち":"1F6E3","歩く|あるく":"1F6B6","地図|ちず":"1F5FA","今日|きょう":"1F4C5","明日|あした":"1F4C5","昨日|きのう":"1F4C5","時間|じかん":"23F0","午前|ごぜん":"1F305","半|はん":"1F317","朝|あさ":"1F305","夜|よる":"1F319","一|いち":"0031-FE0F-20E3","二|に":"0032-FE0F-20E3","三|さん":"0033-FE0F-20E3","四|よん":"0034-FE0F-20E3","五|ご":"0035-FE0F-20E3","六|ろく":"0036-FE0F-20E3","七|なな":"0037-FE0F-20E3","八|はち":"0038-FE0F-20E3","九|きゅう":"0039-FE0F-20E3","十|じゅう":"1F51F","百|ひゃく":"1F4AF","千|せん":"1F4B4","万|まん":"1F4B4","一つ|ひとつ":"0031-FE0F-20E3","二つ|ふたつ":"0032-FE0F-20E3","三つ|みっつ":"0033-FE0F-20E3","家族|かぞく":"1F46A","友達|ともだち":"1F9D1-200D-1F91D-200D-1F9D1","子供|こども":"1F9D2","お母さん|おかあさん":"1F469","お父さん|おとうさん":"1F468","母|はは":"1F469","父|ちち":"1F468","両親|りょうしん":"1F46A","赤ちゃん|あかちゃん":"1F476","祖父|そふ":"1F474","祖母|そぼ":"1F475","大丈夫|だいじょうぶ":"1F44C","痛い|いたい":"1F915","病院|びょういん":"1F3E5","薬|くすり":"1F48A","熱|ねつ":"1F912","風邪|かぜ":"1F927","医者|いしゃ":"1F9D1-200D-2695-FE0F","薬局|やっきょく":"1F48A","歯|は":"1F9B7","怪我|けが":"1FA79","救急車|きゅうきゅうしゃ":"1F691","警察|けいさつ":"1F46E","交番|こうばん":"1F46E","地震|じしん":"1FAE8","火事|かじ":"1F525","仕事|しごと":"1F4BC","会社|かいしゃ":"1F3E2","会議|かいぎ":"1F465","メール|めーる":"1F4E7","資料|しりょう":"1F4C4","打ち合わせ|うちあわせ":"1F465","締め切り|しめきり":"23F0","上司|じょうし":"1F9D1-200D-1F4BC","同僚|どうりょう":"1F9D1-200D-1F4BC","部長|ぶちょう":"1F9D1-200D-1F4BC","名刺|めいし":"1F4C7","休み|やすみ":"1F3D6","給料|きゅうりょう":"1F4B4","天気|てんき":"1F324","暑い|あつい":"1F975","寒い|さむい":"1F976","雨|あめ":"1F327","雪|ゆき":"2744","風|かぜ":"1F32C","暖かい|あたたかい":"1F324","涼しい|すずしい":"1F343","傘|かさ":"2602","台風|たいふう":"1F300","気温|きおん":"1F321","梅雨|つゆ":"2614","春|はる":"1F338","夏|なつ":"1F33B","秋|あき":"1F341","冬|ふゆ":"26C4","趣味|しゅみ":"1F3A8","日本語|にほんご":"1F5FE","上手|じょうず":"1F44D","楽しい|たのしい":"1F389","面白い|おもしろい":"1F929","映画|えいが":"1F3AC","音楽|おんがく":"1F3B5","旅行|りょこう":"2708","料理|りょうり":"1F373","スポーツ|すぽーつ":"26BD","本|ほん":"1F4D5","ゲーム|げーむ":"1F3AE","嬉しい|うれしい":"1F60A","疲れる|つかれる":"1F629","眠い|ねむい":"1F62A","心配|しんぱい":"1F61F","悲しい|かなしい":"1F622","怖い|こわい":"1F631","寂しい|さびしい":"1F614","恥ずかしい|はずかしい":"1F633","驚く|おどろく":"1F632","怒る|おこる":"1F620","幸せ|しあわせ":"1F60A","緊張|きんちょう":"1F62C","安心|あんしん":"1F60C","ジム|じむ":"1F3CB","運動|うんどう":"1F3CB","筋トレ|きんとれ":"1F3CB","体|からだ":"1F9CD","筋肉|きんにく":"1F4AA","筋肉痛|きんにくつう":"1F4AA","走る|はしる":"1F3C3","重い|おもい":"1F3CB","軽い|かるい":"1FAB6","汗|あせ":"1F4A6","体重|たいじゅう":"2696","鍛える|きたえる":"1F3CB","痩せる|やせる":"2696","太る|ふとる":"2696"};
+
 /* =====================================================================
    HELPERS
    ===================================================================== */
@@ -754,7 +1010,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('kd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('kd_' + k, JSON.stringify(v)); } catch (e) {} }
 };
-let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
+let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
 let progress = store.get('progress', {});
 let custom = store.get('custom', []);
 let actLog = store.get('log', {});
@@ -836,11 +1092,11 @@ const posBucket = g => ['noun', 'verb', 'i-adj', 'na-adj', 'adverb', 'expression
 function normV(x, lvl) {
   const id = 'v:' + x.w + '|' + x.r;
   return { id, kind: 'vocab', seq: x.i, w: x.w, r: x.r, f: x.f || furi(x.w, x.r), m: x.m, senses: x.s || [{ p: [], g: [x.m] }], pos: x.g || 'other',
-    lvl, freq: x.q || 2, common: !!x.c, ex: x.ex || [], alt: x.a || null, au: x.au || null };
+    lvl, freq: x.q || 2, common: !!x.c, ex: x.ex || [], alt: x.a || null, au: x.au || null, pic: x.pic || null };
 }
 function normK(x, lvl) {
   const clean = x.m.filter(m => !/radical\s*\(no\.?\s*\d+\)/i.test(m)), mean = clean.length ? clean : x.m;
-  return { id: 'k:' + x.k, kind: 'kanji', k: x.k, mean, m: mean.slice(0, 3).join('; '), on: x.on || [], kun: x.kun || [], s: x.s, r: x.r, freq: x.q || 1, lvl, ex: x.ex || [], gr: x.gr };
+  return { id: 'k:' + x.k, kind: 'kanji', k: x.k, mean, m: mean.slice(0, 3).join('; '), on: x.on || [], kun: x.kun || [], s: x.s, r: x.r, freq: x.q || 1, lvl, ex: x.ex || [], gr: x.gr, pic: x.pic || null };
 }
 function starterData() {
   const posMap = { expression: 'expression', noun: 'noun', pronoun: 'pronoun', verb: 'verb', 'i-adj': 'i-adj', 'na-adj': 'na-adj', adverb: 'adverb', question: 'pronoun', custom: 'other' };
@@ -848,11 +1104,11 @@ function starterData() {
   const vocab = Object.fromEntries(LV.map(l => [l, []])), kanji = Object.fromEntries(LV.map(l => [l, []]));
   for (const a of STARTER_VOCAB) {
     const l = LV.includes(a[4]) ? a[4] : 'N5';
-    vocab[l].push({ i: null, w: plain(a[0]), r: a[1], f: a[0], m: a[2], s: [{ p: [], g: a[2].split('; ') }], g: posMap[a[3]] || 'other', q: a[5], ex: a[7] ? [{ j: a[7], e: a[8], t: null }] : [] });
+    vocab[l].push({ i: null, pic: STARTER_PICS.v[plain(a[0])] || null, w: plain(a[0]), r: a[1], f: a[0], m: a[2], s: [{ p: [], g: a[2].split('; ') }], g: posMap[a[3]] || 'other', q: a[5], ex: a[7] ? [{ j: a[7], e: a[8], t: null }] : [] });
   }
   for (const a of STARTER_KANJI) {
     const l = LV.includes(a[4]) ? a[4] : 'N5';
-    kanji[l].push({ k: a[0], m: a[1].split('; '), on: a[2].split('、'), kun: a[3] ? a[3].split('、') : [], s: a[6], r: a[5], q: kq(a[5]),
+    kanji[l].push({ k: a[0], pic: STARTER_PICS.k[a[0]] || null, m: a[1].split('; '), on: a[2].split('、'), kun: a[3] ? a[3].split('、') : [], s: a[6], r: a[5], q: kq(a[5]),
       ex: (a[7] || '').split(';').filter(Boolean).map(e => { const [w, r, m] = e.split('|'); return { w, r, m, l: '' }; }) });
   }
   return { vocab, kanji };
@@ -861,7 +1117,7 @@ async function boot() {
   try {
     const r = await fetch('data/meta.json', { cache: 'no-cache' });
     if (!r.ok) throw new Error(r.status);
-    DATA.meta = await r.json(); DATA.mode = 'full';
+    DATA.meta = await r.json(); DATA.mode = 'full'; PIC3D = new Set(DATA.meta.pics3d || []);
     await Promise.all(LV.map(l => load('kanji', l).catch(() => [])));
   } catch (e) {
     DATA.mode = 'starter';
@@ -915,6 +1171,8 @@ const isDue = (id, now = Date.now()) => { const p = progress[id]; return !!p && 
 /** r = reviews today; nv / nk = new flashcards introduced today (words / kanji). */
 function logAct(newCard, kind) { const d = today(); const e = actLog[d] || { r: 0 }; e.r = (e.r || 0) + 1; if (newCard) { const k = kind === 'kanji' ? 'nk' : kind === 'grammar' ? 'ng' : kind === 'kana' ? 'na' : 'nv'; e[k] = (e[k] || 0) + 1; } actLog[d] = e; store.set('log', actLog); }
 const todayLog = () => actLog[today()] || { r: 0 };
+const dayFlag = k => { const d = today(), f = store.get('dayflags', {}); if (f.d !== d) { f.d = d; f.v = {}; } f.v[k] = 1; store.set('dayflags', f); };
+const flagged = k => { const f = store.get('dayflags', {}); return f.d === today() && !!(f.v || {})[k]; };
 const newLeft = kind => Math.max(0, settings.newPerDay - (todayLog()[kind === 'kanji' ? 'nk' : kind === 'grammar' ? 'ng' : kind === 'kana' ? 'na' : 'nv'] || 0));
 function streak() {
   let n = 0; const d = new Date();
@@ -960,7 +1218,7 @@ const S = {
   tf: { deck: 'vocab', dir: 'mix', count: 10 },
   browse: { sort: 'freq', limit: 100 },
   search: { q: '', busy: false },
-  gf: { q: '', limit: 100 }, gq: 'gfill', kanaQ: 'k2r', sit: null, back: null, examLv: null, examMode: 'full', examN: 10,
+  gf: { q: '', limit: 100 }, open: {}, openAll: false, drew: false, gq: 'gfill', kanaQ: 'k2r', sit: null, back: null, examLv: null, examMode: 'full', examN: 10,
   session: null
 };
 const vSel = () => V.filter(x => settings.levels.includes(x.lvl) && (S.pos === 'all' || posBucket(x.pos) === S.pos));
@@ -985,45 +1243,105 @@ const posLabel = tags => {
 /* =====================================================================
    VIEWS
    ===================================================================== */
+/* pictures: OpenMoji SVGs (hex ids), Tabler Icons ("t.name") and game-icons.net ("g.artist.name") once built;
+   the device's emoji before that (or if an OpenMoji file is missing) */
+const picChar = hex => String(hex || '').split('-').map(h => String.fromCodePoint(parseInt(h, 16))).join('');
+let PIC3D = new Set();
+const isHexPic = id => /^[0-9A-F]{2,}(-[0-9A-F]+)*$/i.test(String(id || ''));
+const hanOf = w => [...new Set(String(w).match(/\p{Script=Han}/gu) || [])];
+function picHtml(hex, cls = '') {
+  if (!hex || !settings.pics) return '';
+  const kind = isHexPic(hex) ? 'emoji' : 'icon';
+  if (DATA.mode === 'full') {
+    const p3 = kind === 'emoji' && settings.picStyle !== 'flat' && PIC3D.has(hex);
+    return `<img class="pic ${kind}${p3 ? ' p3d' : ''} ${cls}" src="data/img/${esc(hex)}.${p3 ? 'png' : 'svg'}" alt="" loading="lazy" decoding="async" data-hex="${esc(hex)}" onerror="picFail(this)">`;
+  }
+  return isHexPic(hex) ? `<span class="pic emo ${cls}" aria-hidden="true">${picChar(hex)}</span>` : '';
+}
+function picFail(img) {
+  if (!isHexPic(img.dataset.hex)) { img.remove(); return; }
+  if (/\.png$/.test(img.getAttribute('src'))) { img.classList.remove('p3d'); img.src = `data/img/${img.dataset.hex}.svg`; return; }   // no 3D file: flat picture
+  const sp = document.createElement('span'); sp.className = img.className.replace(/\b(emoji|icon)\b/g, '') + ' emo'; sp.setAttribute('aria-hidden', 'true'); sp.textContent = picChar(img.dataset.hex); img.replaceWith(sp);
+}
+/* credit line for icons whose licence asks for the artist's name */
+function picCredit(id) {
+  const m = /^g\.([^.]+)\./.exec(String(id || ''));
+  if (m) return `Picture: ${esc(m[1].split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' '))}, game-icons.net (CC BY 3.0)`;
+  if (/^t\./.test(String(id || ''))) return 'Picture: Tabler Icons (MIT)';
+  return '';
+}
+/* a word's own picture (none when its meaning can't be drawn) */
+function wordPic(x, cls) { return settings.pics && x.pic ? picHtml(x.pic, cls) : ''; }
+/* line colour for a JLPT level (N5 green … N1 magenta) */
+const lcVar = l => /^N[1-5]$/.test(l) ? `var(--n${l[1]})` : 'var(--accent)';
+function paintLevels(root) {
+  root.querySelectorAll('.tag.lv, .lvl, .sign-no').forEach(el => {
+    if (el.style.getPropertyValue('--lc')) return;
+    const m = /N([1-5])/.exec(el.textContent); if (m) el.style.setProperty('--lc', `var(--n${m[1]})`);
+  });
+}
+/* settings tucked into one row that summarises the current choice */
+const optsBox = (key, summary, inner) => `<details class="opts"${S.open[key] || S.openAll ? ' open' : ''} ontoggle="S.open['${key}']=this.open"><summary><span class="ot">Options</span><span class="os">${summary}</span></summary><div class="ob">${inner}</div></details>`;
+const labelOf = (opts, v) => ((opts.find(o => String(o[0]) === String(v)) || [])[1] || '').replace(/<[^>]+>.*$/, '');
+/* 駅名標-style word sign */
+function stationSign(x, mean) {
+  const hasK = [...x.w].some(isK);
+  return `<div class="sign" style="--lc:${lcVar(x.lvl)}">
+    <div class="sign-top"><span class="sign-no">${esc(lvName(x.lvl))}</span><span class="sign-kana jp">${hasK ? esc(kata2hira(x.r) === x.r ? x.r : x.r) : ''}</span></div>${sayBtn(x.au)}
+    ${x.pic && settings.pics ? `<div class="sign-pic">${wordPic(x, 'lg')}</div>${picCredit(x.pic) ? `<div class="pic-credit">${picCredit(x.pic)}</div>` : ''}` : ''}<div class="sign-word dword jp">${esc(x.w)}</div>
+    <div class="sign-band">${esc(toRomaji(x.r))}</div>${mean ? `<div class="sign-mean">${esc(mean)}</div>` : ''}
+  </div>`;
+}
 const seg = (opts, cur, fn) => `<div class="seg">${opts.map(([v, l]) => `<button class="${v === cur ? 'on' : ''}" onclick="${fn}('${v}')">${l}</button>`).join('')}</div>`;
 const chips = (opts, cur, fn) => `<div class="chips">${opts.map(([v, l]) => `<button class="chip ${(Array.isArray(cur) ? cur.includes(v) : String(v) === String(cur)) ? 'on' : ''}" onclick="${fn}('${v}')">${l}</button>`).join('')}</div>`;
-const levelChips = () => chips(levelsAvail().map(l => [l, `${lvName(l)}<small>${fmtN(levelTotal('vocab', l))}</small>`]), settings.levels, 'App.lvToggle');
+const levelChips = () => chips(levelsAvail().map(l => [l, `<i class="lcdot" style="background:${lcVar(l)}"></i>${lvName(l)}<small>${fmtN(levelTotal('vocab', l))}</small>`]), settings.levels, 'App.lvToggle');
 const loadingSel = () => settings.levels.some(l => !isLoaded('vocab', l));
 
+function weakestSituation() {
+  let best = SITUATIONS[0], bestR = 2;
+  for (const x of SITUATIONS) { const it = sitItems(x); if (!it.length) continue; const r = it.filter(i => status(i.id) === 'known').length / it.length; if (r < bestR) { bestR = r; best = x; } }
+  return best;
+}
 function vHome() {
-  const due = dueCount(), tl = todayLog();
-  const vRows = LV.filter(l => levelTotal('vocab', l)).map(l => { const s = levelStats('vocab', l); const pk = s.total ? s.known / s.total * 100 : 0, pl = s.total ? s.learning / s.total * 100 : 0;
-    return `<div class="lvrow"><b>${l}</b><div class="pbar"><i style="width:${pk}%"></i><i class="l" style="width:${pl}%"></i></div><span class="muted">${fmtN(s.known)} / ${fmtN(s.total)}</span></div>`; }).join('');
-  const kRows = LV.filter(l => levelTotal('kanji', l)).map(l => { const s = levelStats('kanji', l); const pk = s.total ? s.known / s.total * 100 : 0, pl = s.total ? s.learning / s.total * 100 : 0;
-    return `<div class="lvrow"><b>${l}</b><div class="pbar"><i style="width:${pk}%"></i><i class="l" style="width:${pl}%"></i></div><span class="muted">${fmtN(s.known)} / ${fmtN(s.total)}</span></div>`; }).join('');
+  const due = dueCount(), tl = todayLog(), nl = newLeft('vocab'), fresh = vSel().filter(x => !progress[x.id]).length;
+  const hK = KANA.filter(x => x.script === 'h'), hKnown = hK.filter(x => status(x.id) === 'known').length;
+  const sit = weakestSituation(), lvl = userLevel();
+  const examToday = store.get('exams', []).some(h => h.d === today());
+  const newNow = Math.min(nl, fresh);
+  const stops = [
+    { title: due ? `Review ${fmtN(due)} card${due === 1 ? '' : 's'}` : newNow ? `Meet ${newNow} new word${newNow === 1 ? '' : 's'}` : 'Flashcards',
+      sub: due ? `Plus ${newNow} new today` : newNow ? 'Nothing due, so start on new words' : 'All caught up for today', done: !due && !newNow, go: 'Start', act: "App.go('vocab','cards')" },
+    { title: 'Quiz round', sub: `20 ${lvl} words with instant feedback`, done: flagged('learn'), go: 'Play', act: "App.go('vocab','learn')" },
+    { title: `${sit.icon} ${sit.name}`, sub: 'The situation you know least so far', done: flagged('sit'), go: 'Open', act: `App.go('vocab','sit');App.sitOpen('${sit.id}')` },
+    { title: 'Kana drill', sub: `${hKnown} of ${hK.length} hiragana known`, done: flagged('kana'), go: 'Drill', act: "App.go('kana')" },
+    { title: 'Mock exam', sub: examToday ? 'Taken today' : `${lvl} · JLPT-style, timed`, done: examToday, go: 'Sit it', act: "App.go('exam')" }
+  ];
+  const nextI = Math.max(0, stops.findIndex(x => !x.done)), allDone = stops.every(x => x.done);
+  let lastDone = -1; stops.forEach((x, i) => { if (x.done) lastDone = i; });
+  const frac = allDone ? 1 : Math.max(nextI, lastDone) / (stops.length - 1);
+  const draw = !S.drew; S.drew = true;
+  const lineRows = (kind, label) => {
+    const rows = LV.filter(l => levelTotal(kind, l)).map(l => { const st = levelStats(kind, l), pk = st.total ? st.known / st.total * 100 : 0, pl = st.total ? st.learning / st.total * 100 : 0;
+      return `<div class="lnrow" style="--lc:${lcVar(l)}"><span class="tag lv">${l}</span><div class="pbar"><i style="width:${pk}%"></i><i class="l" style="width:${pl}%"></i></div><span>${fmtN(st.known)} / ${fmtN(st.total)}</span></div>`; }).join('');
+    return rows ? `<div><h3>${label}</h3>${rows}</div>` : '';
+  };
+  const kanaRows = [['h', 'あ', 'Hiragana'], ['k', 'ア', 'Katakana']].map(([sc, lab]) => { const all = KANA.filter(x => x.script === sc), k = all.filter(x => status(x.id) === 'known').length, l2 = all.filter(x => status(x.id) === 'learning').length;
+    return `<div class="lnrow"><span class="tag lv jp" style="--lc:var(--accent)">${lab}</span><div class="pbar"><i style="width:${k / all.length * 100}%"></i><i class="l" style="width:${l2 / all.length * 100}%"></i></div><span>${k} / ${all.length}</span></div>`; }).join('');
   return `${DATA.mode === 'starter' ? `<div class="banner"><b>Starter set.</b> The full dictionaries haven't been built yet, so you're seeing ${V.length} built-in words. Once the GitHub Action has run, all JLPT levels load automatically.</div>` : ''}
-  <h1>おかえり<span class="muted"> · welcome back</span></h1>
-  <p class="sub">${due ? `You have ${fmtN(due)} card${due === 1 ? '' : 's'} to review.` : 'Nothing due right now. Learn something new?'}</p>
   <div class="home-grid"><div class="home-main">
-  <div class="stats">
-    <div class="stat"><b>${fmtN(due)}</b><span>due now</span></div>
-    <div class="stat"><b>${tl.r}</b><span>reviews today</span></div>
-    <div class="stat"><b>${streak()}</b><span>day streak</span></div>
-  </div>
-  ${wotdCard()}
-  <div class="actions">
-    <button class="action ${due ? 'hot' : ''}" onclick="App.go('vocab','cards')"><span class="ic">札</span><div><b>Flashcards</b><span>Spaced repetition: due cards first, then ${settings.newPerDay} new a day</span></div></button>
-    <button class="action" onclick="App.go('vocab','learn')"><span class="ic">学</span><div><b>Learn with quizzes</b><span>Pick the answer, then see the full entry</span></div></button>
-    <button class="action" onclick="App.go('vocab','test')"><span class="ic">試</span><div><b>Take a test</b><span>No hints, full review at the end</span></div></button>
-    <button class="action" onclick="App.go('kana')"><span class="ic">あ</span><div><b>Hiragana &amp; katakana</b><span>Charts, stroke order and quizzes</span></div></button>
-    <button class="action" onclick="App.go('vocab','sit')"><span class="ic">場</span><div><b>Situations</b><span>Words for greetings, restaurants, shopping and more</span></div></button>
-    <button class="action" onclick="App.go('kanji')"><span class="ic">字</span><div><b>Kanji</b><span>By frequency or JLPT level, with stroke order</span></div></button>
-    <button class="action" onclick="App.go('grammar')"><span class="ic">文</span><div><b>Grammar</b><span>JLPT grammar points with formation and examples</span></div></button>
-    <button class="action" onclick="App.go('exam')"><span class="ic">模</span><div><b>Mock exam</b><span>Timed JLPT-style exam with an estimated score</span></div></button>
-  </div>
+    <h1 class="hello">おかえり<small>${allDone ? 'Every stop done today. Nice work.' : `Today's line has ${stops.length - stops.filter(x => x.done).length} stops left.`}</small></h1>
+    <div class="badges"><span class="badge">🔥 <b>${streak()}</b> day streak</span><span class="badge"><b>${tl.r}</b> answers today</span></div>
+    <div class="route${draw ? ' draw' : ''}" style="--run:calc((100% - 44px) * ${frac})"><span class="run"></span>
+      ${stops.map((x, i) => `<button class="stop ${x.done ? 'done' : i === nextI && !allDone ? 'next' : ''}" onclick="${x.act}"><span class="pin">${x.done ? '✓' : i + 1}</span><span class="sb"><span class="t"><b>${x.title}</b><span>${x.sub}</span></span>${x.done ? '' : `<span class="go">${x.go}</span>`}</span></button>`).join('')}
+    </div>
   </div><div class="home-side">
-  <div class="label">Vocabulary progress</div><div class="card lvrows">${vRows || '<span class="muted">No data</span>'}</div>
-  <div class="label">Kanji progress</div><div class="card lvrows">${kRows || '<span class="muted">No data</span>'}</div>
-  <div class="label">Kana progress</div><div class="card lvrows">${[['h', 'あ'], ['k', 'ア']].map(([sc, lab]) => { const all = KANA.filter(x => x.script === sc), k = all.filter(x => status(x.id) === 'known').length, l2 = all.filter(x => status(x.id) === 'learning').length;
-    return `<div class="lvrow"><b class="jp">${lab}</b><div class="pbar"><i style="width:${k / all.length * 100}%"></i><i class="l" style="width:${l2 / all.length * 100}%"></i></div><span class="muted">${k} / ${all.length}</span></div>`; }).join('')}</div>
-  <div class="label">Grammar progress</div><div class="card lvrows">${LV.filter(l => levelTotal('grammar', l)).map(l => { const s = levelStats('grammar', l); const pk = s.total ? s.known / s.total * 100 : 0, pl = s.total ? s.learning / s.total * 100 : 0;
-    return `<div class="lvrow"><b>${l}</b><div class="pbar"><i style="width:${pk}%"></i><i class="l" style="width:${pl}%"></i></div><span class="muted">${fmtN(s.known)} / ${fmtN(s.total)}</span></div>`; }).join('') || '<span class="muted">No data</span>'}</div>
-  <div class="legend"><span><i class="dot known"></i>Known (reviewed at 2+ week intervals)</span><span><i class="dot learning"></i>Learning</span></div>
+    ${wotdCard()}
+    ${quoteCard()}
+    <div class="label">Your lines</div>
+    <div class="card lines">${lineRows('vocab', 'Words')}${lineRows('kanji', 'Kanji')}<div><h3>Kana</h3>${kanaRows}</div>${lineRows('grammar', 'Grammar')}</div>
+    <div class="legend"><span><i class="dot known"></i>Known: reviewed at 2+ week intervals</span><span><i class="dot learning"></i>Learning</span></div>
+    <div class="label">Jump to</div>
+    <div class="elsewhere"><button onclick="App.go('kanji')"><b>字</b>Kanji</button><button onclick="App.go('grammar')"><b>文</b>Grammar</button><button onclick="App.go('vocab','browse')"><b>一</b>Word list</button><button onclick="App.go('search')"><b>探</b>Search</button></div>
   </div></div>`;
 }
 
@@ -1053,14 +1371,11 @@ function wordOfDay() {
 function wotdCard() {
   const w = wordOfDay(); if (!w) return '';
   const { x, l } = w, st = levelStats('vocab', l), pct = st.total ? Math.round(st.known / st.total * 100) : 0, isNew = !progress[x.id];
-  return `<div class="card wotd force">
-    <div class="wk"><span>Word of the day</span><span class="tag lv">${l}</span></div>
-    <div class="dtop"><div class="w jp">${ruby(x.f, true)}</div>${sayBtn(x.au)}</div>
-    <div class="wm"><b>${esc(x.m)}</b> <span class="muted">· ${esc(x.r)} · ${esc(toRomaji(x.r))}</span></div>
-    <div class="tags"><span class="tag">${esc(POS_LABEL[x.pos] || x.pos)}</span>${freqBadge(x.freq)}</div>
+  return `<div class="label">Word of the day</div><div class="wotd force">
+    ${stationSign(x, x.m)}
     ${x.ex[0] ? exHtml(x.ex[0]) : ''}
     <div class="btnrow"><button class="btn sec" data-open="${esc(x.id)}">Full entry</button><button class="btn" onclick="App.wotdAdd()" ${isNew ? '' : 'disabled'}>${isNew ? 'Add to flashcards' : 'In your reviews ✓'}</button></div>
-    <p class="note">Picked for your level: ${l}, where you know ${pct}% of words. It moves up once you know 90%.</p>
+    <p class="note">Picked from ${l}, where you know ${pct}% of the words. It moves up a level once you know 90%.</p>
   </div>`;
 }
 
@@ -1069,47 +1384,51 @@ function filters(extra = '') {
   <div class="label">Word type</div>${chips(POS_FILTER, S.pos, 'App.posSet')}${extra}`;
 }
 function vVocab() {
-  const tabs = `<div class="vtabs">${seg([['sit', 'Situations'], ['cards', 'Cards'], ['learn', 'Learn'], ['test', 'Test'], ['browse', 'Browse']], S.vtab, 'App.vtab')}</div>`;
+  const modes = [['sit', '場', 'Situations'], ['cards', '札', 'Flashcards'], ['learn', '学', 'Learn'], ['test', '試', 'Test'], ['browse', '一', 'Word list']];
+  const tabs = `<div class="vtabs">${modes.map(([v, ic, l]) => `<button class="mode ${S.vtab === v ? 'on' : ''}" onclick="App.vtab('${v}')"><b>${ic}</b>${l}</button>`).join('')}</div>`;
   if (S.vtab === 'sit') return vSituations(tabs);
-  const busy = loadingSel();
-  const n = vSel().length;
+  const busy = loadingSel(), n = vSel().length;
+  const posL = labelOf(POS_FILTER, S.pos), lvL = settings.levels.map(lvName).join(', ');
+  const fsum = `${lvL} · ${posL === 'All' ? 'all word types' : posL}`;
   const countNote = busy ? '<p class="note">Loading words…</p>' : '';
+  const head = (title, sub) => `<h1>${title}</h1>${tabs}<p class="sub" style="margin-top:12px">${sub}</p>`;
+  const DIRS = [['jp2en', 'Word → meaning'], ['en2jp', 'Meaning → word'], ...(settings.pics ? [['p2w', 'Picture → word']] : []), ['mix', 'Mixed']];
   if (S.vtab === 'cards') {
-    const now = Date.now(), sel = vSel();
-    const due = sel.filter(x => isDue(x.id, now)).length, fresh = sel.filter(x => !progress[x.id]).length;
-    const nl = newLeft('vocab');
-    return `<h1>Flashcards</h1><p class="sub">See the card, recall it, then rate how well you knew it.</p>${tabs}
-    ${filters(`<div class="label">Card front</div>${seg([['jp', 'Japanese'], ['en', 'English']], settings.cardFront, 'App.cardFront')}`)}
-    ${countNote || `<p class="note">${fmtN(due)} due · ${fmtN(Math.min(nl, fresh))} new today (${fmtN(fresh)} unseen in selection)</p>`}
-    <button class="btn" onclick="App.startCards('vocab')" ${busy || !n ? 'disabled' : ''}>${due ? `Review ${fmtN(due)} due` : 'Start'}${Math.min(nl, fresh) ? ` + ${Math.min(nl, fresh)} new` : ''}</button>
-    ${!due && !Math.min(nl, fresh) && n ? `<button class="btn sec" onclick="App.cram('vocab')">Practise anyway (20 random)</button>` : ''}`;
+    const now = Date.now(), sel = vSel(), due = sel.filter(x => isDue(x.id, now)).length, fresh = sel.filter(x => !progress[x.id]).length, nl = Math.min(newLeft('vocab'), fresh);
+    return `${head('Words', 'See the card, recall it, then rate how well you knew it.')}
+    ${optsBox('vcards', `${fsum} · ${settings.cardFront === 'jp' ? 'Japanese' : 'English'} front`, `${filters()}<div class="label">Card front</div>${seg([['jp', 'Japanese'], ['en', 'English']], settings.cardFront, 'App.cardFront')}`)}
+    ${countNote || `<p class="note">${fmtN(due)} due · ${fmtN(nl)} new today · ${fmtN(fresh)} not seen yet</p>`}
+    <button class="btn" onclick="App.startCards('vocab')" ${busy || !n ? 'disabled' : ''}>${due ? `Review ${fmtN(due)} due` : 'Start'}${nl ? ` + ${nl} new` : ''}</button>
+    ${!due && !nl && n ? `<button class="btn sec" onclick="App.cram('vocab')">Practise anyway (20 random)</button>` : ''}`;
   }
   if (S.vtab === 'learn') {
-    return `<h1>Learn</h1><p class="sub">Answer, then see the full entry for each word.</p>${tabs}
-    <div class="label">Question type</div>${seg([['jp2en', 'Word → meaning'], ['en2jp', 'Meaning → word'], ['mix', 'Mixed']], S.vf.dir, 'App.vfDir')}
-    ${filters()}
-    ${countNote || `<p class="note">${fmtN(n)} words selected. New and missed words come up more often.</p>`}
-    <button class="btn" onclick="App.startLearn('vocab')" ${busy || !n ? 'disabled' : ''}>Start learning</button>`;
+    return `${head('Words', 'Rounds of 20 words. Answer, then see the full entry for each one.')}
+    ${optsBox('vlearn', `${fsum} · ${labelOf(DIRS, S.vf.dir)}`, `<div class="label">Question type</div>${seg(DIRS, S.vf.dir, 'App.vfDir')}${filters()}`)}
+    ${countNote || `<p class="note">${fmtN(n)} words selected. Words you're learning come first, then the most common new ones.</p>`}
+    <button class="btn" onclick="App.startLearn('vocab')" ${busy || !n ? 'disabled' : ''}>Start a round</button>`;
   }
   if (S.vtab === 'test') {
     const kanjiDeck = S.tf.deck === 'kanji', gramDeck = S.tf.deck === 'grammar', kanaDeck = S.tf.deck === 'kana';
     const pool = kanjiDeck ? K.filter(k => settings.levels.includes(k.lvl)) : gramDeck ? G.filter(g => settings.levels.includes(g.lvl)) : kanaDeck ? kanaSel() : vSel();
-    const dirs = kanaDeck ? [['k2r', 'Kana → romaji'], ['r2k', 'Romaji → kana'], ['pair', 'あ ↔ ア'], ['mix', 'Mixed']] : kanjiDeck ? [['k2m', 'Meaning'], ['m2k', 'Pick kanji'], ['k2r', 'Reading'], ['mix', 'Mixed']] : gramDeck ? [['gfill', 'Fill the blank'], ['g2m', 'Meaning'], ['m2g', 'Pick grammar'], ['mix', 'Mixed']] : [['jp2en', 'Word → meaning'], ['en2jp', 'Meaning → word'], ['mix', 'Mixed']];
-    return `<h1>Test</h1><p class="sub">No hints along the way. You'll get a full review at the end.</p>${tabs}
-    <div class="label">Deck</div>${seg([['vocab', 'Vocab'], ['kanji', 'Kanji'], ['grammar', 'Grammar'], ['kana', 'Kana']], S.tf.deck, 'App.tfDeck')}
-    <div class="label">Question type</div>${seg(dirs, S.tf.dir, 'App.tfDir')}
-    ${kanaDeck ? `<div class="label">Script</div>${seg([['h', 'Hiragana'], ['k', 'Katakana'], ['both', 'Both']], settings.kanaScript, 'App.kanaScript')}<div class="label">Characters</div>${chips(KANA_GROUPS.filter(g => settings.kanaScript !== 'h' || g[0] !== 'ext'), settings.kanaGroups, 'App.kanaGroup')}` : kanjiDeck || gramDeck ? `<div class="label">JLPT levels</div>${chips(LV.filter(l => levelTotal(gramDeck ? 'grammar' : 'kanji', l)).map(l => [l, `${l}<small>${fmtN(levelTotal(gramDeck ? 'grammar' : 'kanji', l))}</small>`]), settings.levels, 'App.lvToggle')}` : filters()}
-    <div class="label">Questions</div>${chips([[10, '10'], [20, '20'], [30, '30'], [50, '50']], S.tf.count, 'App.tfCount')}
+    const dirs = kanaDeck ? [['k2r', 'Kana → romaji'], ['r2k', 'Romaji → kana'], ['pair', 'あ ↔ ア'], ['mix', 'Mixed']] : kanjiDeck ? [['k2m', 'Meaning'], ['m2k', 'Pick kanji'], ['k2r', 'Reading'], ...(settings.pics ? [['p2k', 'Picture']] : []), ['mix', 'Mixed']] : gramDeck ? [['gfill', 'Fill the blank'], ['g2m', 'Meaning'], ['m2g', 'Pick grammar'], ['mix', 'Mixed']] : DIRS;
+    const scope = kanaDeck ? `${settings.kanaScript === 'h' ? 'Hiragana' : settings.kanaScript === 'k' ? 'Katakana' : 'Both scripts'}` : kanjiDeck || gramDeck ? lvL : fsum;
+    const inner = `<div class="label">Question type</div>${seg(dirs, S.tf.dir, 'App.tfDir')}
+      ${kanaDeck ? `<div class="label">Script</div>${seg([['h', 'Hiragana'], ['k', 'Katakana'], ['both', 'Both']], settings.kanaScript, 'App.kanaScript')}<div class="label">Characters</div>${chips(KANA_GROUPS.filter(g => settings.kanaScript !== 'h' || g[0] !== 'ext'), settings.kanaGroups, 'App.kanaGroup')}` : kanjiDeck || gramDeck ? `<div class="label">JLPT levels</div>${chips(LV.filter(l => levelTotal(gramDeck ? 'grammar' : 'kanji', l)).map(l => [l, `<i class="lcdot" style="background:${lcVar(l)}"></i>${l}<small>${fmtN(levelTotal(gramDeck ? 'grammar' : 'kanji', l))}</small>`]), settings.levels, 'App.lvToggle')}` : filters()}
+      <div class="label">Questions</div>${chips([[10, '10'], [20, '20'], [30, '30'], [50, '50']], S.tf.count, 'App.tfCount')}`;
+    return `${head('Words', 'No hints along the way. You get a full review at the end.')}
+    <div class="label">What to test</div>${seg([['vocab', 'Words'], ['kanji', 'Kanji'], ['grammar', 'Grammar'], ['kana', 'Kana']], S.tf.deck, 'App.tfDeck')}
+    ${optsBox('vtest', `${scope} · ${labelOf(dirs, S.tf.dir)} · ${S.tf.count} questions`, inner)}
     ${S.tf.deck === 'vocab' && busy ? countNote : `<p class="note">${Math.min(pool.length, S.tf.count)} questions from ${fmtN(pool.length)} available.</p>`}
     <button class="btn" onclick="App.startTest()" ${(S.tf.deck === 'vocab' && busy) || pool.length < 2 ? 'disabled' : ''}>Start test</button>`;
   }
-  return `<h1>Word list</h1><p class="sub">Tap any word for its full entry.</p>${tabs}${filters()}
-  <div style="margin-top:14px">${seg([['freq', 'Most common'], ['level', 'Level'], ['kana', 'あいうえお']], S.browse.sort, 'App.bSort')}</div>
-  <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span><span>${freqBadge(5, true)} frequency</span></div>
+  return `${head('Words', 'Tap any word for its full entry.')}
+  ${optsBox('vbrowse', fsum, filters())}
+  <div style="margin-top:12px">${seg([['freq', 'Most common'], ['level', 'Level'], ['kana', 'あいうえお']], S.browse.sort, 'App.bSort')}</div>
+  <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span><span>${freqBadge(5, true)} how common</span></div>
   ${busy ? '<div class="loading">Loading words…</div>' : `<div class="list">${browseRows()}</div>`}`;
 }
 function vRow(x, showLvl = true) {
-  return `<button class="row" data-open="${esc(x.id)}"><i class="dot ${status(x.id)}"></i><span class="rw jp">${ruby(x.f)}</span><span class="rm">${esc(x.m)}</span>${showLvl ? `<span class="lvl">${lvName(x.lvl)}</span>` : ''}${freqBadge(x.freq, true)}</button>`;
+  return `<button class="row" data-open="${esc(x.id)}"><i class="dot ${status(x.id)}"></i>${x.pic && settings.pics ? wordPic(x, 'sm') : '<span class="pic sm none"></span>'}<span class="rw jp">${ruby(x.f)}</span><span class="rm">${esc(x.m)}</span>${showLvl ? `<span class="lvl">${lvName(x.lvl)}</span>` : ''}${freqBadge(x.freq, true)}</button>`;
 }
 function browseRows() {
   const rows = vSel().slice();
@@ -1129,14 +1448,14 @@ function vKanji() {
   ranges.push(['all', 'All']);
   const now = Date.now(), due = sel.filter(k => isDue(k.id, now)).length;
   return `<h1>Kanji</h1><p class="sub">${fmtN(K.length)} kanji. Choose how to work through them.</p>
-  <div class="label">Order</div>${seg([['freq', 'Most frequent first'], ['jlpt', 'JLPT level']], S.kf.order, 'App.kOrder')}
+  ${optsBox('kanji', `${S.kf.order === 'freq' ? `Most frequent · ${labelOf(ranges, S.kf.range)}` : S.kf.jlpt} · ${labelOf([['k2m', 'Meaning'], ['m2k', 'Pick kanji'], ['k2r', 'Reading'], ...(settings.pics ? [['p2k', 'Picture']] : []), ['mix', 'Mixed']], S.kf.qt)}`, `<div class="label">Order</div>${seg([['freq', 'Most frequent first'], ['jlpt', 'JLPT level']], S.kf.order, 'App.kOrder')}
   <div class="label">${S.kf.order === 'freq' ? 'Frequency rank' : 'Level'}</div>
-  ${S.kf.order === 'freq' ? chips(ranges, S.kf.range, 'App.kRange') : chips(LV.filter(l => levelTotal('kanji', l)).map(l => [l, `${l}<small>${fmtN(levelTotal('kanji', l))}</small>`]), S.kf.jlpt, 'App.kLv')}
+  ${S.kf.order === 'freq' ? chips(ranges, S.kf.range, 'App.kRange') : chips(LV.filter(l => levelTotal('kanji', l)).map(l => [l, `<i class="lcdot" style="background:${lcVar(l)}"></i>${l}<small>${fmtN(levelTotal('kanji', l))}</small>`]), S.kf.jlpt, 'App.kLv')}
   <div class="label">Quiz type</div>
-  ${seg([['k2m', 'Meaning'], ['m2k', 'Pick kanji'], ['k2r', 'Reading'], ['mix', 'Mixed']], S.kf.qt, 'App.kQt')}
+  ${seg([['k2m', 'Meaning'], ['m2k', 'Pick kanji'], ['k2r', 'Reading'], ...(settings.pics ? [['p2k', 'Picture']] : []), ['mix', 'Mixed']], S.kf.qt, 'App.kQt')}`)}
   <div class="btnrow"><button class="btn" onclick="App.startCards('kanji')" ${sel.length ? '' : 'disabled'}>Flashcards${due ? ` · ${due} due` : ''}</button><button class="btn sec" onclick="App.startLearn('kanji')" ${sel.length > 1 ? '' : 'disabled'}>Quiz these ${fmtN(sel.length)}</button></div>
   <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span></div>
-  <div class="tiles">${sel.map(k => `<button class="tile" data-open="${esc(k.id)}"><i class="dot ${status(k.id)}"></i><span class="tk jp">${k.k}</span><span class="tm">${esc(k.mean[0] || '')}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>`;
+  <div class="tiles">${sel.map(k => `<button class="tile" data-open="${esc(k.id)}"><i class="dot ${status(k.id)}"></i>${picHtml(k.pic, 'xs')}<span class="tk jp">${k.k}</span><span class="tm">${esc(k.mean[0] || '')}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>`;
 }
 
 function vSearch() {
@@ -1175,7 +1494,7 @@ function searchResults() {
   else if (q.length >= 2) kan = K.filter(k => k.mean.some(m => m.toLowerCase() === q)).slice(0, 12);
   const rows = scored.slice(0, 60).map(([, x]) => vRow(x)).join('');
   const gram = G.filter(g => jp ? g.t.includes(q0) || plain(g.t).includes(q0) : (q.length >= 3 && g.m.toLowerCase().includes(q))).slice(0, 8);
-  return `${kan.length ? `<div class="label">Kanji</div><div class="tiles" style="margin-top:0">${kan.map(k => `<button class="tile" data-open="${esc(k.id)}"><i class="dot ${status(k.id)}"></i><span class="tk jp">${k.k}</span><span class="tm">${esc(k.mean[0] || '')}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>` : ''}
+  return `${kan.length ? `<div class="label">Kanji</div><div class="tiles" style="margin-top:0">${kan.map(k => `<button class="tile" data-open="${esc(k.id)}"><i class="dot ${status(k.id)}"></i>${picHtml(k.pic, 'xs')}<span class="tk jp">${k.k}</span><span class="tm">${esc(k.mean[0] || '')}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>` : ''}
   ${gram.length ? `<div class="label">Grammar</div><div class="list" style="margin-top:0">${gram.map(gRow).join('')}</div>` : ''}
   <div class="label">Words ${scored.length ? `· ${scored.length > 60 ? 'top 60 of ' : ''}${fmtN(scored.length)}` : ''}</div>
   ${rows ? `<div class="list" style="margin-top:0">${rows}</div>` : '<p class="muted">No words found.</p>'}`;
@@ -1188,6 +1507,11 @@ function vSettings() {
     { name: 'JMdict & KANJIDIC2', by: 'Electronic Dictionary Research and Development Group', license: 'CC BY-SA 4.0', url: 'https://www.edrdg.org/edrdg/licence.html' },
     { name: 'KanjiVG', by: 'Ulrich Apel and contributors', license: 'CC BY-SA 3.0', url: 'https://kanjivg.tagaini.net/' },
     { name: 'Tatoeba', by: 'Tatoeba contributors', license: 'CC BY 2.0 FR', url: 'https://tatoeba.org/' },
+    { name: 'Pictures', by: 'OpenMoji – the open-source emoji and icon project (your device\'s emoji are shown until the full data is built)', license: 'CC BY-SA 4.0', url: 'https://openmoji.org/' },
+    { name: '3D pictures', by: 'Fluent Emoji (Microsoft)', license: 'MIT', url: 'https://github.com/microsoft/fluentui-emoji' },
+    { name: 'Icons', by: 'Tabler Icons (Paweł Kuna)', license: 'MIT', url: 'https://tabler.io/icons' },
+    { name: 'Icons', by: 'game-icons.net (Lorc, Delapouite and contributors; the artist is named under each picture)', license: 'CC BY 3.0', url: 'https://game-icons.net/' },
+    { name: 'Modern quotes', by: 'Short catchphrases by Shuzo Matsuoka and from anime and manga, quoted briefly with credit; © their creators and publishers (shown on each quote). Switch them off above.', license: '© owners', url: 'https://en.wikipedia.org/wiki/Shuzo_Matsuoka' },
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' }];
   return `<h1>Settings</h1><p class="sub">Saved on this device.</p>
   <div class="card">
@@ -1197,6 +1521,9 @@ function vSettings() {
         <span>${k.name}<br><small>${k.desc}</small></span></button>`).join('')}</div></div>
     <div class="set" style="display:block"><b>Appearance</b><span>${settings.skin === 'terminal' ? 'The Terminal design is always dark' : 'System follows your phone or computer setting'}</span>
       ${settings.skin === 'terminal' ? '' : `<div style="margin-top:10px">${seg([['system', 'System'], ['light', '☀️ Light'], ['dark', '🌙 Dark']], settings.theme, 'App.theme')}</div>`}</div>
+    <div class="set"><div><b>Pictures</b><span>Show a picture for words and kanji you can draw</span></div><label class="sw"><input type="checkbox" ${settings.pics ? 'checked' : ''} onchange="App.set('pics',this.checked)"><span></span></label></div>
+    <div class="set"${settings.pics ? '' : ' style="display:none"'}><div><b>Picture style</b><span>3D pictures, or flat drawings</span></div>${seg([['3d', '3D'], ['flat', 'Flat']], settings.picStyle === 'flat' ? 'flat' : '3d', 'App.picStyle')}</div>
+    <div class="set"><div><b>Modern quotes</b><span>Include Shuzo Matsuoka and anime catchphrases in Quote of the day</span></div><label class="sw"><input type="checkbox" ${settings.modernQuotes !== false ? 'checked' : ''} onchange="App.set('modernQuotes',this.checked)"><span></span></label></div>
     <div class="set" style="display:block"><b>Furigana</b><span>Reading shown above kanji</span>
       <div style="margin-top:10px">${seg([['on', 'Show'], ['tap', 'Tap to reveal'], ['off', 'Hide']], settings.furigana, 'App.furi')}</div></div>
     <div class="set"><div><b>Show romaji</b><span>Latin letters under words in questions</span></div>${sw('romaji')}</div>
@@ -1308,9 +1635,9 @@ function vDetail(x) {
   const p = progress[x.id];
   const uk = x.senses.some(s => (s.x || []).includes('uk'));
   return `<div class="detail force">
-    <div class="dtop"><div class="dword jp">${ruby(x.f, true)}</div>${sayBtn(x.au)}</div>
-    <div class="dread jp">${esc(x.r)} · ${esc(toRomaji(x.r))}${x.alt ? ` · also written <span class="jp">${esc(x.alt)}</span>` : ''}</div>
-    <div class="tags"><span class="tag lv">${lvName(x.lvl)}</span><span class="tag">${esc(POS_LABEL[x.pos] || x.pos)}</span>${x.common ? '<span class="tag cm">common word</span>' : ''}${uk ? '<span class="tag">usually kana</span>' : ''}${freqBadge(x.freq)}</div>
+    ${stationSign(x)}
+    ${x.alt ? `<div class="dread">Also written <span class="jp">${esc(x.alt)}</span></div>` : ''}
+    <div class="tags"><span class="tag">${esc(POS_LABEL[x.pos] || x.pos)}</span>${x.common ? '<span class="tag cm">common word</span>' : ''}${uk ? '<span class="tag">usually kana</span>' : ''}${freqBadge(x.freq)}</div>
     ${x.senses.length > 1 ? `<ol class="senses">${x.senses.map((s, i) => `<li>${s.p && s.p.length && (i === 0 || s.p.join() !== x.senses[i - 1].p.join()) ? `<span class="pos">${esc(posLabel(s.p))}</span>` : ''}${esc(s.g.join('; '))}${s.i ? ` <span class="muted">(${esc(s.i)})</span>` : ''}</li>`).join('')}</ol>`
       : `<div class="dmean">${esc(x.senses[0].g.join('; '))}</div>${x.senses[0].p && x.senses[0].p.length && DATA.meta ? `<div class="muted" style="font-size:13px">${esc(posLabel(x.senses[0].p))}</div>` : ''}`}
     ${x.ex.map(exHtml).join('')}
@@ -1322,7 +1649,7 @@ function kDetail(k) {
   const p = progress[k.id];
   const words = k.ex.length ? k.ex : V.filter(x => x.w.includes(k.k)).slice(0, 5).map(x => ({ w: x.w, r: x.r, m: x.m, l: x.lvl }));
   return `<div class="detail force">
-    <div class="khead"><div class="kbig jp strokes" data-k="${esc(k.k)}">${k.k}</div><div style="flex:1;min-width:0"><div class="dmean" style="margin-top:0">${esc(k.mean.join('; '))}</div>
+    <div class="khead"><div class="kbig jp strokes" data-k="${esc(k.k)}">${k.k}</div><div style="flex:1;min-width:0">${k.pic && settings.pics ? `<div class="kpic">${picHtml(k.pic, 'md')}${picCredit(k.pic) ? `<span class="pic-credit">${picCredit(k.pic)}</span>` : ''}</div>` : ''}<div class="dmean" style="margin-top:0">${esc(k.mean.join('; '))}</div>
       <div class="tags"><span class="tag lv">${k.lvl}</span>${k.s ? `<span class="tag">${k.s} strokes</span>` : ''}${k.gr ? `<span class="tag">${k.gr <= 6 ? 'grade ' + k.gr : k.gr === 8 ? 'jōyō (secondary)' : 'jinmeiyō'}</span>` : ''}</div>
       <div>${freqBadge(k.freq)}${k.r ? ` <span class="muted" style="font-size:12px">· #${k.r} of the 2,500 most used</span>` : ''}</div></div></div>
     <div class="frames" data-frames="${esc(k.k)}"></div>
@@ -1436,6 +1763,14 @@ function makeQ(kind, item, dir) {
   if (kind === 'grammar') return makeGrammarQ(item, dir);
   if (kind === 'vocab') {
     const pool = V.length > 40 ? V.filter(x => x.lvl === item.lvl || Math.abs(LV.indexOf(x.lvl) - LV.indexOf(item.lvl)) <= 1) : V;
+    if (dir === 'p2w' && item.pic && settings.pics) {
+      const ppool = pool.filter(x => x.pic && x.pic !== item.pic), bigger = ppool.length >= 3 ? ppool : pool;
+      const opts = shuffle([item, ...distract(item, bigger, x => x.w, x => x.pos === item.pos)]);
+      return { item, dir, jp: false, say: wordSay(item.r), au: item.au, hint: 'Which word is this?',
+        prompt: `<div class="ppic">${picHtml(item.pic, 'xl')}</div>`, meta: `<span class="tag lv">${lvName(item.lvl)}</span>`, grid: true,
+        opts: opts.map(x => ({ html: `<span class="jp cjp">${ruby(x.f)}</span>`, ok: x === item })) };
+    }
+    if (dir === 'p2w') dir = 'en2jp';
     if (dir === 'jp2en') {
       const opts = shuffle([item, ...distract(item, pool, x => x.m, x => x.pos === item.pos)]);
       return { item, dir, jp: true, say: wordSay(item.r), au: item.au, hint: 'What does this mean?',
@@ -1449,6 +1784,12 @@ function makeQ(kind, item, dir) {
   }
   const meta = `<span class="tag lv">${item.lvl}</span>${freqBadge(item.freq)}`, say = wordSay(item.ex[0] ? item.ex[0].r : (item.kun.find(k => !k.startsWith('-')) || item.on[0] || '').split('.').join('')), au = item.ex[0] ? ((VMAP['v:' + item.ex[0].w + '|' + item.ex[0].r] || {}).au || null) : null;
   const pool = K.filter(x => x.lvl === item.lvl).length > 10 ? K.filter(x => x.lvl === item.lvl) : K;
+  if (dir === 'p2k' && item.pic && settings.pics) {
+    const ppool = K.filter(x => x.pic && x.pic !== item.pic), bigger = ppool.length >= 3 ? ppool : pool;
+    const opts = shuffle([item, ...distract(item, bigger, x => x.k, () => true)]);
+    return { item, dir, jp: false, say, au, hint: 'Which kanji is this?', prompt: `<div class="ppic">${picHtml(item.pic, 'xl')}</div>`, meta, grid: true, opts: opts.map(x => ({ html: `<span class="jp ckanji">${x.k}</span>`, ok: x === item })) };
+  }
+  if (dir === 'p2k') dir = 'm2k';
   if (dir === 'm2k') {
     const opts = shuffle([item, ...distract(item, pool, x => x.k, () => true)]);
     return { item, dir, jp: false, say, au, hint: 'Which kanji has this meaning?', prompt: `<div class="pmean">${esc(item.m)}</div>`, meta, grid: true, opts: opts.map(x => ({ html: `<span class="jp ckanji">${x.k}</span>`, ok: x === item })) };
@@ -1481,10 +1822,13 @@ function learnDeck(kind, exclude, custom) {
 }
 function startLearn(kind, carry, custom) {
   const used = carry ? carry.used : new Set(); custom = custom || (carry && carry.custom) || null;
+  const pdir = kind === 'vocab' ? S.vf.dir : kind === 'kanji' ? S.kf.qt : '';
+  if ((pdir === 'p2w' || pdir === 'p2k') && settings.pics) custom = (custom || basePool(kind)).filter(x => x.pic);
   const deck = learnDeck(kind, used, custom);
   if (deck.length < 2 && !carry) return toast('Select at least two items');
   if (!deck.length) { toast("You've been through everything in this selection"); return; }
   deck.forEach(x => used.add(x.id)); markSeen(deck.map(x => ['learn', x.id]));
+  dayFlag(custom ? 'sit' : kind === 'kana' ? 'kana' : 'learn');
   S.session = { mode: 'learn', kind, deck, idx: 0, unique: deck.length, dir: kind === 'vocab' ? S.vf.dir : kind === 'grammar' ? S.gq : kind === 'kana' ? S.kanaQ : S.kf.qt,
     seen: 0, correct: 0, streak: 0, first: new Map(), retries: new Map(), used, round: carry ? carry.round + 1 : 1, custom, back: carry ? carry.back : S.back };
   S.back = null;
@@ -1494,7 +1838,8 @@ function startTest(items, custom) {
   const kind = custom ? 'vocab' : S.tf.deck;
   const pool = custom || (kind === 'vocab' ? vSel() : kind === 'grammar' ? G.filter(g => settings.levels.includes(g.lvl)) : kind === 'kana' ? kanaSel() : K.filter(k => settings.levels.includes(k.lvl)));
   if (pool.length < 2) return toast('Nothing to test');
-  const queue = items || freshFirst(pool, 'test-' + kind).slice(0, S.tf.count);
+  const picOnly = !custom && (S.tf.dir === 'p2w' || S.tf.dir === 'p2k') && settings.pics;
+  const queue = items || freshFirst(picOnly ? pool.filter(x => x.pic) : pool, 'test-' + kind).slice(0, S.tf.count);
   if (!items) markSeen(queue.map(x => ['test-' + kind, x.id]));
   S.session = { mode: 'test', kind, pool, queue, idx: 0, dir: custom ? 'mix' : S.tf.dir, results: [], back: S.back }; S.back = null;
   nextQ();
@@ -1505,7 +1850,7 @@ function nextQ() {
   if (s.idx >= list.length) { s.done = true; render(); window.scrollTo(0, 0); return; }
   item = list[s.idx];
   let dir = s.dir;
-  if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp'] : s.kind === 'grammar' ? ['gfill', 'gfill', 'g2m', 'm2g'] : s.kind === 'kana' ? ['k2r', 'r2k', 'pair'] : ['k2m', 'm2k', 'k2r']);
+  if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp', ...(item.pic && settings.pics ? ['p2w'] : [])] : s.kind === 'grammar' ? ['gfill', 'gfill', 'g2m', 'm2g'] : s.kind === 'kana' ? ['k2r', 'r2k', 'pair'] : ['k2m', 'm2k', 'k2r', ...(item.pic && settings.pics ? ['p2k'] : [])]);
   s.q = makeQ(s.kind, item, dir); s.answered = false; s.chosen = -1;
   render(); window.scrollTo(0, 0);
   if (settings.autoSpeak && s.q.jp) playAudio(s.q.au);
@@ -1580,7 +1925,7 @@ function renderCards() {
   }
   const item = s.queue[s.idx], vocab = s.kind === 'vocab';
   const frontJp = !vocab || settings.cardFront === 'jp';
-  const front = vocab ? (frontJp ? `<div class="pword jp">${ruby(item.f)}</div>${settings.romaji ? `<div class="proma">${esc(toRomaji(item.r))}</div>` : ''}` : `<div class="pmean">${esc(item.m)}</div>`)
+  const front = vocab ? (frontJp ? `<div class="pword jp">${ruby(item.f)}</div>${settings.romaji ? `<div class="proma">${esc(toRomaji(item.r))}</div>` : ''}` : `${item.pic && settings.pics ? `<div class="ppic">${wordPic(item, 'xl')}</div>` : ''}<div class="pmean">${esc(item.m)}</div>`)
     : s.kind === 'grammar' ? `<div class="pword gq">${gTitleHtml(item.t, false)}</div>` : s.kind === 'kana' ? `<div class="pkanji jp">${esc(item.ch)}</div>` : `<div class="pkanji jp">${item.k}</div>`;
   const remaining = s.queue.length - s.idx;
   const head = `<div class="qtop"><span class="qnav"><button class="ghost" onclick="App.endSession()">✕ End</button>${s.hist.length ? `<button class="ghost backbtn" onclick="App.back()" title="Previous card (undo its rating)">‹ Back</button>` : ''}</span><span>${remaining} left · ${progress[item.id] ? (isDue(item.id) ? 'review' : 'again') : '<b style="color:var(--accent)">new</b>'}</span></div>
@@ -1604,21 +1949,28 @@ function renderSession() {
   if (s.done) return s.mode === 'learn' ? renderLearnDone() : renderResults();
   const q = s.q, test = s.mode === 'test', list = test ? s.queue : s.deck;
   const retry = !test && s.first.has(q.item.id) && !s.answered;
-  const head = test ? `<span>Question ${s.idx + 1} of ${s.queue.length}</span>` : `<span>${retry ? '<b style="color:var(--warn)">↻ try again</b> · ' : ''}${Math.min(s.first.size + (s.first.has(q.item.id) ? 0 : 1), s.unique)} of ${s.unique} · 🔥 ${s.streak}</span>`;
+  const kindL = { vocab: 'Words', kanji: 'Kanji', grammar: 'Grammar', kana: 'Kana' }[s.kind] || '';
+  const pos = test ? `${s.idx + 1} of ${s.queue.length}` : `${Math.min(s.first.size + (s.first.has(q.item.id) ? 0 : 1), s.unique)} of ${s.unique}`;
+  const head = `<span class="qtitle">${test ? 'Test' : 'Learn'} · ${kindL} · ${pos}${retry ? ' · try again' : ''}</span>${s.mode === 'learn' && s.streak >= 2 ? `<span class="combo${s.answered && q.opts[s.chosen].ok ? ' bump' : ''}">×${s.streak}</span>` : '<span style="width:34px"></span>'}`;
+  // route-style progress: one stop per question, filled green / red as you go
+  let states;
+  if (test) states = s.queue.map((_, i) => i < s.results.length ? (s.results[i].ok ? 'ok' : 'bad') : i === s.idx ? 'cur' : '');
+  else { const order = []; for (const x of s.deck) if (!order.includes(x.id)) order.push(x.id); states = order.map(id => s.first.has(id) ? (s.first.get(id) ? 'ok' : 'bad') : id === q.item.id ? 'cur' : ''); }
+  const track = states.length <= 30 ? `<div class="track" aria-hidden="true">${states.map(c => `<i class="${c}"></i>`).join('')}</div>` : `<div class="qbar"><i style="width:${(test ? s.idx / s.queue.length : s.first.size / s.unique) * 100}%"></i></div>`;
   const opts = q.opts.map((o, i) => {
     let c = 'choice';
-    if (s.answered) c += o.ok ? ' ok' : i === s.chosen ? ' bad' : ' dim';
+    if (s.answered) c += (o.ok ? ' ok' : i === s.chosen ? ' bad' : ' dim') + (i === s.chosen ? ' picked' : '');
     return `<button class="${c}" onclick="App.answer(${i})"><span class="n">${i + 1}</span><span>${o.html}</span></button>`;
   }).join('');
   let after = '';
   if (s.answered) {
     const ok = q.opts[s.chosen].ok, last = s.idx + 1 >= list.length;
-    after = `<div class="verdict ${ok ? 'good' : 'bad'}">${ok ? pick(['正解! Correct', 'いいね! Nice one', 'すごい! Great']) : 'おしい! Not quite — the right answer is highlighted'}${hasRec(q.au) ? `<button class="vplay" data-audio="${esc(q.au)}" aria-label="Play the word">🔊 ${ok && settings.playOnCorrect ? 'playing' : 'hear it'}</button>` : ''}</div>
-      ${test ? '' : `<div class="card" style="margin-top:12px">${detail(q.item)}</div>`}
-      <button class="btn" onclick="App.next()">${last ? 'See results' : 'Next'} →</button>`;
+    const right = (q.opts.find(o => o.ok) || {}).html || '';
+    after = `<div class="feedback ${ok ? 'good' : 'bad'}" role="status"><div class="fv">${ok ? (s.streak >= 3 ? `正解! ${s.streak} in a row` : pick(['正解! Correct', 'いいね! Nice one', 'すごい! Great'])) : 'おしい! Not quite'}<small>${ok ? '' : 'Answer: '}${right}</small></div>${hasRec(q.au) ? `<button class="vplay" data-audio="${esc(q.au)}" aria-label="Play the word">🔊</button>` : ''}<button class="btn" onclick="App.next()">${last ? 'See results' : 'Next'}</button></div>
+      ${test ? '' : `<div class="card" style="margin-top:12px">${detail(q.item)}</div>`}`;
   }
   return `<div class="qtop"><button class="ghost" onclick="App.endSession()">✕ End</button>${head}</div>
-  <div class="qbar"><i style="width:${(test ? s.idx / s.queue.length : s.first.size / s.unique) * 100}%"></i></div>
+  ${track}
   <div class="card prompt">${q.prompt}<div class="pmeta">${q.meta}</div>${q.jp || s.answered ? sayBtn(q.au, 'say') : ''}</div>
   <div class="hint">${q.hint}</div>
   <div class="choices ${q.grid ? 'grid2' : ''}">${opts}</div>
@@ -1629,7 +1981,7 @@ function renderLearnDone() {
   const missed = [...s.first].filter(([, v]) => !v).map(([id]) => s.deck.find(x => x.id === id));
   const row = x => x.kind === 'vocab' ? vRow(x) : x.kind === 'grammar' ? gRow(x) : x.kind === 'kana' ? `<button class="row" data-open="${esc(x.id)}"><span class="rw jp" style="font-size:28px;min-width:44px">${esc(x.ch)}</span><span class="rm">${esc(x.ro)}</span></button>` : `<button class="row" data-open="${esc(x.id)}"><span class="rw jp" style="font-size:28px;min-width:44px">${x.k}</span><span class="rm">${esc(x.m)}</span></button>`;
   const left = learnDeck(s.kind, s.used, s.custom).length;
-  return `<div class="card score"><div class="muted">Round ${s.round} complete · ${n} ${s.kind === 'kanji' ? 'kanji' : s.kind === 'grammar' ? 'grammar points' : 'words'}</div>
+  return `<div class="card score"><div class="arrive">終点</div><div class="muted">Round ${s.round} complete · ${n} ${s.kind === 'kanji' ? 'kanji' : s.kind === 'grammar' ? 'grammar points' : s.kind === 'kana' ? 'characters' : 'words'}</div>
     <div class="big">${n ? Math.round(ok / n * 100) : 0}%</div><div>${ok} of ${n} right first time</div></div>
   ${missed.length ? `<div class="label">Missed this round (${missed.length}) — tap to review</div><div class="list">${missed.map(row).join('')}</div>` : '<p class="note" style="text-align:center">No misses this round.</p>'}
   ${left ? `<button class="btn" onclick="App.learnMore()">Next round · ${Math.min(left, ROUND)} new ${s.kind === 'vocab' ? 'words' : 'items'}</button>` : `<p class="note" style="text-align:center">You've been through every item in this selection.</p>`}
@@ -1776,8 +2128,8 @@ function vGrammar() {
   const busy = gSelLevels().some(l => !isLoaded('grammar', l));
   const sel = busy ? [] : gSel(), now = Date.now(), due = sel.filter(g => isDue(g.id, now)).length;
   return `<h1>Grammar</h1><p class="sub">${grammarFull() ? `${fmtN(lv.reduce((a, l) => a + levelTotal('grammar', l), 0))} JLPT grammar points from hanabira.org.` : 'Starter grammar set. The full N5–N1 grammar from hanabira.org loads once the GitHub Action has built it.'} Tap one for formation, explanation and examples.</p>
-  <div class="label">JLPT levels</div>${chips(lv.map(l => [l, `${l}<small>${fmtN(levelTotal('grammar', l))}</small>`]), gSelLevels(), 'App.glvToggle')}
-  <div class="label">Quiz type</div>${seg([['gfill', 'Fill the blank'], ['g2m', 'Meaning'], ['m2g', 'Pick grammar'], ['mix', 'Mixed']], S.gq, 'App.gqSet')}
+  ${optsBox('grammar', `${gSelLevels().join(', ')} · ${labelOf([['gfill', 'Fill the blank'], ['g2m', 'Meaning'], ['m2g', 'Pick grammar'], ['mix', 'Mixed']], S.gq)}`, `<div class="label">JLPT levels</div>${chips(lv.map(l => [l, `<i class="lcdot" style="background:${lcVar(l)}"></i>${l}<small>${fmtN(levelTotal('grammar', l))}</small>`]), gSelLevels(), 'App.glvToggle')}
+  <div class="label">Quiz type</div>${seg([['gfill', 'Fill the blank'], ['g2m', 'Meaning'], ['m2g', 'Pick grammar'], ['mix', 'Mixed']], S.gq, 'App.gqSet')}`)}
   <div class="btnrow"><button class="btn" onclick="App.startCards('grammar')" ${busy || !sel.length ? 'disabled' : ''}>Flashcards${due ? ` · ${due} due` : ''}</button><button class="btn sec" onclick="App.startLearn('grammar')" ${busy || sel.length < 2 ? 'disabled' : ''}>Quiz</button></div>
   <input class="search" style="margin-top:16px" placeholder="Filter, e.g. たい, want, must" value="${esc(S.gf.q)}" oninput="App.gSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false">
   <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span></div>
@@ -2204,7 +2556,7 @@ function registerSituationExtras() {
     const id = 'v:' + w + '|' + r, rh = kata2hira(r);
     if (VMAP[id] || SITX[id] || V.some(x => (x.w === w || x.alt === w) && kata2hira(x.r) === rh)) continue;
     const x = normV({ i: null, w, r: /^[ぁ-ゖー]+$/.test(r) && /[ァ-ヶ]/.test(w) ? w : r, f: furi(w, r), m, s: [{ p: [], g: m.split('; ') }], g: 'expression', q: 3, ex: [] }, 'Extra');
-    x.id = id; SITX[id] = x; VMAP[id] = x;
+    x.id = id; x.pic = SIT_PICS[w + '|' + r] || null; SITX[id] = x; VMAP[id] = x;
   }
 }
 
@@ -2343,8 +2695,8 @@ function vKana() {
     <div class="stat"><b>${known('h')} / ${total('h')}</b><span>hiragana known</span></div>
     <div class="stat"><b>${known('k')} / ${total('k')}</b><span>katakana known</span></div></div>
   ${seg([['h', 'Hiragana'], ['k', 'Katakana'], ['both', 'Both']], sc, 'App.kanaScript')}
-  <div class="label">Practise</div>${chips(KANA_GROUPS.filter(g => sc !== 'h' || g[0] !== 'ext'), settings.kanaGroups, 'App.kanaGroup')}
-  <div style="margin-top:10px">${seg([['k2r', 'Kana → romaji'], ['r2k', 'Romaji → kana'], ['pair', 'あ ↔ ア'], ['mix', 'Mixed']], S.kanaQ, 'App.kanaQ')}</div>
+  ${optsBox('kana', `${settings.kanaGroups.map(g => labelOf(KANA_GROUPS, g)).join(', ')} · ${labelOf([['k2r', 'Kana → romaji'], ['r2k', 'Romaji → kana'], ['pair', 'あ ↔ ア'], ['mix', 'Mixed']], S.kanaQ)}`, `<div class="label">Characters to practise</div>${chips(KANA_GROUPS.filter(g => sc !== 'h' || g[0] !== 'ext'), settings.kanaGroups, 'App.kanaGroup')}
+  <div class="label">Quiz type</div>${seg([['k2r', 'Kana → romaji'], ['r2k', 'Romaji → kana'], ['pair', 'あ ↔ ア'], ['mix', 'Mixed']], S.kanaQ, 'App.kanaQ')}`)}
   <div class="btnrow"><button class="btn" onclick="App.startCards('kana')" ${sel.length ? '' : 'disabled'}>Flashcards${due ? ` · ${due} due` : ''}</button><button class="btn sec" onclick="App.startLearn('kana')" ${sel.length > 3 ? '' : 'disabled'}>Quiz these ${sel.length}</button></div>
   <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span></div>
   ${KANA_GROUPS.map(chart).join('')}`;
@@ -2352,10 +2704,10 @@ function vKana() {
 
 function vSituations(tabs) {
   const busy = DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l));
-  if (busy) return `<h1>Situations</h1><p class="sub">Words grouped by occasion.</p>${tabs}<div class="loading">Loading words…</div>`;
+  if (busy) return `<h1>Words</h1>${tabs}<div class="loading">Loading words…</div>`;
   const sit = S.sit && SITUATIONS.find(x => x.id === S.sit);
   if (!sit) {
-    return `<h1>Situations</h1><p class="sub">Words and phrases grouped by occasion, ordered from what you'll hear most to least.</p>${tabs}
+    return `<h1>Words</h1>${tabs}<p class="sub" style="margin-top:12px">Words and phrases grouped by occasion, ordered from what you'll hear most to least.</p>
     <div class="sitgrid">${SITUATIONS.map(x => { const it = sitItems(x), k = it.filter(i => status(i.id) === 'known').length;
       return `<button class="sitcard" onclick="App.sitOpen('${x.id}')"><span class="si">${x.icon}</span><b>${esc(x.name)}</b><span class="sj jp">${esc(x.jp)}</span>
         <span class="sm">${it.length} words · ${k} known</span><span class="pbar"><i style="width:${it.length ? k / it.length * 100 : 0}%"></i></span></button>`; }).join('')}</div>`;
@@ -2365,21 +2717,105 @@ function vSituations(tabs) {
   <h1>${sit.icon} ${esc(sit.name)} <span class="muted jp">${esc(sit.jp)}</span></h1><p class="sub">${esc(sit.desc)}. Ordered from most to least common.</p>
   <div class="btnrow"><button class="btn" onclick="App.sitStudy('learn')">Learn</button><button class="btn sec" onclick="App.sitStudy('cards')">Flashcards</button><button class="btn sec" onclick="App.sitStudy('test')">Test</button></div>
   <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span><span>🔊 native recording</span></div>
-  <div class="list">${items.map((x, i) => `<button class="row" data-open="${esc(x.id)}"><span class="rank">${i + 1}</span><i class="dot ${status(x.id)}"></i><span class="rw jp">${ruby(x.f)}</span><span class="rm">${esc(x.m)}</span>${hasRec(x.au) ? '<span title="Native recording">🔊</span>' : ''}<span class="lvl">${lvName(x.lvl)}</span></button>`).join('')}</div>`;
+  <div class="list">${items.map((x, i) => `<button class="row" data-open="${esc(x.id)}"><span class="rank">${i + 1}</span><i class="dot ${status(x.id)}"></i>${x.pic && settings.pics ? wordPic(x, 'sm') : '<span class="pic sm none"></span>'}<span class="rw jp">${ruby(x.f)}</span><span class="rm">${esc(x.m)}</span>${hasRec(x.au) ? '<span title="Native recording">🔊</span>' : ''}<span class="lvl">${lvName(x.lvl)}</span></button>`).join('')}</div>`;
+}
+
+/* =====================================================================
+   QUOTE OF THE DAY — public-domain Japanese sayings, poems and proverbs,
+   each credited to its author (or as a proverb). Translations: Kotoba Dojo.
+   { j: Japanese with {漢字|かな} furigana, e: English, who, whoJ, when, src, note }
+   ===================================================================== */
+const QUOTES = [
+{ j: '{月日|つきひ}は{百代|はくたい}の{過客|かかく}にして、{行|ゆ}かふ{年|とし}も{又|また}{旅人|たびびと}{也|なり}。', e: 'The months and days are travellers of a hundred ages, and the years that come and go are travellers too.', who: 'Matsuo Bashō', whoJ: '松尾芭蕉', when: '1644–1694', src: 'The Narrow Road to the Deep North (おくのほそ道)', note: 'Classical Japanese: 也 (なり) means "is", and 行かふ is today\'s 行き交う.' },
+{ j: '{古池|ふるいけ}や{蛙|かわず}{飛|と}び{込|こ}む{水|みず}の{音|おと}', e: 'An old pond. A frog jumps in: the sound of water.', who: 'Matsuo Bashō', whoJ: '松尾芭蕉', when: '1644–1694', src: 'haiku, 1686', note: 'In poetry 蛙 is read かわず; in everyday Japanese it\'s かえる.' },
+{ j: '{為|な}せば{成|な}る　{為|な}さねば{成|な}らぬ{何事|なにごと}も　{成|な}らぬは{人|ひと}の{為|な}さぬなりけり', e: 'Try, and it can be done; don\'t try, and it can\'t. Whatever it is, if it isn\'t done, it\'s because no one did it.', who: 'Uesugi Yōzan', whoJ: '上杉鷹山', when: '1751–1822', src: 'waka poem' },
+{ j: '{天|てん}は{人|ひと}の{上|うえ}に{人|ひと}を{造|つく}らず{人|ひと}の{下|した}に{人|ひと}を{造|つく}らずと{言|い}えり。', e: 'It is said that heaven does not create one person above another, nor one person below another.', who: 'Fukuzawa Yukichi', whoJ: '福沢諭吉', when: '1835–1901', src: 'An Encouragement of Learning (学問のすゝめ), 1872' },
+{ j: '{初心|しょしん}{忘|わす}るべからず', e: 'Never forget the mind you had as a beginner.', who: 'Zeami', whoJ: '世阿弥', when: 'c. 1363–1443', src: 'Kakyō (花鏡), a treatise on Noh theatre', note: 'べからず is a classical "must not".' },
+{ j: '{千日|せんにち}の{稽古|けいこ}を{鍛|たん}とし、{万日|まんにち}の{稽古|けいこ}を{錬|れん}とす。', e: 'A thousand days of practice to forge; ten thousand days of practice to polish.', who: 'Miyamoto Musashi', whoJ: '宮本武蔵', when: 'c. 1584–1645', src: 'The Book of Five Rings (五輪書)' },
+{ j: '{我|われ}、{事|こと}において{後悔|こうかい}をせず。', e: 'I do not regret the things I have done.', who: 'Miyamoto Musashi', whoJ: '宮本武蔵', when: 'c. 1584–1645', src: 'The Way of Walking Alone (独行道), 1645' },
+{ j: '{雨|あめ}ニモマケズ　{風|かぜ}ニモマケズ', e: 'Not beaten by the rain, not beaten by the wind.', who: 'Miyazawa Kenji', whoJ: '宮沢賢治', when: '1896–1933', src: 'poem written in 1931', note: 'Written in katakana, as in the original notebook: ニモマケズ = にも負けず.' },
+{ j: '{柿|かき}くへば{鐘|かね}が{鳴|な}るなり{法隆寺|ほうりゅうじ}', e: 'I bite into a persimmon, and the bell rings out: Hōryū-ji.', who: 'Masaoka Shiki', whoJ: '正岡子規', when: '1867–1902', src: 'haiku, 1895', note: 'くへば is the old spelling of 食えば.' },
+{ j: '{菜|な}の{花|はな}や{月|つき}は{東|ひがし}に{日|ひ}は{西|にし}に', e: 'A field of rapeseed flowers: the moon in the east, the sun in the west.', who: 'Yosa Buson', whoJ: '与謝蕪村', when: '1716–1784', src: 'haiku, 1774' },
+{ j: '{痩蛙|やせがえる}まけるな{一茶|いっさ}{是|これ}に{有|あ}り', e: 'Skinny frog, don\'t give up! Issa is right here.', who: 'Kobayashi Issa', whoJ: '小林一茶', when: '1763–1828', src: 'haiku, 1816' },
+{ j: '{春|はる}はあけぼの。', e: 'In spring, it is the dawn.', who: 'Sei Shōnagon', whoJ: '清少納言', when: 'c. 966–1025', src: 'The Pillow Book (枕草子)', note: 'The famous opening line: the best time of spring is daybreak.' },
+{ j: '{少|すこ}しのことにも、{先達|せんだつ}はあらまほしき{事|こと}なり。', e: 'Even in small matters, it is good to have a guide.', who: 'Yoshida Kenkō', whoJ: '兼好法師', when: 'c. 1283–1352', src: 'Essays in Idleness (徒然草)' },
+{ j: '{人|ひと}の{一生|いっしょう}は{重荷|おもに}を{負|お}うて{遠|とお}き{道|みち}を{行|ゆ}くが{如|ごと}し。{急|いそ}ぐべからず。', e: 'Life is like walking a long road with a heavy load. Do not hurry.', who: 'Tokugawa Ieyasu (attributed)', whoJ: '徳川家康', when: '1543–1616', src: 'Tōshōgū Ikun (東照公遺訓)' },
+{ j: '{積小為大|せきしょういだい}', e: 'Small things, added up, become great.', who: 'Ninomiya Sontoku', whoJ: '二宮尊徳', when: '1787–1856', src: 'his teachings', note: 'A four-character saying: 小を積みて大と為す.' },
+{ j: '{故|ふる}きを{温|たず}ねて{新|あたら}しきを{知|し}る', e: 'Study the old to understand the new.', who: 'Confucius', whoJ: '孔子', when: '551–479 BC', src: 'The Analects (論語)', note: 'The four-character form is 温故知新 (おんこちしん).' },
+{ j: '{千里|せんり}の{道|みち}も{一歩|いっぽ}から', e: 'A journey of a thousand ri begins with a single step.', who: 'Japanese proverb, from Laozi', whoJ: '老子', when: '6th century BC', src: 'Tao Te Ching (道徳経)', note: 'One ri (里) is about 4 km.' },
+{ j: '{七転|ななころ}び{八起|やお}き', e: 'Fall down seven times, get up eight.', who: 'Japanese proverb', whoJ: 'ことわざ' },
+{ j: '{石|いし}の{上|うえ}にも{三年|さんねん}', e: 'Sit on a cold stone for three years and even it gets warm: patience pays off.', who: 'Japanese proverb', whoJ: 'ことわざ' },
+{ j: '{塵|ちり}も{積|つ}もれば{山|やま}となる', e: 'Even dust, piled up, becomes a mountain.', who: 'Japanese proverb', whoJ: 'ことわざ' },
+{ j: '{継続|けいぞく}は{力|ちから}なり', e: 'Keeping at it is strength.', who: 'Japanese saying', whoJ: '格言' },
+{ j: '{急|いそ}がば{回|まわ}れ', e: 'If you\'re in a hurry, take the long way round.', who: 'Japanese proverb', whoJ: 'ことわざ' },
+{ j: '{好|す}きこそ{物|もの}の{上手|じょうず}なれ', e: 'What you love doing, you become good at.', who: 'Japanese proverb', whoJ: 'ことわざ' },
+{ j: '{笑|わら}う{門|かど}には{福|ふく}{来|きた}る', e: 'Good fortune comes to the house where people laugh.', who: 'Japanese proverb', whoJ: 'ことわざ' },
+{ j: '{猿|さる}も{木|き}から{落|お}ちる', e: 'Even monkeys fall from trees: everyone makes mistakes.', who: 'Japanese proverb', whoJ: 'ことわざ' },
+{ j: '{一期一会|いちごいちえ}', e: 'One time, one meeting: treasure every encounter, because it will never happen the same way again.', who: 'Sen no Rikyū\'s teachings', whoJ: '千利休', when: '1522–1591', src: 'the way of tea (茶道)' },
+{ j: '{習|なら}うより{慣|な}れよ', e: 'Getting used to something teaches more than being taught it.', who: 'Japanese proverb', whoJ: 'ことわざ' },
+{ j: '{十人十色|じゅうにんといろ}', e: 'Ten people, ten colours: everyone is different.', who: 'Japanese proverb', whoJ: 'ことわざ' },
+{ j: '{雨|あめ}{降|ふ}って{地|じ}{固|かた}まる', e: 'After the rain, the ground grows firm.', who: 'Japanese proverb', whoJ: 'ことわざ' },
+{ j: '{井|い}の{中|なか}の{蛙|かわず}{大海|たいかい}を{知|し}らず', e: 'A frog in a well knows nothing of the great sea.', who: 'Japanese proverb, from Zhuangzi', whoJ: '荘子', when: '4th century BC', src: 'Zhuangzi (荘子)' }
+];
+/* MODERN QUOTES: short, famous one-line catchphrases, quoted briefly for study
+   with full credit. These are copyrighted by their creators (not public domain);
+   they can be switched off in Settings. Translations: Kotoba Dojo. */
+const QUOTES_MODERN = [
+{ j: '{諦|あきら}めんなよ！', e: 'Don\'t give up!', who: 'Shuzo Matsuoka', whoJ: '松岡修造', when: 'former professional tennis player, born 1967', src: 'one of his best-known catchphrases', copy: 'Shuzo Matsuoka', note: '諦めんな is a casual, spoken form of 諦めるな ("don\'t give up").' },
+{ j: '{崖|がけ}っぷちありがとう！', e: 'Thank you, cliff edge!', who: 'Shuzo Matsuoka', whoJ: '松岡修造', when: 'former professional tennis player, born 1967', src: 'one of his best-known catchphrases', copy: 'Shuzo Matsuoka', note: '崖っぷち means "the edge of a cliff": being pushed to the limit is a chance to grow.' },
+{ j: '{今日|きょう}から{君|きみ}は{富士山|ふじさん}だ！', e: 'From today, you are Mount Fuji!', who: 'Shuzo Matsuoka', whoJ: '松岡修造', when: 'former professional tennis player, born 1967', src: 'one of his best-known catchphrases', copy: 'Shuzo Matsuoka', note: 'Stand tall and steady, like Japan\'s highest mountain.' },
+{ j: 'もっと{熱|あつ}くなれよ！', e: 'Get more fired up!', who: 'Shuzo Matsuoka', whoJ: '松岡修造', when: 'former professional tennis player, born 1967', src: 'one of his best-known catchphrases', copy: 'Shuzo Matsuoka', note: '熱くなる: to get heated, to become passionate. なれよ is a strong, friendly command.' },
+{ j: 'あきらめたらそこで{試合|しあい}{終了|しゅうりょう}ですよ', e: 'If you give up, that\'s when the game is over.', who: 'Coach Anzai', whoJ: '安西先生', work: 'SLAM DUNK', by: 'Takehiko Inoue', byJ: '井上雄彦', copy: 'Takehiko Inoue / Shueisha', note: 'Polite ですよ from the gentle coach: たら = "if/when".' },
+{ j: '{海賊王|かいぞくおう}におれはなる！', e: 'I\'m going to be King of the Pirates!', who: 'Monkey D. Luffy', whoJ: 'モンキー・D・ルフィ', work: 'ONE PIECE', by: 'Eiichiro Oda', byJ: '尾田栄一郎', copy: 'Eiichiro Oda / Shueisha', note: 'Normal order is おれは海賊王になる; putting 海賊王に first adds emphasis.' },
+{ j: 'まっすぐ{自分|じぶん}の{言葉|ことば}は{曲|ま}げねェ　それがオレの{忍道|にんどう}だ', e: 'I never go back on my word. That\'s my ninja way.', who: 'Naruto Uzumaki', whoJ: 'うずまきナルト', work: 'NARUTO', by: 'Masashi Kishimoto', byJ: '岸本斉史', copy: 'Masashi Kishimoto / Shueisha', note: '曲げねェ is rough speech for 曲げない ("won\'t bend").' },
+{ j: '{逃|に}げちゃダメだ', e: 'I mustn\'t run away.', who: 'Shinji Ikari', whoJ: '碇シンジ', work: 'Neon Genesis Evangelion (新世紀エヴァンゲリオン)', by: 'Hideaki Anno', byJ: '庵野秀明', copy: 'khara', note: '〜ちゃダメ is the spoken form of 〜てはだめ ("must not").' },
+{ j: '{心|こころ}を{燃|も}やせ', e: 'Set your heart on fire.', who: 'Kyojuro Rengoku', whoJ: '煉獄杏寿郎', work: 'Demon Slayer (鬼滅の刃)', by: 'Koyoharu Gotouge', byJ: '吾峠呼世晴', copy: 'Koyoharu Gotouge / Shueisha', note: '燃やせ is the plain command form of 燃やす ("to burn").' },
+{ j: '{真実|しんじつ}はいつもひとつ！', e: 'There is only ever one truth!', who: 'Conan Edogawa', whoJ: '江戸川コナン', work: 'Detective Conan (名探偵コナン)', by: 'Gosho Aoyama', byJ: '青山剛昌', copy: 'Gosho Aoyama / Shogakukan' },
+{ j: '{立|た}って{歩|ある}け　{前|まえ}へ{進|すす}め', e: 'Stand up and walk. Keep moving forward.', who: 'Edward Elric', whoJ: 'エドワード・エルリック', work: 'Fullmetal Alchemist (鋼の錬金術師)', by: 'Hiromu Arakawa', byJ: '荒川弘', copy: 'Hiromu Arakawa / Square Enix', note: 'Two plain commands: 歩け (walk) and 進め (advance).' }
+];
+const quotePool = () => settings.modernQuotes === false ? QUOTES : QUOTES.concat(QUOTES_MODERN);
+function quoteOfDay(offset = 0) {
+  const pool = quotePool(), d = today(); let h = 0; for (const c of d) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return pool[(h + offset) % pool.length];
+}
+function quoteCard() {
+  const q = quoteOfDay(S.quoteOff || 0);
+  let credit;
+  if (q.work) credit = `${esc(q.who)} <span class="jp">${esc(q.whoJ)}</span><span class="qsrc">in ${esc(q.work)}, created by ${esc(q.by)} <span class="jp">${esc(q.byJ)}</span></span>`;
+  else if (q.whoJ === 'ことわざ' || q.whoJ === '格言') credit = esc(q.who);
+  else credit = `${esc(q.who)} <span class="jp">${esc(q.whoJ)}</span>${q.when ? ` (${esc(q.when)})` : ''}${q.src ? `<span class="qsrc">${esc(q.src)}</span>` : ''}`;
+  return `<div class="label">Quote of the day</div>
+  <figure class="quote force">
+    <blockquote class="qj jp">${ruby(q.j, true)}</blockquote>
+    <p class="qe">${esc(q.e)}</p>
+    <figcaption>— ${credit}</figcaption>
+    ${q.copy ? `<p class="qcopy">© ${esc(q.copy)}. Quoted briefly for study; translation by Kotoba Dojo.</p>` : ''}
+    ${q.note ? `<p class="qnote">${esc(q.note)}</p>` : ''}
+    <button class="ghost qnext" onclick="App.quoteNext()">Another quote</button>
+  </figure>`;
 }
 
 /* =====================================================================
    RENDER + ACTIONS
    ===================================================================== */
+/* desktop sidebar footer: progress on the line you're riding */
+function navFoot(st) {
+  const l = userLevel(); if (!l || l === 'MY') return '';
+  const row = (name, kind) => { const x = levelStats(kind, l); const pc = x.total ? Math.round(100 * x.known / x.total) : 0; return x.total ? `<div class="nf-row"><span>${name}</span><div class="nf-bar"><span style="width:${Math.max(pc, x.known ? 2 : 0)}%"></span></div><b>${pc}%</b></div>` : ''; };
+  const due = dueCount();
+  return `<div style="--lc:${lcVar(l)}"><div class="nf-head"><i></i>${esc(lvName(l))} line</div>${row('Words', 'vocab')}${row('Kanji', 'kanji')}${row('Grammar', 'grammar')}
+  <div class="nf-meta"><span>🔥 ${st} day${st === 1 ? '' : 's'}</span><span>${due ? `${due} due` : 'Nothing due'}</span></div></div>`;
+}
 function render() {
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === S.view));
   const st = streak(); $('#streak').textContent = st ? `🔥 ${st}` : '';
+  const nf = $('#navfoot'); if (nf) nf.innerHTML = navFoot(st);
   const page = S.session ? 'session' : S.view;
   $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, exam: vExam, search: vSearch, settings: vSettings })[S.view]()}</div>`;
-  hydrate($('#app'));
+  hydrate($('#app')); paintLevels($('#app'));
 }
 const SKINS = [
-  { id: 'washi', name: 'Washi', desc: 'Warm paper, red ink', bg: '#faf7f2', ink: '#1d1b19', accent: '#c8102e', line: '#e8e1d7', font: 'Noto Sans JP', sample: '語 Aa', glow: 'none', meta: ['#faf7f2', '#141312'] },
+  { id: 'washi', name: 'Station', desc: 'Platform white, line colours', bg: '#F5F7F6', ink: '#1C2127', accent: '#22408F', line: '#4DAF4A', font: 'Zen Kaku Gothic New', sample: '駅 Aa', glow: 'none', meta: ['#F5F7F6', '#0F1317'] },
   { id: 'terminal', name: 'Terminal', desc: 'Green hacker console', bg: '#010b05', ink: '#3dff7a', accent: '#39ff14', line: '#0d4020', font: 'JetBrains Mono, monospace', sample: '> 語_', glow: '0 0 8px #39ff14', meta: ['#010b05', '#010b05'] },
   { id: 'sakura', name: 'Sakura', desc: 'Soft cherry-blossom pink', bg: '#fdf6f8', ink: '#2a1d22', accent: '#d6336c', line: '#f1dde4', font: 'Noto Sans JP', sample: '桜 Aa', glow: 'none', meta: ['#fdf6f8', '#1a1216'] },
   { id: 'ocean', name: 'Ocean', desc: 'Calm blue', bg: '#f4f8fb', ink: '#14202b', accent: '#1769aa', line: '#dbe6ef', font: 'Noto Sans JP', sample: '海 Aa', glow: 'none', meta: ['#f4f8fb', '#0d151d'] }
@@ -2410,7 +2846,7 @@ function renderSheet() {
   sh.innerHTML = `<div class="sheet-bg" onclick="App.closeSheet()"></div><div class="sheet">
     <div class="sheet-nav">${prev ? `<button class="ghost sheet-back" onclick="App.sheetBack()" aria-label="Back">‹ <span class="jp">${esc(itemLabel(itemById(prev.id)))}</span></button>` : '<span></span>'}
     <button class="ghost close" onclick="App.closeSheet()" aria-label="Close">✕</button></div>${detail(item)}</div>`;
-  sh.classList.add('open'); hydrate(sh);
+  sh.classList.add('open'); hydrate(sh); paintLevels(sh);
   const panel = sh.querySelector('.sheet'); if (panel) panel.scrollTop = top.scroll || 0;
 }
 function hideSheet() { sheetStack = []; const sh = $('#sheet'); sh.classList.remove('open'); sh.innerHTML = ''; }
@@ -2473,6 +2909,8 @@ const App = {
       const r = $('#sres'); if (r && S.view === 'search' && !S.session) r.innerHTML = searchResults();
     }, 220);
   },
+  picStyle(v) { settings.picStyle = v; App.set('picStyle', v); },
+  quoteNext() { S.quoteOff = ((S.quoteOff || 0) + 1) % quotePool().length; const el = document.querySelector('.quote'); if (el) { el.outerHTML = quoteCard().replace(/^[\s\S]*?<figure/, '<figure'); } },
   wotdAdd() {
     const w = wordOfDay(); if (!w || progress[w.x.id]) return;
     progress[w.x.id] = { c: 0, w: 0, b: 0, d: Date.now(), t: Date.now(), l: w.x.lvl }; save();

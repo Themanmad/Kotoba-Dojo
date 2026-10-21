@@ -21,6 +21,7 @@
  *   Word audio          (CC BY-SA 4.0, Tofugu & WaniKani) tofugu/japanese-vocabulary-pronunciation-audio (optional)
  *   Word audio, more    (CC BY 4.0, Kanji alive)  example-word recordings for 1,235 kanji (optional)
  *   Sentence audio      (per recording, Tatoeba)   native recordings; only ones with a reuse licence (optional)
+ *   Pictures            (CC BY-SA 4.0, OpenMoji)  pictures for words and kanji you can draw (optional)
  *
  * Usage
  *   node build-data.mjs [--out data] [--cache .cache] [--from-dir DIR]
@@ -40,6 +41,7 @@ import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 
 /* ---------------------------------------------------------------- args */
@@ -193,6 +195,184 @@ function getAudioDir() {
     } else log('  cached word audio');
     return look(dest);
   } catch (e) { warn('word audio: ' + e.message); return null; }
+}
+
+/* ---------------------------------------------------------------- pictures (OpenMoji, CC BY-SA 4.0)
+   A word or kanji gets a picture only when its meaning is something you can draw.
+   1) hand-picked table per part of speech (verbs / adjectives / nouns) — checked first
+   2) for nouns and kanji only: an OpenMoji whose name is exactly the meaning ("dog", "train")
+   Verbs and adjectives never fall through to name matching (that's how "to fly" becomes an insect). */
+const PIC_VERB = 'eat:🍽️|drink:🥤|sleep:😴|wake up:⏰|get up:⏰|walk:🚶|run:🏃|swim:🏊|read:📖|write:✍️|listen:🎧|hear:👂|see:👀|look:👀|look at:👀|watch:📺|speak:🗣️|talk:💬|say:💬|buy:🛒|sell:🏷️|cook:🍳|study:📚|learn:📚|teach:🧑‍🏫|work:💼|think:🤔|laugh:😂|cry:😢|sing:🎤|dance:💃|drive:🚗|fly:✈️|call:📞|telephone:📞|wash:🧼|bathe:🛁|take a bath:🛁|open:🔓|close:🔒|shut:🔒|wait:⏳|take a photo:📸|photograph:📸|send:📤|receive:📥|pay:💳|rest:🛌|sit:🪑|sit down:🪑|stand:🧍|stand up:🧍|meet:🤝|give:🎁|love:❤️|like:👍|remember:💭|cut:✂️|climb:🧗|ride:🚃|get on:🚃|board:🚃|turn:↪️|cross:🚸|carry:📦|clean:🧹|smoke:🚬|fish:🎣|grow:🌱|be born:👶|marry:💍|get married:💍|win:🏆|begin:🏁|start:🏁|finish:🏁|end:🏁|hug:🤗|shower:🚿|draw:🎨|paint:🎨|worry:😟|be surprised:😲|get angry:😠|be angry:😠|get tired:😩|be tired:😩|tire:😩|throw:🤾|kick:⚽|push:👉|play:🎲|travel:✈️|exercise:🏋️|train:🏋️|stretch:🤸|lose weight:⚖️|gain weight:⚖️|rain:🌧️|snow:🌨️|shine:☀️|blow:🌬️|cool:🍃|heat:🔥|warm:🔥|sweat:💦|cough:😷|sneeze:🤧|smile:😊|kiss:💋|knock:✊|dress:👕|put on:👕|wear:👕|take off:👕|brush:🪥|cook rice:🍚|bake:🍞|boil:♨️|fry:🍳|pour:🫗|mix:🥣|ring:🔔|count:🔢|measure:📏|lock:🔒|knit:🧶|sew:🧵|plant:🌱|water:🚿|steal:🦹|fight:🥊|hit:🥊|search:🔍|look for:🔍|find:🔍';
+const PIC_ADJ = 'okay:👌|all right:👌|fine:👌|hot:🥵|cold:🥶|warm:🌤️|cool:🍃|big:🐘|large:🐘|small:🐜|little:🐜|tall:🦒|high:🔝|expensive:💰|cheap:🏷️|delicious:😋|tasty:😋|sweet:🍬|spicy:🌶️|salty:🧂|sour:🍋|happy:😊|glad:😊|sad:😢|lonely:😔|scary:😱|frightening:😱|afraid:😱|fun:🎉|enjoyable:🎉|interesting:🤩|busy:⏱️|sleepy:😪|painful:🤕|sore:🤕|cute:🥰|beautiful:🌸|pretty:🌸|clean:✨|new:🆕|old:🏚️|young:🧒|fast:⚡|quick:⚡|slow:🐢|early:🌅|heavy:🏋️|light:🪶|strong:💪|bright:💡|dark:🌑|quiet:🤫|noisy:📢|loud:📢|healthy:💪|energetic:💪|famous:⭐|kind:😇|red:🔴|blue:🔵|white:⚪|black:⚫|yellow:🟡|green:🟢|brown:🟤|long:📏|short:🤏|near:📍|close:📍|far:🔭|wide:↔️|angry:😠|difficult:🧩|hard:🧩|easy:👌|convenient:👍|dangerous:⚠️|safe:🛡️|free:🆓|full:🈵|empty:🈳|round:⚪|sick:🤒|ill:🤒|tired:😩|embarrassed:😳|surprised:😲|cloudy:☁️|sunny:☀️|rainy:🌧️|thin:🥢|fat:🍔|good at:👍|skilful:👍|rich:💰|poor:🪙|delightful:😊|soft:🧸|hard (firm):🪨|wet:💦|dry:🏜️|deep:🌊|shallow:🏖️|round (shape):⚪|square:🟥|sharp:🔪|smelly:🦨|bitter:☕|lucky:🍀|sick (ill):🤒';
+const PIC_NOUN = 'water:💧|tree:🌳|wood:🪵|person:🧑|people:👥|human:🧑|man:👨|woman:👩|child:🧒|children:🧒|kid:🧒|baby:👶|mother:👩|father:👨|parents:👪|family:👪|friend:🧑‍🤝‍🧑|teacher:🧑‍🏫|student:🧑‍🎓|doctor:🧑‍⚕️|police:👮|police officer:👮|police box:👮|hand:✋|foot:🦶|leg:🦵|face:🙂|body:🧍|tooth:🦷|teeth:🦷|hair:💇|heart:❤️|rain:🌧️|snow:❄️|cloud:☁️|wind:🌬️|sky:🌤️|river:🏞️|stream:🏞️|sea:🌊|ocean:🌊|wave:🌊|mountain:⛰️|moon:🌙|star:⭐|flower:🌸|cherry blossom:🌸|cherry blossoms:🌸|rice:🍚|cooked rice:🍚|rice (cooked):🍚|meal:🍱|breakfast:🍳|lunch:🍱|dinner:🍽️|bread:🍞|meat:🍖|fish:🐟|egg:🥚|eggs:🥚|vegetable:🥦|vegetables:🥦|fruit:🍎|apple:🍎|tea:🍵|green tea:🍵|coffee:☕|beer:🍺|alcohol:🍶|sake:🍶|milk:🥛|juice:🧃|house:🏠|home:🏠|school:🏫|station:🚉|railway station:🚉|train:🚃|bus:🚌|car:🚗|automobile:🚗|taxi:🚕|bicycle:🚲|bike:🚲|airplane:✈️|aeroplane:✈️|plane:✈️|airport:🛫|ship:🚢|boat:⛵|hotel:🏨|hospital:🏥|bank:🏦|shop:🏪|store:🏪|convenience store:🏪|department store:🏬|post office:🏣|park:🏞️|library:📚|toilet:🚻|restroom:🚻|bathroom:🛁|room:🚪|door:🚪|window:🪟|chair:🪑|bed:🛏️|book:📕|books:📚|newspaper:📰|letter:✉️|envelope:✉️|telephone:☎️|phone:📱|mobile phone:📱|smartphone:📱|computer:💻|television:📺|tv:📺|camera:📷|photograph:📷|photo:📷|picture:🖼️|painting:🖼️|drawing:🖼️|music:🎵|song:🎵|movie:🎬|film:🎬|game:🎮|sport:⚽|sports:⚽|soccer:⚽|baseball:⚾|money:💴|yen:💴|ticket:🎫|map:🗺️|umbrella:☂️|clothes:👕|clothing:👕|shirt:👕|shoes:👟|hat:👒|bag:👜|key:🔑|lock:🔒|clock:🕰️|watch:⌚|time:⏰|hour:⏰|morning:🌅|night:🌙|evening:🌆|today:📅|tomorrow:📅|yesterday:📅|day:📅|date:📅|calendar:📅|week:🗓️|month:🗓️|year:🗓️|spring:🌸|summer:🌻|autumn:🍁|fall:🍁|winter:⛄|weather:🌤️|sun:☀️|sunshine:☀️|fire:🔥|earth:🌍|world:🌍|globe:🌍|japan:🗾|island:🏝️|cat:🐈|dog:🐕|bird:🐦|horse:🐎|cow:🐄|pig:🐖|insect:🐛|bug:🐛|chopsticks:🥢|cup:🥤|glass:🥛|plate:🍽️|knife:🔪|spoon:🥄|medicine:💊|drug:💊|fever:🤒|cold:🤧|a cold:🤧|cold (illness):🤧|injury:🩹|wound:🩹|gift:🎁|present:🎁|souvenir:🎁|birthday:🎂|party:🎉|festival:🏮|temple:🛕|shrine:⛩️|castle:🏯|hot spring:♨️|hot springs:♨️|kimono:👘|sushi:🍣|ramen:🍜|noodles:🍜|curry:🍛|rice ball:🍙|boxed lunch:🍱|lunch box:🍱|bento:🍱|cake:🍰|sweets:🍬|candy:🍬|ice cream:🍦|salt:🧂|gym:🏋️|exercise:🏋️|training:🏋️|strength training:🏋️|muscle:💪|muscles:💪|muscle soreness:💪|sweat:💦|weight:⚖️|body weight:⚖️|number:🔢|east:🧭|west:🧭|south:🧭|north:🧭|direction:🧭|right:➡️|left:⬅️|up:⬆️|above:⬆️|top:⬆️|down:⬇️|below:⬇️|under:⬇️|entrance:🚪|exit:🚪|road:🛣️|way:🛣️|street:🛣️|bridge:🌉|traffic light:🚦|traffic lights:🚦|signal:🚦|language:🗣️|word:💬|words:💬|japanese:🗾|japanese language:🗾|english:🔤|question:❓|answer:💡|homework:📝|test:📝|exam:📝|examination:📝|job:💼|work:💼|company:🏢|office:🏢|meeting:👥|business card:📇|email:📧|e-mail:📧|mail:📧|document:📄|documents:📄|paper:📄|deadline:⏰|salary:💴|holiday:🏖️|vacation:🏖️|day off:🏖️|trip:🧳|travel:✈️|journey:🧳|passport:🛂|luggage:🧳|baggage:🧳|suitcase:🧳|reservation:📋|booking:📋|seat:💺|menu:📋|order:📝|bill:🧾|receipt:🧾|cash:💴|card:💳|credit card:💳|discount:🏷️|sale:🏷️|price:🏷️|size:📏|colour:🎨|color:🎨|ambulance:🚑|fire engine:🚒|earthquake:🫨|typhoon:🌀|cloudy weather:☁️|sunny weather:☀️|temperature:🌡️|rainy season:☔|hobby:🎨|cooking:🍳|cuisine:🍳|happiness:😊|worry:😟|nervousness:😬|relief:😌|love:❤️|dream:💭|idea:💡|light:💡|lamp:💡|electricity:⚡|picture book:📖|sound:🔊|noise:🔊|voice:🗣️|name:📛|okay:👌|ok:👌|all right:👌|grandfather:👴|grandmother:👵|bath:🛁|shower:🚿|mirror:🪞|soap:🧼|towel:🧺|box:📦|stamp:📮|pen:🖊️|pencil:✏️|notebook:📓|dictionary:📖|glasses:👓|eyeglasses:👓|nose:👃|ear:👂|eye:👁️|eyes:👀|mouth:👄|lips:👄|neck:🧣|finger:☝️|arm:💪|bone:🦴|blood:🩸|tooth decay:🦷|dentist:🦷|nurse:🧑‍⚕️|pharmacy:💊|chemist:💊|police station:🚓|fire station:🚒|stairs:🪜|elevator:🛗|lift:🛗|escalator:🛗|front desk:🛎️|reception:🛎️|towels:🧺|internet:🌐|website:🌐|smartphone app:📱|desk:🗄️|table:🍽️|kitchen:🍳|garden:🌷|grass:🌿|leaf:🍃|leaves:🍂|forest:🌲|woods:🌲|stone:🪨|rock:🪨|sand:🏖️|beach:🏖️|field:🌾|rice field:🌾|rice paddy:🌾|village:🏘️|town:🏘️|city:🏙️|capital:🏙️|building:🏢|tower:🗼|tokyo tower:🗼|mt fuji:🗻|mount fuji:🗻|fuji:🗻|bamboo:🎍|pine:🌲|maple:🍁|rose:🌹|sunflower:🌻|tulip:🌷|mushroom:🍄|potato:🥔|carrot:🥕|tomato:🍅|onion:🧅|garlic:🧄|corn:🌽|banana:🍌|grape:🍇|grapes:🍇|strawberry:🍓|peach:🍑|orange:🍊|mandarin orange:🍊|lemon:🍋|melon:🍈|watermelon:🍉|pear:🍐|cherry:🍒|chicken:🐔|chicken (meat):🍗|beef:🥩|pork:🥓|tofu:🍢|soup:🍲|miso soup:🍲|pizza:🍕|hamburger:🍔|sandwich:🥪|cookie:🍪|chocolate:🍫|honey:🍯|water bottle:🧴|bottle:🍾|can:🥫|snake:🐍|mouse:🐁|rat:🐀|rabbit:🐇|bear:🐻|monkey:🐒|elephant:🐘|lion:🦁|tiger:🐅|fox:🦊|frog:🐸|turtle:🐢|whale:🐋|dolphin:🐬|octopus:🐙|crab:🦀|shrimp:🦐|butterfly:🦋|bee:🐝|ant:🐜|spider:🕷️|duck:🦆|crow:🐦‍⬛|owl:🦉|dragon:🐉|ghost:👻|robot:🤖|king:🤴|queen:👸|prince:🤴|princess:👸|soldier:💂|army:🪖|war:⚔️|peace:☮️|god:⛩️|buddha:🛕|church:⛪|guitar:🎸|piano:🎹|drum:🥁|violin:🎻|singer:🎤|concert:🎤|ball:⚽|tennis:🎾|basketball:🏀|golf:⛳|swimming:🏊|skiing:🎿|marathon:🏃|bicycle race:🚴|race:🏁|trophy:🏆|medal:🥇|prize:🏆|ring:💍|wedding:💒|marriage:💍|jewel:💎|gem:💎|treasure:💎|crown:👑|scissors:✂️|hammer:🔨|tool:🔧|tools:🛠️|machine:⚙️|battery:🔋|candle:🕯️|flashlight:🔦|magnet:🧲|microscope:🔬|telescope:🔭|rocket:🚀|space:🌌|planet:🪐|satellite:🛰️|cigarette:🚬|newspaper article:📰|magazine:📰|novel:📖|story:📖|poem:📜|letter (alphabet):🔤|alphabet:🔤|kanji:🈁|calendar page:📅|one:1️⃣|two:2️⃣|three:3️⃣|four:4️⃣|five:5️⃣|six:6️⃣|seven:7️⃣|eight:8️⃣|nine:9️⃣|ten:🔟|hundred:💯|thousand:💴|ten thousand:💴|half:🌗|circle:⭕|yes:⭕|no:❌|ok:👌|danger:⚠️|help:🆘|sos:🆘|emergency:🚨|rice plant:🌾|grain:🌾|wheat:🌾|thread:🧵|cloth:🧶|silk:🧵|paper (sheet):📄|wall:🧱|roof:🏠|garden (japanese):🏯|pond:🪷|lake:🏞️|valley:🏞️|hill:⛰️|volcano:🌋|desert:🏜️|snowman:☃️|ice:🧊|steam:♨️|smoke:💨|thunder:⚡|lightning:⚡|rainbow:🌈|fog:🌫️|tornado:🌪️|sunrise:🌅|sunset:🌇|shadow:👤|crowd:👥|guest:🛎️|customer:🛎️|waiter:🧑‍🍳|chef:🧑‍🍳|cook:🧑‍🍳|farmer:🧑‍🌾|scientist:🧑‍🔬|artist:🧑‍🎨|pilot:🧑‍✈️|firefighter:🧑‍🚒|judge:🧑‍⚖️|office worker:🧑‍💼|company employee:🧑‍💼|boss:🧑‍💼|colleague:🧑‍💼|president:🧑‍💼|department manager:🧑‍💼';
+/* emoji names that are the wrong sense of a common meaning, never matched by name */
+const PIC_NAME_SKIP = new Set(['fly', 'bat', 'pen', 'fork', 'rose', 'jack', 'mail', 'can', 'bow', 'match', 'nail', 'seal', 'pound', 'bar', 'trunk', 'kite', 'spring', 'pitcher', 'tie', 'organ', 'palm', 'chip', 'chips', 'bill', 'jam', 'bank', 'date', 'trip', 'ring', 'cold', 'light', 'right', 'left', 'top', 'cut', 'drill', 'saw', 'file', 'rule', 'scale', 'sheet', 'net', 'ward', 'arms', 'lead', 'mine', 'rock']);
+/* pictographic kanji: the picture the character grew out of */
+const KANJI_PICS = new Map([...'日☀️月🌙山⛰️川🏞️木🌳林🌳森🌲火🔥水💧土🌱金💰人🧑口👄目👁️耳👂手✋足🦶田🌾雨🌧️女👩男👨子🧒車🚗門🚪犬🐕魚🐟鳥🐦馬🐎牛🐄竹🎋花🌸草🌿石🪨米🍚糸🧵貝🐚虫🐛雪❄️電⚡本📕力💪王👑玉💎刀🔪弓🏹矢🏹舟⛵船🚢心❤️羊🐑豚🐖象🐘竜🐉亀🐢皿🍽️箱📦傘☂️桜🌸梅🌸菊🌼星⭐空🌤️海🌊池🪷島🏝️橋🌉家🏠店🏪駅🚉'.matchAll(/(\p{Script=Han})([^\p{Script=Han}]+)/gu)].map(m => [m[1], m[2]]));
+const parsePics = str => new Map(str.split('|').map(p => { const i = p.lastIndexOf(':'); return [p.slice(0, i), p.slice(i + 1)]; }));
+/* more hand-picked pictures for common N5–N4 words (these win where both list a meaning) */
+const PIC_NOUN_MORE = `university:🎓|college:🎓|graduation:🎓|classroom:🏫|junior high school:🏫|high school:🏫|elementary school:🏫|café:☕|cafe:☕|coffee shop:☕|tearoom:☕|cafeteria:🍽️|dining hall:🍽️|restaurant:🍽️|embassy:🏛️|museum:🏛️|art museum:🖼️|art gallery:🖼️|intersection:🚦|crossing:🚸|vase:🏺|flower vase:🏺|postage stamp:📮|postage stamps:📮|postal stamps:📮|postcard:📮|ashtray:🚬|refrigerator:🧊|fridge:🧊|greengrocer:🥬|vegetable store:🥬|barber:💈|barber's:💈|barbershop:💈|barber's shop:💈|zoo:🦁|doll:🪆|futon:🛏️|glove:🧤|gloves:🧤|comic:📖|comic book:📖|judo:🥋|diary:📔|journal:📔|injection:💉|drawer:🗄️|scenery:🏞️|landscape:🏞️|coast:🏖️|seashore:🏖️|inn:🏨|japanese inn:🏨|vehicle:🚗|express train:🚄|limited express:🚄|parking lot:🅿️|parking:🅿️|weather forecast:🌦️|broadcasting:📡|broadcast:📡|television program:📺|tv program:📺|countryside:🌾|rural area:🌾|buddhist temple:🛕|population:👥|science:🔬|mathematics:➗|math:➗|literature:📚|geography:🗺️|industry:🏭|telegram:📨|air:💨|cherry-blossom viewing:🌸|cherry blossom viewing:🌸|sightseeing:📸|hot water:♨️|dance:💃|dancing:💃|uncooked rice:🌾|husband:👨|wife:👩|daughter:👧|son:👦|uncle:👨|aunt:👩|adult:🧑|shopping:🛍️|food:🍱|drink:🥤|beverage:🥤|animal:🐾|animals:🐾|chicken meat:🍗|illness:🤒|sickness:🤒|disease:🤒|laundry:🧺|washing:🧺|cleaning:🧹|sweeping:🧹|suit:👔|men's suit:👔|business suit:👔|western-style clothes:👗|eye glasses:👓|spectacles:👓|black tea:🫖|rice bowl:🍚|zero:0️⃣|monday:🌙|tuesday:🔥|wednesday:💧|thursday:🌳|friday:💰|saturday:🌱|sunday:☀️|study:📚|practice:🏋️|practise:🏋️|homework:📝|shrine:⛩️|new year:🎍|new year's day:🎍|summer vacation:🏖️|summer holiday:🏖️|lunch break:🍱|zoo animal:🦁|science laboratory:🔬|laboratory:🔬|teacher's office:🏫|newspaper company:📰|driver:🚗|chauffeur:🚗|clerk:🧑‍💼|shop assistant:🧑‍💼|receptionist:🛎️|reception desk:🛎️|government worker:🧑‍💼|citizen:🧑|section manager:🧑‍💼|company president:🧑‍💼|principal:🧑‍🏫|headmaster:🧑‍🏫|girlfriend:👩|boyfriend:👨|rich person:💰|exhibition:🖼️|graduation ceremony:🎓|invitation:✉️|explanation:💬|opinion:💬|conversation:💬|consultation:💬|meeting:👥|conference:👥|conference room:👥|heating:🌡️|electric light:💡|light bulb:💡|water supply:🚰|water service:🚰|tap water:🚰|rule:📏|regulation:📏|plan:📋|schedule:📅|education:🧑‍🏫|culture:🎎|society:👥|experience:🧗|safety:🦺|security:🛡️|traffic:🚗|transportation:🚌|departure:🛫|attendance:🙋|pronunciation:🗣️|preparation:📋|review:📝|diary entry:📔|cotton:🧵|doll festival:🎎|camera:📷|tea ceremony:🍵`;
+const PIC_VERB_MORE = `bloom:🌸|flower:🌸|answer:🙋|reply:💬|arrive:📍|arrive at:📍|reach:📍|go out:🚶|depart:🚶|leave:🚪|return something:↩️|give back:↩️|raise:🙋|lift:🏋️|take out:📤|show:🫴|display:🫴|stop:🛑|halt:🛑|come to a halt:🛑|cease:🛑|know:💡|understand:💡|become cloudy:☁️|get cloudy:☁️|step on:👣|tread on:👣|pray:🙏|wish:🙏|do one's best:💪|try one's best:💪|persevere:💪|compare:⚖️|help:🤝|assist:🤝|hurry:🏃|rush:🏃|rejoice:😊|be delighted:😊|be heard:👂|be audible:👂|be visible:👀|can be seen:👀|be found:🔍|be discovered:🔍|get dark:🌆|grow dark:🌆|burn:🔥|be burned:🔥|grow cold:🥶|get cold:🥶|cool down:🧊|be late:⏰|become late:⏰|add:➕|notify:📢|inform:📢|invite:✉️|explain:💬|consult:💬|graduate:🎓|attend:🙋|prepare:📋|practice:🏋️|practise:🏋️|review:📝|transfer:🔁|change trains:🔁|export:🚢|import:📦|catch:🫴|arrest:🚓|dry:☀️|get dry:☀️|break:💔|snap:💔|be broken:💔|crack:💔|switch on:💡|be switched on:💡|come on:💡`;
+const PIC_ADJ_MORE = `it's ok:👌|it's okay:👌|it's all right:👌|important:❗|valuable:💎|serious:❗|very important:❗|lukewarm:🌡️|tepid:🌡️|polite:🙇|courteous:🙇|simple:👌|complex:🧩|complicated:🧩|inconvenient:🚫|enthusiastic:🔥|kind:😇|kindness:😇|diligent:📚|safe:🛡️|together:🤝|a little:🤏|a few:🤏|few:🤏|little:🤏|many:🔢|much:🔢|a lot:🔢|lots:🔢|happy:😊|glad:😊|blue:🔵|red:🔴|yellow:🟡|green:🟢|black:⚫|white:⚪|brown:🟤|famous:⭐|skillful:👍|skilful:👍|be good at:👍|unskillful:👎|poor:👎|bad at:👎`;
+const mergePics = (more, base) => new Map([...parsePics(base), ...parsePics(more)]);
+const PICS = { verb: mergePics(PIC_VERB_MORE, PIC_VERB), adj: mergePics(PIC_ADJ_MORE, PIC_ADJ), noun: mergePics(PIC_NOUN_MORE, PIC_NOUN) };
+const stripFE = s => String(s).replace(/️/g, '');
+/** index OpenMoji by name and by emoji character */
+function buildPicIndex(list) {
+  const byName = new Map(), byChar = new Map();
+  for (const x of list) {
+    if (x.skintone || x.group === 'component') continue;
+    byChar.set(stripFE(x.emoji), x.hexcode);
+    if (x.group === 'flags' || x.group === 'extras-openmoji' || x.group === 'extras-unicode') continue;
+    const a = String(x.annotation || '').toLowerCase().trim(); if (!a) continue;
+    if (!byName.has(a)) byName.set(a, x.hexcode);
+    const bare = a.replace(/ face$/, '');                       // "dog face" also answers "dog" (face drawings read best)
+    if (bare !== a) byName.set(bare, x.hexcode);
+  }
+  return { byName, byChar };
+}
+const glossKeys = gs => {
+  const out = [];
+  for (const g of gs.slice(0, 2)) {
+    const n = String(g).toLowerCase().replace(/\(.*?\)/g, '').replace(/^(to|a|an|the)\s+/, '').replace(/\s+/g, ' ').trim();
+    if (n && !out.includes(n)) out.push(n);
+    const full = String(g).toLowerCase().replace(/^(to|a|an|the)\s+/, '').trim();
+    if (full !== n && !out.includes(full)) out.unshift(full);   // "cold (illness)" before "cold"
+  }
+  return out;
+};
+/** pos: 'verb' | 'i-adj' | 'na-adj' | 'noun' | other; kanji: true for kanji meanings */
+/* per-word fixes where the first meaning picks the wrong picture (null = no picture) */
+const WORD_PICS = { '弾く': '🎸', '丁度': null, 'ちょうど': null, '賑やか': '🎉', 'にぎやか': '🎉', '外': null, '他': null, '程': null };
+function pictureFor(idx, glosses, pos, kanji, word) {
+  if (word && word in WORD_PICS) { const w = WORD_PICS[word]; return w ? idx.byChar.get(stripFE(w)) || null : null; }
+  const kind = pos === 'verb' ? 'verb' : (pos === 'i-adj' || pos === 'na-adj') ? 'adj' : 'noun';
+  const keys = glossKeys(glosses), hex = e => e && idx.byChar.get(stripFE(e));
+  if (kanji) {
+    // kanji is the literal character: pictographs first, then each meaning in order across all tables
+    const kp = KANJI_PICS.get(kanji); if (kp && hex(kp)) return hex(kp);
+    for (const k of keys) for (const t of ['noun', 'adj', 'verb']) { const h = hex(PICS[t].get(k)); if (h) return h; }
+  } else {
+    for (const k of keys) { const h = hex(PICS[kind].get(k)); if (h) return h; }
+    if (kind !== 'noun') return null;
+    for (const k of keys) { const h = hex(PICS.adj.get(k)); if (h) return h; }   // 青 "blue", 一緒 "together" (not verbs: "the rest" isn't resting)
+  }
+  for (const k of keys) { if (PIC_NAME_SKIP.has(k) || k.length < 3) continue; const h = idx.byName.get(k); if (h) return h; }
+  return null;
+}
+
+const OPENMOJI_REPO = 'https://github.com/hfg-gmuend/openmoji';
+/** OpenMoji data + colour SVGs: --openmoji-dir, an "openmoji" folder in --from-dir, or a sparse git clone */
+function getOpenMoji() {
+  if (flag('no-pictures')) return null;
+  const look = base => { const j = path.join(base, 'data', 'openmoji.json'), d = path.join(base, 'color', 'svg'); return fs.existsSync(j) && fs.existsSync(d) ? { json: j, svg: d } : null; };
+  if (opt('openmoji-dir')) return look(path.resolve(opt('openmoji-dir')));
+  if (FROM) { const r = look(path.join(FROM, 'openmoji')); if (!r) warn('no openmoji folder in --from-dir, skipping pictures'); return r; }
+  const dest = path.join(CACHE, 'openmoji');
+  try {
+    if (!look(dest)) {
+      fs.rmSync(dest, { recursive: true, force: true });
+      log('  cloning OpenMoji (data + colour SVGs only)');
+      execFileSync('git', ['clone', '--depth', '1', '--filter=blob:none', '--sparse', OPENMOJI_REPO, dest], { stdio: 'inherit' });
+      execFileSync('git', ['-C', dest, 'sparse-checkout', 'set', 'data', 'color/svg'], { stdio: 'inherit' });
+    } else log('  cached OpenMoji');
+    return look(dest);
+  } catch (e) { warn('pictures: ' + e.message); return null; }
+}
+
+/* ---------------------------------------------------------------- more pictures: Tabler Icons (MIT) + game-icons.net (CC BY 3.0)
+   Used only when OpenMoji has nothing, and only for nouns/kanji whose meaning is exactly an icon's name
+   (no tag or fuzzy matching: that's how "class" became a bicycle). Ids: "t.<name>" and "g.<author>.<name>". */
+const TABLER_REPO = 'https://github.com/tabler/tabler-icons';
+const GAMEICONS_REPO = 'https://github.com/game-icons/icons';
+const ICON_INK = '#22408F';
+const EXT_SKIP = new Set([...PIC_NAME_SKIP, 'mark', 'point', 'form', 'order', 'case', 'change', 'line', 'set', 'state', 'check', 'plus', 'minus', 'list', 'menu', 'filter', 'power', 'shape', 'box', 'well', 'smart', 'character', 'blank', 'private', 'catch', 'tank top', 'volume', 'record', 'article', 'exchange', 'present', 'time', 'body', 'gear', 'front', 'class', 'pitch', 'table', 'key', 'track', 'code', 'cross', 'report', 'stamp', 'fan', 'shell', 'strike', 'plant', 'figure', 'glass', 'press', 'charge', 'cell', 'post', 'stock', 'board', 'current', 'free', 'second', 'minute', 'yard', 'bolt', 'pupil', 'iris', 'crane', 'bass', 'racket', 'jet', 'court', 'fall', 'drive', 'dash', 'safe', 'shuttle', 'loop', 'frame', 'print', 'brand', 'pool', 'space', 'link', 'sign', 'ghost', 'alien', 'spade', 'club', 'diamond', 'bishop', 'knight', 'queen', 'king', 'rook', 'pawn', 'bomb', 'tank', 'notes', 'function', 'search', 'person', 'thing', 'matter', 'way', 'kind', 'type', 'part', 'side', 'one', 'self']);
+function getIconSets() {
+  const sets = { tabler: null, gi: null };
+  if (flag('no-pictures') || flag('no-icons')) return sets;
+  const okT = d => fs.existsSync(path.join(d, 'icons', 'outline')) ? path.join(d, 'icons', 'outline') : null;
+  const okG = d => fs.existsSync(path.join(d, 'lorc')) ? d : null;
+  if (FROM) { sets.tabler = okT(path.join(FROM, 'tabler-icons')); sets.gi = okG(path.join(FROM, 'game-icons')); return sets; }
+  const clone = (repo, dest, sparse) => {
+    if (fs.existsSync(dest)) return;
+    log('  cloning ' + repo.replace('https://github.com/', ''));
+    execFileSync('git', ['clone', '--depth', '1', '--filter=blob:none', ...(sparse ? ['--sparse'] : []), repo, dest], { stdio: 'inherit' });
+    if (sparse) execFileSync('git', ['-C', dest, 'sparse-checkout', 'set', sparse], { stdio: 'inherit' });
+  };
+  try { const d = path.join(CACHE, 'tabler-icons'); if (!okT(d)) fs.rmSync(d, { recursive: true, force: true }); clone(TABLER_REPO, d, 'icons/outline'); sets.tabler = okT(d); } catch (e) { warn('Tabler Icons: ' + e.message); }
+  try { const d = path.join(CACHE, 'game-icons'); if (!okG(d)) fs.rmSync(d, { recursive: true, force: true }); clone(GAMEICONS_REPO, d); sets.gi = okG(d); } catch (e) { warn('game-icons: ' + e.message); }
+  return sets;
+}
+/** name → { id, file } for both sets (Tabler wins over game-icons; game-icons' generic "badges" folder is left out) */
+function buildExtIndex(sets) {
+  const byName = new Map();
+  if (sets.tabler) for (const f of fs.readdirSync(sets.tabler)) if (f.endsWith('.svg')) { const n = f.slice(0, -4); const k = n.replace(/-/g, ' '); if (!byName.has(k)) byName.set(k, { id: 't.' + n, file: path.join(sets.tabler, f) }); }
+  if (sets.gi) for (const a of fs.readdirSync(sets.gi).sort()) {
+    const d = path.join(sets.gi, a); if (a === 'badges' || a.startsWith('.') || !fs.statSync(d).isDirectory()) continue;
+    for (const f of fs.readdirSync(d)) if (f.endsWith('.svg')) { const n = f.slice(0, -4); const k = n.replace(/-/g, ' '); if (!byName.has(k)) byName.set(k, { id: `g.${a}.${n}`, file: path.join(d, f) }); }
+  }
+  return byName;
+}
+const singular = k => k.endsWith('ies') ? k.slice(0, -3) + 'y' : k.endsWith('s') && !/(ss|us|is)$/.test(k) ? k.slice(0, -1) : k;
+const extKeys = gs => { const out = []; for (const g of gs.slice(0, 2)) { const n = String(g).toLowerCase().replace(/\^/g, '').replace(/\(.*?\)/g, '').replace(/^(to|a|an|the)\s+/, '').replace(/[!?.~]/g, '').replace(/\s+/g, ' ').trim(); if (n && !out.includes(n)) out.push(n); } return out; };
+/** second-chance picture for a noun or kanji meaning: exact icon name, then the head noun of a 2–3 word gloss ("electric train" → train) in OpenMoji */
+function extPictureFor(idx, ext, glosses, pos) {
+  if (pos !== 'noun') return null;
+  const keys = extKeys(glosses);
+  for (const k0 of keys) for (const k of new Set([k0, singular(k0)])) { if (EXT_SKIP.has(k) || k.length < 3) continue; const h = ext.get(k); if (h) return h.id; }
+  for (const k of keys) {
+    const ws = k.split(' '); if (ws.length < 2 || ws.length > 3) continue; const h = singular(ws[ws.length - 1]); if (h.length < 4 || EXT_SKIP.has(h)) continue;
+    const c = PICS.noun.get(h); if (c && idx.byChar.get(stripFE(c))) return idx.byChar.get(stripFE(c));
+    const o = idx.byName.get(h); if (o) return o;
+  }
+  return null;
+}
+/** icon SVG recoloured in the app's ink (Tabler: stroke; game-icons: drop the black square, fill the glyph) */
+function iconSvg(id, file) {
+  let t = fs.readFileSync(file, 'utf8').replace(/<!--[\s\S]*?-->\s*/g, '');
+  if (id.startsWith('t.')) t = t.replace(/currentColor/g, ICON_INK).replace(/\swidth="24"\s+height="24"/, '');
+  else t = t.replace(/<path d="M0 0h512v512H0z"\s*\/>/, '').replace(/fill="#fff(fff)?"/gi, `fill="${ICON_INK}"`);
+  return t;
+}
+const hanOf = w => [...new Set(String(w).match(/\p{Script=Han}/gu) || [])];
+
+/* ---------------------------------------------------------------- 3D pictures: Microsoft Fluent Emoji (MIT)
+   Same emoji as OpenMoji, rendered in 3D. Only the 3D PNGs and metadata are fetched (sparse clone, ~75 MB).
+   Each picture is stored as <hex>.png next to OpenMoji's <hex>.svg, so the app can switch styles. */
+const FLUENT_REPO = 'https://github.com/microsoft/fluentui-emoji';
+const normHex = h => String(h).toUpperCase().split(/[-\s_]+/).filter(x => x && x !== 'FE0F').join('-');
+function getFluent3D() {
+  if (flag('no-pictures') || flag('no-3d')) return null;
+  const ok = d => fs.existsSync(path.join(d, 'assets')) ? d : null;
+  let dir = null;
+  if (FROM) dir = ok(path.join(FROM, 'fluentui-emoji'));
+  else {
+    const d = path.join(CACHE, 'fluentui-emoji');
+    try {
+      if (!ok(d)) {
+        fs.rmSync(d, { recursive: true, force: true });
+        log('  cloning Fluent Emoji (3D pictures only)');
+        execFileSync('git', ['clone', '--depth', '1', '--filter=blob:none', '--no-checkout', FLUENT_REPO, d], { stdio: 'inherit' });
+        execFileSync('git', ['-C', d, 'sparse-checkout', 'init', '--no-cone'], { stdio: 'inherit' });
+        fs.writeFileSync(path.join(d, '.git', 'info', 'sparse-checkout'), '/assets/*/metadata.json\n/assets/*/3D/*\n/assets/*/Default/3D/*\n/LICENSE\n');
+        execFileSync('git', ['-C', d, 'checkout'], { stdio: 'inherit' });
+      } else log('  cached Fluent Emoji');
+      dir = ok(d);
+    } catch (e) { warn('Fluent Emoji: ' + e.message); }
+  }
+  if (!dir) return null;
+  const byHex = new Map();
+  for (const name of fs.readdirSync(path.join(dir, 'assets'))) {
+    const base = path.join(dir, 'assets', name);
+    try {
+      const meta = JSON.parse(fs.readFileSync(path.join(base, 'metadata.json'), 'utf8'));
+      for (const sub of ['3D', path.join('Default', '3D')]) {
+        const d = path.join(base, sub); if (!fs.existsSync(d)) continue;
+        const png = fs.readdirSync(d).find(f => f.endsWith('.png')); if (png) { byHex.set(normHex(meta.unicode), path.join(d, png)); break; }
+      }
+    } catch (e) {}
+  }
+  return byHex;
 }
 
 /* ---------------------------------------------------------------- file helpers */
@@ -789,6 +969,57 @@ async function main() {
   const audioTotal = LEVELS.reduce((a, l) => a + vocab[l].filter(e => e.au).length, 0);
   if (!audioTotal) meta.notes.push('No native word audio in this build; words use the device voice.');
 
+  /* ---- 8e. Pictures (OpenMoji) */
+  if (!flag('no-pictures')) {
+    log('Pictures (OpenMoji)');
+    const om = getOpenMoji();
+    if (om) {
+      const idx = buildPicIndex(JSON.parse(fs.readFileSync(om.json, 'utf8')));
+      const ext = buildExtIndex(getIconSets());
+      log(`  ${ext.size} extra icons (Tabler Icons, game-icons.net)`);
+      const used = new Set(); let nv = 0, nk = 0, nx = 0;
+      for (const l of LEVELS) for (const k of kanji[l]) {
+        const h = pictureFor(idx, k.m, 'noun', k.k) || extPictureFor(idx, ext, k.m, 'noun');
+        if (h) { k.pic = h; used.add(h); nk++; }
+      }
+      for (const l of LEVELS) for (const e of vocab[l]) {
+        const gl = (e.s[0] && e.s[0].g) || [e.m];
+        let h = pictureFor(idx, gl, e.g, false, e.w);
+        if (!h && !(e.w in WORD_PICS)) { h = extPictureFor(idx, ext, gl, e.g); if (h) nx++; }
+        if (h) { e.pic = h; used.add(h); nv++; }
+      }
+      // pictures for the app's own Situations phrases (listed in index.html as SIT_PICS)
+      try {
+        const html = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), 'index.html'), 'utf8');
+        const m = /const SIT_PICS = (\{[^;]*\});/.exec(html); if (m) Object.values(JSON.parse(m[1])).forEach(h => used.add(h));
+      } catch (e) {}
+      fs.mkdirSync(path.join(OUT, 'img'), { recursive: true });
+      const extFile = new Map([...ext.values()].map(v => [v.id, v.file]));
+      let bytes = 0; const missing = new Set();
+      for (const h of used) {
+        const dest = path.join(OUT, 'img', h + '.svg');
+        if (h.startsWith('t.') || h.startsWith('g.')) { const f = extFile.get(h); if (!f) { missing.add(h); continue; } const t = iconSvg(h, f); fs.writeFileSync(dest, t); bytes += t.length; continue; }
+        const f = path.join(om.svg, h + '.svg'); if (fs.existsSync(f)) { fs.copyFileSync(f, dest); bytes += fs.statSync(f).size; } else missing.add(h);
+      }
+      if (missing.size) for (const l of LEVELS) {
+        for (const e of vocab[l]) if (missing.has(e.pic)) delete e.pic;
+        for (const k of kanji[l]) if (missing.has(k.pic)) delete k.pic;
+      }
+      // 3D versions of the emoji pictures (Fluent Emoji); the app falls back to the flat SVG where there's none
+      const fl = getFluent3D(); const pics3d = [];
+      if (fl) for (const h of used) {
+        if (missing.has(h) || /^[tg]\./.test(h)) continue;
+        const f = fl.get(normHex(h)); if (!f) continue;
+        fs.copyFileSync(f, path.join(OUT, 'img', h + '.png')); bytes += fs.statSync(f).size; pics3d.push(h);
+      }
+      meta.pics3d = pics3d;
+      if (fl) log(`  ${pics3d.length} pictures also in 3D (Fluent Emoji)`);
+      meta.counts.pictures = { words: nv, wordsFromIcons: nx, kanji: nk, files: used.size - missing.size, in3d: pics3d.length };
+      meta.sources.pictures = 'Fluent Emoji 3D, OpenMoji (colour SVG), Tabler Icons, game-icons.net';
+      log(`  pictures for ${nv} words (${nx} from icon sets), ${nk} kanji (${used.size - missing.size} files, ${(bytes / 1e6).toFixed(1)} MB)`);
+    } else meta.notes.push('OpenMoji unavailable: no pictures in this build.');
+  }
+
   /* ---- 9. write */
   log('Writing files');
   let total = 0;
@@ -812,6 +1043,10 @@ async function main() {
     { name: 'JLPT grammar', by: 'hanabira.org', license: 'Creative Commons (in-house content)', url: 'https://hanabira.org/' },
     { name: 'Word pronunciation audio', by: 'Tofugu & WaniKani', license: 'CC BY-SA 4.0', url: 'https://github.com/tofugu/japanese-vocabulary-pronunciation-audio' },
     { name: 'Example-word audio', by: 'Kanji alive', license: 'CC BY 4.0', url: 'https://github.com/kanjialive/kanji-data-media' },
+    { name: 'Pictures', by: 'OpenMoji – the open-source emoji and icon project', license: 'CC BY-SA 4.0', url: 'https://openmoji.org/' },
+    { name: '3D pictures', by: 'Fluent Emoji (Microsoft)', license: 'MIT', url: 'https://github.com/microsoft/fluentui-emoji' },
+    { name: 'Icons', by: 'Tabler Icons (Paweł Kuna)', license: 'MIT', url: 'https://tabler.io/icons' },
+    { name: 'Icons', by: 'game-icons.net (Lorc, Delapouite and contributors; each icon credits its artist)', license: 'CC BY 3.0', url: 'https://game-icons.net/' },
     { name: 'Sentence audio', by: 'Tatoeba contributors (credited on each sentence)', license: 'per recording', url: 'https://tatoeba.org/en/downloads' }
   ];
   total += write('meta.json', meta);
@@ -819,4 +1054,5 @@ async function main() {
   if (meta.notes.length) meta.notes.forEach(n => warn(n));
 }
 
-main().catch(e => { console.error('\nBuild failed:', e.message); process.exit(1); });
+export { buildPicIndex, pictureFor, buildExtIndex, extPictureFor, iconSvg, hanOf };
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch(e => { console.error('\nBuild failed:', e.message); process.exit(1); });
