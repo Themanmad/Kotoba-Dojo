@@ -656,12 +656,16 @@ async function main() {
 
   /* ---- 8. KanjiVG stroke order */
   log('KanjiVG');
-  const strokes = Object.fromEntries(LEVELS.map(l => [l, {}]));
+  const strokes = Object.fromEntries([...LEVELS, 'KANA'].map(l => [l, {}]));
   const kv = await getSource('kanjivg', SOURCES.kanjivg, { required: false });
   if (kv) {
     const files = new Map(walk(extractDir(kv.file)).filter(p => /\.svg$/i.test(p)).map(p => [path.basename(p).toLowerCase(), p]));
     let n = 0;
-    for (const [c, l] of kanjiSet) {
+    // kanji, plus every hiragana / katakana character for the Kana section
+    const targets = [...kanjiSet];
+    for (let cp = 0x3041; cp <= 0x3096; cp++) targets.push([String.fromCodePoint(cp), 'KANA']);
+    for (let cp = 0x30a1; cp <= 0x30fa; cp++) targets.push([String.fromCodePoint(cp), 'KANA']);
+    for (const [c, l] of targets) {
       const hex = c.codePointAt(0).toString(16).padStart(5, '0');
       const f = files.get(hex + '.svg'); if (!f) continue;
       const svg = fs.readFileSync(f, 'utf8');
@@ -679,7 +683,7 @@ async function main() {
       n++;
     }
     meta.sources.kanjivg = kv.label;
-    log(`  stroke data for ${n} kanji`);
+    log(`  stroke data for ${n - Object.keys(strokes.KANA).length} kanji and ${Object.keys(strokes.KANA).length} kana`);
   } else meta.notes.push('KanjiVG unavailable: no stroke-order diagrams in this build.');
 
   /* ---- 8b. Grammar (hanabira.org, MIT) */
@@ -794,6 +798,7 @@ async function main() {
     total += write(`vocab-${l.toLowerCase()}.json`, vocab[l]);
     total += write(`kanji-${l.toLowerCase()}.json`, kanji[l]);
     total += write(`strokes-${l.toLowerCase()}.json`, strokes[l]);
+    if (l === LEVELS[LEVELS.length - 1]) total += write('strokes-kana.json', strokes.KANA);
     if (gCount) { (meta.counts.grammar = meta.counts.grammar || {})[l] = grammar[l].length; total += write(`grammar-${l.toLowerCase()}.json`, grammar[l]); }
   }
   meta.tags = Object.fromEntries([...usedTags].filter(t => tagNames[t]).map(t => [t, tagNames[t]]));

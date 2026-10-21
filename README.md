@@ -6,6 +6,8 @@ dictionaries, turns them into small files and publishes the site. It refreshes
 every Monday.
 
 ## What's inside
+- **Kana** — full hiragana and katakana charts (basic, ゛゜ sounds, combinations like きゃ, extended katakana like ファ) with KanjiVG stroke order, lookalike warnings (シ/ツ, ぬ/め…) and real words that use each character. Quizzes: kana → romaji, romaji → kana and hiragana ↔ katakana, with lookalikes as the wrong answers; plus flashcards and tests.
+- **Situations** — words and phrases grouped by occasion (greetings, restaurant, convenience store, shopping, train & travel, hotel, directions, time, numbers, family, health & emergencies, work, weather, small talk, feelings, gym), each ordered from what you'll hear most to least. Study any situation with Learn, Flashcards or Test.
 - **Vocabulary** — the JLPT N5–N1 lists matched to **JMdict** entries: all main meanings, parts of speech, alternative spellings and furigana.
 - **Kanji** — every JLPT kanji from **KANJIDIC2** (meanings, on/kun readings, stroke count, frequency rank) with animated **KanjiVG** stroke order.
 - **Example sentences** — **Tatoeba** sentences with English translations and furigana, each linking back to its Tatoeba page.

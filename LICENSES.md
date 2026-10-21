@@ -22,7 +22,7 @@ generated `data/` files are distributed under **CC BY-SA 4.0**.
 
 The mock exam's questions are generated from the data above, not taken from JLPT papers (those are the Japan Foundation's copyright). Pass marks are the official ones published at [jlpt.jp](https://www.jlpt.jp/e/guideline/results.html).
 
-The starter grammar set built into `index.html` (used before the first build) was written for this app.
+The starter grammar set and the Situations word lists built into `index.html` were written for this app. Kana stroke order comes from KanjiVG (above).
 
 The Japan Foundation doesn't publish official JLPT word lists. The N5–N1 levels
 here follow the widely used community lists above.
