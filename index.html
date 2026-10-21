@@ -302,6 +302,35 @@ img.pic.p3d{filter:drop-shadow(0 .03em .05em rgba(0,0,0,.18))}
 .kcx{cursor:pointer;border-radius:4px;text-decoration:underline dotted color-mix(in srgb,var(--accent) 45%,transparent);text-underline-offset:.22em;text-decoration-thickness:1.5px;transition:background-color .12s,color .12s}
 .kcx:hover,.kcx:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
 .kcx:active{background:var(--accent);color:#fff}
+.kbuild,.kremember{background:var(--chip);border-radius:16px;padding:14px;margin-bottom:6px}
+.kb-type{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:3px 10px;margin-bottom:10px}
+.kb-eq{display:flex;align-items:stretch;flex-wrap:wrap;gap:6px}
+.kb-op{align-self:center;font-style:normal;font-weight:700;color:var(--muted);font-size:18px;padding:0 2px}
+.kb-part{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:74px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 10px;color:var(--ink);font:inherit;text-align:center}
+button.kb-part{cursor:pointer}
+button.kb-part:hover{border-color:var(--accent)}
+.kb-part b{font-size:30px;font-weight:600;line-height:1.15}
+.kb-pm{font-size:12.5px;color:var(--ink);font-weight:600;max-width:110px}
+.kb-pn{font-size:11px;color:var(--muted)}
+.kb-role{margin-top:3px;font-size:10.5px;font-weight:700;border-radius:999px;padding:1px 7px}
+.kb-part.meaning .kb-role{background:var(--ok-soft);color:var(--ok)}
+.kb-part.sound .kb-role{background:var(--warn-soft);color:var(--warn)}
+.kb-part.whole{border:2px solid var(--accent)}
+.kb-part.whole b{color:var(--accent)}
+.kb-say{margin:10px 2px 0;font-size:14.5px;line-height:1.55}
+.kb-rad{margin:8px 2px 0;font-size:13px;color:var(--muted)}
+.kb-rad b{color:var(--ink);font-size:15px}
+.kr-row+.kr-row{margin-top:12px}
+.kr-h{font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.kb-ks{display:flex;flex-wrap:wrap;gap:6px}
+.kb-k{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:4px 10px 4px 6px;cursor:pointer;color:var(--ink);font:inherit;font-size:13px}
+.kb-k b{font-size:22px;font-weight:600;line-height:1.2}
+.kb-k span{color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kb-k:hover{border-color:var(--accent)}
+.kr-note{display:block}
+.kr-note textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;font-size:14px;padding:8px 10px;resize:vertical}
+.kr-note textarea:focus{outline:2px solid var(--accent);outline-offset:0}
+.kr-saved{display:block;font-size:11.5px;color:var(--ok);min-height:14px;margin-top:2px}
 .kc-hint{font-size:12.5px;color:var(--muted);margin:2px 0 6px}
 .kcx.kc-sel{background:var(--accent-soft);color:var(--accent);text-decoration:none}
 ::highlight(kp-word){background-color:var(--accent-soft);color:var(--accent)}
@@ -1121,9 +1150,13 @@ function normV(x, lvl) {
   return { id, kind: 'vocab', seq: x.i, w: x.w, r: x.r, f: x.f || furi(x.w, x.r), m: x.m, senses: x.s || [{ p: [], g: [x.m] }], pos: x.g || 'other',
     lvl, freq: x.q || 2, common: !!x.c, ex: x.ex || [], alt: x.a || null, au: x.au || null, pic: x.pic || null };
 }
+/* how each starter kanji is built (KanjiVG parts + Kanjium), so the section works before the full data is built */
+const STARTER_KSTRUCT = {"k":{"日":{"ty":"P","rad":"日"},"一":{"ty":"I","rad":"一"},"国":{"pt":[["囗","kamae","r"],["玉","","p"]],"ty":"C","rad":"囗"},"会":{"pt":[["人","top","r"],["云","bottom",""]],"ty":"P","rad":"𠆢","lk":["今"]},"人":{"ty":"P","rad":"人","lk":["入","八"]},"年":{"pt":[["丿","","r"],["干","","r"]],"ty":"P","rad":"干"},"大":{"ty":"P","rad":"大"},"十":{"ty":"P","rad":"十"},"二":{"ty":"C","rad":"二"},"本":{"ty":"I","rad":"木","lk":["休","体"]},"中":{"pt":[["口","",""],["丨","","r"]],"ty":"I","rad":"丨"},"長":{"ty":"P","rad":"長"},"出":{"pt":[["山","",""],["凵","","r"]],"ty":"C","rad":"凵"},"三":{"pt":[["一","top","r"],["一","bottom",""],["一","bottom",""]],"ty":"C","rad":"一"},"時":{"pt":[["日","left","r"],["寺","right","p"]],"ty":"S","ph":"寺","phR":["ジ"],"rad":"日"},"事":{"pt":[["口","",""],["⺕","",""],["亅","","r"]],"ty":"C","rad":"亅"},"自":{"ty":"P","rad":"自"},"行":{"ty":"P","rad":"行"},"社":{"pt":[["礻","left","r"],["土","right","p"]],"ty":"C","rad":"礻"},"見":{"pt":[["目","top",""],["儿","bottom",""]],"ty":"P","rad":"見"},"月":{"ty":"P","rad":"月"},"分":{"pt":[["八","top","r"],["刀","bottom","r"]],"ty":"I","rad":"刀"},"後":{"pt":[["彳","left","r"],["幺","right",""],["夂","right",""]],"ty":"C","rad":"彳"},"前":{"pt":[["八","top","p"],["月","bottom",""],["刂","bottom",""]],"ty":"I","rad":"刂"},"生":{"ty":"I","rad":"生"},"五":{"ty":"P","rad":"二"},"間":{"pt":[["門","kamae","r"],["日","",""]],"ty":"S","ph":"門","phR":["モン","カン"],"rad":"門"},"上":{"pt":[["卜","","r"],["一","","r"]],"ty":"I","rad":"一"},"東":{"pt":[["木","","r"],["日","",""]],"ty":"C","rad":"木"},"地":{"pt":[["土","left","r"],["也","right","p"]],"ty":"S","ph":"也","phR":["チ"],"rad":"土"},"方":{"ty":"P","rad":"方","lk":["万"]},"四":{"pt":[["囗","kamae","r"],["儿","",""]],"ty":"P","rad":"囗"},"今":{"pt":[["人","top","r"],["一","bottom",""]],"ty":"C","rad":"𠆢","lk":["会"]},"新":{"pt":[["立","left","p"],["木","left","p"],["斤","right","r"]],"ty":"S","ph":"亲","phR":["シン"],"rad":"斤"},"場":{"pt":[["土","left","r"],["昜","right","p"]],"ty":"C","rad":"土"},"金":{"ty":"P","rad":"金"},"九":{"pt":[["丿","","r"],["乙","","r"]],"ty":"P","rad":"乙"},"入":{"ty":"I","rad":"入","lk":["八","人"]},"開":{"pt":[["門","kamae","r"],["开","",""]],"ty":"C","rad":"門"},"手":{"ty":"P","rad":"手"},"力":{"ty":"P","rad":"力"},"学":{"pt":[["⺍","top","p"],["冖","top","p"],["子","bottom","r"]],"ty":"C","rad":"子"},"高":{"pt":[["亠","top",""],["口","top",""],["冋","bottom",""]],"ty":"P","rad":"高"},"円":{"ty":"C","rad":"冂"},"子":{"ty":"P","rad":"子"},"動":{"pt":[["重","left","p"],["力","right","r"]],"ty":"C","rad":"力"},"京":{"pt":[["亠","top","r"],["口","bottom",""],["小","bottom",""]],"ty":"C","rad":"亠"},"目":{"ty":"P","rad":"目"},"外":{"pt":[["夕","left","r"],["卜","right",""]],"ty":"P","rad":"夕"},"言":{"ty":"P","rad":"言"},"体":{"pt":[["亻","left","r"],["本","right",""]],"ty":"C","rad":"亻","lk":["休","本"]},"田":{"ty":"P","rad":"田"},"八":{"ty":"I","rad":"八","lk":["人","入"]},"六":{"pt":[["亠","top","r"],["八","bottom","r"]],"ty":"P","rad":"八"},"下":{"pt":[["一","","r"],["卜","",""]],"ty":"I","rad":"一"},"来":{"ty":"P","rad":"木"},"気":{"pt":[["气","kamae","r"],["乂","",""]],"ty":"S","ph":"气","phR":["キ"],"rad":"气"},"小":{"ty":"I","rad":"小"},"七":{"pt":[["一","","r"],["乙","","r"]],"ty":"I","rad":"一"},"山":{"ty":"P","rad":"山"},"思":{"pt":[["田","top","r"],["心","bottom","r"]],"ty":"C","rad":"心"},"話":{"pt":[["言","left","r"],["舌","right","p"]],"ty":"C","rad":"訁"},"使":{"pt":[["亻","left","r"],["吏","right",""]],"ty":"S","ph":"史","phR":["シ"],"rad":"亻"},"女":{"ty":"P","rad":"女"},"北":{"ty":"P","rad":"匕"},"午":{"pt":[["丿","top",""],["干","top",""]],"ty":"P","rad":"十","lk":["千"]},"道":{"pt":[["首","nyoc","p"],["⻌","nyo","r"]],"ty":"C","rad":"辶"},"百":{"pt":[["一","top","r"],["白","bottom","r"]],"ty":"S","rad":"白"},"書":{"pt":[["聿","top","r"],["日","bottom","r"]],"ty":"C","rad":"曰"},"先":{"ty":"C","rad":"儿"},"名":{"pt":[["夕","top","r"],["口","bottom","r"]],"ty":"C","rad":"口"},"川":{"ty":"P","rad":"川"},"千":{"pt":[["丿","top","r"],["十","bottom","r"]],"ty":"C","rad":"十","lk":["午"]},"水":{"ty":"P","rad":"水"},"半":{"pt":[["丶","","r"],["二","",""],["十","","r"]],"ty":"C","rad":"十"},"男":{"pt":[["田","top","r"],["力","bottom",""]],"ty":"C","rad":"田"},"私":{"pt":[["禾","left","r"],["厶","right","p"]],"ty":"C","rad":"禾"},"西":{"ty":"P","rad":"西"},"電":{"pt":[["雨","top","r"],["日","bottom","p"]],"ty":"C","rad":"⻗"},"口":{"ty":"P","rad":"口"},"校":{"pt":[["木","left","r"],["交","right","p"]],"ty":"S","ph":"交","phR":["コウ"],"rad":"木"},"語":{"pt":[["言","left","r"],["吾","right","p"]],"ty":"S","ph":"五","phR":["ゴ"],"rad":"訁"},"空":{"pt":[["穴","top","r"],["工","bottom","p"]],"ty":"S","rad":"穴"},"土":{"ty":"P","rad":"土"},"木":{"ty":"P","rad":"木"},"聞":{"pt":[["門","kamae","r"],["耳","","r"]],"ty":"S","ph":"門","phR":["モン","カン"],"rad":"耳"},"食":{"ty":"C","rad":"食"},"車":{"ty":"P","rad":"車"},"何":{"pt":[["亻","left","r"],["可","right","p"]],"ty":"S","ph":"可","phR":["カ"],"rad":"亻"},"南":{"pt":[["十","top","r"],["冂","bottom",""],["干","bottom",""]],"ty":"C","rad":"十"},"足":{"pt":[["口","top",""],["龰","bottom",""]],"ty":"P","rad":"足"},"楽":{"pt":[["白","top",""],["冫","top",""],["木","bottom","r"]],"ty":"C","rad":"木"},"万":{"ty":"P","rad":"一","lk":["方"]},"毎":{"pt":[["𠂉","top",""],["毋","bottom","r"]],"ty":"C","rad":"毋"},"店":{"pt":[["广","tare","r"],["占","tarec","p"]],"ty":"S","ph":"占","phR":["テン"],"rad":"广"},"白":{"ty":"P","rad":"白"},"天":{"pt":[["一","top","r"],["大","bottom","r"]],"ty":"P","rad":"大"},"買":{"pt":[["罒","top","r"],["貝","bottom","r"]],"ty":"C","rad":"貝"},"母":{"ty":"P","rad":"母"},"火":{"ty":"P","rad":"火"},"花":{"pt":[["艹","top","r"],["化","bottom","p"]],"ty":"S","ph":"化","phR":["カ"],"rad":"艹"},"右":{"pt":[["丆","",""],["口","","r"]],"ty":"P","rad":"口"},"読":{"pt":[["言","left","r"],["売","right","p"]],"ty":"C","rad":"訁"},"休":{"pt":[["亻","left","r"],["木","right",""]],"ty":"C","rad":"亻","lk":["体","本"]},"駅":{"pt":[["馬","left","r"],["尺","right","p"]],"ty":"S","rad":"馬"},"父":{"ty":"C","rad":"父"},"友":{"pt":[["𠂇","kamae",""],["又","kamaec","r"]],"ty":"C","rad":"又"},"左":{"ty":"P","rad":"工"},"旅":{"pt":[["方","left","r"],["𠂉","right",""],["亻","right",""]],"ty":"C","rad":"方"},"雨":{"ty":"P","rad":"雨"},"好":{"pt":[["女","left","r"],["子","right",""]],"ty":"C","rad":"女"},"肉":{"ty":"P","rad":"肉"},"飲":{"pt":[["飠","left","r"],["欠","right",""]],"ty":"C","rad":"飠"},"茶":{"pt":[["艹","top","r"],["人","bottom","p"],["木","bottom","p"]],"ty":"C","rad":"艹"},"耳":{"ty":"P","rad":"耳"},"晴":{"pt":[["日","left","r"],["青","right","p"]],"ty":"S","ph":"青","phR":["セイ","ショウ","ジョウ"],"rad":"日"},"森":{"pt":[["木","top","r"],["林","bottom",""]],"ty":"C","rad":"木"},"明":{"pt":[["日","left","r"],["月","right",""]],"ty":"C","rad":"日"}},"parts":{"日":["sun","ひ"],"一":["one","いち"],"囗":["enclosure","くに"],"玉":["jade","たま"],"人":["man","ひと"],"云":["say",""],"𠆢":["man","ひとやね"],"丿":["slash","の"],"干":["pestle","かん"],"大":["big","だい"],"十":["ten","じゅう"],"二":["two","に"],"木":["tree","き"],"口":["mouth","くち"],"丨":["line","ぼう"],"長":["long","ながい"],"山":["mountain","やま"],"凵":["container","かんにょう"],"寺":["Buddhist temple",""],"亅":["hook","はねぼう"],"自":["self","みずから"],"行":["go","ぎょう"],"礻":["sign","しめすへん"],"土":["earth","つち"],"目":["eye","め"],"儿":["legs","にんにょう"],"見":["see","みる"],"月":["moon","つき"],"八":["eight","はち"],"刀":["knife","かたな"],"彳":["step","ぎょうにんべん"],"幺":["short","いとがしら"],"夂":["go slowly","ちかんむり"],"刂":["knife","りっとう"],"生":["life","うむ"],"門":["gate","もん"],"卜":["divination","ぼく"],"也":["to be (classical)",""],"方":["square","ほう"],"立":["stand","たつ"],"斤":["axe","おの"],"亲":["parent",""],"昜":["open",""],"金":["metal","かね"],"乙":["second","おつ"],"入":["enter","いる"],"手":["hand","て"],"力":["power","ちから"],"⺍":["small","つ"],"冖":["cover","わかんむり"],"子":["child","こ"],"亠":["lid","けいさん"],"高":["tall","たかい"],"冂":["open country","けいがまえ"],"重":["heavy",""],"小":["small","しょう"],"夕":["evening","ゆう"],"言":["speech","いう"],"亻":["man","にんべん"],"本":["book",""],"田":["field","た"],"气":["steam","きがまえ"],"乂":["mow",""],"心":["heart","こころ"],"舌":["tongue","した"],"訁":["speech","ごんべん"],"吏":["officer",""],"史":["history",""],"女":["woman","おんな"],"匕":["spoon","さじ"],"首":["head","くび"],"辶":["walk","しんにょう"],"白":["white","しろ"],"聿":["brush","ふで"],"曰":["say","ひらび"],"川":["river","かわ"],"水":["water","みず"],"丶":["dot","てん"],"禾":["grain","のぎ"],"厶":["private","む"],"西":["west","にし"],"雨":["rain","あめ"],"⻗":["rain","あめかんむり"],"交":["mingle",""],"吾":["I",""],"五":["five",""],"穴":["cave","あな"],"工":["work","こう"],"耳":["ear","みみ"],"食":["eat","しょく"],"車":["cart","くるま"],"可":["can",""],"足":["foot","あし"],"冫":["ice","にすい"],"毋":["mother","なし"],"广":["house on cliff","まだれ"],"占":["fortune-telling",""],"罒":["net","あみがしら"],"貝":["shell","かい"],"母":["mother","はは"],"火":["fire","ひ"],"艹":["grass","くさかんむり"],"化":["change",""],"売":["sell",""],"馬":["horse","うま"],"尺":["shaku",""],"父":["father","ちち"],"又":["right hand","また"],"肉":["meat","にく"],"飠":["eat","しょくへん"],"欠":["lack","あくび"],"青":["blue","あお"],"林":["grove",""]}};
+let PARTS = STARTER_KSTRUCT.parts;
 function normK(x, lvl) {
   const clean = x.m.filter(m => !/radical\s*\(no\.?\s*\d+\)/i.test(m)), mean = clean.length ? clean : x.m;
-  return { id: 'k:' + x.k, kind: 'kanji', k: x.k, mean, m: mean.slice(0, 3).join('; '), on: x.on || [], kun: x.kun || [], s: x.s, r: x.r, freq: x.q || 1, lvl, ex: x.ex || [], gr: x.gr, pic: x.pic || null };
+  return { id: 'k:' + x.k, kind: 'kanji', k: x.k, mean, m: mean.slice(0, 3).join('; '), on: x.on || [], kun: x.kun || [], s: x.s, r: x.r, freq: x.q || 1, lvl, ex: x.ex || [], gr: x.gr, pic: x.pic || null,
+    ...(() => { const st = x.pt || x.ty ? x : STARTER_KSTRUCT.k[x.k] || {}; return { pt: st.pt || null, ty: st.ty || '', ph: st.ph || '', phR: st.phR || [], rad: st.rad || '', lk: st.lk || [] }; })() };
 }
 function starterData() {
   const posMap = { expression: 'expression', noun: 'noun', pronoun: 'pronoun', verb: 'verb', 'i-adj': 'i-adj', 'na-adj': 'na-adj', adverb: 'adverb', question: 'pronoun', custom: 'other' };
@@ -1145,7 +1178,8 @@ async function boot() {
     const r = await fetch('data/meta.json', { cache: 'no-cache' });
     if (!r.ok) throw new Error(r.status);
     DATA.meta = await r.json(); DATA.mode = 'full'; PIC3D = new Set(DATA.meta.pics3d || []);
-    await Promise.all(LV.map(l => load('kanji', l).catch(() => [])));
+    await Promise.all([...LV.map(l => load('kanji', l).catch(() => [])),
+      fetch('data/parts.json').then(r => r.ok ? r.json() : null).then(j => { if (j) PARTS = Object.assign({}, STARTER_KSTRUCT.parts, j); }).catch(() => {})]);
   } catch (e) {
     DATA.mode = 'starter';
     const st = starterData();
@@ -1535,6 +1569,7 @@ function vSettings() {
     { name: 'KanjiVG', by: 'Ulrich Apel and contributors', license: 'CC BY-SA 3.0', url: 'https://kanjivg.tagaini.net/' },
     { name: 'Tatoeba', by: 'Tatoeba contributors', license: 'CC BY 2.0 FR', url: 'https://tatoeba.org/' },
     { name: 'Pictures', by: 'OpenMoji – the open-source emoji and icon project (your device\'s emoji are shown until the full data is built)', license: 'CC BY-SA 4.0', url: 'https://openmoji.org/' },
+    { name: 'Kanji origins and parts', by: 'Kanjium (mifunetoshiro), built on EDRDG data; parts from KanjiVG', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' },
     { name: '3D pictures', by: 'Fluent Emoji (Microsoft)', license: 'MIT', url: 'https://github.com/microsoft/fluentui-emoji' },
     { name: 'Icons', by: 'Tabler Icons (Paweł Kuna)', license: 'MIT', url: 'https://tabler.io/icons' },
     { name: 'Icons', by: 'game-icons.net (Lorc, Delapouite and contributors; the artist is named under each picture)', license: 'CC BY 3.0', url: 'https://game-icons.net/' },
@@ -1672,6 +1707,50 @@ function vDetail(x) {
     <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong · next review ${p.d > Date.now() ? 'in ' + fmtIv(p.d - Date.now()) : 'due now'}` : 'Not studied yet'}</div>
   </div>`;
 }
+/* ---------- how a kanji is built, and ways to remember it ---------- */
+const POS_WORD = { left: 'left', right: 'right', top: 'top', bottom: 'bottom', kamae: 'around', kamaec: 'around', tare: 'top-left', tarec: 'top-left', nyo: 'bottom-left', nyoc: 'bottom-left' };
+const partMean = el => (KMAP[el] && KMAP[el].mean[0]) || (PARTS[el] && PARTS[el][0]) || '';
+const partName = el => (PARTS[el] && PARTS[el][1]) || '';
+const kataOf = r => String(r).replace(/[ぁ-ゖ]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60));
+let knotes = store.get('knotes', {});
+function kBuild(k) {
+  const pt = k.pt || [], S = k.ty === 'S';
+  const radP = pt.find(p => p[0] === k.rad) || pt.find(p => p[2] === 'r'), isRad = p => p === radP, isSnd = p => S && (p[2] === 'p' || p[0] === k.ph);
+  const m0 = k.mean[0] || '';
+  const chip = p => { const m = partMean(p[0]), n = (isRad(p) && partName(k.rad)) || partName(p[0]), role = isSnd(p) ? 'sound' : S && isRad(p) ? 'meaning' : '';
+    return `<${KMAP[p[0]] ? `button data-open="k:${esc(p[0])}"` : 'div'} class="kb-part${role ? ' ' + role : ''}"><b class="jp">${esc(p[0])}</b><span class="kb-pm">${esc(m || '—')}</span>${n ? `<span class="kb-pn jp">${esc(n)}</span>` : ''}${role ? `<span class="kb-role">${role === 'sound' ? `sound ${esc((k.phR || []).slice(0, 2).join('・'))}` : 'meaning'}</span>` : ''}</${KMAP[p[0]] ? 'button' : 'div'}>`; };
+  const eq = pt.length && k.ty !== 'P' && k.ty !== 'I' ? `<div class="kb-eq">${pt.map(chip).join('<i class="kb-op">+</i>')}<i class="kb-op">=</i><div class="kb-part whole"><b class="jp">${esc(k.k)}</b><span class="kb-pm">${esc(m0)}</span></div></div>` : '';
+  const named = p => `${p[0]}${partMean(p[0]) ? ` (${partMean(p[0])})` : ''}`;
+  let title = '', text = '';
+  if (k.ty === 'P') { title = 'Picture'; text = `It began as a drawing of “${(PARTS[k.k] && PARTS[k.k][0]) || m0}”, simplified over centuries into the strokes you see now.${k.pic && settings.pics ? ' The picture above shows the idea.' : ''}`; }
+  else if (k.ty === 'I') { title = 'Symbol'; text = `A simple sign that points to an idea (“${m0}”) rather than a drawing of a thing.`; }
+  else if (k.ty === 'C') { title = 'Meanings combined'; text = pt.length ? `${pt.map(named).join(' + ')} together give the idea of “${m0}”.` : `Its parts combine to give the idea of “${m0}”.`; }
+  else if (S) {
+    title = 'Meaning + sound';
+    const mp = pt.find(isRad) || (k.rad ? [k.rad] : null), sp = pt.find(isSnd) || (k.ph ? [k.ph] : null), sounds = k.phR || [];
+    const hit = k.on.map(kataOf).find(o => sounds.includes(o));
+    text = `${mp ? `${named(mp)} shows what it's about` : 'One part shows what it is about'}${sp ? `, and ${sp[0]} gives the sound${sounds.length ? ` (${sounds.join('・')})` : ''}` : ''}.${hit ? ` That's why ${k.k} is read ${hit}.` : k.on[0] ? ` The sound has shifted over time: today ${k.k} is read ${kataOf(k.on[0])}.` : ''}`;
+  }
+  const rg = k.rad || (radP && radP[0]), rpos = radP && radP[1], rn = partName(rg) || (radP && partName(radP[0])), rm = partMean(rg) || (radP && partMean(radP[0]));
+  const radLine = rg && (rm || rn) ? `<div class="kb-rad">Radical <b class="jp">${esc(rg)}</b>${rn ? ` <span class="jp">${esc(rn)}</span>` : ''}${rm ? `, “${esc(rm)}”` : ''}${POS_WORD[rpos] ? `, on the ${POS_WORD[rpos]}` : ''}.${rg !== k.k && rm && !/^(one|two|line|dot|slash|hook|second|lid|legs|eight|ten|cover|enclosure|open country|box|hiding enclosure)$/i.test(rm) ? ` Kanji with this radical often have something to do with “${esc(rm)}”.` : ''}</div>` : '';
+  if (!eq && !title && !radLine) return '';
+  return `<div class="mini">How it's built</div><div class="kbuild">${title ? `<div class="kb-type">${title}</div>` : ''}${eq}${text ? `<p class="kb-say">${esc(text)}</p>` : ''}${radLine}</div>`;
+}
+function kRemember(k) {
+  const fam = k.ty === 'S' && k.ph ? K.filter(x => x !== k && x.ph === k.ph).sort((a, b) => (a.r || 9999) - (b.r || 9999)).slice(0, 8) : [];
+  const look = (k.lk || []).map(c => KMAP[c]).filter(Boolean);
+  const inside = K.filter(x => x !== k && (x.pt || []).some(p => p[0] === k.k)).sort((a, b) => (a.r || 9999) - (b.r || 9999)).slice(0, 10);
+  const kchip = (x, sub) => `<button class="kb-k" data-open="k:${esc(x.k)}"><b class="jp">${x.k}</b><span>${esc(sub)}</span></button>`;
+  const pt = k.pt || [], hint = pt.length ? pt.map(p => partMean(p[0]) || p[0]).join(' + ') + ' → ' + (k.mean[0] || '') : (k.mean[0] || '');
+  return `<div class="mini">Remember it</div><div class="kremember">
+    ${fam.length ? `<div class="kr-row"><div class="kr-h">Same sound part <span class="jp">${esc(k.ph)}</span>, similar reading</div><div class="kb-ks">${fam.map(x => kchip(x, x.on[0] ? kataOf(x.on[0]) : (x.mean[0] || ''))).join('')}</div></div>` : ''}
+    ${look.length ? `<div class="kr-row"><div class="kr-h">Looks similar, don't mix up</div><div class="kb-ks">${look.map(x => kchip(x, x.mean[0] || '')).join('')}</div></div>` : ''}
+    ${inside.length ? `<div class="kr-row"><div class="kr-h">You'll find ${k.k} inside</div><div class="kb-ks">${inside.map(x => kchip(x, x.mean[0] || '')).join('')}</div></div>` : ''}
+    <label class="kr-row kr-note"><div class="kr-h">Your memory story</div>
+      <textarea rows="2" data-knote="${esc(k.k)}" placeholder="Make up a little story or picture, e.g. ${esc(hint)}" oninput="App.knote(this)">${esc(knotes[k.k] || '')}</textarea>
+      <span class="kr-saved" aria-live="polite"></span></label>
+  </div>`;
+}
 function kDetail(k) {
   const p = progress[k.id];
   const words = k.ex.length ? k.ex : V.filter(x => x.w.includes(k.k)).slice(0, 5).map(x => ({ w: x.w, r: x.r, m: x.m, l: x.lvl }));
@@ -1684,6 +1763,8 @@ function kDetail(k) {
       <div class="read"><b>On'yomi</b><span class="jp">${k.on.length ? esc(k.on.join('、')) : '—'}</span><span class="muted" style="font-size:13px">${esc(k.on.map(toRomaji).join(', '))}</span></div>
       <div class="read"><b>Kun'yomi</b><span class="jp">${kunHtml(k.kun)}</span><span class="muted" style="font-size:13px">${esc(k.kun.map(toRomaji).join(', '))}</span></div>
     </div>
+    ${kBuild(k)}
+    ${kRemember(k)}
     ${(() => { const sim = similarKanji(k); return sim.length ? `<div class="mini">Different kanji with similar meaning</div><div class="simlist">${sim.map(({ x }) => `<button class="simrow" data-open="k:${esc(x.k)}"><span class="sk jp">${x.k}</span><span class="sm"><b>${esc(x.mean.slice(0, 3).join('; '))}</b><span>${esc(kRead(x))}${x.ex[0] ? ` · e.g. <span class="jp">${esc(x.ex[0].w)}</span> ${esc(x.ex[0].m)}` : ''}</span></span><span class="lvl">${x.lvl}</span></button>`).join('')}</div>
       <p class="note" style="margin-top:6px">Compare the example words to see how each one is used.</p>` : ''; })()}
     ${words.length ? `<div class="mini">Words using ${k.k}</div><div class="exlist">${words.map(e => { const v = VMAP['v:' + e.w + '|' + e.r];
@@ -3094,8 +3175,9 @@ const App = {
     toast(added ? `Added ${added} word${added === 1 ? '' : 's'}` : 'Nothing added — check the format'); render();
   },
   clearWords() { if (!confirm('Remove all your custom words?')) return; custom = []; store.set('custom', custom); settings.levels = settings.levels.filter(l => l !== 'MY'); if (!settings.levels.length) settings.levels = ['N5']; saveSettings(); rebuild(); render(); },
+  knote(el) { const k = el.dataset.knote, v = el.value.trim(); if (v) knotes[k] = el.value; else delete knotes[k]; store.set('knotes', knotes); const s2 = el.parentElement.querySelector('.kr-saved'); if (s2) { s2.textContent = 'Saved on this device'; clearTimeout(el._t); el._t = setTimeout(() => { s2.textContent = ''; }, 1500); } },
   exportProgress() {
-    const blob = new Blob([JSON.stringify({ app: 'kotoba-dojo', v: 2, exported: new Date().toISOString(), progress, log: actLog, custom, settings }, null, 1)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify({ app: 'kotoba-dojo', v: 2, exported: new Date().toISOString(), progress, log: actLog, custom, settings, knotes }, null, 1)], { type: 'application/json' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `kotoba-dojo-progress-${today()}.json`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
   },
   importProgress(file) {
@@ -3108,6 +3190,7 @@ const App = {
         for (const [id, p] of Object.entries(d.progress)) if (!progress[id] || (p.t || 0) > (progress[id].t || 0)) progress[id] = p;
         for (const [k, e] of Object.entries(d.log || {})) { const c = actLog[k] || {}; actLog[k] = { r: Math.max(c.r || 0, e.r || 0), nv: Math.max(c.nv || 0, e.nv || 0), nk: Math.max(c.nk || 0, e.nk || 0) }; }
         if (Array.isArray(d.custom)) for (const c of d.custom) if (!custom.some(x => x[0] === c[0] && x[1] === c[1])) custom.push(c);
+        if (d.knotes && typeof d.knotes === 'object') { for (const [k, v] of Object.entries(d.knotes)) if (!knotes[k] && typeof v === 'string') knotes[k] = v; store.set('knotes', knotes); }
         save(); store.set('log', actLog); store.set('custom', custom); rebuild(); toast('Progress imported'); render();
       } catch (e) { toast('That file is not a Kotoba Dojo export'); }
     };

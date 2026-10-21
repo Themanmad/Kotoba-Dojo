@@ -375,6 +375,69 @@ function getFluent3D() {
   return byHex;
 }
 
+/* ---------------------------------------------------------------- kanji structure
+   KanjiVG (CC BY-SA 3.0): the top-level parts of each kanji, where they sit, and which part is the
+   radical / the sound part.  Kanjium (CC BY-SA 4.0): how the kanji was formed (pictograph, combined
+   meanings, meaning + sound), its sound component and the readings it gives, look-alike kanji, and
+   names and meanings for radicals and parts. */
+const KANJIUM_REPO = 'https://github.com/mifunetoshiro/kanjium';
+/** top-level parts of a KanjiVG drawing: [[part, position, role]] (role: 'r' radical, 'p' sound part) */
+function kvgParts(svg, c) {
+  const hex = c.codePointAt(0).toString(16).padStart(5, '0'), rootId = `kvg:${hex}`;
+  const toks = [...svg.matchAll(/<g\b[^>]*>|<\/g>/g)].map(m => m[0]);
+  let depth = 0, rootDepth = -1; const top = [];   // [tag, depth]
+  for (const t of toks) {
+    if (t === '</g>') { depth--; if (depth < rootDepth) break; continue; }
+    depth++;
+    if (rootDepth < 0) { if (new RegExp(`\\bid="${rootId}"`).test(t)) rootDepth = depth; continue; }
+    if (depth === rootDepth + 1 || depth === rootDepth + 2) top.push([t, depth]);
+  }
+  const attr = (t, a) => { const m = new RegExp(`kvg:${a}="([^"]*)"`).exec(t); return m ? m[1] : null; };
+  const out = [];
+  for (let i = 0; i < top.length; i++) {
+    const [t, d] = top[i]; if (d !== rootDepth + 1) continue;
+    const el = attr(t, 'element'), pos = attr(t, 'position'), role = attr(t, 'radical') ? 'r' : attr(t, 'phon') ? 'p' : '';
+    if (el) { if (attr(t, 'part') && attr(t, 'part') !== '1') continue; out.push([el, pos || '', role]); continue; }
+    // a group with no name of its own (学's top): use its named children
+    for (let j = i + 1; j < top.length && top[j][1] > d; j++) { const e2 = attr(top[j][0], 'element'); if (e2 && top[j][1] === d + 1 && !(attr(top[j][0], 'part') && attr(top[j][0], 'part') !== '1')) out.push([e2, pos || attr(top[j][0], 'position') || '', role]); }
+  }
+  return out.length > 1 ? out : null;   // a kanji that is one part (日, 木) has no breakdown
+}
+function getKanjium() {
+  if (flag('no-structure')) return null;
+  const ok = d => fs.existsSync(path.join(d, 'data', 'source_files', 'kanjidict.txt')) ? path.join(d, 'data', 'source_files') : null;
+  if (FROM) return ok(path.join(FROM, 'kanjium'));
+  const d = path.join(CACHE, 'kanjium');
+  try {
+    if (!ok(d)) {
+      fs.rmSync(d, { recursive: true, force: true });
+      log('  cloning Kanjium (text data only)');
+      execFileSync('git', ['clone', '--depth', '1', '--filter=blob:none', '--sparse', KANJIUM_REPO, d], { stdio: 'inherit' });
+      execFileSync('git', ['-C', d, 'sparse-checkout', 'set', 'data/source_files'], { stdio: 'inherit' });
+    } else log('  cached Kanjium');
+    return ok(d);
+  } catch (e) { warn('Kanjium: ' + e.message); return null; }
+}
+const TYPE_CODE = { 'Pictograph': 'P', 'Ideograph': 'I', 'Compound ideograph': 'C', 'Phono-semantic compound': 'S' };
+/** Kanjium tables → { info: kanji → {ty, ph, lk, rad}, partMeaning(el) } */
+function readKanjium(dir) {
+  const rows = f => fs.readFileSync(path.join(dir, f), 'utf8').split(/\r?\n/).filter(Boolean).map(l => l.split('\t'));
+  const kd = new Map(rows('kanjidict.txt').map(r => [r[0], r]));
+  const look = new Map(rows('lookalikes.txt').map(r => [r[0], (r[1] || '').split(/[,、]/).map(x => x.trim()).filter(Boolean)]));
+  const phon = new Map(rows('phonetics.txt').map(r => [r[0], (r[1] || '').split('、').filter(Boolean)]));
+  const radName = new Map();
+  for (const f of ['radicals_variants.txt', 'radicals.txt']) for (const r of rows(f)) {   // variants first: 亻 is にんべん, not ひと
+    const [a, b, , , names, meaning] = f === 'radicals.txt' ? r : [r[0], r[1], r[2], r[3], r[4], r[5]];
+    const name = String(names || '').split('・')[0], m = String(meaning || '').split(',')[0].trim();
+    for (const ch of [a, ...(f === 'radicals.txt' ? String(b || '').split(/[,、 ]/) : [])]) if (ch && !radName.has(ch)) radName.set(ch, { n: name, m });
+  }
+  const meaningOf = c => { const r = kd.get(c); return r ? String(r[17] || r[16] || '').split(';')[0].replace(/\s*\((kokuji|extended shinjitai|ghost character)\)/g, '').trim() : ''; };
+  return {
+    info: c => { const r = kd.get(c); if (!r) return null; return { ty: TYPE_CODE[r[5]] || '', rad: r[2] || r[1] || '', ph: r[3] || '', phR: (phon.get(r[3]) || []).slice(0, 4), lk: look.get(c) || [] }; },
+    part: el => { const rn = radName.get(el), m = meaningOf(el); return { m: (rn && rn.m) || m, n: rn ? rn.n : '' }; }
+  };
+}
+
 /* ---------------------------------------------------------------- file helpers */
 function extractDir(file) {
   const dir = path.join(CACHE, 'x-' + path.basename(file).replace(/[^\w.-]/g, '_'));
@@ -837,6 +900,7 @@ async function main() {
   /* ---- 8. KanjiVG stroke order */
   log('KanjiVG');
   const strokes = Object.fromEntries([...LEVELS, 'KANA'].map(l => [l, {}]));
+  const kvgPartsOf = new Map();
   const kv = await getSource('kanjivg', SOURCES.kanjivg, { required: false });
   if (kv) {
     const files = new Map(walk(extractDir(kv.file)).filter(p => /\.svg$/i.test(p)).map(p => [path.basename(p).toLowerCase(), p]));
@@ -860,11 +924,35 @@ async function main() {
         .sort((a, b) => +a[3] - +b[3]).map(m => [+(+m[1]).toFixed(1), +(+m[2]).toFixed(1)]);
       if (!paths.length) continue;
       strokes[l][c] = { d: paths.map(p => p[1]), n: nums.length === paths.length ? nums : [] };
+      if (l !== 'KANA') { const pt = kvgParts(svg, c); if (pt) kvgPartsOf.set(c, pt); }
       n++;
     }
     meta.sources.kanjivg = kv.label;
     log(`  stroke data for ${n - Object.keys(strokes.KANA).length} kanji and ${Object.keys(strokes.KANA).length} kana`);
   } else meta.notes.push('KanjiVG unavailable: no stroke-order diagrams in this build.');
+
+  /* ---- 8a. How each kanji is built (KanjiVG parts + Kanjium) */
+  const partsDict = {};
+  if (!flag('no-structure')) {
+    log('Kanji structure (KanjiVG parts, Kanjium)');
+    const kmDir = getKanjium(), km = kmDir ? readKanjium(kmDir) : null;
+    const jlptSet = new Set(kanjiSet.keys()); let n = 0;
+    for (const l of LEVELS) for (const k of kanji[l]) {
+      const pt = kvgPartsOf.get(k.k), inf = km && km.info(k.k);
+      if (pt) k.pt = pt;
+      if (inf) {
+        if (inf.ty) k.ty = inf.ty;
+        if (inf.ph && inf.ph !== k.k) { k.ph = inf.ph; if (inf.phR.length) k.phR = inf.phR; }
+        if (inf.rad) k.rad = inf.rad;
+        const lk = inf.lk.filter(x => jlptSet.has(x) && x !== k.k).slice(0, 6); if (lk.length) k.lk = lk;
+      }
+      if (km) for (const el of [...(pt || []).map(p => p[0]), k.rad, k.ph].filter(Boolean)) if (!partsDict[el]) { const pm = km.part(el); if (pm.m || pm.n) partsDict[el] = [pm.m, pm.n]; }
+      if (k.pt || k.ty) n++;
+    }
+    if (km) meta.sources.structure = 'KanjiVG component groups + Kanjium (kanjidict, phonetics, lookalikes, radicals)';
+    else meta.notes.push('Kanjium unavailable: kanji origins come from KanjiVG parts only.');
+    log(`  structure for ${n} kanji, ${Object.keys(partsDict).length} parts named`);
+  }
 
   /* ---- 8b. Grammar (hanabira.org, MIT) */
   log('Grammar (hanabira.org)');
@@ -1038,6 +1126,7 @@ async function main() {
     { name: 'JMdict & KANJIDIC2', by: 'Electronic Dictionary Research and Development Group', license: 'CC BY-SA 4.0', url: 'https://www.edrdg.org/edrdg/licence.html' },
     { name: 'jmdict-simplified', by: 'scriptin', license: 'CC BY-SA 4.0 (data)', url: 'https://github.com/scriptin/jmdict-simplified' },
     { name: 'KanjiVG', by: 'Ulrich Apel and contributors', license: 'CC BY-SA 3.0', url: 'https://kanjivg.tagaini.net/' },
+    { name: 'Kanji origins and parts', by: 'Kanjium (mifunetoshiro), built on EDRDG data', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' },
     { name: 'Tatoeba', by: 'Tatoeba contributors', license: 'CC BY 2.0 FR', url: 'https://tatoeba.org/' },
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },
     { name: 'Kanji JLPT levels', by: 'David Luz Gouveia (kanji-data)', license: 'MIT', url: 'https://github.com/davidluzgouveia/kanji-data' },
@@ -1050,10 +1139,11 @@ async function main() {
     { name: 'Icons', by: 'game-icons.net (Lorc, Delapouite and contributors; each icon credits its artist)', license: 'CC BY 3.0', url: 'https://game-icons.net/' },
     { name: 'Sentence audio', by: 'Tatoeba contributors (credited on each sentence)', license: 'per recording', url: 'https://tatoeba.org/en/downloads' }
   ];
+  if (Object.keys(partsDict).length) total += write('parts.json', partsDict);
   total += write('meta.json', meta);
   log(`Done: ${Object.values(meta.counts.vocab).reduce((a, b) => a + b, 0)} words, ${kanjiSet.size} kanji, ${(total / 1e6).toFixed(1)} MB in ${OUT}`);
   if (meta.notes.length) meta.notes.forEach(n => warn(n));
 }
 
-export { buildPicIndex, pictureFor, buildExtIndex, extPictureFor, iconSvg, hanOf };
+export { kvgParts, readKanjium, buildPicIndex, pictureFor, buildExtIndex, extPictureFor, iconSvg, hanOf };
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch(e => { console.error('\nBuild failed:', e.message); process.exit(1); });
