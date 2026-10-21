@@ -299,10 +299,33 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 .ppic{display:flex;justify-content:center;margin-bottom:6px}
 .pic.icon{padding:.12em;box-sizing:border-box;background:linear-gradient(150deg,#F2F5FD,#D3DCF4);border-radius:24%;box-shadow:inset 0 -.04em 0 rgba(34,64,143,.18),0 .03em .08em rgba(20,30,60,.18)}
 img.pic.p3d{filter:drop-shadow(0 .03em .05em rgba(0,0,0,.18))}
-.kc{cursor:pointer;border-radius:4px;text-decoration:underline dotted color-mix(in srgb,var(--accent) 45%,transparent);text-underline-offset:.22em;text-decoration-thickness:1.5px;transition:background-color .12s,color .12s}
-.kc:hover,.kc:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
-.kc:active{background:var(--accent);color:#fff}
+.kcx{cursor:pointer;border-radius:4px;text-decoration:underline dotted color-mix(in srgb,var(--accent) 45%,transparent);text-underline-offset:.22em;text-decoration-thickness:1.5px;transition:background-color .12s,color .12s}
+.kcx:hover,.kcx:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
+.kcx:active{background:var(--accent);color:#fff}
 .kc-hint{font-size:12.5px;color:var(--muted);margin:2px 0 6px}
+.kcx.kc-sel{background:var(--accent-soft);color:var(--accent);text-decoration:none}
+::highlight(kp-word){background-color:var(--accent-soft);color:var(--accent)}
+.has-hl .kcx.kc-sel{background:none}
+.kpop{position:fixed;z-index:60;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 32px rgba(10,20,40,.22);padding:10px;animation:kpop .14s ease-out}
+@keyframes kpop{from{opacity:0;transform:translateY(-4px)}}
+.kpop.above{animation-name:kpopup}
+@keyframes kpopup{from{opacity:0;transform:translateY(4px)}}
+.kp-load{padding:8px 6px;color:var(--muted);font-size:14px}
+.kp-word{display:grid;grid-template-columns:1fr auto;grid-template-areas:"w go" "m go";align-items:center;gap:2px 10px;width:100%;text-align:left;background:var(--accent-soft);border:0;border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--ink);font:inherit}
+.kp-word.static{background:var(--chip);cursor:default}
+.kp-word:hover{filter:brightness(.97)}
+.kp-w{grid-area:w;font-size:24px;font-weight:700;line-height:1.5}
+.kp-m{grid-area:m;font-size:14px;color:var(--muted);line-height:1.35}
+.kp-go{grid-area:go;font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap}
+.kp-note{font-size:12.5px;color:var(--muted);margin:6px 4px 0}
+.kp-label{font-size:12px;font-weight:700;color:var(--muted);margin:10px 4px 6px}
+.kp-kanji{display:flex;flex-wrap:wrap;gap:6px}
+.kp-kanji button{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--line);border-radius:10px;padding:5px 10px 5px 6px;cursor:pointer;color:var(--ink);font:inherit;font-size:13px;max-width:100%}
+.kp-kanji button b{font-size:22px;font-weight:600;line-height:1.2;min-width:26px;text-align:center}
+.kp-kanji button span{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px}
+.kp-kanji button.on{border-color:var(--accent)}
+.kp-kanji button:hover,.kpop button:focus-visible{background:var(--chip);outline:2px solid var(--accent);outline-offset:1px}
+@media (prefers-reduced-motion:reduce){.kpop{animation:none}}
 .pic-credit{font-size:11px;color:var(--muted);text-align:center;margin-top:2px}
 .kpic .pic-credit{display:block;text-align:left}
 /* dark mode: pictures sit on a light tile so their black outlines and ink-coloured icons stay visible */
@@ -1644,7 +1667,7 @@ function vDetail(x) {
     <div class="tags"><span class="tag">${esc(POS_LABEL[x.pos] || x.pos)}</span>${x.common ? '<span class="tag cm">common word</span>' : ''}${uk ? '<span class="tag">usually kana</span>' : ''}${freqBadge(x.freq)}</div>
     ${x.senses.length > 1 ? `<ol class="senses">${x.senses.map((s, i) => `<li>${s.p && s.p.length && (i === 0 || s.p.join() !== x.senses[i - 1].p.join()) ? `<span class="pos">${esc(posLabel(s.p))}</span>` : ''}${esc(s.g.join('; '))}${s.i ? ` <span class="muted">(${esc(s.i)})</span>` : ''}</li>`).join('')}</ol>`
       : `<div class="dmean">${esc(x.senses[0].g.join('; '))}</div>${x.senses[0].p && x.senses[0].p.length && DATA.meta ? `<div class="muted" style="font-size:13px">${esc(posLabel(x.senses[0].p))}</div>` : ''}`}
-    ${x.ex.length ? `<div class="kc-hint">Tap any underlined kanji to look it up.</div>` : ''}${x.ex.map(exHtml).join('')}
+    ${x.ex.length ? `<div class="kc-hint">Tap an underlined kanji to look up its word or the kanji.</div>` : ''}${x.ex.map(exHtml).join('')}
     ${ks.length ? `<div class="mini">Kanji in this word</div><div class="kchips">${ks.map(c => `<button class="kchip" data-open="k:${esc(c)}"><b>${c}</b>${esc(KMAP[c].mean[0] || '')}<span class="muted">${KMAP[c].lvl}</span></button>`).join('')}</div>` : ''}
     <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong · next review ${p.d > Date.now() ? 'in ' + fmtIv(p.d - Date.now()) : 'due now'}` : 'Not studied yet'}</div>
   </div>`;
@@ -1743,20 +1766,104 @@ const KANJI_ZONES = '.ex .jp, .qj, .sign-word';
 function linkKanji(root) {
   root.querySelectorAll(KANJI_ZONES).forEach(zone => {
     if (zone.dataset.kl) return; zone.dataset.kl = 1;
-    const walker = document.createTreeWalker(zone, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement.closest('rt, rp, button, a, .kc') ? NodeFilter.FILTER_REJECT : /\p{Script=Han}/u.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP });
+    const walker = document.createTreeWalker(zone, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement.closest('rt, rp, button, a, .kcx') ? NodeFilter.FILTER_REJECT : /\p{Script=Han}/u.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP });
     const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
     for (const n of nodes) {
       const parts = n.nodeValue.split(/(\p{Script=Han})/u); if (!parts.some(t => KMAP[t])) continue;
       const frag = document.createDocumentFragment();
       for (const t of parts) {
         if (!t) continue;
-        if (KMAP[t]) { const sp = document.createElement('span'); sp.className = 'kc'; sp.dataset.open = 'k:' + t; sp.tabIndex = 0; sp.setAttribute('role', 'button'); sp.setAttribute('aria-label', `${t}: ${(KMAP[t].mean || []).slice(0, 2).join(', ')}`); sp.title = (KMAP[t].mean || []).slice(0, 3).join('; '); sp.textContent = t; frag.appendChild(sp); }
+        if (KMAP[t]) { const sp = document.createElement('span'); sp.className = 'kcx'; sp.dataset.open = 'k:' + t; sp.tabIndex = 0; sp.setAttribute('role', 'button'); sp.setAttribute('aria-label', `${t}: ${(KMAP[t].mean || []).slice(0, 2).join(', ')}`); sp.title = (KMAP[t].mean || []).slice(0, 3).join('; '); sp.textContent = t; frag.appendChild(sp); }
         else frag.appendChild(document.createTextNode(t));
       }
       n.replaceWith(frag);
     }
   });
 }
+/* ---------- tapping a kanji in a sentence: show the word it belongs to first ----------
+   電車に乗る: tapping 電 or 車 offers 電車 (the word), then 電 and 車 to look at one by one.
+   Words are found in the dictionary by longest match around the tapped kanji, including
+   conjugated forms (食べた → 食べる) by matching the word's kanji stem and as much of its kana ending as fits. */
+const isHan = c => /\p{Script=Han}|々/u.test(c), isHira = c => /[ぁ-ゟ]/.test(c);
+let WIDX = null, WIDXn = -1;
+function wordIndex() {
+  const all = V.concat(Object.values(SITX || {}));
+  if (WIDX && WIDXn === all.length) return WIDX;
+  const ex = new Map(), stem = new Map(), add = (m, k, x) => { if (!m.has(k)) m.set(k, []); m.get(k).push(x); };
+  for (const x of all) for (const w of [x.w, x.alt]) {
+    if (!w) continue; add(ex, w, x);
+    const m = /^(.*[\p{Script=Han}々])([ぁ-ゟ]+)$/u.exec(w); if (m) add(stem, m[1], { x, tail: m[2] });
+  }
+  // words listed under each kanji (names and words outside the JLPT lists): shown, but have no full entry
+  for (const k of K) for (const e of k.ex || []) if (e.w && !ex.has(e.w)) add(ex, e.w, { pseudo: true, w: e.w, r: e.r, m: e.m, lvl: e.l });
+  WIDXn = all.length; return WIDX = { ex, stem };
+}
+function zoneText(zone) {
+  let text = ''; const pos = new Map(), spans = [], nodes = [];
+  const walker = document.createTreeWalker(zone, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement.closest('rt, rp') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+  while (walker.nextNode()) { const n = walker.currentNode, kc = n.parentElement.closest('.kcx'); if (kc) { pos.set(kc, text.length); spans[text.length] = kc; } nodes.push([n, text.length]); text += n.nodeValue; }
+  return { text, pos, spans, nodes };
+}
+/* how a verb / i-adjective ending can change: 飲む → 飲み・飲ま・飲ん…, 高い → 高く・高かった… (る verbs just drop る) */
+const CONJ_ROW = { う: 'わいうえおっ', く: 'かきくけこいっ', ぐ: 'がぎぐげごい', す: 'さしすせそ', つ: 'たちつてとっ', ぬ: 'なにぬねのん', ぶ: 'ばびぶべぼん', む: 'まみむめもん', る: 'らりるれろっ', い: 'くかけさそ' };
+function findWord(text, t) {
+  const { ex, stem } = wordIndex(); let best = null;
+  const consider = (x, s, e, score) => { if (!best || score > best.score || (score === best.score && (x.freq || 0) > (best.x.freq || 0))) best = { x, s, e, score }; };
+  for (let s = Math.max(0, t - 6); s <= t; s++) for (let e = t + 1; e <= Math.min(text.length, s + 10); e++) {
+    const sub = text.slice(s, e);
+    for (const x of ex.get(sub) || []) consider(x, s, e, sub.length * 10 + (x.pseudo ? 0 : 3));
+    if (isHan(text[e - 1]) && isHira(text[e] || '')) for (const { x, tail } of stem.get(sub) || []) {
+      let m = 0; while (m < tail.length && text[e + m] === tail[m]) m++;
+      const rest = tail.slice(m), next = text[e + m] || '';
+      const ok = !rest || rest === 'る' || (rest.length === 1 && (CONJ_ROW[rest] || '').includes(next));
+      if (ok) consider(x, s, e + m + (rest && rest !== 'る' ? 1 : 0), (sub.length + m + 1) * 10 + 1);   // 食べた → 食べる, 飲みます → 飲む
+    }
+  }
+  return best;
+}
+function closeWordPop() {
+  const p = document.querySelector('.kpop'); if (p) p.remove();
+  document.querySelectorAll('.kc-sel').forEach(el => el.classList.remove('kc-sel'));
+  try { if (window.CSS && CSS.highlights) CSS.highlights.delete('kp-word'); } catch (e) {}
+}
+function placePop(pop, el) {
+  const r = el.getBoundingClientRect(), vw = window.innerWidth, vh = window.innerHeight, w = Math.min(320, vw - 24);
+  pop.style.width = w + 'px';
+  const left = Math.max(12, Math.min(vw - w - 12, r.left + r.width / 2 - w / 2));
+  pop.style.left = left + 'px';
+  const h = pop.offsetHeight, below = r.bottom + 8 + h < vh - 8;
+  pop.style.top = (below ? r.bottom + 8 : Math.max(8, r.top - h - 8)) + 'px';
+  pop.classList.toggle('above', !below);
+}
+async function showWordPop(kc) {
+  closeWordPop();
+  const zone = kc.closest(KANJI_ZONES), c = kc.textContent;
+  if (!zone || zone.matches('.sign-word')) { openSheet(kc.dataset.open); return; }   // the word card's own word: go straight to the kanji
+  const pop = document.createElement('div'); pop.className = 'kpop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', 'Look up');
+  pop.innerHTML = '<div class="kp-load">Looking up…</div>'; document.body.appendChild(pop); placePop(pop, kc);
+  if (DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) { try { await loadAllVocab(); } catch (e) {} }
+  if (!pop.isConnected) return;
+  const { text, pos, spans } = zoneText(zone), t = pos.get(kc), hit = t == null ? null : findWord(text, t);
+  if (!hit) { closeWordPop(); openSheet(kc.dataset.open); return; }
+  const x = hit.x, word = text.slice(hit.s, hit.e);
+  for (let i = hit.s; i < hit.e; i++) if (spans[i]) spans[i].classList.add('kc-sel');
+  try {
+    if (window.CSS && CSS.highlights && window.Highlight) {
+      const { nodes } = zoneText(zone), at = off => { for (let i = nodes.length - 1; i >= 0; i--) if (nodes[i][1] <= off) return [nodes[i][0], off - nodes[i][1]]; };
+      const [sn, so] = at(hit.s), [en, eo] = at(hit.e - 1), range = document.createRange(); range.setStart(sn, so); range.setEnd(en, eo + 1);
+      CSS.highlights.set('kp-word', new Highlight(range)); document.body.classList.add('has-hl');
+    }
+  } catch (e) {}
+  const ks = [...new Set([...(x.w || word)].filter(ch => KMAP[ch]))];
+  const head = `<span class="kp-w jp">${ruby(x.f || (x.r && x.r !== x.w ? `{${x.w}|${x.r}}` : x.w), true)}</span><span class="kp-m">${esc(x.m || '')}</span>`;
+  pop.innerHTML = `${x.pseudo ? `<div class="kp-word static">${head}</div>` : `<button class="kp-word" data-open="${esc(x.id)}">${head}<span class="kp-go">Word ›</span></button>`}
+    ${word !== x.w && !x.pseudo ? `<div class="kp-note">In the sentence as <span class="jp">${esc(word)}</span></div>` : ''}
+    ${ks.length ? `<div class="kp-label">${ks.length > 1 ? 'Kanji in this word' : 'Kanji'}</div><div class="kp-kanji">${ks.map(ch => `<button data-open="k:${esc(ch)}" class="${ch === c ? 'on' : ''}"><b class="jp">${ch}</b><span>${esc((KMAP[ch].mean || [])[0] || '')}</span></button>`).join('')}</div>` : ''}`;
+  placePop(pop, kc);
+  const first = pop.querySelector('button'); if (first) first.focus({ preventScroll: true });
+}
+window.addEventListener('resize', closeWordPop);
+document.addEventListener('scroll', closeWordPop, true);
 function hydrate(root = document) {
   linkKanji(root);
   root.querySelectorAll('.strokes[data-k]:not([data-done])').forEach(el => {
@@ -2136,7 +2243,7 @@ function gDetail(g) {
     <div class="dmean">${esc(g.m)}</div>
     ${g.fm ? `<div class="gform"><b>Formation</b>${gFormHtml(g.fm)}</div>` : ''}
     ${g.x ? `<div class="gexpl">${gExplHtml(g.x)}</div>` : ''}
-    ${g.ex.length ? `<div class="mini">Examples</div><div class="kc-hint">Tap any underlined kanji to look it up.</div>${g.ex.map(e => exHtml(e, g)).join('')}` : ''}
+    ${g.ex.length ? `<div class="mini">Examples</div><div class="kc-hint">Tap an underlined kanji to look up its word or the kanji.</div>${g.ex.map(e => exHtml(e, g)).join('')}` : ''}
     <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong · next review ${p.d > Date.now() ? 'in ' + fmtIv(p.d - Date.now()) : 'due now'}` : 'Not studied yet'}${grammarFull() ? ' · Grammar from <a href="https://hanabira.org/" target="_blank" rel="noopener">hanabira.org</a>' : ''}</div>
   </div>`;
 }
@@ -2867,6 +2974,7 @@ const itemById = id => id.startsWith('k:') ? KMAP[id.slice(2)] : id.startsWith('
 const itemLabel = x => !x ? '' : x.kind === 'kana' ? x.ch : x.kind === 'kanji' ? x.k : x.kind === 'grammar' ? (gSplitTitle(x.t).jp || x.t) : x.w;
 let sheetStack = [], sheetPushed = 0, sheetClosing = false;
 function renderSheet() {
+  closeWordPop();
   const sh = $('#sheet'), top = sheetStack[sheetStack.length - 1]; if (!top) return hideSheet();
   const item = itemById(top.id), prev = sheetStack[sheetStack.length - 2];
   sh.innerHTML = `<div class="sheet-bg" onclick="App.closeSheet()"></div><div class="sheet">
@@ -2875,7 +2983,7 @@ function renderSheet() {
   sh.classList.add('open'); hydrate(sh); paintLevels(sh);
   const panel = sh.querySelector('.sheet'); if (panel) panel.scrollTop = top.scroll || 0;
 }
-function hideSheet() { sheetStack = []; const sh = $('#sheet'); sh.classList.remove('open'); sh.innerHTML = ''; }
+function hideSheet() { closeWordPop(); sheetStack = []; const sh = $('#sheet'); sh.classList.remove('open'); sh.innerHTML = ''; }
 function openSheet(id) {
   if (!itemById(id)) return;
   const sh = $('#sheet'), open = sh.classList.contains('open');
@@ -3018,13 +3126,16 @@ const App = {
 document.addEventListener('click', e => {
   const say = e.target.closest('[data-audio]'); if (say && !say.dataset.open) { e.stopPropagation(); playAudio(say.dataset.audio); return; }
   const rb = e.target.closest('ruby');
-  if (e.target.closest('.kc') && rb && document.body.classList.contains('furi-tap') && !rb.classList.contains('show')) { rb.classList.add('show'); e.stopPropagation(); return; }   // tap-to-reveal furigana: first tap shows the reading
-  const op = e.target.closest('[data-open]'); if (op) { if (op.classList.contains('kc')) e.stopPropagation(); openSheet(op.dataset.open); return; }
+  if (e.target.closest('.kcx') && rb && document.body.classList.contains('furi-tap') && !rb.classList.contains('show')) { rb.classList.add('show'); e.stopPropagation(); return; }   // tap-to-reveal furigana: first tap shows the reading
+  const kc = e.target.closest('.kcx'); if (kc) { e.stopPropagation(); showWordPop(kc); return; }
+  if (document.querySelector('.kpop') && !e.target.closest('.kpop')) { closeWordPop(); e.stopPropagation(); e.preventDefault(); return; }   // first tap outside only dismisses the pop-up
+  const op = e.target.closest('[data-open]'); if (op) { const inPop = !!op.closest('.kpop'); if (inPop) { e.stopPropagation(); closeWordPop(); } openSheet(op.dataset.open); return; }
   if (rb && document.body.classList.contains('furi-tap') && !e.target.closest('.choice')) { rb.classList.toggle('show'); e.stopPropagation(); }
 }, true);
 document.addEventListener('keydown', e => {
   if (e.target.matches('input, textarea')) return;
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('kc')) { e.preventDefault(); openSheet(e.target.dataset.open); return; }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('kcx')) { e.preventDefault(); showWordPop(e.target); return; }
+  if (e.key === 'Escape' && document.querySelector('.kpop')) { e.preventDefault(); e.stopPropagation(); closeWordPop(); return; }
   if ($('#sheet').classList.contains('open')) {
     if (e.key === 'Escape') return App.closeSheet();
     if ((e.key === 'Backspace' || e.key === 'ArrowLeft') && sheetStack.length > 1) { e.preventDefault(); return App.sheetBack(); }
