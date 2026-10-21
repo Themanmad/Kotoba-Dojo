@@ -7,8 +7,6 @@ every Monday.
 
 ## What's inside
 - **Kana** — full hiragana and katakana charts (basic, ゛゜ sounds, combinations like きゃ, extended katakana like ファ) with KanjiVG stroke order, lookalike warnings (シ/ツ, ぬ/め…) and real words that use each character. Quizzes: kana → romaji, romaji → kana and hiragana ↔ katakana, with lookalikes as the wrong answers; plus flashcards and tests.
-- **Pictures** — a picture for every word and kanji whose meaning you can draw (OpenMoji illustrations; picture-kanji like 日 山 川 木 get their origin picture). Shown on word cards, lists, kanji tiles and flashcards, plus *Picture → word* and *Picture → kanji* quizzes. Words with no sensible picture simply have none. Turn off in Settings.
-- **Quote of the day** — a public-domain saying, haiku or proverb on Home (Bashō, Musashi, Zeami, Fukuzawa…), with furigana, an English translation and the author credited. Optionally mixes in short credited catchphrases from Shuzo Matsuoka and anime/manga (Settings → Modern quotes).
 - **Situations** — words and phrases grouped by occasion (greetings, restaurant, convenience store, shopping, train & travel, hotel, directions, time, numbers, family, health & emergencies, work, weather, small talk, feelings, gym), each ordered from what you'll hear most to least. Study any situation with Learn, Flashcards or Test.
 - **Vocabulary** — the JLPT N5–N1 lists matched to **JMdict** entries: all main meanings, parts of speech, alternative spellings and furigana.
 - **Kanji** — every JLPT kanji from **KANJIDIC2** (meanings, on/kun readings, stroke count, frequency rank) with animated **KanjiVG** stroke order.
@@ -52,8 +50,7 @@ files, the app runs on a small built-in starter set so it still works.
 5. Builds kanji from **KANJIDIC2**, with current JLPT levels from kanji-data and stroke paths from **KanjiVG**.
 6. Copies native recordings for matching words from **tofugu/japanese-vocabulary-pronunciation-audio** (sparse git clone of `lib/mp3`, matched on word + reading), then **Kanji alive** for the rest, and downloads Tatoeba recordings for the chosen example sentences (licensed ones only, cached between runs).
 7. Adds JLPT grammar from **hanabira.org**'s content repo (`grammar_ja_N*.json`), with furigana on the examples.
-8. Matches **OpenMoji** pictures to words and kanji by meaning and copies only the ones used.
-9. Writes `data/vocab-n5.json … n1`, `data/kanji-*.json`, `data/strokes-*.json`, `data/grammar-*.json`, `data/audio/*.mp3`, `data/saudio/*.mp3`, `data/img/*.svg` and `data/meta.json`. The app loads a level only when you select it.
+8. Writes `data/vocab-n5.json … n1`, `data/kanji-*.json`, `data/strokes-*.json`, `data/grammar-*.json`, `data/audio/*.mp3`, `data/saudio/*.mp3` and `data/meta.json`. The app loads a level only when you select it.
 
 Every optional source fails soft. If Tatoeba, KanjiVG or the frequency file is
 unreachable, the build still finishes and notes what's missing under **Settings → Data**.
@@ -65,7 +62,7 @@ node build-data.mjs --out data
 # or, with files you've already downloaded:
 node build-data.mjs --from-dir ./downloads --out data
 ```
-Other flags: `--no-tatoeba`, `--no-freq`, `--no-kuromoji`, `--no-grammar`, `--no-audio`, `--audio-dir DIR`, `--no-kanjialive`, `--no-sentence-audio`, `--max-sentence-audio 6000`, `--commercial-audio-only`, `--no-pictures`, `--openmoji-dir DIR`, `--max-examples 3`.
+Other flags: `--no-tatoeba`, `--no-freq`, `--no-kuromoji`, `--no-grammar`, `--no-audio`, `--audio-dir DIR`, `--no-kanjialive`, `--no-sentence-audio`, `--max-sentence-audio 6000`, `--commercial-audio-only`, `--max-examples 3`.
 
 ## Notes
 - Progress is stored in your browser. Use **Settings → Export** to back it up.

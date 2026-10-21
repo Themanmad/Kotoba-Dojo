@@ -18,12 +18,11 @@ generated `data/` files are distributed under **CC BY-SA 4.0**.
 | [Japanese vocabulary pronunciation audio](https://github.com/tofugu/japanese-vocabulary-pronunciation-audio) | [Tofugu](https://www.tofugu.com) & [WaniKani](https://www.wanikani.com) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Native-speaker word recordings in `data/audio/` (copied unchanged, renamed by hash) |
 | [Kanji alive](https://github.com/kanjialive/kanji-data-media) example-word audio | Kanji alive | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | Native recordings for words the WaniKani set doesn't cover, in `data/audio/k*.mp3` |
 | [Tatoeba](https://tatoeba.org/) sentence audio | Individual Tatoeba members (named on each sentence in the app) | Each recording's own licence (CC BY, CC BY-SA, CC BY-NC, CC0 …). Recordings without a reuse licence are never included; build with `--commercial-audio-only` to keep only licences that allow commercial use | Native recordings of example sentences in `data/saudio/` (copied unchanged) |
-| [OpenMoji](https://openmoji.org/) | OpenMoji – the open-source emoji and icon project (HfG Schwäbisch Gmünd) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Pictures for words and kanji, in `data/img/` (copied unchanged) |
 | [kuromoji.js](https://github.com/takuyaa/kuromoji.js) (build tool only) | Takuya Asano | Apache 2.0 | Furigana for example sentences |
 
 The mock exam's questions are generated from the data above, not taken from JLPT papers (those are the Japan Foundation's copyright). Pass marks are the official ones published at [jlpt.jp](https://www.jlpt.jp/e/guideline/results.html).
 
-The starter grammar set and the Situations word lists built into `index.html` were written for this app. Quote of the day uses public-domain works (poems, classical texts and proverbs; each is credited in the app). It can also show a few short, famous catchphrases by Shuzo Matsuoka and from anime/manga (SLAM DUNK, ONE PIECE, NARUTO, Evangelion, Demon Slayer, Detective Conan, Fullmetal Alchemist). These are not public domain: they remain © their creators and publishers, are quoted as single lines with the speaker, work, creator and rights holder shown, and can be switched off in Settings → Modern quotes; the English translations were written for this app. Kana stroke order comes from KanjiVG (above).
+The starter grammar set and the Situations word lists built into `index.html` were written for this app. Kana stroke order comes from KanjiVG (above).
 
 The Japan Foundation doesn't publish official JLPT word lists. The N5–N1 levels
 here follow the widely used community lists above.
