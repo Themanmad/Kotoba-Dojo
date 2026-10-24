@@ -418,6 +418,44 @@ function getKanjium() {
     return ok(d);
   } catch (e) { warn('Kanjium: ' + e.message); return null; }
 }
+/* origin stories: Make Me a Hanzi's dictionary.txt (LGPL-3.0), e.g. 休 "A person 亻 leaning against a tree 木".
+   Japanese simplified forms are looked up by their older form (気 → 氣, 読 → 讀); kanji made in Japan have no entry. */
+const MMH_REPO = 'https://github.com/skishore/makemeahanzi';
+/* a few hints that are wrong or misleading for Japanese learners */
+const ORIGIN_FIX = { '氣': 'Steam 气 rising from cooking rice 米' };
+function getMakeMeAHanzi() {
+  if (flag('no-structure') || flag('no-origins')) return null;
+  const ok = d => fs.existsSync(path.join(d, 'dictionary.txt')) ? path.join(d, 'dictionary.txt') : null;
+  if (FROM) return ok(path.join(FROM, 'makemeahanzi'));
+  const d = path.join(CACHE, 'makemeahanzi');
+  try {
+    if (!ok(d)) {
+      fs.rmSync(d, { recursive: true, force: true });
+      log('  cloning Make Me a Hanzi (dictionary only)');
+      execFileSync('git', ['clone', '--depth', '1', '--filter=blob:none', '--no-checkout', MMH_REPO, d], { stdio: 'inherit' });
+      execFileSync('git', ['-C', d, 'sparse-checkout', 'init', '--no-cone'], { stdio: 'inherit' });
+      fs.writeFileSync(path.join(d, '.git', 'info', 'sparse-checkout'), '/dictionary.txt\n/COPYING\n');
+      execFileSync('git', ['-C', d, 'checkout'], { stdio: 'inherit' });
+    } else log('  cached Make Me a Hanzi');
+    return ok(d);
+  } catch (e) { warn('Make Me a Hanzi: ' + e.message); return null; }
+}
+function readOrigins(file) {
+  const m = new Map();
+  for (const line of fs.readFileSync(file, 'utf8').split('\n')) { if (!line.trim()) continue; try { const d = JSON.parse(line); if (d.etymology) m.set(d.character, d.etymology); } catch (e) {} }
+  return m;
+}
+/** origin for kanji c: {t: 'P'|'C'|'S', h: hint, sem, pho, old} */
+function originFor(origins, c, oldForm) {
+  for (const key of [c, oldForm]) {
+    const e = key && origins.get(key); if (!e) continue;
+    const t = e.type === 'pictographic' ? 'P' : e.type === 'pictophonetic' ? 'S' : 'C';
+    const o = { t }; const h = ORIGIN_FIX[c] || ORIGIN_FIX[key] || e.hint; if (h) o.h = h;
+    if (e.semantic) o.sem = e.semantic; if (e.phonetic) o.pho = e.phonetic; if (key !== c) o.old = key;
+    return o;
+  }
+  return null;
+}
 const TYPE_CODE = { 'Pictograph': 'P', 'Ideograph': 'I', 'Compound ideograph': 'C', 'Phono-semantic compound': 'S' };
 /** Kanjium tables → { info: kanji → {ty, ph, lk, rad}, partMeaning(el) } */
 function readKanjium(dir) {
@@ -425,6 +463,7 @@ function readKanjium(dir) {
   const kd = new Map(rows('kanjidict.txt').map(r => [r[0], r]));
   const look = new Map(rows('lookalikes.txt').map(r => [r[0], (r[1] || '').split(/[,、]/).map(x => x.trim()).filter(Boolean)]));
   const phon = new Map(rows('phonetics.txt').map(r => [r[0], (r[1] || '').split('、').filter(Boolean)]));
+  const oldOf = new Map(rows('variants.txt').filter(r => r[7]).map(r => [r[0], r[7].split(',')[0].trim()]));
   const radName = new Map();
   for (const f of ['radicals_variants.txt', 'radicals.txt']) for (const r of rows(f)) {   // variants first: 亻 is にんべん, not ひと
     const [a, b, , , names, meaning] = f === 'radicals.txt' ? r : [r[0], r[1], r[2], r[3], r[4], r[5]];
@@ -433,7 +472,7 @@ function readKanjium(dir) {
   }
   const meaningOf = c => { const r = kd.get(c); return r ? String(r[17] || r[16] || '').split(';')[0].replace(/\s*\((kokuji|extended shinjitai|ghost character)\)/g, '').trim() : ''; };
   return {
-    info: c => { const r = kd.get(c); if (!r) return null; return { ty: TYPE_CODE[r[5]] || '', rad: r[2] || r[1] || '', ph: r[3] || '', phR: (phon.get(r[3]) || []).slice(0, 4), lk: look.get(c) || [] }; },
+    info: c => { const r = kd.get(c); if (!r) return null; return { ty: TYPE_CODE[r[5]] || '', rad: r[2] || r[1] || '', ph: r[3] || '', phR: (phon.get(r[3]) || []).slice(0, 4), lk: look.get(c) || [], old: oldOf.get(c) || '', kokuji: /\(kokuji\)/.test(r[16] || '') }; },
     part: el => { const rn = radName.get(el), m = meaningOf(el); return { m: (rn && rn.m) || m, n: rn ? rn.n : '' }; }
   };
 }
@@ -936,6 +975,7 @@ async function main() {
   if (!flag('no-structure')) {
     log('Kanji structure (KanjiVG parts, Kanjium)');
     const kmDir = getKanjium(), km = kmDir ? readKanjium(kmDir) : null;
+    const mmhFile = getMakeMeAHanzi(), origins = mmhFile ? readOrigins(mmhFile) : null; let no = 0;
     const jlptSet = new Set(kanjiSet.keys()); let n = 0;
     for (const l of LEVELS) for (const k of kanji[l]) {
       const pt = kvgPartsOf.get(k.k), inf = km && km.info(k.k);
@@ -946,12 +986,18 @@ async function main() {
         if (inf.rad) k.rad = inf.rad;
         const lk = inf.lk.filter(x => jlptSet.has(x) && x !== k.k).slice(0, 6); if (lk.length) k.lk = lk;
       }
-      if (km) for (const el of [...(pt || []).map(p => p[0]), k.rad, k.ph].filter(Boolean)) if (!partsDict[el]) { const pm = km.part(el); if (pm.m || pm.n) partsDict[el] = [pm.m, pm.n]; }
+      // look the story up by the kanji, or by its pre-1946 form (気 → 氣); Kanjium also calls Japan-only
+      // simplified forms "kokuji", so a kanji counts as made in Japan only when it has neither (働, 込)
+      const og = origins && originFor(origins, k.k, inf && inf.old);
+      if (og) { k.og = og; no++; } else if (inf && inf.old && inf.old !== k.k) k.old = inf.old;
+      else if (inf && inf.kokuji) k.kk = 1;
+      if (km) for (const el of [...(pt || []).map(p => p[0]), k.rad, k.ph, k.og && k.og.sem, k.og && k.og.pho].filter(Boolean)) if (!partsDict[el]) { const pm = km.part(el); if (pm.m || pm.n) partsDict[el] = [pm.m, pm.n]; }
       if (k.pt || k.ty) n++;
     }
     if (km) meta.sources.structure = 'KanjiVG component groups + Kanjium (kanjidict, phonetics, lookalikes, radicals)';
     else meta.notes.push('Kanjium unavailable: kanji origins come from KanjiVG parts only.');
-    log(`  structure for ${n} kanji, ${Object.keys(partsDict).length} parts named`);
+    if (origins) meta.sources.origins = 'Make Me a Hanzi dictionary.txt (etymology hints)';
+    log(`  structure for ${n} kanji (${no} with an origin story), ${Object.keys(partsDict).length} parts named`);
   }
 
   /* ---- 8b. Grammar (hanabira.org, MIT) */
@@ -1126,7 +1172,8 @@ async function main() {
     { name: 'JMdict & KANJIDIC2', by: 'Electronic Dictionary Research and Development Group', license: 'CC BY-SA 4.0', url: 'https://www.edrdg.org/edrdg/licence.html' },
     { name: 'jmdict-simplified', by: 'scriptin', license: 'CC BY-SA 4.0 (data)', url: 'https://github.com/scriptin/jmdict-simplified' },
     { name: 'KanjiVG', by: 'Ulrich Apel and contributors', license: 'CC BY-SA 3.0', url: 'https://kanjivg.tagaini.net/' },
-    { name: 'Kanji origins and parts', by: 'Kanjium (mifunetoshiro), built on EDRDG data', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' },
+    { name: 'Kanji origin stories', by: 'Make Me a Hanzi (Shaunak Kishore), from Unihan and CJKlib', license: 'LGPL-3.0', url: 'https://github.com/skishore/makemeahanzi' },
+    { name: 'Kanji types, sound parts, look-alikes', by: 'Kanjium (mifunetoshiro), built on EDRDG data', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' },
     { name: 'Tatoeba', by: 'Tatoeba contributors', license: 'CC BY 2.0 FR', url: 'https://tatoeba.org/' },
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },
     { name: 'Kanji JLPT levels', by: 'David Luz Gouveia (kanji-data)', license: 'MIT', url: 'https://github.com/davidluzgouveia/kanji-data' },
@@ -1145,5 +1192,5 @@ async function main() {
   if (meta.notes.length) meta.notes.forEach(n => warn(n));
 }
 
-export { kvgParts, readKanjium, buildPicIndex, pictureFor, buildExtIndex, extPictureFor, iconSvg, hanOf };
+export { kvgParts, readKanjium, readOrigins, originFor, buildPicIndex, pictureFor, buildExtIndex, extPictureFor, iconSvg, hanOf };
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch(e => { console.error('\nBuild failed:', e.message); process.exit(1); });

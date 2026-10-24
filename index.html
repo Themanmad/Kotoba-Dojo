@@ -317,7 +317,14 @@ button.kb-part:hover{border-color:var(--accent)}
 .kb-part.sound .kb-role{background:var(--warn-soft);color:var(--warn)}
 .kb-part.whole{border:2px solid var(--accent)}
 .kb-part.whole b{color:var(--accent)}
-.kb-say{margin:10px 2px 0;font-size:14.5px;line-height:1.55}
+.kb-story{margin:0 2px 12px;font-size:17px;line-height:1.55;font-weight:600}
+.kb-say{margin:10px 2px 0;font-size:13.5px;line-height:1.55;color:var(--muted)}
+.kb-trick{margin-top:10px;background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;display:grid;gap:2px}
+.kb-trick b{font-size:12px;color:var(--accent)}
+.kb-trick span{font-size:15px;font-weight:600}
+.kb-trick small{font-size:11.5px;color:var(--muted)}
+.kb-old{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:var(--muted)}
+.kb-old b{font-size:30px;font-weight:500;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:2px 8px;line-height:1.3}
 .kb-rad{margin:8px 2px 0;font-size:13px;color:var(--muted)}
 .kb-rad b{color:var(--ink);font-size:15px}
 .kr-row+.kr-row{margin-top:12px}
@@ -331,6 +338,91 @@ button.kb-part:hover{border-color:var(--accent)}
 .kr-note textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;font-size:14px;padding:8px 10px;resize:vertical}
 .kr-note textarea:focus{outline:2px solid var(--accent);outline-offset:0}
 .kr-saved{display:block;font-size:11.5px;color:var(--ok);min-height:14px;margin-top:2px}
+.pcheck{display:flex;align-items:center;gap:14px;justify-content:space-between;border:2px dashed var(--accent)}
+.pcheck.done{border-style:solid;border-color:var(--line)}
+.pcheck b{display:block;font-size:15.5px}
+.pcheck span{display:block;font-size:13.5px;color:var(--muted);margin-top:2px}
+.btn.sm{width:auto;padding:10px 16px;font-size:14px;white-space:nowrap;margin:0}
+.ptabs{margin:14px 0}
+.pnext{border-left:6px solid var(--lc);margin-bottom:16px}
+.pn-k{font-size:12.5px;font-weight:700;color:var(--lc)}
+.pn-t{font-size:24px;font-weight:800;margin:4px 0 2px}
+.pn-s{color:var(--muted);margin-bottom:12px}
+.plevel{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:10px;overflow:hidden}
+.plevel summary{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;list-style:none}
+.plevel summary::-webkit-details-marker{display:none}
+.plevel summary b{flex:1}
+.pl-n{font-size:13px;color:var(--muted)}
+.plevel .note{padding:0 16px 14px;margin:0}
+.ulist{display:flex;flex-direction:column}
+.plevel .ulist{border-top:1px solid var(--line)}
+.unit{display:flex;align-items:center;gap:12px;text-align:left;background:var(--card);border:0;border-bottom:1px solid var(--line);padding:12px 16px;cursor:pointer;color:var(--ink);font:inherit}
+.ulist>.unit:last-child{border-bottom:0}
+body > main .ulist:not(.plevel .ulist){border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.unit:hover{background:var(--chip)}
+.un{flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border:2.5px solid var(--lc);color:var(--lc);background:var(--card)}
+.unit.done .un{background:var(--lc);color:#fff}
+.unit.cur{background:var(--accent-soft)}
+.unit.cur .un{box-shadow:0 0 0 4px color-mix(in srgb,var(--lc) 25%,transparent)}
+.ut{flex:1;min-width:0;display:flex;flex-direction:column}
+.ut b{font-size:15.5px}
+.ut span{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ugo{font-size:13px;font-weight:700;color:var(--accent)}
+.lesson{max-width:680px;margin:0 auto}
+.lsteps{margin-bottom:14px}
+.ls-h{margin:6px 0 14px}
+.ls-k{font-size:13px;font-weight:700;color:var(--accent)}
+.ls-h h2{font-size:24px;margin:4px 0 6px;line-height:1.3}
+.lpat{text-align:center;padding:22px 16px}
+.lp-t{font-size:30px;font-weight:700;line-height:1.6}
+.lp-m{font-size:16px;color:var(--muted);margin-top:4px}
+.lpat .gform{text-align:left;margin-top:12px}
+.lpts{padding-left:20px;margin:16px 0;line-height:1.75;font-size:15.5px}
+.lpts li{margin-bottom:6px}
+.lex{background:var(--chip);border-radius:12px;padding:10px 14px;margin-bottom:8px;display:block}
+.lex .jp{font-size:19px;line-height:1.9}
+.lex .en{display:block;font-size:14px;color:var(--muted)}
+.lwords{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.lword{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px 10px 12px;cursor:pointer;color:var(--ink);font:inherit;text-align:center}
+.lword:hover{border-color:var(--accent)}
+.lw-pic{height:64px;display:flex;align-items:center}
+.lw-pic.none{height:8px}
+.lw-w{font-size:22px;font-weight:700;line-height:1.7}
+.lw-r{font-size:12.5px;color:var(--muted)}
+.lw-m{font-size:14px;font-weight:600}
+.lword .say{position:absolute;top:6px;right:6px}
+.lkanji{display:flex;flex-direction:column;gap:10px}
+.lk{display:flex;gap:14px;align-items:flex-start;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px;cursor:pointer;color:var(--ink);font:inherit}
+.lk:hover{border-color:var(--accent)}
+.lk-k{font-size:52px;line-height:1;flex:none;width:64px;text-align:center}
+.lk-b{display:flex;flex-direction:column;gap:3px;min-width:0}
+.lk-b b{font-size:16px}
+.lk-b>span{font-size:13.5px;color:var(--muted)}
+.lk-b .lk-o{color:var(--ink);font-style:italic}
+.lread{display:flex;flex-direction:column;gap:10px}
+.lline{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.lline .jp,.bub .jp{font-size:20px;line-height:2}
+.len{font-size:13px;padding:2px 0;color:var(--muted);text-align:left}
+.len.on{color:var(--ink)}
+.ltalk{display:flex;flex-direction:column;gap:12px}
+.bub{max-width:88%;background:var(--card);border:1px solid var(--line);border-radius:18px 18px 18px 6px;padding:10px 14px;align-self:flex-start}
+.bub.me{align-self:flex-end;background:var(--accent-soft);border-color:transparent;border-radius:18px 18px 6px 18px}
+.bub .who{font-size:11.5px;font-weight:700;color:var(--muted)}
+.bub .ex{background:none;padding:0;margin:0}
+.lnav{display:flex;justify-content:space-between;gap:10px;margin:20px auto 0;max-width:680px}
+.lnav .btn{width:auto;flex:1;margin:0}
+.lnav .btn.line{flex:0 0 auto}
+.choice.idk{justify-content:center;color:var(--muted);border-style:dashed}
+.placerows .psk{font-size:12.5px;color:var(--muted);margin:-2px 0 8px 44px}
+.libgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+@media (min-width:900px){.libgrid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}}
+.libtile{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:14px;cursor:pointer;color:var(--ink);font:inherit}
+.libtile:hover{border-color:var(--accent)}
+.libtile b{font-size:34px;font-weight:600;color:var(--accent);line-height:1.2}
+.lt-t{font-size:17px;font-weight:700}
+.lt-d{font-size:13.5px;color:var(--muted)}
+.nav-sub{display:none;font-size:12px;font-weight:700;color:var(--muted);padding:14px 18px 4px;text-transform:none}
+@media (min-width:900px){ .nav-sub.nav-extra{display:block!important} nav.tabs button.lib{padding-top:8px;padding-bottom:8px;font-size:15px} nav.tabs button.lib b{font-size:20px} }
 .kc-hint{font-size:12.5px;color:var(--muted);margin:2px 0 6px}
 .kcx.kc-sel{background:var(--accent-soft);color:var(--accent);text-decoration:none}
 ::highlight(kp-word){background-color:var(--accent-soft);color:var(--accent)}
@@ -742,11 +834,14 @@ details.opts .ob>.label:first-child{margin-top:12px}
 <main id="app"><div class="loading">読み込み中… loading</div></main>
 <nav class="tabs"><div class="in">
   <button data-v="home" onclick="App.go('home')"><b>家</b>Home</button>
-  <button data-v="kana" onclick="App.go('kana')"><b>あ</b>Kana</button>
-  <button data-v="vocab" onclick="App.go('vocab')"><b>語</b>Vocab</button>
-  <button data-v="kanji" onclick="App.go('kanji')"><b>字</b>Kanji</button>
-  <button data-v="grammar" onclick="App.go('grammar')"><b>文</b>Grammar</button>
+  <button data-v="path" onclick="App.go('path')"><b>道</b>Path</button>
+  <button data-v="library" onclick="App.go('library')"><b>本</b>Library</button>
   <button data-v="exam" onclick="App.go('exam')"><b>試</b>Exam</button>
+  <div class="nav-sub nav-extra">Library</div>
+  <button class="nav-extra lib" data-v="kana" onclick="App.go('kana')"><b>あ</b>Kana</button>
+  <button class="nav-extra lib" data-v="vocab" onclick="App.go('vocab')"><b>語</b>Words</button>
+  <button class="nav-extra lib" data-v="kanji" onclick="App.go('kanji')"><b>字</b>Kanji</button>
+  <button class="nav-extra lib" data-v="grammar" onclick="App.go('grammar')"><b>文</b>Grammar</button>
   <button class="nav-extra" data-v="search" onclick="App.go('search')"><b>探</b>Search</button>
   <button class="nav-extra" data-v="settings" onclick="App.go('settings')"><b>設</b>Settings</button>
 </div><div class="nav-foot" id="navfoot"></div></nav>
@@ -1151,12 +1246,12 @@ function normV(x, lvl) {
     lvl, freq: x.q || 2, common: !!x.c, ex: x.ex || [], alt: x.a || null, au: x.au || null, pic: x.pic || null };
 }
 /* how each starter kanji is built (KanjiVG parts + Kanjium), so the section works before the full data is built */
-const STARTER_KSTRUCT = {"k":{"日":{"ty":"P","rad":"日"},"一":{"ty":"I","rad":"一"},"国":{"pt":[["囗","kamae","r"],["玉","","p"]],"ty":"C","rad":"囗"},"会":{"pt":[["人","top","r"],["云","bottom",""]],"ty":"P","rad":"𠆢","lk":["今"]},"人":{"ty":"P","rad":"人","lk":["入","八"]},"年":{"pt":[["丿","","r"],["干","","r"]],"ty":"P","rad":"干"},"大":{"ty":"P","rad":"大"},"十":{"ty":"P","rad":"十"},"二":{"ty":"C","rad":"二"},"本":{"ty":"I","rad":"木","lk":["休","体"]},"中":{"pt":[["口","",""],["丨","","r"]],"ty":"I","rad":"丨"},"長":{"ty":"P","rad":"長"},"出":{"pt":[["山","",""],["凵","","r"]],"ty":"C","rad":"凵"},"三":{"pt":[["一","top","r"],["一","bottom",""],["一","bottom",""]],"ty":"C","rad":"一"},"時":{"pt":[["日","left","r"],["寺","right","p"]],"ty":"S","ph":"寺","phR":["ジ"],"rad":"日"},"事":{"pt":[["口","",""],["⺕","",""],["亅","","r"]],"ty":"C","rad":"亅"},"自":{"ty":"P","rad":"自"},"行":{"ty":"P","rad":"行"},"社":{"pt":[["礻","left","r"],["土","right","p"]],"ty":"C","rad":"礻"},"見":{"pt":[["目","top",""],["儿","bottom",""]],"ty":"P","rad":"見"},"月":{"ty":"P","rad":"月"},"分":{"pt":[["八","top","r"],["刀","bottom","r"]],"ty":"I","rad":"刀"},"後":{"pt":[["彳","left","r"],["幺","right",""],["夂","right",""]],"ty":"C","rad":"彳"},"前":{"pt":[["八","top","p"],["月","bottom",""],["刂","bottom",""]],"ty":"I","rad":"刂"},"生":{"ty":"I","rad":"生"},"五":{"ty":"P","rad":"二"},"間":{"pt":[["門","kamae","r"],["日","",""]],"ty":"S","ph":"門","phR":["モン","カン"],"rad":"門"},"上":{"pt":[["卜","","r"],["一","","r"]],"ty":"I","rad":"一"},"東":{"pt":[["木","","r"],["日","",""]],"ty":"C","rad":"木"},"地":{"pt":[["土","left","r"],["也","right","p"]],"ty":"S","ph":"也","phR":["チ"],"rad":"土"},"方":{"ty":"P","rad":"方","lk":["万"]},"四":{"pt":[["囗","kamae","r"],["儿","",""]],"ty":"P","rad":"囗"},"今":{"pt":[["人","top","r"],["一","bottom",""]],"ty":"C","rad":"𠆢","lk":["会"]},"新":{"pt":[["立","left","p"],["木","left","p"],["斤","right","r"]],"ty":"S","ph":"亲","phR":["シン"],"rad":"斤"},"場":{"pt":[["土","left","r"],["昜","right","p"]],"ty":"C","rad":"土"},"金":{"ty":"P","rad":"金"},"九":{"pt":[["丿","","r"],["乙","","r"]],"ty":"P","rad":"乙"},"入":{"ty":"I","rad":"入","lk":["八","人"]},"開":{"pt":[["門","kamae","r"],["开","",""]],"ty":"C","rad":"門"},"手":{"ty":"P","rad":"手"},"力":{"ty":"P","rad":"力"},"学":{"pt":[["⺍","top","p"],["冖","top","p"],["子","bottom","r"]],"ty":"C","rad":"子"},"高":{"pt":[["亠","top",""],["口","top",""],["冋","bottom",""]],"ty":"P","rad":"高"},"円":{"ty":"C","rad":"冂"},"子":{"ty":"P","rad":"子"},"動":{"pt":[["重","left","p"],["力","right","r"]],"ty":"C","rad":"力"},"京":{"pt":[["亠","top","r"],["口","bottom",""],["小","bottom",""]],"ty":"C","rad":"亠"},"目":{"ty":"P","rad":"目"},"外":{"pt":[["夕","left","r"],["卜","right",""]],"ty":"P","rad":"夕"},"言":{"ty":"P","rad":"言"},"体":{"pt":[["亻","left","r"],["本","right",""]],"ty":"C","rad":"亻","lk":["休","本"]},"田":{"ty":"P","rad":"田"},"八":{"ty":"I","rad":"八","lk":["人","入"]},"六":{"pt":[["亠","top","r"],["八","bottom","r"]],"ty":"P","rad":"八"},"下":{"pt":[["一","","r"],["卜","",""]],"ty":"I","rad":"一"},"来":{"ty":"P","rad":"木"},"気":{"pt":[["气","kamae","r"],["乂","",""]],"ty":"S","ph":"气","phR":["キ"],"rad":"气"},"小":{"ty":"I","rad":"小"},"七":{"pt":[["一","","r"],["乙","","r"]],"ty":"I","rad":"一"},"山":{"ty":"P","rad":"山"},"思":{"pt":[["田","top","r"],["心","bottom","r"]],"ty":"C","rad":"心"},"話":{"pt":[["言","left","r"],["舌","right","p"]],"ty":"C","rad":"訁"},"使":{"pt":[["亻","left","r"],["吏","right",""]],"ty":"S","ph":"史","phR":["シ"],"rad":"亻"},"女":{"ty":"P","rad":"女"},"北":{"ty":"P","rad":"匕"},"午":{"pt":[["丿","top",""],["干","top",""]],"ty":"P","rad":"十","lk":["千"]},"道":{"pt":[["首","nyoc","p"],["⻌","nyo","r"]],"ty":"C","rad":"辶"},"百":{"pt":[["一","top","r"],["白","bottom","r"]],"ty":"S","rad":"白"},"書":{"pt":[["聿","top","r"],["日","bottom","r"]],"ty":"C","rad":"曰"},"先":{"ty":"C","rad":"儿"},"名":{"pt":[["夕","top","r"],["口","bottom","r"]],"ty":"C","rad":"口"},"川":{"ty":"P","rad":"川"},"千":{"pt":[["丿","top","r"],["十","bottom","r"]],"ty":"C","rad":"十","lk":["午"]},"水":{"ty":"P","rad":"水"},"半":{"pt":[["丶","","r"],["二","",""],["十","","r"]],"ty":"C","rad":"十"},"男":{"pt":[["田","top","r"],["力","bottom",""]],"ty":"C","rad":"田"},"私":{"pt":[["禾","left","r"],["厶","right","p"]],"ty":"C","rad":"禾"},"西":{"ty":"P","rad":"西"},"電":{"pt":[["雨","top","r"],["日","bottom","p"]],"ty":"C","rad":"⻗"},"口":{"ty":"P","rad":"口"},"校":{"pt":[["木","left","r"],["交","right","p"]],"ty":"S","ph":"交","phR":["コウ"],"rad":"木"},"語":{"pt":[["言","left","r"],["吾","right","p"]],"ty":"S","ph":"五","phR":["ゴ"],"rad":"訁"},"空":{"pt":[["穴","top","r"],["工","bottom","p"]],"ty":"S","rad":"穴"},"土":{"ty":"P","rad":"土"},"木":{"ty":"P","rad":"木"},"聞":{"pt":[["門","kamae","r"],["耳","","r"]],"ty":"S","ph":"門","phR":["モン","カン"],"rad":"耳"},"食":{"ty":"C","rad":"食"},"車":{"ty":"P","rad":"車"},"何":{"pt":[["亻","left","r"],["可","right","p"]],"ty":"S","ph":"可","phR":["カ"],"rad":"亻"},"南":{"pt":[["十","top","r"],["冂","bottom",""],["干","bottom",""]],"ty":"C","rad":"十"},"足":{"pt":[["口","top",""],["龰","bottom",""]],"ty":"P","rad":"足"},"楽":{"pt":[["白","top",""],["冫","top",""],["木","bottom","r"]],"ty":"C","rad":"木"},"万":{"ty":"P","rad":"一","lk":["方"]},"毎":{"pt":[["𠂉","top",""],["毋","bottom","r"]],"ty":"C","rad":"毋"},"店":{"pt":[["广","tare","r"],["占","tarec","p"]],"ty":"S","ph":"占","phR":["テン"],"rad":"广"},"白":{"ty":"P","rad":"白"},"天":{"pt":[["一","top","r"],["大","bottom","r"]],"ty":"P","rad":"大"},"買":{"pt":[["罒","top","r"],["貝","bottom","r"]],"ty":"C","rad":"貝"},"母":{"ty":"P","rad":"母"},"火":{"ty":"P","rad":"火"},"花":{"pt":[["艹","top","r"],["化","bottom","p"]],"ty":"S","ph":"化","phR":["カ"],"rad":"艹"},"右":{"pt":[["丆","",""],["口","","r"]],"ty":"P","rad":"口"},"読":{"pt":[["言","left","r"],["売","right","p"]],"ty":"C","rad":"訁"},"休":{"pt":[["亻","left","r"],["木","right",""]],"ty":"C","rad":"亻","lk":["体","本"]},"駅":{"pt":[["馬","left","r"],["尺","right","p"]],"ty":"S","rad":"馬"},"父":{"ty":"C","rad":"父"},"友":{"pt":[["𠂇","kamae",""],["又","kamaec","r"]],"ty":"C","rad":"又"},"左":{"ty":"P","rad":"工"},"旅":{"pt":[["方","left","r"],["𠂉","right",""],["亻","right",""]],"ty":"C","rad":"方"},"雨":{"ty":"P","rad":"雨"},"好":{"pt":[["女","left","r"],["子","right",""]],"ty":"C","rad":"女"},"肉":{"ty":"P","rad":"肉"},"飲":{"pt":[["飠","left","r"],["欠","right",""]],"ty":"C","rad":"飠"},"茶":{"pt":[["艹","top","r"],["人","bottom","p"],["木","bottom","p"]],"ty":"C","rad":"艹"},"耳":{"ty":"P","rad":"耳"},"晴":{"pt":[["日","left","r"],["青","right","p"]],"ty":"S","ph":"青","phR":["セイ","ショウ","ジョウ"],"rad":"日"},"森":{"pt":[["木","top","r"],["林","bottom",""]],"ty":"C","rad":"木"},"明":{"pt":[["日","left","r"],["月","right",""]],"ty":"C","rad":"日"}},"parts":{"日":["sun","ひ"],"一":["one","いち"],"囗":["enclosure","くに"],"玉":["jade","たま"],"人":["man","ひと"],"云":["say",""],"𠆢":["man","ひとやね"],"丿":["slash","の"],"干":["pestle","かん"],"大":["big","だい"],"十":["ten","じゅう"],"二":["two","に"],"木":["tree","き"],"口":["mouth","くち"],"丨":["line","ぼう"],"長":["long","ながい"],"山":["mountain","やま"],"凵":["container","かんにょう"],"寺":["Buddhist temple",""],"亅":["hook","はねぼう"],"自":["self","みずから"],"行":["go","ぎょう"],"礻":["sign","しめすへん"],"土":["earth","つち"],"目":["eye","め"],"儿":["legs","にんにょう"],"見":["see","みる"],"月":["moon","つき"],"八":["eight","はち"],"刀":["knife","かたな"],"彳":["step","ぎょうにんべん"],"幺":["short","いとがしら"],"夂":["go slowly","ちかんむり"],"刂":["knife","りっとう"],"生":["life","うむ"],"門":["gate","もん"],"卜":["divination","ぼく"],"也":["to be (classical)",""],"方":["square","ほう"],"立":["stand","たつ"],"斤":["axe","おの"],"亲":["parent",""],"昜":["open",""],"金":["metal","かね"],"乙":["second","おつ"],"入":["enter","いる"],"手":["hand","て"],"力":["power","ちから"],"⺍":["small","つ"],"冖":["cover","わかんむり"],"子":["child","こ"],"亠":["lid","けいさん"],"高":["tall","たかい"],"冂":["open country","けいがまえ"],"重":["heavy",""],"小":["small","しょう"],"夕":["evening","ゆう"],"言":["speech","いう"],"亻":["man","にんべん"],"本":["book",""],"田":["field","た"],"气":["steam","きがまえ"],"乂":["mow",""],"心":["heart","こころ"],"舌":["tongue","した"],"訁":["speech","ごんべん"],"吏":["officer",""],"史":["history",""],"女":["woman","おんな"],"匕":["spoon","さじ"],"首":["head","くび"],"辶":["walk","しんにょう"],"白":["white","しろ"],"聿":["brush","ふで"],"曰":["say","ひらび"],"川":["river","かわ"],"水":["water","みず"],"丶":["dot","てん"],"禾":["grain","のぎ"],"厶":["private","む"],"西":["west","にし"],"雨":["rain","あめ"],"⻗":["rain","あめかんむり"],"交":["mingle",""],"吾":["I",""],"五":["five",""],"穴":["cave","あな"],"工":["work","こう"],"耳":["ear","みみ"],"食":["eat","しょく"],"車":["cart","くるま"],"可":["can",""],"足":["foot","あし"],"冫":["ice","にすい"],"毋":["mother","なし"],"广":["house on cliff","まだれ"],"占":["fortune-telling",""],"罒":["net","あみがしら"],"貝":["shell","かい"],"母":["mother","はは"],"火":["fire","ひ"],"艹":["grass","くさかんむり"],"化":["change",""],"売":["sell",""],"馬":["horse","うま"],"尺":["shaku",""],"父":["father","ちち"],"又":["right hand","また"],"肉":["meat","にく"],"飠":["eat","しょくへん"],"欠":["lack","あくび"],"青":["blue","あお"],"林":["grove",""]}};
+const STARTER_KSTRUCT = {"k":{"日":{"ty":"P","rad":"日","og":{"t":"P","h":"The sun"}},"一":{"ty":"I","rad":"一","og":{"t":"C","h":"Represents heaven (天), earth (旦), or the number 1"}},"国":{"pt":[["囗","kamae","r"],["玉","","p"]],"ty":"C","rad":"囗","og":{"t":"C","h":"Treasure 玉 within a country's borders 囗"}},"会":{"pt":[["人","top","r"],["云","bottom",""]],"ty":"P","rad":"𠆢","lk":["今"],"og":{"t":"C","h":"People 人 speaking 云"}},"人":{"ty":"P","rad":"人","lk":["入","八"],"og":{"t":"P","h":"The legs of a human being"}},"年":{"pt":[["丿","","r"],["干","","r"]],"ty":"P","rad":"干","og":{"t":"C","h":"A man 干 carrying grain, representing the annual harvest"}},"大":{"ty":"P","rad":"大","og":{"t":"C","h":"A man 人 with outstretched arms"}},"十":{"ty":"P","rad":"十"},"二":{"ty":"C","rad":"二","og":{"t":"C","h":"Two  parallel lines; compare 一 (one) and 三 (three)"}},"本":{"ty":"I","rad":"木","lk":["休","体"],"og":{"t":"C","h":"A tree 木 with its roots highlighted"}},"中":{"pt":[["口","",""],["丨","","r"]],"ty":"I","rad":"丨","og":{"t":"C","h":"A line 丨 through the center of a box 口"}},"長":{"ty":"P","rad":"長","og":{"t":"P","h":"An old man with long hair and a cane"}},"出":{"pt":[["山","",""],["凵","","r"]],"ty":"C","rad":"凵","og":{"t":"C","h":"A sprout 屮 growing out of a container 凵"}},"三":{"pt":[["一","top","r"],["一","bottom",""],["一","bottom",""]],"ty":"C","rad":"一","og":{"t":"C","h":"Three  parallel lines; compare 一 (one) and 二 (two)"}},"時":{"pt":[["日","left","r"],["寺","right","p"]],"ty":"S","ph":"寺","phR":["ジ"],"rad":"日","og":{"t":"S","h":"day","sem":"日","pho":"寺"}},"事":{"pt":[["口","",""],["⺕","",""],["亅","","r"]],"ty":"C","rad":"亅"},"自":{"ty":"P","rad":"自","og":{"t":"P","h":"A nose; in China, people refer to themselves by pointing to their noses"}},"行":{"ty":"P","rad":"行","og":{"t":"C","h":"To take small steps 亍 with one's feet 彳"}},"社":{"pt":[["礻","left","r"],["土","right","p"]],"ty":"C","rad":"礻","og":{"t":"C","h":"An earth 土 spirit 礻; 礻 also provides the pronunciation"}},"見":{"pt":[["目","top",""],["儿","bottom",""]],"ty":"P","rad":"見","og":{"t":"C","h":"A man 儿 with the eye 目 emphasized"}},"月":{"ty":"P","rad":"月","og":{"t":"P","h":"A crescent moon"}},"分":{"pt":[["八","top","r"],["刀","bottom","r"]],"ty":"I","rad":"刀","og":{"t":"C","h":"Pieces 八 being further subdivided with a knife 刀 "}},"後":{"pt":[["彳","left","r"],["幺","right",""],["夂","right",""]],"ty":"C","rad":"彳","og":{"t":"C","h":"One step 彳 coming behind another 夂; 幺 provides the pronunciation"}},"前":{"pt":[["八","top","p"],["月","bottom",""],["刂","bottom",""]],"ty":"I","rad":"刂"},"生":{"ty":"I","rad":"生","og":{"t":"C","h":" A shoot 屮 growing in the soil 土"}},"五":{"ty":"P","rad":"二","og":{"t":"C","h":"Five elements (the cross with the extra stroke) between heaven 一 and earth 一 "}},"間":{"pt":[["門","kamae","r"],["日","",""]],"ty":"S","ph":"門","phR":["モン","カン"],"rad":"門","og":{"t":"C","h":"The sun 日 shining through a doorway 門"}},"上":{"pt":[["卜","","r"],["一","","r"]],"ty":"I","rad":"一","og":{"t":"C","h":"One stroke on top of another; compare 下 (below)"}},"東":{"pt":[["木","","r"],["日","",""]],"ty":"C","rad":"木","og":{"t":"C","h":"The sun 日 rising behind a tree 木; compare 西"}},"地":{"pt":[["土","left","r"],["也","right","p"]],"ty":"S","ph":"也","phR":["チ"],"rad":"土","og":{"t":"S","h":"earth","sem":"土","pho":"也"}},"方":{"ty":"P","rad":"方","lk":["万"]},"四":{"pt":[["囗","kamae","r"],["儿","",""]],"ty":"P","rad":"囗","og":{"t":"C","h":"A child 儿 in a room with four walls 囗"}},"今":{"pt":[["人","top","r"],["一","bottom",""]],"ty":"C","rad":"𠆢","lk":["会"],"og":{"t":"C","h":"A mouth 亼 talking about things"}},"新":{"pt":[["立","left","p"],["木","left","p"],["斤","right","r"]],"ty":"S","ph":"亲","phR":["シン"],"rad":"斤","og":{"t":"C","h":"A freshly chopped 斤 tree 亲"}},"場":{"pt":[["土","left","r"],["昜","right","p"]],"ty":"C","rad":"土","og":{"t":"S","h":"earth","sem":"土","pho":"昜"}},"金":{"ty":"P","rad":"金","og":{"t":"P","h":"A cast-iron bell"}},"九":{"pt":[["丿","","r"],["乙","","r"]],"ty":"P","rad":"乙","og":{"t":"P","h":"An elbow"}},"入":{"ty":"I","rad":"入","lk":["八","人"],"og":{"t":"C","h":"An arrow indicating \"enter\""}},"開":{"pt":[["門","kamae","r"],["开","",""]],"ty":"C","rad":"門","og":{"t":"S","h":"gate","sem":"門","pho":"开"}},"手":{"ty":"P","rad":"手","og":{"t":"P","h":"A hand with the fingers splayed"}},"力":{"ty":"P","rad":"力","og":{"t":"C","h":"A plow's head representing strength"}},"学":{"pt":[["⺍","top","p"],["冖","top","p"],["子","bottom","r"]],"ty":"C","rad":"子","og":{"t":"C","h":"A building 冖 where children 子 study; ⺍ provides the pronunciation"}},"高":{"pt":[["亠","top",""],["口","top",""],["冋","bottom",""]],"ty":"P","rad":"高","og":{"t":"P","h":"A tall palace"}},"円":{"ty":"C","rad":"冂","og":{"t":"S","h":"enclosure","sem":"囗","pho":"員","old":"圓"}},"子":{"ty":"P","rad":"子","og":{"t":"P","h":"A child in a wrap, with outstretched arms but bundled legs"}},"動":{"pt":[["重","left","p"],["力","right","r"]],"ty":"C","rad":"力","og":{"t":"S","h":"strength","sem":"力","pho":"重"}},"京":{"pt":[["亠","top","r"],["口","bottom",""],["小","bottom",""]],"ty":"C","rad":"亠","og":{"t":"P","h":"A capital building on a hill"}},"目":{"ty":"P","rad":"目","og":{"t":"P","h":"An eye drawn on its side"}},"外":{"pt":[["夕","left","r"],["卜","right",""]],"ty":"P","rad":"夕","og":{"t":"C","h":"Night-time 夕 divinations 卜; the supernatural, the foreign"}},"言":{"ty":"P","rad":"言","og":{"t":"C","h":"A tongue sticking out of a mouth 口"}},"体":{"pt":[["亻","left","r"],["本","right",""]],"ty":"C","rad":"亻","lk":["休","本"],"og":{"t":"S","h":"bone","sem":"骨","pho":"豊","old":"體"}},"田":{"ty":"P","rad":"田","og":{"t":"P","h":"The plots of a rice paddy"}},"八":{"ty":"I","rad":"八","lk":["人","入"],"og":{"t":"C","h":"Two bent lines meaning \"to divide\""}},"六":{"pt":[["亠","top","r"],["八","bottom","r"]],"ty":"P","rad":"八"},"下":{"pt":[["一","","r"],["卜","",""]],"ty":"I","rad":"一","og":{"t":"C","h":"One stroke under another; compare 上 (above)"}},"来":{"ty":"P","rad":"木","og":{"t":"C","h":"A wheat plant that has not yet borne fruit; compare 來"}},"気":{"pt":[["气","kamae","r"],["乂","",""]],"ty":"S","ph":"气","phR":["キ"],"rad":"气","og":{"t":"C","h":"Steam 气 rising from cooking rice 米","old":"氣"}},"小":{"ty":"I","rad":"小","og":{"t":"C","h":"Dividing 八 by a line 亅"}},"七":{"pt":[["一","","r"],["乙","","r"]],"ty":"I","rad":"一"},"山":{"ty":"P","rad":"山","og":{"t":"P","h":"Three mountain peaks"}},"思":{"pt":[["田","top","r"],["心","bottom","r"]],"ty":"C","rad":"心","og":{"t":"C","h":"Weighing something with your mind 囟 (altered) and heart 心"}},"話":{"pt":[["言","left","r"],["舌","right","p"]],"ty":"C","rad":"訁","og":{"t":"C","h":"A spoken 言 tongue 舌; 舌 also provides the pronunciation"}},"使":{"pt":[["亻","left","r"],["吏","right",""]],"ty":"S","ph":"史","phR":["シ"],"rad":"亻","og":{"t":"C","h":"A person 亻 working for the government 吏"}},"女":{"ty":"P","rad":"女","og":{"t":"P","h":"A woman turned to the side"}},"北":{"ty":"P","rad":"匕","og":{"t":"P","h":"Two people 匕 sitting back-to-back; phonetic loan for \"north\""}},"午":{"pt":[["丿","top",""],["干","top",""]],"ty":"P","rad":"十","lk":["千"]},"道":{"pt":[["首","nyoc","p"],["⻌","nyo","r"]],"ty":"C","rad":"辶","og":{"t":"S","h":"walk","sem":"辶","pho":"首"}},"百":{"pt":[["一","top","r"],["白","bottom","r"]],"ty":"S","rad":"白","og":{"t":"S","h":"one","sem":"一","pho":"白"}},"書":{"pt":[["聿","top","r"],["日","bottom","r"]],"ty":"C","rad":"曰","og":{"t":"C","h":"A brush 聿 used to write words 曰"}},"先":{"ty":"C","rad":"儿","og":{"t":"C","h":"Someone stepping 止 in front of another person 儿"}},"名":{"pt":[["夕","top","r"],["口","bottom","r"]],"ty":"C","rad":"口","og":{"t":"C","h":"A name called out 口 to hail someone at night 夕"}},"川":{"ty":"P","rad":"川","og":{"t":"C","h":"A river's flow; compare 巛"}},"千":{"pt":[["丿","top","r"],["十","bottom","r"]],"ty":"C","rad":"十","lk":["午"]},"水":{"ty":"P","rad":"水","og":{"t":"P","h":"A river running between two banks; compare 川"}},"半":{"pt":[["丶","","r"],["二","",""],["十","","r"]],"ty":"C","rad":"十","og":{"t":"C","h":"A cow 牛 splitting 丷 wood in half"}},"男":{"pt":[["田","top","r"],["力","bottom",""]],"ty":"C","rad":"田","og":{"t":"C","h":"Someone who can work 力 the farm 田"}},"私":{"pt":[["禾","left","r"],["厶","right","p"]],"ty":"C","rad":"禾","og":{"t":"C","h":"厶 provides the meaning and pronunciation"}},"西":{"ty":"P","rad":"西","og":{"t":"P","h":"A bird settling into its nest, representing sunset; compare 東"}},"電":{"pt":[["雨","top","r"],["日","bottom","p"]],"ty":"C","rad":"⻗","og":{"t":"C","h":"A thunderbolt 电 cast by a storm cloud 雨"}},"口":{"ty":"P","rad":"口","og":{"t":"P","h":"An open mouth"}},"校":{"pt":[["木","left","r"],["交","right","p"]],"ty":"S","ph":"交","phR":["コウ"],"rad":"木","og":{"t":"S","h":"wood","sem":"木","pho":"交"}},"語":{"pt":[["言","left","r"],["吾","right","p"]],"ty":"S","ph":"五","phR":["ゴ"],"rad":"訁","og":{"t":"S","h":"words","sem":"言","pho":"吾"}},"空":{"pt":[["穴","top","r"],["工","bottom","p"]],"ty":"S","rad":"穴","og":{"t":"S","h":"cave","sem":"穴","pho":"工"}},"土":{"ty":"P","rad":"土","og":{"t":"P","h":"A lump of clay on a potter's wheel"}},"木":{"ty":"P","rad":"木","og":{"t":"P","h":"A tree"}},"聞":{"pt":[["門","kamae","r"],["耳","","r"]],"ty":"S","ph":"門","phR":["モン","カン"],"rad":"耳","og":{"t":"S","h":"ear","sem":"耳","pho":"門"}},"食":{"ty":"C","rad":"食","og":{"t":"P","h":"A dish of food 良 with a lid on top 人"}},"車":{"ty":"P","rad":"車","og":{"t":"P","h":"A cart with two wheels, seen from above"}},"何":{"pt":[["亻","left","r"],["可","right","p"]],"ty":"S","ph":"可","phR":["カ"],"rad":"亻"},"南":{"pt":[["十","top","r"],["冂","bottom",""],["干","bottom",""]],"ty":"C","rad":"十","og":{"t":"P","h":"A musical bell"}},"足":{"pt":[["口","top",""],["龰","bottom",""]],"ty":"P","rad":"足","og":{"t":"P","h":"The leg 口 above the foot"}},"楽":{"pt":[["白","top",""],["冫","top",""],["木","bottom","r"]],"ty":"C","rad":"木","og":{"t":"C","h":"A musical instrument with wood 木, strings 幺, and a pick 白","old":"樂"}},"万":{"ty":"P","rad":"一","lk":["方"],"old":"萬"},"毎":{"pt":[["𠂉","top",""],["毋","bottom","r"]],"ty":"C","rad":"毋","og":{"t":"S","pho":"母","old":"每"}},"店":{"pt":[["广","tare","r"],["占","tarec","p"]],"ty":"S","ph":"占","phR":["テン"],"rad":"广","og":{"t":"S","h":"building","sem":"广","pho":"占"}},"白":{"ty":"P","rad":"白","og":{"t":"C","h":"A burning candle; the rays of the sun"}},"天":{"pt":[["一","top","r"],["大","bottom","r"]],"ty":"P","rad":"大","og":{"t":"C","h":"The heavens 一 above a man 大"}},"買":{"pt":[["罒","top","r"],["貝","bottom","r"]],"ty":"C","rad":"貝","og":{"t":"S","h":"money","sem":"貝"}},"母":{"ty":"P","rad":"母","og":{"t":"C","h":"A mother's breasts"}},"火":{"ty":"P","rad":"火","og":{"t":"P","h":"Flames"}},"花":{"pt":[["艹","top","r"],["化","bottom","p"]],"ty":"S","ph":"化","phR":["カ"],"rad":"艹","og":{"t":"C","h":"A flower 艹 in bloom 化; 化 also provides the pronunciation"}},"右":{"pt":[["丆","",""],["口","","r"]],"ty":"P","rad":"口"},"読":{"pt":[["言","left","r"],["売","right","p"]],"ty":"C","rad":"訁","og":{"t":"C","h":"To show off 賣 one's literacy 言","old":"讀"}},"休":{"pt":[["亻","left","r"],["木","right",""]],"ty":"C","rad":"亻","lk":["体","本"],"og":{"t":"C","h":"A person 亻 leaning against a tree 木"}},"駅":{"pt":[["馬","left","r"],["尺","right","p"]],"ty":"S","rad":"馬","og":{"t":"S","h":"horse","sem":"馬","pho":"睪","old":"驛"}},"父":{"ty":"C","rad":"父","og":{"t":"C","h":"A hand 乂 holding an axe 八"}},"友":{"pt":[["𠂇","kamae",""],["又","kamaec","r"]],"ty":"C","rad":"又","og":{"t":"C","h":"Two hands 又 joined, representing friendship; 又 also provides the pronunciation"}},"左":{"ty":"P","rad":"工","og":{"t":"P","h":"A left hand; compare 又"}},"旅":{"pt":[["方","left","r"],["𠂉","right",""],["亻","right",""]],"ty":"C","rad":"方","og":{"t":"C","h":"A man 方 traveling with a pack 氏 on his back"}},"雨":{"ty":"P","rad":"雨","og":{"t":"P","h":"Rain drops falling from a cloud 帀"}},"好":{"pt":[["女","left","r"],["子","right",""]],"ty":"C","rad":"女","og":{"t":"C","h":"A woman 女 with a son 子"}},"肉":{"ty":"P","rad":"肉","og":{"t":"P","h":"Meat on the ribs of an animal"}},"飲":{"pt":[["飠","left","r"],["欠","right",""]],"ty":"C","rad":"飠","og":{"t":"S","h":"food","sem":"飠","pho":"欠"}},"茶":{"pt":[["艹","top","r"],["人","bottom","p"],["木","bottom","p"]],"ty":"C","rad":"艹","og":{"t":"S","h":"plant","sem":"艹"}},"耳":{"ty":"P","rad":"耳","og":{"t":"P","h":"An ear"}},"晴":{"pt":[["日","left","r"],["青","right","p"]],"ty":"S","ph":"青","phR":["セイ","ショウ","ジョウ"],"rad":"日","og":{"t":"S","h":"sun","sem":"日","pho":"青"}},"森":{"pt":[["木","top","r"],["林","bottom",""]],"ty":"C","rad":"木","og":{"t":"C","h":"Many trees 木 forming a forest"}},"明":{"pt":[["日","left","r"],["月","right",""]],"ty":"C","rad":"日","og":{"t":"C","h":"The light of the sun 日 and moon 月"}}},"parts":{"日":["sun","ひ"],"一":["one","いち"],"囗":["enclosure","くに"],"玉":["jade","たま"],"人":["man","ひと"],"云":["say",""],"𠆢":["man","ひとやね"],"丿":["slash","の"],"干":["pestle","かん"],"大":["big","だい"],"十":["ten","じゅう"],"二":["two","に"],"木":["tree","き"],"口":["mouth","くち"],"丨":["line","ぼう"],"長":["long","ながい"],"山":["mountain","やま"],"凵":["container","かんにょう"],"寺":["Buddhist temple",""],"亅":["hook","はねぼう"],"自":["self","みずから"],"行":["go","ぎょう"],"礻":["sign","しめすへん"],"土":["earth","つち"],"目":["eye","め"],"儿":["legs","にんにょう"],"見":["see","みる"],"月":["moon","つき"],"八":["eight","はち"],"刀":["knife","かたな"],"彳":["step","ぎょうにんべん"],"幺":["short","いとがしら"],"夂":["go slowly","ちかんむり"],"刂":["knife","りっとう"],"生":["life","うむ"],"門":["gate","もん"],"卜":["divination","ぼく"],"也":["to be (classical)",""],"方":["square","ほう"],"立":["stand","たつ"],"斤":["axe","おの"],"亲":["parent",""],"昜":["open",""],"金":["metal","かね"],"乙":["second","おつ"],"入":["enter","いる"],"手":["hand","て"],"力":["power","ちから"],"⺍":["small","つ"],"冖":["cover","わかんむり"],"子":["child","こ"],"亠":["lid","けいさん"],"高":["tall","たかい"],"冂":["open country","けいがまえ"],"員":["employee",""],"重":["heavy",""],"小":["small","しょう"],"夕":["evening","ゆう"],"言":["speech","いう"],"亻":["man","にんべん"],"本":["book",""],"骨":["bone","ほね"],"豊":["bountiful",""],"田":["field","た"],"气":["steam","きがまえ"],"乂":["mow",""],"心":["heart","こころ"],"舌":["tongue","した"],"訁":["speech","ごんべん"],"吏":["officer",""],"史":["history",""],"女":["woman","おんな"],"匕":["spoon","さじ"],"首":["head","くび"],"辶":["walk","しんにょう"],"辶":["walk","しんにょう"],"白":["white","しろ"],"聿":["brush","ふで"],"曰":["say","ひらび"],"川":["river","かわ"],"水":["water","みず"],"丶":["dot","てん"],"禾":["grain","のぎ"],"厶":["private","む"],"西":["west","にし"],"雨":["rain","あめ"],"⻗":["rain","あめかんむり"],"交":["mingle",""],"吾":["I",""],"五":["five",""],"穴":["cave","あな"],"工":["work","こう"],"耳":["ear","みみ"],"食":["eat","しょく"],"車":["cart","くるま"],"可":["can",""],"足":["foot","あし"],"冫":["ice","にすい"],"毋":["mother","なし"],"母":["mother","はは"],"广":["house on cliff","まだれ"],"占":["fortune-telling",""],"罒":["net","あみがしら"],"貝":["shell","かい"],"火":["fire","ひ"],"艹":["grass","くさかんむり"],"化":["change",""],"売":["sell",""],"馬":["horse","うま"],"尺":["shaku",""],"父":["father","ちち"],"又":["right hand","また"],"肉":["meat","にく"],"飠":["eat","しょくへん"],"欠":["lack","あくび"],"青":["blue","あお"],"林":["grove",""]}};
 let PARTS = STARTER_KSTRUCT.parts;
 function normK(x, lvl) {
   const clean = x.m.filter(m => !/radical\s*\(no\.?\s*\d+\)/i.test(m)), mean = clean.length ? clean : x.m;
   return { id: 'k:' + x.k, kind: 'kanji', k: x.k, mean, m: mean.slice(0, 3).join('; '), on: x.on || [], kun: x.kun || [], s: x.s, r: x.r, freq: x.q || 1, lvl, ex: x.ex || [], gr: x.gr, pic: x.pic || null,
-    ...(() => { const st = x.pt || x.ty ? x : STARTER_KSTRUCT.k[x.k] || {}; return { pt: st.pt || null, ty: st.ty || '', ph: st.ph || '', phR: st.phR || [], rad: st.rad || '', lk: st.lk || [] }; })() };
+    ...(() => { const st = x.pt || x.ty || x.og ? x : STARTER_KSTRUCT.k[x.k] || {}; return { pt: st.pt || null, ty: st.ty || '', ph: st.ph || '', phR: st.phR || [], rad: st.rad || '', lk: st.lk || [], og: st.og || null, kk: !!st.kk, old: st.old || '' }; })() };
 }
 function starterData() {
   const posMap = { expression: 'expression', noun: 'noun', pronoun: 'pronoun', verb: 'verb', 'i-adj': 'i-adj', 'na-adj': 'na-adj', adverb: 'adverb', question: 'pronoun', custom: 'other' };
@@ -1363,18 +1458,24 @@ function weakestSituation() {
   for (const x of SITUATIONS) { const it = sitItems(x); if (!it.length) continue; const r = it.filter(i => status(i.id) === 'known').length / it.length; if (r < bestR) { bestR = r; best = x; } }
   return best;
 }
+function vLibrary() {
+  const tiles = [['kana', 'あ', 'Kana', 'Hiragana and katakana charts, stroke order and drills'], ['vocab', '語', 'Words', 'Flashcards, quizzes, word lists and everyday situations'], ['kanji', '字', 'Kanji', 'Every JLPT kanji with its story, parts and stroke order'], ['grammar', '文', 'Grammar', 'Grammar points N5–N1 with examples and drills'], ['vocab:sit', '場', 'Situations', 'Words grouped by where you’ll hear them'], ['search', '探', 'Search', 'Look up any word, kanji or grammar point']];
+  return `<h1>Library</h1><p class="sub">Everything in the app, for looking things up or drilling a weak spot. Your lessons are on the Path.</p>
+  <div class="libgrid">${tiles.map(([v, g, t, d]) => { const [view, tab] = v.split(':'); return `<button class="libtile" onclick="App.go('${view}'${tab ? `,'${tab}'` : ''})"><b class="jp">${g}</b><span class="lt-t">${t}</span><span class="lt-d">${d}</span></button>`; }).join('')}</div>`;
+}
 function vHome() {
   const due = dueCount(), tl = todayLog(), nl = newLeft('vocab'), fresh = vSel().filter(x => !progress[x.id]).length;
   const hK = KANA.filter(x => x.script === 'h'), hKnown = hK.filter(x => status(x.id) === 'known').length;
   const sit = weakestSituation(), lvl = userLevel();
   const examToday = store.get('exams', []).some(h => h.d === today());
   const newNow = Math.min(nl, fresh);
+  const pu = nextUnit('jlpt'), tu = nextUnit('travel');
   const stops = [
-    { title: due ? `Review ${fmtN(due)} card${due === 1 ? '' : 's'}` : newNow ? `Meet ${newNow} new word${newNow === 1 ? '' : 's'}` : 'Flashcards',
-      sub: due ? `Plus ${newNow} new today` : newNow ? 'Nothing due, so start on new words' : 'All caught up for today', done: !due && !newNow, go: 'Start', act: "App.go('vocab','cards')" },
-    { title: 'Quiz round', sub: `20 ${lvl} words with instant feedback`, done: flagged('learn'), go: 'Play', act: "App.go('vocab','learn')" },
-    { title: `${sit.icon} ${sit.name}`, sub: 'The situation you know least so far', done: flagged('sit'), go: 'Open', act: `App.go('vocab','sit');App.sitOpen('${sit.id}')` },
-    { title: 'Kana drill', sub: `${hKnown} of ${hK.length} hiragana known`, done: flagged('kana'), go: 'Drill', act: "App.go('kana')" },
+    pathSt.place || Object.keys(pathSt.done).length
+      ? { title: `Lesson: ${pu.t}`, sub: `${unitLabel(pu)} · about 15 minutes`, done: flagged('lesson'), go: 'Start', act: `App.lesson('${pu.id}')` }
+      : { title: 'Find your starting point', sub: '5-minute placement check', done: false, go: 'Start', act: 'App.placeStart()' },
+    { title: due ? `Review ${fmtN(due)} card${due === 1 ? '' : 's'}` : 'Reviews', sub: due ? 'Words and kanji from your lessons, due today' : 'Nothing due. New words arrive with each lesson', done: !due, go: 'Review', act: "App.go('vocab','cards')" },
+    { title: `Travel: ${tu.t}`, sub: tu.s, done: !!pathSt.done[tu.id] && flagged('lesson'), go: 'Open', act: `App.lesson('${tu.id}')` },
     { title: 'Mock exam', sub: examToday ? 'Taken today' : `${lvl} · JLPT-style, timed`, done: examToday, go: 'Sit it', act: "App.go('exam')" }
   ];
   const nextI = Math.max(0, stops.findIndex(x => !x.done)), allDone = stops.every(x => x.done);
@@ -1569,7 +1670,8 @@ function vSettings() {
     { name: 'KanjiVG', by: 'Ulrich Apel and contributors', license: 'CC BY-SA 3.0', url: 'https://kanjivg.tagaini.net/' },
     { name: 'Tatoeba', by: 'Tatoeba contributors', license: 'CC BY 2.0 FR', url: 'https://tatoeba.org/' },
     { name: 'Pictures', by: 'OpenMoji – the open-source emoji and icon project (your device\'s emoji are shown until the full data is built)', license: 'CC BY-SA 4.0', url: 'https://openmoji.org/' },
-    { name: 'Kanji origins and parts', by: 'Kanjium (mifunetoshiro), built on EDRDG data; parts from KanjiVG', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' },
+    { name: 'Kanji origin stories', by: 'Make Me a Hanzi (Shaunak Kishore), from Unihan and CJKlib', license: 'LGPL-3.0', url: 'https://github.com/skishore/makemeahanzi' },
+    { name: 'Kanji types, sound parts, look-alikes', by: 'Kanjium (mifunetoshiro), built on EDRDG data; parts from KanjiVG', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' },
     { name: '3D pictures', by: 'Fluent Emoji (Microsoft)', license: 'MIT', url: 'https://github.com/microsoft/fluentui-emoji' },
     { name: 'Icons', by: 'Tabler Icons (Paweł Kuna)', license: 'MIT', url: 'https://tabler.io/icons' },
     { name: 'Icons', by: 'game-icons.net (Lorc, Delapouite and contributors; the artist is named under each picture)', license: 'CC BY 3.0', url: 'https://game-icons.net/' },
@@ -1708,33 +1810,48 @@ function vDetail(x) {
   </div>`;
 }
 /* ---------- how a kanji is built, and ways to remember it ---------- */
-const POS_WORD = { left: 'left', right: 'right', top: 'top', bottom: 'bottom', kamae: 'around', kamaec: 'around', tare: 'top-left', tarec: 'top-left', nyo: 'bottom-left', nyoc: 'bottom-left' };
+const POS_WORD = { left: 'on the left', right: 'on the right', top: 'on top', bottom: 'at the bottom', kamae: 'wrapped around it', kamaec: 'wrapped around it', tare: 'over the top-left', tarec: 'over the top-left', nyo: 'along the bottom-left', nyoc: 'along the bottom-left' };
 const partMean = el => (KMAP[el] && KMAP[el].mean[0]) || (PARTS[el] && PARTS[el][0]) || '';
 const partName = el => (PARTS[el] && PARTS[el][1]) || '';
 const kataOf = r => String(r).replace(/[ぁ-ゖ]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60));
 let knotes = store.get('knotes', {});
 function kBuild(k) {
-  const pt = k.pt || [], S = k.ty === 'S';
-  const radP = pt.find(p => p[0] === k.rad) || pt.find(p => p[2] === 'r'), isRad = p => p === radP, isSnd = p => S && (p[2] === 'p' || p[0] === k.ph);
-  const m0 = k.mean[0] || '';
-  const chip = p => { const m = partMean(p[0]), n = (isRad(p) && partName(k.rad)) || partName(p[0]), role = isSnd(p) ? 'sound' : S && isRad(p) ? 'meaning' : '';
-    return `<${KMAP[p[0]] ? `button data-open="k:${esc(p[0])}"` : 'div'} class="kb-part${role ? ' ' + role : ''}"><b class="jp">${esc(p[0])}</b><span class="kb-pm">${esc(m || '—')}</span>${n ? `<span class="kb-pn jp">${esc(n)}</span>` : ''}${role ? `<span class="kb-role">${role === 'sound' ? `sound ${esc((k.phR || []).slice(0, 2).join('・'))}` : 'meaning'}</span>` : ''}</${KMAP[p[0]] ? 'button' : 'div'}>`; };
-  const eq = pt.length && k.ty !== 'P' && k.ty !== 'I' ? `<div class="kb-eq">${pt.map(chip).join('<i class="kb-op">+</i>')}<i class="kb-op">=</i><div class="kb-part whole"><b class="jp">${esc(k.k)}</b><span class="kb-pm">${esc(m0)}</span></div></div>` : '';
-  const named = p => `${p[0]}${partMean(p[0]) ? ` (${partMean(p[0])})` : ''}`;
-  let title = '', text = '';
-  if (k.ty === 'P') { title = 'Picture'; text = `It began as a drawing of “${(PARTS[k.k] && PARTS[k.k][0]) || m0}”, simplified over centuries into the strokes you see now.${k.pic && settings.pics ? ' The picture above shows the idea.' : ''}`; }
-  else if (k.ty === 'I') { title = 'Symbol'; text = `A simple sign that points to an idea (“${m0}”) rather than a drawing of a thing.`; }
-  else if (k.ty === 'C') { title = 'Meanings combined'; text = pt.length ? `${pt.map(named).join(' + ')} together give the idea of “${m0}”.` : `Its parts combine to give the idea of “${m0}”.`; }
+  const pt = k.pt || [], og = k.og || null, m0 = k.mean[0] || '';
+  const S = og ? og.t === 'S' : k.ty === 'S', sem = (og && og.sem) || (S && k.rad) || '', pho = (og && og.pho) || (S && k.ph) || '';
+  const radP = pt.find(p => p[0] === k.rad) || pt.find(p => p[2] === 'r');
+  const isSnd = p => S && (p[0] === pho || (!pho && p[2] === 'p')), isMean = p => S && !isSnd(p) && (p[0] === sem || p === radP);
+  const named = el => `${el}${partMean(el) ? ` (${partMean(el)})` : ''}`;
+  const chip = p => { const role = isSnd(p) ? 'sound' : isMean(p) ? 'meaning' : '', n = (p === radP && partName(k.rad)) || partName(p[0]), tag = KMAP[p[0]] ? 'button' : 'div';
+    return `<${tag}${tag === 'button' ? ` data-open="k:${esc(p[0])}"` : ''} class="kb-part${role ? ' ' + role : ''}"><b class="jp">${esc(p[0])}</b><span class="kb-pm">${esc(partMean(p[0]) || '—')}</span>${n ? `<span class="kb-pn jp">${esc(n)}</span>` : ''}${role ? `<span class="kb-role">${role === 'sound' ? `sound${k.phR && k.phR.length ? ' ' + esc(k.phR.slice(0, 2).join('・')) : ''}` : 'meaning'}</span>` : ''}</${tag}>`; };
+  // the story itself
+  let title = '', story = '', extra = '', trick = '';
+  if (og && og.t === 'P') { title = 'Picture'; story = og.h ? `${og.h}.` : `A drawing of “${m0}”.`; extra = 'The drawing was simplified over centuries into the strokes you see now.'; }
+  else if (og && og.t === 'C') { title = k.ty === 'I' ? 'Symbol' : 'Meanings combined'; story = og.h ? `${og.h}.` : ''; }
   else if (S) {
     title = 'Meaning + sound';
-    const mp = pt.find(isRad) || (k.rad ? [k.rad] : null), sp = pt.find(isSnd) || (k.ph ? [k.ph] : null), sounds = k.phR || [];
-    const hit = k.on.map(kataOf).find(o => sounds.includes(o));
-    text = `${mp ? `${named(mp)} shows what it's about` : 'One part shows what it is about'}${sp ? `, and ${sp[0]} gives the sound${sounds.length ? ` (${sounds.join('・')})` : ''}` : ''}.${hit ? ` That's why ${k.k} is read ${hit}.` : k.on[0] ? ` The sound has shifted over time: today ${k.k} is read ${kataOf(k.on[0])}.` : ''}`;
+    const sm = (og && og.h) || partMean(sem), sounds = k.phR || [], hit = k.on.map(kataOf).find(o => sounds.includes(o));
+    story = `${sem ? `${sem}${sm ? ` (${sm})` : ''} tells you what it's about` : 'One part tells you what it is about'}${pho ? `, and ${pho} was added for its sound${sounds.length ? ` (${sounds.join('・')})` : ''}` : ''}.${hit ? ` That's why ${k.k} is read ${hit}.` : k.on[0] && pho ? ` The sound has drifted since: today ${k.k} is read ${kataOf(k.on[0])}.` : ''}`;
+    extra = 'More than half of all kanji were made this way: one part for the topic, one borrowed for its sound. Learn the sound parts and you can often guess a new kanji\'s reading.';
+    const pm = partMean(pho), smn = partMean(sem);
+    if (pm && smn) trick = `${smn} (${sem}) + ${pm} (${pho}) → ${m0}`;
   }
+  else if (k.kk) { title = 'Made in Japan'; story = `This kanji was created in Japan rather than China.${pt.length ? ` ${pt.map(p => named(p[0])).join(' + ')} together give the idea of “${m0}”.` : ''}`; }
+  else if (k.ty === 'P') { title = 'Picture'; story = `A drawing of “${m0}”, simplified over centuries.`; }
+  else if (k.ty === 'I') { title = 'Symbol'; story = `A simple sign that points to an idea (“${m0}”) rather than a drawing of a thing.`; }
+  else if (k.ty === 'C' && pt.length) { title = 'Meanings combined'; story = `${pt.map(p => named(p[0])).join(' + ')} together give the idea of “${m0}”.`; }
+  const old = (og && og.old) || k.old;
+  const oldLine = old && old !== k.k ? `<div class="kb-old"><b class="jp">${esc(old)}</b><span>Older form, used in Japan until the 1946 simplification${og && og.old ? '. The story above describes this form' : ''}.</span></div>` : '';
+  // the parts row must agree with the story: every part has to appear in it (電 is 电 + 雨, not 雨 + 日)
+  const told = og ? new Set([...String(og.h || '').matchAll(/[\p{Script=Han}\u2E80-\u2FDF]/gu)].map(m => m[0]).concat([og.sem, og.pho].filter(Boolean))) : null;
+  const showEq = pt.length && !(og ? og.t === 'P' : k.ty === 'P') && k.ty !== 'I' && (!og || (!og.old && pt.every(p => told.has(p[0]))));   // a story about the older form (讀) doesn't match today's parts
+  const eq = showEq ? `<div class="kb-eq">${pt.map(chip).join('<i class="kb-op">+</i>')}<i class="kb-op">=</i><div class="kb-part whole"><b class="jp">${esc(k.k)}</b><span class="kb-pm">${esc(m0)}</span></div></div>` : '';
   const rg = k.rad || (radP && radP[0]), rpos = radP && radP[1], rn = partName(rg) || (radP && partName(radP[0])), rm = partMean(rg) || (radP && partMean(radP[0]));
-  const radLine = rg && (rm || rn) ? `<div class="kb-rad">Radical <b class="jp">${esc(rg)}</b>${rn ? ` <span class="jp">${esc(rn)}</span>` : ''}${rm ? `, “${esc(rm)}”` : ''}${POS_WORD[rpos] ? `, on the ${POS_WORD[rpos]}` : ''}.${rg !== k.k && rm && !/^(one|two|line|dot|slash|hook|second|lid|legs|eight|ten|cover|enclosure|open country|box|hiding enclosure)$/i.test(rm) ? ` Kanji with this radical often have something to do with “${esc(rm)}”.` : ''}</div>` : '';
-  if (!eq && !title && !radLine) return '';
-  return `<div class="mini">How it's built</div><div class="kbuild">${title ? `<div class="kb-type">${title}</div>` : ''}${eq}${text ? `<p class="kb-say">${esc(text)}</p>` : ''}${radLine}</div>`;
+  const radLine = rg && (rm || rn) && rg !== k.k ? `<div class="kb-rad">Radical <b class="jp">${esc(rg)}</b>${rn ? ` <span class="jp">${esc(rn)}</span>` : ''}${rm ? `, “${esc(rm)}”` : ''}${POS_WORD[rpos] ? `, ${POS_WORD[rpos]}` : ''}.${rm && !/^(one|two|line|dot|slash|hook|second|lid|legs|eight|ten|cover|enclosure|open country|box|hiding enclosure)$/i.test(rm) ? ` Kanji with this radical often have something to do with “${esc(rm)}”.` : ''}</div>` : '';
+  if (!story && !eq && !radLine) return '';
+  return `<div class="mini">How it came to be</div><div class="kbuild">${title ? `<div class="kb-type">${title}</div>` : ''}
+    ${story ? `<p class="kb-story">${esc(story)}</p>` : ''}${eq}${extra ? `<p class="kb-say">${esc(extra)}</p>` : ''}
+    ${trick ? `<div class="kb-trick"><b>Memory trick</b><span>${esc(trick)}</span><small>A way to remember it, not the real history.</small></div>` : ''}
+    ${oldLine}${radLine}</div>`;
 }
 function kRemember(k) {
   const fam = k.ty === 'S' && k.ph ? K.filter(x => x !== k && x.ph === k.ph).sort((a, b) => (a.r || 9999) - (b.r || 9999)).slice(0, 8) : [];
@@ -1843,7 +1960,7 @@ function animate(el) {
 /* tap a kanji in a sentence to open its details: example sentences, grammar examples, the quote of the day
    and the big word on a word card. Only kanji the app has data for are tappable; text inside buttons,
    links and furigana is left alone. */
-const KANJI_ZONES = '.ex .jp, .qj, .sign-word';
+const KANJI_ZONES = '.ex .jp, .qj, .sign-word, .lpts li';
 function linkKanji(root) {
   root.querySelectorAll(KANJI_ZONES).forEach(zone => {
     if (zone.dataset.kl) return; zone.dataset.kl = 1;
@@ -3021,11 +3138,13 @@ function navFoot(st) {
   <div class="nf-meta"><span>🔥 ${st} day${st === 1 ? '' : 's'}</span><span>${due ? `${due} due` : 'Nothing due'}</span></div></div>`;
 }
 function render() {
-  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === S.view));
+  const navOf = v => ['kana', 'vocab', 'kanji', 'grammar', 'library'].includes(v) ? 'library' : ['path', 'lesson', 'place'].includes(v) ? 'path' : v;
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === navOf(S.view) || b.dataset.v === S.view));
   const st = streak(); $('#streak').textContent = st ? `🔥 ${st}` : '';
   const nf = $('#navfoot'); if (nf) nf.innerHTML = navFoot(st);
   const page = S.session ? 'session' : S.view;
-  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, exam: vExam, search: vSearch, settings: vSettings })[S.view]()}</div>`;
+  if (S.view === 'path' && DATA.mode === 'full' && !S.pathLoading && (LV.some(l => !isLoaded('vocab', l)) || LV.some(l => !isLoaded('grammar', l)))) { S.pathLoading = true; loadPathData().then(() => { S.pathLoading = false; if (S.view === 'path') render(); }); }
+  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, exam: vExam, search: vSearch, settings: vSettings })[S.view]()}</div>`;
   hydrate($('#app')); paintLevels($('#app'));
 }
 const SKINS = [
@@ -3082,6 +3201,500 @@ window.addEventListener('popstate', () => {
   if ($('#sheet').classList.contains('open')) { sheetPushed = Math.max(0, sheetPushed - 1); popSheet(); }
 });
 let searchTimer = null;
+
+/* =====================================================================
+   PATH — the guided course. N5 units and the travel track are written for this app;
+   N4–N1 units are put together from the grammar and word data (see pathUnits()).
+   Unit: { id, t: title, s: what you'll be able to do, pat: key pattern ({漢字|かな} furigana), pm: its meaning,
+           pts: explanation points, ex: [[jp, en]], w: [[word, reading, meaning]], rd: [[jp, en]] reading,
+           tk: [[speaker, jp, en]] dialogue, cz: [[sentence with ＿, [options], answer index, en]] }
+   ===================================================================== */
+const PATH_N5 = [
+{ id: 'n5-01', t: 'Introducing yourself', s: 'Say who you are and what you do', pat: 'Aは Bです', pm: 'A is B',
+  pts: ['は marks the topic: “as for A…”. Written with ha, it is read “wa” here.', 'です ends a polite sentence. It works like “is / am / are”.', 'Once it is clear who you mean, leave out 私は. Japanese drops what is obvious.', 'Add さん after other people’s names, never after your own.'],
+  ex: [['{私|わたし}は {学生|がくせい}です。', 'I am a student.'], ['{田中|たなか}さんは {先生|せんせい}です。', 'Mr / Ms Tanaka is a teacher.'], ['マリアです。{会社員|かいしゃいん}です。', 'I’m Maria. I’m an office worker.']],
+  w: [['私', 'わたし', 'I, me'], ['学生', 'がくせい', 'student'], ['先生', 'せんせい', 'teacher'], ['会社員', 'かいしゃいん', 'office worker'], ['医者', 'いしゃ', 'doctor'], ['日本人', 'にほんじん', 'Japanese person'], ['人', 'ひと', 'person'], ['友達', 'ともだち', 'friend'], ['名前', 'なまえ', 'name']],
+  rd: [['はじめまして。', 'Nice to meet you.'], ['{私|わたし}は マリアです。', 'I’m Maria.'], ['ブラジル{人|じん}です。', 'I’m Brazilian.'], ['{会社員|かいしゃいん}です。', 'I’m an office worker.'], ['どうぞ よろしく おねがいします。', 'Pleased to meet you.']],
+  tk: [['A', 'はじめまして。{山田|やまだ}です。', 'Nice to meet you. I’m Yamada.'], ['B', 'はじめまして。マリアです。', 'Nice to meet you. I’m Maria.'], ['A', '{私|わたし}は {先生|せんせい}です。', 'I’m a teacher.'], ['B', '{私|わたし}は {学生|がくせい}です。よろしく おねがいします。', 'I’m a student. Pleased to meet you.']],
+  cz: [['{私|わたし}＿ {学生|がくせい}です。', ['は', 'を', 'に', 'で'], 0, 'I am a student.'], ['マリアさんは {医者|いしゃ}＿。', ['です', 'ます', 'か', 'を'], 0, 'Maria is a doctor.'], ['{山田|やまだ}＿は {先生|せんせい}です。', ['さん', 'です', 'は', 'の'], 0, 'Mr / Ms Yamada is a teacher.']] },
+
+{ id: 'n5-02', t: 'Yes, no and questions', s: 'Ask simple questions and say “not”', pat: 'Bですか ／ Bじゃないです', pm: 'Is it B? / It isn’t B',
+  pts: ['Put か at the end to make a question. No question mark is needed.', 'Answer with はい (yes) or いいえ (no).', 'じゃないです means “is not”. じゃありません is the same, a little more formal.', '何 (なん) = what, 誰 (だれ) = who. Put them where the answer would go.'],
+  ex: [['{学生|がくせい}ですか。', 'Are you a student?'], ['いいえ、{学生|がくせい}じゃないです。', 'No, I’m not a student.'], ['あの{人|ひと}は {誰|だれ}ですか。', 'Who is that person?']],
+  w: [['はい', 'はい', 'yes'], ['いいえ', 'いいえ', 'no'], ['何', 'なん', 'what'], ['誰', 'だれ', 'who'], ['日本', 'にほん', 'Japan'], ['国', 'くに', 'country'], ['大学', 'だいがく', 'university'], ['英語', 'えいご', 'English (language)']],
+  rd: [['キムさんは {韓国人|かんこくじん}です。', 'Kim is Korean.'], ['{学生|がくせい}じゃないです。', 'She isn’t a student.'], ['{会社員|かいしゃいん}です。', 'She’s an office worker.'], ['{英語|えいご}の {先生|せんせい}は {誰|だれ}ですか。', 'Who is the English teacher?']],
+  tk: [['A', 'マリアさんは {学生|がくせい}ですか。', 'Maria, are you a student?'], ['B', 'はい、{学生|がくせい}です。', 'Yes, I’m a student.'], ['A', 'アメリカ{人|じん}ですか。', 'Are you American?'], ['B', 'いいえ、アメリカ{人|じん}じゃないです。ブラジル{人|じん}です。', 'No, I’m not American. I’m Brazilian.']],
+  cz: [['{先生|せんせい}です＿。', ['か', 'は', 'を', 'ね'], 0, 'Are you a teacher?'], ['いいえ、{医者|いしゃ}＿ないです。', ['じゃ', 'を', 'は', 'か'], 0, 'No, I’m not a doctor.'], ['あの{人|ひと}は ＿ですか。', ['{誰|だれ}', 'どこ', 'いつ', 'いくら'], 0, 'Who is that person?']] },
+
+{ id: 'n5-03', t: 'This, that and that over there', s: 'Point at things and ask what they are', pat: 'これ・それ・あれは {何|なん}ですか', pm: 'What is this / that / that over there?',
+  pts: ['これ = this (near me). それ = that (near you). あれ = that over there (far from both of us).', 'どれ = which one.', 'Before a noun use この・その・あの・どの: この{本|ほん} = this book.'],
+  ex: [['これは {何|なん}ですか。', 'What is this?'], ['それは {傘|かさ}です。', 'That is an umbrella.'], ['あれは {時計|とけい}ですか。', 'Is that over there a clock?']],
+  w: [['これ', 'これ', 'this'], ['それ', 'それ', 'that'], ['あれ', 'あれ', 'that (over there)'], ['どれ', 'どれ', 'which one'], ['本', 'ほん', 'book'], ['鉛筆', 'えんぴつ', 'pencil'], ['傘', 'かさ', 'umbrella'], ['時計', 'とけい', 'watch, clock'], ['辞書', 'じしょ', 'dictionary'], ['新聞', 'しんぶん', 'newspaper']],
+  rd: [['これは {本|ほん}です。', 'This is a book.'], ['それは {辞書|じしょ}です。', 'That is a dictionary.'], ['あれは {新聞|しんぶん}です。', 'That over there is a newspaper.'], ['あれは {辞書|じしょ}じゃないです。', 'That over there isn’t a dictionary.']],
+  tk: [['A', 'すみません、これは {何|なん}ですか。', 'Excuse me, what is this?'], ['B', 'それは {鉛筆|えんぴつ}です。', 'That’s a pencil.'], ['A', 'あれも {鉛筆|えんぴつ}ですか。', 'Is that one over there a pencil too?'], ['B', 'いいえ、あれは ペンです。', 'No, that’s a pen.']],
+  cz: [['＿は {何|なん}ですか。（the thing in your hand）', ['これ', 'あれ', 'どれ', 'この'], 0, 'What is this?'], ['＿ {本|ほん}は {辞書|じしょ}です。', ['この', 'これ', 'どれ', 'それ'], 0, 'This book is a dictionary.'], ['あなたの {傘|かさ}は ＿ですか。', ['どれ', 'これ', 'あの', 'その'], 0, 'Which one is your umbrella?']] },
+
+{ id: 'n5-04', t: 'My, your, whose', s: 'Talk about what belongs to whom', pat: 'Aの B', pm: 'A’s B / B of A',
+  pts: ['の links two nouns: {私|わたし}の{本|ほん} = my book.', 'It also means “of / about”: {日本語|にほんご}の{先生|せんせい} = a Japanese teacher.', '{誰|だれ}の = whose.', 'You can drop the second noun when it is clear: {私|わたし}のです = it’s mine.'],
+  ex: [['{私|わたし}の {名前|なまえ}は マリアです。', 'My name is Maria.'], ['これは {誰|だれ}の {車|くるま}ですか。', 'Whose car is this?'], ['{田中|たなか}さんは {日本語|にほんご}の {先生|せんせい}です。', 'Mr / Ms Tanaka is a Japanese teacher.']],
+  w: [['家族', 'かぞく', 'family'], ['母', 'はは', '(my) mother'], ['父', 'ちち', '(my) father'], ['日本語', 'にほんご', 'Japanese (language)'], ['車', 'くるま', 'car'], ['会社', 'かいしゃ', 'company'], ['かばん', 'かばん', 'bag'], ['携帯', 'けいたい', 'mobile phone']],
+  rd: [['これは {私|わたし}の {家族|かぞく}です。', 'This is my family.'], ['{父|ちち}は {会社員|かいしゃいん}です。', 'My father is an office worker.'], ['{母|はは}は {英語|えいご}の {先生|せんせい}です。', 'My mother is an English teacher.'], ['この {車|くるま}は {父|ちち}のです。', 'This car is my father’s.']],
+  tk: [['A', 'これは {誰|だれ}の かばんですか。', 'Whose bag is this?'], ['B', '{私|わたし}のです。', 'It’s mine.'], ['A', 'じゃあ、この {携帯|けいたい}も マリアさんのですか。', 'Then is this phone yours too, Maria?'], ['B', 'いいえ、それは {山田|やまだ}さんのです。', 'No, that’s Yamada’s.']],
+  cz: [['{私|わたし}＿ {本|ほん}です。', ['の', 'は', 'を', 'が'], 0, 'It’s my book.'], ['これは ＿の {車|くるま}ですか。', ['{誰|だれ}', '{何|なん}', 'どこ', 'どれ'], 0, 'Whose car is this?'], ['{日本語|にほんご}＿ {先生|せんせい}は {田中|たなか}さんです。', ['の', 'は', 'か', 'に'], 0, 'The Japanese teacher is Mr / Ms Tanaka.']] },
+
+{ id: 'n5-05', t: 'Where is it?', s: 'Ask for places and say where things are', pat: '〜は どこですか', pm: 'Where is …?',
+  pts: ['ここ = here, そこ = there (near you), あそこ = over there, どこ = where.', 'Ask with “place は どこですか”. Answer with “place は ここ / あそこ です”.', 'すみません (excuse me) is the polite way to start.'],
+  ex: [['すみません、トイレは どこですか。', 'Excuse me, where is the toilet?'], ['{駅|えき}は あそこです。', 'The station is over there.'], ['ここは {図書館|としょかん}です。', 'This is the library.']],
+  w: [['ここ', 'ここ', 'here'], ['そこ', 'そこ', 'there'], ['あそこ', 'あそこ', 'over there'], ['どこ', 'どこ', 'where'], ['駅', 'えき', 'station'], ['トイレ', 'トイレ', 'toilet'], ['店', 'みせ', 'shop'], ['銀行', 'ぎんこう', 'bank'], ['病院', 'びょういん', 'hospital'], ['図書館', 'としょかん', 'library']],
+  rd: [['ここは {駅|えき}です。', 'This is the station.'], ['{銀行|ぎんこう}は あそこです。', 'The bank is over there.'], ['{病院|びょういん}は どこですか。', 'Where is the hospital?'], ['トイレは そこです。', 'The toilet is there.']],
+  tk: [['A', 'すみません、{銀行|ぎんこう}は どこですか。', 'Excuse me, where is the bank?'], ['B', '{銀行|ぎんこう}ですか。あそこです。', 'The bank? It’s over there.'], ['A', 'あの {店|みせ}の {隣|となり}ですか。', 'Next to that shop?'], ['B', 'はい、そうです。', 'Yes, that’s right.']],
+  cz: [['トイレは ＿ですか。', ['どこ', 'どれ', '{誰|だれ}', '{何|なん}'], 0, 'Where is the toilet?'], ['{駅|えき}は ＿です。（far from both of you）', ['あそこ', 'ここ', 'そこ', 'どこ'], 0, 'The station is over there.'], ['＿、{病院|びょういん}は どこですか。', ['すみません', 'はじめまして', 'いいえ', 'どうぞ'], 0, 'Excuse me, where is the hospital?']] },
+
+{ id: 'n5-06', t: 'Numbers and prices', s: 'Count, read prices and ask “how much?”', pat: 'いくらですか ／ 〜{円|えん}です', pm: 'How much is it? / It’s … yen',
+  pts: ['Numbers build up simply: {十|じゅう} 10, {二十|にじゅう} 20, {二十三|にじゅうさん} 23.', 'Watch the sound changes: {三百|さんびゃく} 300, {六百|ろっぴゃく} 600, {八百|はっぴゃく} 800, {三千|さんぜん} 3,000.', 'Japanese counts in ten-thousands: {一万|いちまん} = 10,000.', 'いくら = how much. {円|えん} = yen.'],
+  ex: [['これは いくらですか。', 'How much is this?'], ['{五百円|ごひゃくえん}です。', 'It’s 500 yen.'], ['この {時計|とけい}は {一万円|いちまんえん}です。', 'This watch is 10,000 yen.']],
+  w: [['一', 'いち', 'one'], ['二', 'に', 'two'], ['三', 'さん', 'three'], ['十', 'じゅう', 'ten'], ['百', 'ひゃく', 'hundred'], ['千', 'せん', 'thousand'], ['万', 'まん', 'ten thousand'], ['円', 'えん', 'yen'], ['いくら', 'いくら', 'how much'], ['お金', 'おかね', 'money']],
+  rd: [['この {本|ほん}は {千円|せんえん}です。', 'This book is 1,000 yen.'], ['その かばんは {三千円|さんぜんえん}です。', 'That bag is 3,000 yen.'], ['あの {時計|とけい}は いくらですか。', 'How much is that watch over there?'], ['{二万円|にまんえん}です。', 'It’s 20,000 yen.']],
+  tk: [['A', 'すみません、これは いくらですか。', 'Excuse me, how much is this?'], ['B', '{八百円|はっぴゃくえん}です。', 'It’s 800 yen.'], ['A', 'じゃあ、これを ください。', 'Then I’ll take this, please.'], ['B', 'ありがとう ございます。', 'Thank you very much.']],
+  cz: [['これは ＿ですか。', ['いくら', 'どこ', '{誰|だれ}', 'どれ'], 0, 'How much is this?'], ['300 = ＿', ['さんびゃく', 'さんひゃく', 'さんぴゃく', 'みひゃく'], 0, 'Three hundred'], ['10,000 = ＿', ['いちまん', 'じゅうせん', 'ひゃくせん', 'まん'], 0, 'Ten thousand']] },
+
+{ id: 'n5-07', t: 'What time is it?', s: 'Tell the time and say from when to when', pat: '〜{時|じ}から 〜{時|じ}まで', pm: 'from … o’clock until … o’clock',
+  pts: ['{時|じ} = o’clock, {分|ふん／ぷん} = minutes, {半|はん} = half past.', 'Learn the odd ones: {四時|よじ} 4:00, {七時|しちじ} 7:00, {九時|くじ} 9:00.', '{午前|ごぜん} = a.m., {午後|ごご} = p.m. They go before the time.', 'から = from, まで = until.'],
+  ex: [['{今|いま} {何時|なんじ}ですか。', 'What time is it now?'], ['{三時半|さんじはん}です。', 'It’s half past three.'], ['{銀行|ぎんこう}は {九時|くじ}から {三時|さんじ}までです。', 'The bank is open from 9 until 3.']],
+  w: [['今', 'いま', 'now'], ['時間', 'じかん', 'time, hours'], ['半', 'はん', 'half'], ['午前', 'ごぜん', 'morning, a.m.'], ['午後', 'ごご', 'afternoon, p.m.'], ['朝', 'あさ', 'morning'], ['夜', 'よる', 'night'], ['毎日', 'まいにち', 'every day']],
+  rd: [['{今|いま}、{午前|ごぜん} {十時|じゅうじ}です。', 'It’s 10 a.m. now.'], ['{図書館|としょかん}は {朝|あさ} {九時|くじ}から {夜|よる} {八時|はちじ}までです。', 'The library is open from 9 in the morning to 8 at night.'], ['{仕事|しごと}は {毎日|まいにち} {五時|ごじ}までです。', 'Work is until 5 every day.']],
+  tk: [['A', 'すみません、{今|いま} {何時|なんじ}ですか。', 'Excuse me, what time is it now?'], ['B', '{四時|よじ}{半|はん}です。', 'It’s half past four.'], ['A', 'デパートは {何時|なんじ}までですか。', 'Until what time is the department store open?'], ['B', '{夜|よる} {八時|はちじ}までです。', 'Until 8 p.m.']],
+  cz: [['4:00 = ＿', ['よじ', 'よんじ', 'しじ', 'よっじ'], 0, 'Four o’clock'], ['{九時|くじ}＿ {五時|ごじ}までです。', ['から', 'まで', 'の', 'に'], 0, 'From 9 until 5.'], ['{今|いま} ＿ですか。', ['{何時|なんじ}', 'いくら', 'どこ', '{誰|だれ}'], 0, 'What time is it now?']] },
+
+{ id: 'n5-08', t: 'Going and coming', s: 'Say where you go, come and return to', pat: '〜へ／に {行|い}きます', pm: 'go to …',
+  pts: ['Polite verbs end in ます. Dictionary {行|い}く becomes {行|い}きます.', 'Not doing it: ません. {行|い}きません = don’t go.', 'へ (read “e”) or に marks where you are heading.', '{行|い}く go, {来|く}る come, {帰|かえ}る go back home.'],
+  ex: [['{明日|あした} {学校|がっこう}へ {行|い}きます。', 'I’ll go to school tomorrow.'], ['{友達|ともだち}が {家|うち}に {来|き}ます。', 'A friend is coming to my house.'], ['{今日|きょう}は {会社|かいしゃ}に {行|い}きません。', 'I’m not going to the office today.']],
+  w: [['行く', 'いく', 'to go'], ['来る', 'くる', 'to come'], ['帰る', 'かえる', 'to go home, return'], ['学校', 'がっこう', 'school'], ['家', 'いえ', 'house, home'], ['今日', 'きょう', 'today'], ['明日', 'あした', 'tomorrow'], ['一人で', 'ひとりで', 'alone, by oneself']],
+  rd: [['{私|わたし}は {毎日|まいにち} {会社|かいしゃ}へ {行|い}きます。', 'I go to the office every day.'], ['{六時|ろくじ}に {家|いえ}へ {帰|かえ}ります。', 'I go home at six.'], ['{明日|あした}は {日曜日|にちようび}です。', 'Tomorrow is Sunday.'], ['{会社|かいしゃ}へ {行|い}きません。', 'I’m not going to the office.']],
+  tk: [['A', '{明日|あした} どこへ {行|い}きますか。', 'Where are you going tomorrow?'], ['B', '{東京|とうきょう}へ {行|い}きます。', 'I’m going to Tokyo.'], ['A', '{一人|ひとり}で {行|い}きますか。', 'Are you going alone?'], ['B', 'いいえ、{友達|ともだち}と {行|い}きます。', 'No, I’m going with a friend.']],
+  cz: [['{学校|がっこう}＿ {行|い}きます。', ['へ', 'を', 'で', 'は'], 0, 'I go to school.'], ['{明日|あした}は {会社|かいしゃ}に {行|い}き＿。', ['ません', 'ないです', 'じゃないです', 'ました'], 0, 'I won’t go to the office tomorrow.'], ['{六時|ろくじ}に {家|いえ}へ ＿。', ['{帰|かえ}ります', '{帰|かえ}る', '{帰|かえ}りです', '{帰|かえ}って'], 0, 'I go home at six.']] },
+
+{ id: 'n5-09', t: 'Eating, drinking, watching', s: 'Say what you do with を', pat: '〜を {食|た}べます', pm: 'eat … (を marks what the action is done to)',
+  pts: ['を (read “o”) marks the thing you act on: パンを{食|た}べます = eat bread.', 'The verb always comes last in a Japanese sentence.', 'Group 2 verbs drop る: {食|た}べる → {食|た}べます. Group 1 verbs change u → i: {飲|の}む → {飲|の}みます.', '{何|なに}を = what (as the object).'],
+  ex: [['{朝|あさ} パンを {食|た}べます。', 'I eat bread in the morning.'], ['コーヒーを {飲|の}みます。', 'I drink coffee.'], ['{何|なに}を {見|み}ますか。', 'What will you watch?']],
+  w: [['食べる', 'たべる', 'to eat'], ['飲む', 'のむ', 'to drink'], ['見る', 'みる', 'to see, watch'], ['読む', 'よむ', 'to read'], ['買う', 'かう', 'to buy'], ['聞く', 'きく', 'to listen, hear'], ['水', 'みず', 'water'], ['ご飯', 'ごはん', 'rice, meal'], ['映画', 'えいが', 'movie'], ['音楽', 'おんがく', 'music']],
+  rd: [['{私|わたし}は {毎朝|まいあさ} ご{飯|はん}を {食|た}べます。', 'I eat rice every morning.'], ['お{茶|ちゃ}を {飲|の}みます。', 'I drink tea.'], ['{夜|よる}は {本|ほん}を {読|よ}みます。', 'At night I read books.'], ['ときどき {映画|えいが}を {見|み}ます。', 'Sometimes I watch movies.']],
+  tk: [['A', '{何|なに}を {飲|の}みますか。', 'What will you drink?'], ['B', 'コーヒーを ください。', 'Coffee, please.'], ['A', '{何|なに}か {食|た}べますか。', 'Will you eat something?'], ['B', 'いいえ、{食|た}べません。', 'No, I won’t eat.']],
+  cz: [['パン＿ {食|た}べます。', ['を', 'へ', 'は', 'に'], 0, 'I eat bread.'], ['{水|みず}を {飲|の}＿ます。', ['み', 'む', 'め', 'ま'], 0, 'I drink water.'], ['{何|なに}を ＿か。', ['{見|み}ます', '{見|み}る', '{見|み}', '{見|み}です'], 0, 'What will you watch?']] },
+
+{ id: 'n5-10', t: 'Where, how and when', s: 'Add the place, the means and the time', pat: '〜で ／ 〜に', pm: 'で: at / by means of — に: at (a time)',
+  pts: ['で marks where an action happens: {図書館|としょかん}で{勉強|べんきょう}します.', 'で also marks the means: {電車|でんしゃ}で{行|い}きます = go by train.', 'に marks a specific time: {七時|しちじ}に{起|お}きます.', 'No に with relative times like {毎日|まいにち}, {今日|きょう}, {明日|あした}.'],
+  ex: [['{七時|しちじ}に {起|お}きます。', 'I get up at seven.'], ['{電車|でんしゃ}で {会社|かいしゃ}へ {行|い}きます。', 'I go to work by train.'], ['{図書館|としょかん}で {勉強|べんきょう}します。', 'I study at the library.']],
+  w: [['起きる', 'おきる', 'to get up'], ['寝る', 'ねる', 'to sleep, go to bed'], ['勉強', 'べんきょう', 'study'], ['電車', 'でんしゃ', 'train'], ['バス', 'バス', 'bus'], ['自転車', 'じてんしゃ', 'bicycle'], ['朝ご飯', 'あさごはん', 'breakfast'], ['晩ご飯', 'ばんごはん', 'dinner']],
+  rd: [['{私|わたし}は {毎朝|まいあさ} {六時|ろくじ}に {起|お}きます。', 'I get up at six every morning.'], ['{家|いえ}で {朝|あさ}ご{飯|はん}を {食|た}べます。', 'I eat breakfast at home.'], ['バスで {会社|かいしゃ}へ {行|い}きます。', 'I go to work by bus.'], ['{夜|よる} {十一時|じゅういちじ}に {寝|ね}ます。', 'I go to bed at 11 p.m.']],
+  tk: [['A', '{毎日|まいにち} {何時|なんじ}に {起|お}きますか。', 'What time do you get up every day?'], ['B', '{七時|しちじ}に {起|お}きます。', 'I get up at seven.'], ['A', '{何|なん}で {学校|がっこう}へ {行|い}きますか。', 'How do you get to school?'], ['B', '{自転車|じてんしゃ}で {行|い}きます。', 'I go by bicycle.']],
+  cz: [['{電車|でんしゃ}＿ {行|い}きます。', ['で', 'に', 'を', 'へ'], 0, 'I go by train.'], ['{七時|しちじ}＿ {起|お}きます。', ['に', 'で', 'を', 'が'], 0, 'I get up at seven.'], ['{図書館|としょかん}＿ {本|ほん}を {読|よ}みます。', ['で', 'に', 'へ', 'が'], 0, 'I read books at the library.']] },
+
+{ id: 'n5-11', t: 'What you did', s: 'Talk about the past', pat: '〜ました ／ 〜ませんでした', pm: 'did … / didn’t …',
+  pts: ['Past: ます → ました. {食|た}べました = ate.', 'Past negative: ません → ませんでした. {行|い}きませんでした = didn’t go.', '{昨日|きのう} yesterday, {先週|せんしゅう} last week, {去年|きょねん} last year.', 'と = with (a person): {友達|ともだち}と = with a friend.'],
+  ex: [['{昨日|きのう} {映画|えいが}を {見|み}ました。', 'I watched a movie yesterday.'], ['{先週|せんしゅう} {友達|ともだち}に {会|あ}いました。', 'I met a friend last week.'], ['{朝|あさ}ご{飯|はん}を {食|た}べませんでした。', 'I didn’t eat breakfast.']],
+  w: [['昨日', 'きのう', 'yesterday'], ['先週', 'せんしゅう', 'last week'], ['去年', 'きょねん', 'last year'], ['会う', 'あう', 'to meet'], ['話す', 'はなす', 'to speak, talk'], ['書く', 'かく', 'to write'], ['手紙', 'てがみ', 'letter'], ['宿題', 'しゅくだい', 'homework']],
+  rd: [['{昨日|きのう}は {日曜日|にちようび}でした。', 'Yesterday was Sunday.'], ['{友達|ともだち}と {映画|えいが}を {見|み}ました。', 'I watched a movie with a friend.'], ['{夜|よる}は {家|いえ}で {手紙|てがみ}を {書|か}きました。', 'In the evening I wrote a letter at home.'], ['{宿題|しゅくだい}は しませんでした。', 'I didn’t do my homework.']],
+  tk: [['A', '{昨日|きのう} {何|なに}を しましたか。', 'What did you do yesterday?'], ['B', '{友達|ともだち}に {会|あ}いました。', 'I met a friend.'], ['A', 'どこへ {行|い}きましたか。', 'Where did you go?'], ['B', 'どこも {行|い}きませんでした。{家|いえ}で {話|はな}しました。', 'We didn’t go anywhere. We talked at home.']],
+  cz: [['{昨日|きのう} {映画|えいが}を {見|み}＿。', ['ました', 'ます', 'ません', 'ましょう'], 0, 'I watched a movie yesterday.'], ['{宿題|しゅくだい}を し＿。', ['ませんでした', 'ないでした', 'じゃなかった', 'ません'], 0, 'I didn’t do my homework.'], ['{友達|ともだち}＿ {話|はな}しました。', ['と', 'を', 'で', 'へ'], 0, 'I talked with a friend.']] },
+
+{ id: 'n5-12', t: 'Describing with い-adjectives', s: 'Say what things are like', pat: '{大|おお}きい {家|いえ} ／ {高|たか}くないです', pm: 'a big house / it isn’t expensive',
+  pts: ['い-adjectives end in い and go straight before a noun: {高|たか}い{時計|とけい}.', 'To end a sentence add です: {高|たか}いです.', 'Not: drop い, add くないです: {高|たか}くないです. いい (good) is irregular: よくないです.', 'とても = very. あまり〜ない = not very.'],
+  ex: [['この {時計|とけい}は {高|たか}いです。', 'This watch is expensive.'], ['{今日|きょう}は あまり {寒|さむ}くないです。', 'It isn’t very cold today.'], ['とても おいしい ケーキです。', 'It’s a very tasty cake.']],
+  w: [['大きい', 'おおきい', 'big'], ['小さい', 'ちいさい', 'small'], ['高い', 'たかい', 'expensive; tall'], ['安い', 'やすい', 'cheap'], ['新しい', 'あたらしい', 'new'], ['古い', 'ふるい', 'old (things)'], ['暑い', 'あつい', 'hot (weather)'], ['寒い', 'さむい', 'cold (weather)'], ['おいしい', 'おいしい', 'tasty'], ['難しい', 'むずかしい', 'difficult']],
+  rd: [['{私|わたし}の {部屋|へや}は {小|ちい}さいです。', 'My room is small.'], ['でも、とても {新|あたら}しいです。', 'But it’s very new.'], ['{近|ちか}くの {店|みせ}は とても {安|やす}いです。', 'The shop nearby is very cheap.'], ['{日本語|にほんご}は {難|むずか}しいです。でも、{面白|おもしろ}いです。', 'Japanese is difficult. But it’s interesting.']],
+  tk: [['A', 'その かばん、{新|あたら}しいですか。', 'Is that bag new?'], ['B', 'はい。でも、あまり {高|たか}くないです。', 'Yes. But it isn’t very expensive.'], ['A', 'いいですね。{大|おお}きいですね。', 'Nice. It’s big, isn’t it.'], ['B', 'ええ、とても {便利|べんり}です。', 'Yes, it’s very handy.']],
+  cz: [['この {本|ほん}は {高|たか}＿ないです。', ['く', 'い', 'な', 'じゃ'], 0, 'This book isn’t expensive.'], ['＿ {家|いえ}ですね。', ['{大|おお}きい', '{大|おお}きいな', '{大|おお}きく', '{大|おお}きです'], 0, 'It’s a big house, isn’t it.'], ['{今日|きょう}は ＿ {寒|さむ}くないです。', ['あまり', 'とても', 'たくさん', 'いつも'], 0, 'It isn’t very cold today.']] },
+
+{ id: 'n5-13', t: 'Describing with な-adjectives', s: 'Use the other kind of adjective', pat: '{静|しず}かな {町|まち} ／ {静|しず}かじゃないです', pm: 'a quiet town / it isn’t quiet',
+  pts: ['な-adjectives take な before a noun: {静|しず}かな{町|まち}.', 'At the end of a sentence they act like nouns: {静|しず}かです / {静|しず}かじゃないです.', 'Watch out: きれい ends in い but is a な-adjective (きれいな{部屋|へや}).'],
+  ex: [['ここは {静|しず}かな {町|まち}です。', 'This is a quiet town.'], ['{東京|とうきょう}は とても にぎやかです。', 'Tokyo is very lively.'], ['この {部屋|へや}は きれいじゃないです。', 'This room isn’t clean.']],
+  w: [['きれい', 'きれい', 'pretty; clean'], ['静か', 'しずか', 'quiet'], ['有名', 'ゆうめい', 'famous'], ['元気', 'げんき', 'healthy, lively'], ['便利', 'べんり', 'convenient'], ['親切', 'しんせつ', 'kind'], ['にぎやか', 'にぎやか', 'lively, bustling'], ['町', 'まち', 'town']],
+  rd: [['{京都|きょうと}は {有名|ゆうめい}な {町|まち}です。', 'Kyoto is a famous city.'], ['{古|ふる}い お{寺|てら}が たくさん あります。', 'There are many old temples.'], ['{町|まち}の {人|ひと}は とても {親切|しんせつ}です。', 'The people in the city are very kind.'], ['でも、あまり {静|しず}かじゃないです。', 'But it isn’t very quiet.']],
+  tk: [['A', 'お{元気|げんき}ですか。', 'How are you?'], ['B', 'はい、{元気|げんき}です。', 'I’m fine.'], ['A', '{新|あたら}しい {部屋|へや}は どうですか。', 'How is your new room?'], ['B', 'きれいです。とても {静|しず}かです。', 'It’s clean. It’s very quiet.']],
+  cz: [['{静|しず}か＿ {町|まち}です。', ['な', 'い', 'の', 'に'], 0, 'It’s a quiet town.'], ['この {部屋|へや}は きれい＿ないです。', ['じゃ', 'く', 'で', 'な'], 0, 'This room isn’t clean.'], ['＿な {人|ひと}ですね。', ['{親切|しんせつ}', '{高|たか}い', '{大|おお}き', '{安|やす}'], 0, 'What a kind person.']] },
+
+{ id: 'n5-14', t: 'There is, there are', s: 'Say what is where', pat: '〜に 〜が あります／います', pm: 'there is … at / in …',
+  pts: ['あります for things and plants. います for people and animals.', 'Place に thing が あります: {机|つくえ}の{上|うえ}に{本|ほん}があります.', 'Position words follow の: {机|つくえ}の{上|うえ} = on the desk.', '{上|うえ} on, {下|した} under, {中|なか} inside, {前|まえ} in front, {後|うし}ろ behind, {隣|となり} next to.'],
+  ex: [['{机|つくえ}の {上|うえ}に {本|ほん}が あります。', 'There’s a book on the desk.'], ['{公園|こうえん}に {犬|いぬ}が います。', 'There’s a dog in the park.'], ['{銀行|ぎんこう}は {駅|えき}の {前|まえ}に あります。', 'The bank is in front of the station.']],
+  w: [['ある', 'ある', 'to be, exist (things)'], ['いる', 'いる', 'to be, exist (living)'], ['上', 'うえ', 'on, above'], ['下', 'した', 'under, below'], ['中', 'なか', 'inside'], ['前', 'まえ', 'in front'], ['後ろ', 'うしろ', 'behind'], ['隣', 'となり', 'next to'], ['机', 'つくえ', 'desk'], ['犬', 'いぬ', 'dog'], ['猫', 'ねこ', 'cat']],
+  rd: [['{私|わたし}の {部屋|へや}に {机|つくえ}が あります。', 'There’s a desk in my room.'], ['{机|つくえ}の {上|うえ}に パソコンが あります。', 'There’s a computer on the desk.'], ['{机|つくえ}の {下|した}に {猫|ねこ}が います。', 'There’s a cat under the desk.'], ['{窓|まど}の {前|まえ}に {花|はな}が あります。', 'There are flowers in front of the window.']],
+  tk: [['A', 'すみません、この {近|ちか}くに コンビニが ありますか。', 'Excuse me, is there a convenience store near here?'], ['B', 'はい、{駅|えき}の {隣|となり}に あります。', 'Yes, there’s one next to the station.'], ['A', 'ATMも ありますか。', 'Is there an ATM too?'], ['B', 'はい、{中|なか}に あります。', 'Yes, it’s inside.']],
+  cz: [['{公園|こうえん}に {犬|いぬ}が ＿。', ['います', 'あります', 'です', 'ます'], 0, 'There’s a dog in the park.'], ['{机|つくえ}の {上|うえ}＿ {本|ほん}が あります。', ['に', 'で', 'を', 'へ'], 0, 'There’s a book on the desk.'], ['{駅|えき}の ＿に {銀行|ぎんこう}が あります。', ['{前|まえ}', '{前|まえ}の', 'へ', 'で'], 0, 'There’s a bank in front of the station.']] },
+
+{ id: 'n5-15', t: 'Likes and skills', s: 'Say what you like and what you’re good at', pat: '〜が {好|す}きです ／ 〜が {分|わ}かります', pm: 'I like … / I understand …',
+  pts: ['With {好|す}き, {嫌|きら}い, {上手|じょうず}, {下手|へた} and {分|わ}かる the thing takes が, not を.', '{大好|だいす}き = really like. {好|す}きじゃないです = don’t like (softer than {嫌|きら}い).', 'Don’t call yourself {上手|じょうず}. Say {少|すこ}し {分|わ}かります instead.'],
+  ex: [['{音楽|おんがく}が {好|す}きです。', 'I like music.'], ['{日本語|にほんご}が {少|すこ}し {分|わ}かります。', 'I understand a little Japanese.'], ['{田中|たなか}さんは {料理|りょうり}が {上手|じょうず}です。', 'Mr / Ms Tanaka is good at cooking.']],
+  w: [['好き', 'すき', 'liked, favourite'], ['嫌い', 'きらい', 'disliked'], ['上手', 'じょうず', 'good at'], ['下手', 'へた', 'bad at'], ['分かる', 'わかる', 'to understand'], ['料理', 'りょうり', 'cooking, dish'], ['歌', 'うた', 'song'], ['肉', 'にく', 'meat'], ['魚', 'さかな', 'fish'], ['少し', 'すこし', 'a little']],
+  rd: [['{私|わたし}は {肉|にく}が {大好|だいす}きです。', 'I love meat.'], ['でも、{魚|さかな}は あまり {好|す}きじゃないです。', 'But I don’t really like fish.'], ['{母|はは}は {料理|りょうり}が とても {上手|じょうず}です。', 'My mother is very good at cooking.'], ['{私|わたし}は {歌|うた}が {下手|へた}です。', 'I’m bad at singing.']],
+  tk: [['A', 'どんな {音楽|おんがく}が {好|す}きですか。', 'What kind of music do you like?'], ['B', 'アニメの {歌|うた}が {好|す}きです。', 'I like anime songs.'], ['A', '{日本語|にほんご}が {上手|じょうず}ですね。', 'Your Japanese is good.'], ['B', 'いいえ、まだまだです。', 'No, I’ve still got a long way to go.']],
+  cz: [['{音楽|おんがく}＿ {好|す}きです。', ['が', 'を', 'に', 'で'], 0, 'I like music.'], ['{日本語|にほんご}が {少|すこ}し ＿。', ['{分|わ}かります', '{分|わ}かりです', '{好|す}きます', '{上手|じょうず}ます'], 0, 'I understand a little Japanese.'], ['{魚|さかな}は ＿じゃないです。', ['{好|す}き', '{好|す}きな', '{好|す}く', '{好|す}きく'], 0, 'I don’t like fish.']] },
+
+{ id: 'n5-16', t: 'What you want to do', s: 'Talk about wishes and plans', pat: '〜たいです', pm: 'want to …',
+  pts: ['Take the ます form, swap ます for たいです: {行|い}きます → {行|い}きたいです.', 'Don’t want to: たくないです.', 'It describes your own wishes. For other people, ask: {何|なに}を したいですか.'],
+  ex: [['{日本|にほん}へ {行|い}きたいです。', 'I want to go to Japan.'], ['すしを {食|た}べたいです。', 'I want to eat sushi.'], ['{今日|きょう}は {何|なに}も したくないです。', 'I don’t want to do anything today.']],
+  w: [['旅行', 'りょこう', 'trip, travel'], ['海', 'うみ', 'sea'], ['山', 'やま', 'mountain'], ['写真', 'しゃしん', 'photo'], ['撮る', 'とる', 'to take (a photo)'], ['休む', 'やすむ', 'to rest, take time off'], ['遊ぶ', 'あそぶ', 'to play, hang out'], ['泳ぐ', 'およぐ', 'to swim'], ['夏休み', 'なつやすみ', 'summer holidays']],
+  rd: [['{夏休|なつやす}みに {日本|にほん}へ {旅行|りょこう}に {行|い}きたいです。', 'I want to travel to Japan in the summer holidays.'], ['{富士山|ふじさん}の {写真|しゃしん}を {撮|と}りたいです。', 'I want to take photos of Mt Fuji.'], ['{海|うみ}で {泳|およ}ぎたいです。', 'I want to swim in the sea.'], ['でも、{冬|ふゆ}は {行|い}きたくないです。', 'But I don’t want to go in winter.']],
+  tk: [['A', '{日本|にほん}で {何|なに}を したいですか。', 'What do you want to do in Japan?'], ['B', 'ラーメンを {食|た}べたいです。', 'I want to eat ramen.'], ['A', 'どこへ {行|い}きたいですか。', 'Where do you want to go?'], ['B', '{京都|きょうと}へ {行|い}きたいです。お{寺|てら}が {見|み}たいです。', 'I want to go to Kyoto. I want to see temples.']],
+  cz: [['すしを {食|た}べ＿です。', ['たい', 'ます', 'たく', 'るたい'], 0, 'I want to eat sushi.'], ['{日本|にほん}へ {行|い}き＿です。', ['たい', 'たく', 'ます', 'て'], 0, 'I want to go to Japan.'], ['{今日|きょう}は {働|はたら}き＿ないです。', ['たく', 'たい', 'たくて', 'ます'], 0, 'I don’t want to work today.']] },
+
+{ id: 'n5-17', t: 'Shall we?', s: 'Invite people and make plans', pat: '〜ませんか ／ 〜ましょう', pm: 'Won’t you…? / Let’s …',
+  pts: ['〜ませんか invites politely: “won’t you …?”.', '〜ましょう = let’s … . 〜ましょうか = shall we / shall I …?', '{一緒|いっしょ}に = together.', 'To decline kindly: ちょっと… (trailing off) is enough.'],
+  ex: [['{一緒|いっしょ}に {映画|えいが}を {見|み}ませんか。', 'Would you like to see a movie together?'], ['いいですね。{見|み}ましょう。', 'Sounds good. Let’s.'], ['{日曜日|にちようび}は ちょっと…。', 'Sunday is a bit…']],
+  w: [['一緒に', 'いっしょに', 'together'], ['日曜日', 'にちようび', 'Sunday'], ['土曜日', 'どようび', 'Saturday'], ['公園', 'こうえん', 'park'], ['散歩', 'さんぽ', 'walk, stroll'], ['喫茶店', 'きっさてん', 'café'], ['今晩', 'こんばん', 'tonight'], ['時々', 'ときどき', 'sometimes']],
+  rd: [['{土曜日|どようび}、{友達|ともだち}と {公園|こうえん}で {会|あ}いました。', 'On Saturday I met a friend in the park.'], ['{一緒|いっしょ}に {散歩|さんぽ}しました。', 'We went for a walk together.'], ['それから、{喫茶店|きっさてん}で コーヒーを {飲|の}みました。', 'Then we had coffee at a café.'], ['{来週|らいしゅう}も {会|あ}いましょう。', 'Let’s meet next week too.']],
+  tk: [['A', '{今晩|こんばん}、{一緒|いっしょ}に {晩|ばん}ご{飯|はん}を {食|た}べませんか。', 'Would you like to have dinner together tonight?'], ['B', 'いいですね。どこで {食|た}べましょうか。', 'Sounds good. Where shall we eat?'], ['A', '{駅|えき}の {前|まえ}の ラーメン{屋|や}は どうですか。', 'How about the ramen shop in front of the station?'], ['B', 'いいですね。{七時|しちじ}に {会|あ}いましょう。', 'Great. Let’s meet at seven.']],
+  cz: [['{一緒|いっしょ}に {行|い}き＿か。', ['ません', 'ましょう', 'たい', 'ます'], 0, 'Won’t you come with me?'], ['{七時|しちじ}に {会|あ}い＿。', ['ましょう', 'ませんか', 'ました', 'たい'], 0, 'Let’s meet at seven.'], ['＿ {散歩|さんぽ}しませんか。', ['{一緒|いっしょ}に', '{一緒|いっしょ}の', '{一緒|いっしょ}で', '{一緒|いっしょ}を'], 0, 'Shall we go for a walk together?']] },
+
+{ id: 'n5-18', t: 'Please do it', s: 'Ask people to do things with the て-form', pat: '〜てください', pm: 'please …',
+  pts: ['The て-form joins actions together and makes requests. Learn it once and you’ll use it everywhere.', 'Group 2 (る-verbs): る → て. {食|た}べる → {食|た}べて, {見|み}る → {見|み}て.', 'Group 1 by ending: う・つ・る → って, む・ぶ・ぬ → んで, く → いて, ぐ → いで, す → して. Exception: {行|い}く → {行|い}って.', 'Irregular: する → して, {来|く}る → {来|き}て.', 'Add ください: {待|ま}ってください = please wait.'],
+  ex: [['ちょっと {待|ま}って ください。', 'Please wait a moment.'], ['ここに {名前|なまえ}を {書|か}いて ください。', 'Please write your name here.'], ['もう{一度|いちど} ゆっくり {言|い}って ください。', 'Please say it again slowly.']],
+  w: [['待つ', 'まつ', 'to wait'], ['教える', 'おしえる', 'to teach, tell'], ['開ける', 'あける', 'to open'], ['閉める', 'しめる', 'to close'], ['座る', 'すわる', 'to sit'], ['立つ', 'たつ', 'to stand'], ['言う', 'いう', 'to say'], ['窓', 'まど', 'window'], ['ゆっくり', 'ゆっくり', 'slowly']],
+  rd: [['{先生|せんせい}: みなさん、{座|すわ}って ください。', 'Teacher: Everyone, please sit down.'], ['{教科書|きょうかしょ}を {開|あ}けて ください。', 'Please open your textbooks.'], ['{十|じゅう}ページを {読|よ}んで ください。', 'Please read page 10.'], ['{分|わ}かりませんか。じゃあ、もう{一度|いちど} {言|い}いますね。', 'You don’t understand? Then I’ll say it once more.']],
+  tk: [['A', 'すみません、もう{一度|いちど} {言|い}って ください。', 'Sorry, please say that again.'], ['B', 'はい。{駅|えき}は あそこです。', 'Sure. The station is over there.'], ['A', 'ゆっくり {話|はな}して ください。', 'Please speak slowly.'], ['B', 'あ、すみません。え・き・は・あ・そ・こ・です。', 'Oh, sorry. The – station – is – over – there.']],
+  cz: [['ちょっと {待|ま}＿ ください。', ['って', 'て', 'んで', 'いて'], 0, 'Please wait a moment.'], ['ここに {名前|なまえ}を {書|か}＿ ください。', ['いて', 'って', 'して', 'んで'], 0, 'Please write your name here.'], ['この {本|ほん}を {読|よ}＿ ください。', ['んで', 'って', 'いて', 'みて'], 0, 'Please read this book.']] },
+
+{ id: 'n5-19', t: 'Doing it right now', s: 'Talk about what’s happening and ongoing states', pat: '〜ています', pm: 'is …-ing / lives, works, knows …',
+  pts: ['て-form + います = an action happening now: {雨|あめ}が{降|ふ}っています (it’s raining).', 'It also shows an ongoing state: {東京|とうきょう}に{住|す}んでいます (I live in Tokyo).', 'Common states: {住|す}んでいます live, {働|はたら}いています work, {結婚|けっこん}しています married, {知|し}っています know.', 'Careful: “I don’t know” is {知|し}りません, not {知|し}っていません.'],
+  ex: [['{今|いま}、{雨|あめ}が {降|ふ}っています。', 'It’s raining now.'], ['{姉|あね}は {銀行|ぎんこう}で {働|はたら}いています。', 'My older sister works at a bank.'], ['その {人|ひと}を {知|し}っていますか。—いいえ、{知|し}りません。', 'Do you know that person? — No, I don’t.']],
+  w: [['住む', 'すむ', 'to live (somewhere)'], ['働く', 'はたらく', 'to work'], ['結婚', 'けっこん', 'marriage'], ['知る', 'しる', 'to know'], ['雨', 'あめ', 'rain'], ['降る', 'ふる', 'to fall (rain, snow)'], ['東京', 'とうきょう', 'Tokyo'], ['姉', 'あね', '(my) older sister']],
+  rd: [['{私|わたし}の {姉|あね}は {大阪|おおさか}に {住|す}んでいます。', 'My older sister lives in Osaka.'], ['{病院|びょういん}で {働|はたら}いています。', 'She works at a hospital.'], ['{結婚|けっこん}して、{子|こ}どもが {一人|ひとり} います。', 'She’s married and has one child.'], ['{今|いま}、{姉|あね}は {電話|でんわ}で {話|はな}しています。', 'Right now she’s talking on the phone.']],
+  tk: [['A', '{今|いま}、{何|なに}を していますか。', 'What are you doing right now?'], ['B', '{日本語|にほんご}を {勉強|べんきょう}しています。', 'I’m studying Japanese.'], ['A', 'どこに {住|す}んでいますか。', 'Where do you live?'], ['B', '{駅|えき}の {近|ちか}くに {住|す}んでいます。', 'I live near the station.']],
+  cz: [['{今|いま}、{雨|あめ}が {降|ふ}って＿。', ['います', 'あります', 'です', 'ます'], 0, 'It’s raining now.'], ['{東京|とうきょう}に {住|す}＿います。', ['んで', 'って', 'いて', 'して'], 0, 'I live in Tokyo.'], ['あの {人|ひと}ですか。いいえ、＿。', ['{知|し}りません', '{知|し}っていません', '{知|し}らないです', '{知|し}るません'], 0, 'That person? No, I don’t know them.']] },
+
+{ id: 'n5-20', t: 'May I? You mustn’t', s: 'Ask permission and understand rules', pat: '〜ても いいですか ／ 〜ては いけません', pm: 'May I …? / You must not …',
+  pts: ['て-form + も いいですか = may I …? (literally “is it fine even if I …?”).', 'Say yes with はい、どうぞ.', 'て-form + は いけません = you must not … . On signs you’ll often see 〜ないでください (please don’t …).'],
+  ex: [['{写真|しゃしん}を {撮|と}っても いいですか。', 'May I take a photo?'], ['ここで たばこを {吸|す}っては いけません。', 'You must not smoke here.'], ['{靴|くつ}を {脱|ぬ}いで ください。', 'Please take off your shoes.']],
+  w: [['吸う', 'すう', 'to smoke; to breathe in'], ['入る', 'はいる', 'to enter'], ['使う', 'つかう', 'to use'], ['電話', 'でんわ', 'telephone'], ['靴', 'くつ', 'shoes'], ['脱ぐ', 'ぬぐ', 'to take off (clothes)'], ['たばこ', 'たばこ', 'cigarette'], ['中', 'なか', 'inside']],
+  rd: [['お{寺|てら}の {中|なか}では {靴|くつ}を {脱|ぬ}ぎます。', 'You take off your shoes inside a temple.'], ['{写真|しゃしん}を {撮|と}っては いけません。', 'You must not take photos.'], ['{庭|にわ}では {撮|と}っても いいです。', 'You may take photos in the garden.'], ['{大|おお}きい {声|こえ}で {話|はな}さないで ください。', 'Please don’t talk loudly.']],
+  tk: [['A', 'すみません、ここに {座|すわ}っても いいですか。', 'Excuse me, may I sit here?'], ['B', 'はい、どうぞ。', 'Yes, go ahead.'], ['A', 'この {電話|でんわ}を {使|つか}っても いいですか。', 'May I use this phone?'], ['B', 'すみません、それは ちょっと…。', 'Sorry, that’s a little…']],
+  cz: [['{写真|しゃしん}を {撮|と}って＿ いいですか。', ['も', 'は', 'を', 'で'], 0, 'May I take a photo?'], ['ここで たばこを {吸|す}っては ＿。', ['いけません', 'いいです', 'ください', 'います'], 0, 'You must not smoke here.'], ['{靴|くつ}を {脱|ぬ}＿ ください。', ['いで', 'って', 'んで', 'いて'], 0, 'Please take off your shoes.']] },
+
+{ id: 'n5-21', t: 'How it was', s: 'Describe things in the past', pat: '{楽|たの}しかったです ／ {静|しず}かでした', pm: 'it was fun / it was quiet',
+  pts: ['い-adjectives: drop い, add かったです. {楽|たの}しい → {楽|たの}しかったです.', 'Not, in the past: くなかったです. {寒|さむ}くなかったです = it wasn’t cold.', 'な-adjectives and nouns: でした / じゃなかったです.', 'いい → よかったです (it was good).'],
+  ex: [['{旅行|りょこう}は とても {楽|たの}しかったです。', 'The trip was really fun.'], ['ホテルは きれいでした。', 'The hotel was clean.'], ['{天気|てんき}は あまり よくなかったです。', 'The weather wasn’t very good.']],
+  w: [['楽しい', 'たのしい', 'fun, enjoyable'], ['面白い', 'おもしろい', 'interesting, funny'], ['つまらない', 'つまらない', 'boring'], ['忙しい', 'いそがしい', 'busy'], ['天気', 'てんき', 'weather'], ['いい', 'いい', 'good'], ['パーティー', 'パーティー', 'party'], ['週末', 'しゅうまつ', 'weekend']],
+  rd: [['{先週|せんしゅう}、{京都|きょうと}へ {行|い}きました。', 'Last week I went to Kyoto.'], ['お{寺|てら}は {静|しず}かで、きれいでした。', 'The temples were quiet and beautiful.'], ['{料理|りょうり}も とても おいしかったです。', 'The food was very good too.'], ['でも、{人|ひと}が {多|おお}くて、ちょっと {疲|つか}れました。', 'But there were lots of people, so I got a bit tired.']],
+  tk: [['A', '{週末|しゅうまつ}は どうでしたか。', 'How was your weekend?'], ['B', 'とても {忙|いそが}しかったです。', 'It was very busy.'], ['A', 'パーティーは {楽|たの}しかったですか。', 'Was the party fun?'], ['B', 'はい、{楽|たの}しかったです。でも、{音楽|おんがく}は あまり よくなかったです。', 'Yes, it was. But the music wasn’t great.']],
+  cz: [['{旅行|りょこう}は {楽|たの}し＿です。', ['かった', 'いでした', 'くて', 'かったでした'], 0, 'The trip was fun.'], ['ホテルは {静|しず}か＿。', ['でした', 'かったです', 'くなかった', 'だったです'], 0, 'The hotel was quiet.'], ['{天気|てんき}は ＿です。', ['よかった', 'いかった', 'いいでした', 'よいでした'], 0, 'The weather was good.']] },
+
+{ id: 'n5-22', t: 'Comparing', s: 'Say which is more and which is most', pat: 'Aより Bの ほうが 〜 ／ 〜が {一番|いちばん}', pm: 'B is more … than A / … is the most',
+  pts: ['Aより Bの ほうが {高|たか}いです = B is more expensive than A.', 'Ask: Aと Bと どちらが {好|す}きですか (which do you like more?).', 'Group の {中|なか}で X が {一番|いちばん} 〜 = X is the most … of the group.', 'Adjectives don’t change in Japanese comparisons; より and {一番|いちばん} do the work.'],
+  ex: [['{電車|でんしゃ}は バスより {速|はや}いです。', 'Trains are faster than buses.'], ['{夏|なつ}と {冬|ふゆ}と どちらが {好|す}きですか。', 'Which do you prefer, summer or winter?'], ['{季節|きせつ}の {中|なか}で {春|はる}が {一番|いちばん} {好|す}きです。', 'Of all the seasons I like spring best.']],
+  w: [['一番', 'いちばん', 'the most, number one'], ['季節', 'きせつ', 'season'], ['春', 'はる', 'spring'], ['夏', 'なつ', 'summer'], ['秋', 'あき', 'autumn'], ['冬', 'ふゆ', 'winter'], ['速い', 'はやい', 'fast'], ['遅い', 'おそい', 'slow; late'], ['どちら', 'どちら', 'which (of two)']],
+  rd: [['{日本|にほん}には {四|よっ}つの {季節|きせつ}が あります。', 'Japan has four seasons.'], ['{夏|なつ}は {冬|ふゆ}より ずっと {暑|あつ}いです。', 'Summer is much hotter than winter.'], ['{私|わたし}は {秋|あき}が {一番|いちばん} {好|す}きです。', 'I like autumn best.'], ['{春|はる}より {人|ひと}が {少|すく}ないです。', 'There are fewer people than in spring.']],
+  tk: [['A', '{東京|とうきょう}まで {新幹線|しんかんせん}と {飛行機|ひこうき}と どちらが {速|はや}いですか。', 'To Tokyo, which is faster: the bullet train or the plane?'], ['B', '{飛行機|ひこうき}の ほうが {速|はや}いです。', 'The plane is faster.'], ['A', 'でも、{新幹線|しんかんせん}の ほうが {便利|べんり}ですね。', 'But the bullet train is more convenient, isn’t it.'], ['B', 'そうですね。{私|わたし}は {新幹線|しんかんせん}が {一番|いちばん} {好|す}きです。', 'True. I like the bullet train best.']],
+  cz: [['{電車|でんしゃ}は バス＿ {速|はや}いです。', ['より', 'ほう', 'から', 'まで'], 0, 'Trains are faster than buses.'], ['{夏|なつ}と {冬|ふゆ}と ＿が {好|す}きですか。', ['どちら', 'どれ', 'どこ', '{何|なに}'], 0, 'Which do you prefer, summer or winter?'], ['{季節|きせつ}の {中|なか}で {春|はる}が ＿ {好|す}きです。', ['{一番|いちばん}', 'より', 'ほう', 'とても'], 0, 'Of all the seasons I like spring best.']] },
+
+{ id: 'n5-23', t: 'Because and but', s: 'Give reasons and contrast ideas', pat: '〜から ／ 〜が', pm: 'because … / … but …',
+  pts: ['Reason から, result: {雨|あめ}ですから、{行|い}きません = it’s raining, so I won’t go.', 'Answer “why?” (どうして) with 〜からです.', 'が joins two contrasting sentences: {高|たか}いですが、おいしいです = it’s expensive but tasty.', 'でも starts a new sentence with “but”.'],
+  ex: [['{頭|あたま}が {痛|いた}いですから、{休|やす}みます。', 'I have a headache, so I’ll rest.'], ['どうして {行|い}きませんか。—{忙|いそが}しいからです。', 'Why aren’t you going? — Because I’m busy.'], ['{日本語|にほんご}は {難|むずか}しいですが、{楽|たの}しいです。', 'Japanese is hard, but fun.']],
+  w: [['頭', 'あたま', 'head'], ['痛い', 'いたい', 'painful, hurts'], ['お腹', 'おなか', 'stomach'], ['薬', 'くすり', 'medicine'], ['病気', 'びょうき', 'illness'], ['でも', 'でも', 'but, however'], ['どうして', 'どうして', 'why'], ['早く', 'はやく', 'early; quickly']],
+  rd: [['{今日|きょう}は {朝|あさ}から {頭|あたま}が {痛|いた}いです。', 'I’ve had a headache since this morning.'], ['{薬|くすり}を {飲|の}みましたが、まだ {痛|いた}いです。', 'I took medicine, but it still hurts.'], ['{病気|びょうき}ですから、{会社|かいしゃ}を {休|やす}みます。', 'I’m ill, so I’m taking the day off work.'], ['{今晩|こんばん}は {早|はや}く {寝|ね}ます。', 'I’ll go to bed early tonight.']],
+  tk: [['A', 'どうしましたか。', 'What’s wrong?'], ['B', 'お{腹|なか}が {痛|いた}いです。', 'My stomach hurts.'], ['A', '{大丈夫|だいじょうぶ}ですか。{病院|びょういん}へ {行|い}きましょうか。', 'Are you OK? Shall we go to the hospital?'], ['B', 'ありがとう ございます。でも、{薬|くすり}を {飲|の}みましたから、{大丈夫|だいじょうぶ}です。', 'Thank you. But I took medicine, so I’m fine.']],
+  cz: [['{雨|あめ}です＿、{行|い}きません。', ['から', 'が', 'まで', 'でも'], 0, 'It’s raining, so I won’t go.'], ['{高|たか}いです＿、おいしいです。', ['が', 'から', 'と', 'の'], 0, 'It’s expensive, but tasty.'], ['＿ {来|き}ませんでしたか。—{忙|いそが}しかったからです。', ['どうして', 'どこ', 'いつ', 'どれ'], 0, 'Why didn’t you come? — Because I was busy.']] }
+];
+
+/* travel track: survival Japanese for a trip */
+const PATH_TRAVEL = [
+{ id: 'tr-01', t: 'Arriving at the airport', s: 'Get through immigration and find your way out', pat: '{観光|かんこう}です', pm: 'It’s for sightseeing',
+  pts: ['Officers usually ask the purpose of your visit and how long you’ll stay.', '{観光|かんこう}です (sightseeing) and the length of stay are all you need to say.', 'Hand over your passport with パスポートです or simply はい.'],
+  ex: [['{目的|もくてき}は {何|なん}ですか。—{観光|かんこう}です。', 'What’s the purpose? — Sightseeing.'], ['{何日|なんにち}ですか。—{一週間|いっしゅうかん}です。', 'How many days? — One week.'], ['すみません、{出口|でぐち}は どこですか。', 'Excuse me, where is the exit?']],
+  w: [['空港', 'くうこう', 'airport'], ['パスポート', 'パスポート', 'passport'], ['観光', 'かんこう', 'sightseeing'], ['目的', 'もくてき', 'purpose'], ['一週間', 'いっしゅうかん', 'one week'], ['荷物', 'にもつ', 'luggage'], ['出口', 'でぐち', 'exit'], ['両替', 'りょうがえ', 'currency exchange']],
+  rd: [['{空港|くうこう}に {着|つ}きました。', 'I arrived at the airport.'], ['パスポートを {見|み}せました。', 'I showed my passport.'], ['{荷物|にもつ}を {取|と}って、{両替|りょうがえ}を しました。', 'I picked up my luggage and changed money.'], ['それから、{電車|でんしゃ}で ホテルへ {行|い}きました。', 'Then I went to the hotel by train.']],
+  tk: [['Officer', 'パスポートを おねがいします。', 'Your passport, please.'], ['You', 'はい、どうぞ。', 'Here you are.'], ['Officer', '{目的|もくてき}は {何|なん}ですか。', 'What’s the purpose of your visit?'], ['You', '{観光|かんこう}です。{一週間|いっしゅうかん} います。', 'Sightseeing. I’ll be here for a week.']],
+  cz: [['{目的|もくてき}は ＿です。', ['{観光|かんこう}', '{出口|でぐち}', '{荷物|にもつ}', '{空港|くうこう}'], 0, 'The purpose is sightseeing.'], ['すみません、＿は どこですか。（the way out）', ['{出口|でぐち}', '{入口|いりぐち}', '{両替|りょうがえ}', 'パスポート'], 0, 'Excuse me, where is the exit?'], ['パスポートを ＿。', ['おねがいします', 'いただきます', 'ごちそうさま', 'いらっしゃいませ'], 0, 'Your passport, please.']] },
+
+{ id: 'tr-02', t: 'At the hotel', s: 'Check in and ask about the room', pat: '{予約|よやく}した 〜です', pm: 'I have a booking under …',
+  pts: ['Start check-in with チェックイン おねがいします, then give the name on your booking.', '〜は {何時|なんじ}からですか asks when something starts: breakfast, check-in.', '〜は ありますか asks whether they have something: Wi-Fi, towels.'],
+  ex: [['チェックイン おねがいします。{予約|よやく}した マリアです。', 'Check-in, please. I have a booking under Maria.'], ['{朝|あさ}ご{飯|はん}は {何時|なんじ}からですか。', 'What time does breakfast start?'], ['{荷物|にもつ}を {預|あず}かって もらえますか。', 'Could you keep my luggage?']],
+  w: [['予約', 'よやく', 'reservation'], ['部屋', 'へや', 'room'], ['鍵', 'かぎ', 'key'], ['朝食', 'ちょうしょく', 'breakfast'], ['フロント', 'フロント', 'front desk'], ['エレベーター', 'エレベーター', 'lift, elevator'], ['タオル', 'タオル', 'towel'], ['何階', 'なんがい', 'which floor']],
+  rd: [['ホテルの フロントで チェックインしました。', 'I checked in at the hotel front desk.'], ['{部屋|へや}は {五階|ごかい}です。', 'My room is on the fifth floor.'], ['{朝食|ちょうしょく}は {七時|しちじ}から {十時|じゅうじ}までです。', 'Breakfast is from 7 to 10.'], ['{鍵|かぎ}を もらって、エレベーターで {上|うえ}に {行|い}きました。', 'I got the key and went up in the lift.']],
+  tk: [['You', 'チェックイン おねがいします。{予約|よやく}した マリアです。', 'Check-in, please. I have a booking under Maria.'], ['Staff', 'マリア{様|さま}ですね。パスポートを おねがいします。', 'Ms Maria. Your passport, please.'], ['You', 'はい。{朝食|ちょうしょく}は {何時|なんじ}からですか。', 'Here. What time does breakfast start?'], ['Staff', '{七時|しちじ}からです。{部屋|へや}は {五階|ごかい}です。', 'From seven. Your room is on the fifth floor.']],
+  cz: [['{予約|よやく}した マリア＿。', ['です', 'ます', 'を', 'が'], 0, 'I have a booking under Maria.'], ['{朝食|ちょうしょく}は {何時|なんじ}＿ですか。', ['から', 'まで', 'で', 'へ'], 0, 'What time does breakfast start?'], ['{部屋|へや}は ＿ですか。（which floor）', ['{何階|なんがい}', '{何時|なんじ}', 'いくら', '{誰|だれ}'], 0, 'Which floor is the room on?']] },
+
+{ id: 'tr-03', t: 'Trains and the subway', s: 'Buy tickets and get on the right train', pat: 'この {電車|でんしゃ}は 〜に {行|い}きますか', pm: 'Does this train go to …?',
+  pts: ['Ask “does this train go to …?” before you board. It’s the most useful question on Japanese trains.', '〜まで いくらですか = how much is it to …?', '{何番線|なんばんせん} = which platform. {乗|の}り{換|か}え = change trains.'],
+  ex: [['この {電車|でんしゃ}は {新宿|しんじゅく}に {行|い}きますか。', 'Does this train go to Shinjuku?'], ['{渋谷|しぶや}まで いくらですか。', 'How much is it to Shibuya?'], ['{東京駅|とうきょうえき}で {乗|の}り{換|か}えて ください。', 'Please change trains at Tokyo Station.']],
+  w: [['電車', 'でんしゃ', 'train'], ['切符', 'きっぷ', 'ticket'], ['乗る', 'のる', 'to get on, ride'], ['降りる', 'おりる', 'to get off'], ['乗り換え', 'のりかえ', 'changing trains'], ['新幹線', 'しんかんせん', 'bullet train'], ['地下鉄', 'ちかてつ', 'subway'], ['次', 'つぎ', 'next']],
+  rd: [['{地下鉄|ちかてつ}の {駅|えき}で {切符|きっぷ}を {買|か}いました。', 'I bought a ticket at the subway station.'], ['{三番線|さんばんせん}の {電車|でんしゃ}に {乗|の}りました。', 'I got on the train at platform 3.'], ['{次|つぎ}の {駅|えき}で {乗|の}り{換|か}えました。', 'I changed trains at the next station.'], ['{浅草|あさくさ}で {降|お}りました。', 'I got off at Asakusa.']],
+  tk: [['You', 'すみません、この {電車|でんしゃ}は {浅草|あさくさ}に {行|い}きますか。', 'Excuse me, does this train go to Asakusa?'], ['Person', 'いいえ、{行|い}きません。{次|つぎ}の {駅|えき}で {乗|の}り{換|か}えて ください。', 'No, it doesn’t. Please change at the next station.'], ['You', '{何番線|なんばんせん}ですか。', 'Which platform?'], ['Person', '{二番線|にばんせん}です。', 'Platform 2.']],
+  cz: [['この {電車|でんしゃ}は {新宿|しんじゅく}に {行|い}き＿か。', ['ます', 'ました', 'ません', 'たい'], 0, 'Does this train go to Shinjuku?'], ['{渋谷|しぶや}＿ いくらですか。', ['まで', 'から', 'に', 'を'], 0, 'How much is it to Shibuya?'], ['{次|つぎ}の {駅|えき}で ＿ください。', ['{降|お}りて', '{降|お}ります', '{降|お}りる', '{降|お}りた'], 0, 'Please get off at the next station.']] },
+
+{ id: 'tr-04', t: 'Asking for directions', s: 'Ask the way and follow simple directions', pat: 'まっすぐ {行|い}って、{右|みぎ}に {曲|ま}がって ください', pm: 'Go straight, then turn right',
+  pts: ['Start with すみません, then “place は どこですか”.', 'Listen for まっすぐ (straight), {右|みぎ} (right), {左|ひだり} (left), {曲|ま}がる (turn).', 'て-form chains the steps: {行|い}って、{曲|ま}がって = go, and then turn.', 'If you’re lost: {地図|ちず}で {教|おし}えて ください (please show me on the map).'],
+  ex: [['すみません、{駅|えき}は どこですか。', 'Excuse me, where is the station?'], ['まっすぐ {行|い}って、{二|ふた}つ{目|め}の {信号|しんごう}を {左|ひだり}です。', 'Go straight, and it’s left at the second traffic light.'], ['{歩|ある}いて {何分|なんぷん}ですか。', 'How many minutes on foot?']],
+  w: [['右', 'みぎ', 'right'], ['左', 'ひだり', 'left'], ['まっすぐ', 'まっすぐ', 'straight ahead'], ['曲がる', 'まがる', 'to turn'], ['信号', 'しんごう', 'traffic light'], ['角', 'かど', 'corner'], ['地図', 'ちず', 'map'], ['近い', 'ちかい', 'near'], ['遠い', 'とおい', 'far']],
+  rd: [['ホテルから {駅|えき}まで {歩|ある}いて {十分|じゅっぷん}です。', 'It’s a ten-minute walk from the hotel to the station.'], ['ホテルを {出|で}て、まっすぐ {行|い}きます。', 'Leave the hotel and go straight.'], ['{信号|しんごう}を {右|みぎ}に {曲|ま}がります。', 'Turn right at the traffic light.'], ['{駅|えき}は コンビニの {隣|となり}です。', 'The station is next to the convenience store.']],
+  tk: [['You', 'すみません、{東京|とうきょう}タワーは どこですか。', 'Excuse me, where is Tokyo Tower?'], ['Person', 'まっすぐ {行|い}って、あの {角|かど}を {左|ひだり}に {曲|ま}がって ください。', 'Go straight and turn left at that corner.'], ['You', '{遠|とお}いですか。', 'Is it far?'], ['Person', 'いいえ、{歩|ある}いて {五分|ごふん}ぐらいです。', 'No, about five minutes on foot.']],
+  cz: [['まっすぐ {行|い}って、{右|みぎ}に {曲|ま}が＿ ください。', ['って', 'て', 'んで', 'いて'], 0, 'Go straight and turn right.'], ['{歩|ある}いて ＿ですか。（how many minutes）', ['{何分|なんぷん}', '{何時|なんじ}', 'いくら', 'どこ'], 0, 'How many minutes on foot?'], ['{駅|えき}は ＿ですか。', ['{遠|とお}い', '{遠|とお}いな', '{遠|とお}く', '{遠|とお}'], 0, 'Is the station far?']] },
+
+{ id: 'tr-05', t: 'At a restaurant', s: 'Get a table, order and pay', pat: '〜を ください', pm: '… please',
+  pts: ['Staff greet you with いらっしゃいませ. No reply is needed; a nod is fine.', '{何名様|なんめいさま}ですか = how many people? Answer {一人|ひとり}です / {二人|ふたり}です.', 'Point and say これを ください, or name the dish.', 'Pay with お{会計|かいけい} おねがいします. No tipping in Japan.'],
+  ex: [['{二人|ふたり}です。', 'Two people.'], ['これを {二|ふた}つ ください。', 'Two of these, please.'], ['お{会計|かいけい} おねがいします。', 'The bill, please.']],
+  w: [['メニュー', 'メニュー', 'menu'], ['注文', 'ちゅうもん', 'order'], ['お水', 'おみず', 'water'], ['おすすめ', 'おすすめ', 'recommendation'], ['お会計', 'おかいけい', 'the bill'], ['辛い', 'からい', 'spicy'], ['一人', 'ひとり', 'one person'], ['二人', 'ふたり', 'two people']],
+  rd: [['{昨日|きのう}の {夜|よる}、ラーメン{屋|や}に {行|い}きました。', 'Last night I went to a ramen shop.'], ['{店員|てんいん}さんに おすすめを {聞|き}きました。', 'I asked the staff for a recommendation.'], ['{辛|から}い ラーメンを {注文|ちゅうもん}しました。', 'I ordered spicy ramen.'], ['とても おいしかったです。ごちそうさまでした。', 'It was delicious. Thank you for the meal.']],
+  tk: [['Staff', 'いらっしゃいませ。{何名様|なんめいさま}ですか。', 'Welcome. How many people?'], ['You', '{二人|ふたり}です。', 'Two.'], ['You', 'すみません、おすすめは {何|なん}ですか。', 'Excuse me, what do you recommend?'], ['Staff', 'こちらの {味噌|みそ}ラーメンです。', 'This miso ramen.'], ['You', 'じゃあ、それを {二|ふた}つ ください。', 'Then two of those, please.']],
+  cz: [['これを ＿。', ['ください', 'いただきます', 'いらっしゃいませ', 'すみません'], 0, 'This one, please.'], ['お{会計|かいけい} ＿。', ['おねがいします', 'ください です', 'あります', 'いいです'], 0, 'The bill, please.'], ['{何名様|なんめいさま}ですか。—＿です。（two people）', ['{二人|ふたり}', '{二|ふた}つ', '{二|に}', '{二回|にかい}'], 0, 'How many? — Two.']] },
+
+{ id: 'tr-06', t: 'Shopping and convenience stores', s: 'Pay, answer the cashier and shop tax-free', pat: '〜で いいですか', pm: 'Is … OK?',
+  pts: ['Cashiers often ask {袋|ふくろ}は いりますか (do you need a bag?) and {温|あたた}めますか (shall I heat it up?).', 'Answer はい、おねがいします or いいえ、{大丈夫|だいじょうぶ}です.', 'カードで いいですか = Is card OK?', '{免税|めんぜい} = tax-free. Ask {免税|めんぜい}できますか in big stores.'],
+  ex: [['{袋|ふくろ}は いりますか。—いいえ、{大丈夫|だいじょうぶ}です。', 'Do you need a bag? — No, I’m fine.'], ['カードで いいですか。', 'Is card OK?'], ['これを {試着|しちゃく}しても いいですか。', 'May I try this on?']],
+  w: [['袋', 'ふくろ', 'bag'], ['温める', 'あたためる', 'to heat up'], ['現金', 'げんきん', 'cash'], ['カード', 'カード', 'card'], ['レシート', 'レシート', 'receipt'], ['試着', 'しちゃく', 'trying on'], ['免税', 'めんぜい', 'tax-free'], ['お土産', 'おみやげ', 'souvenir'], ['大丈夫', 'だいじょうぶ', 'all right, fine']],
+  rd: [['コンビニで おにぎりと お{茶|ちゃ}を {買|か}いました。', 'I bought a rice ball and tea at a convenience store.'], ['{店員|てんいん}さんが「{温|あたた}めますか」と {言|い}いました。', 'The clerk asked, “Shall I heat it up?”'], ['「いいえ、{大丈夫|だいじょうぶ}です」と {答|こた}えました。', 'I answered, “No, I’m fine.”'], ['カードで {払|はら}いました。', 'I paid by card.']],
+  tk: [['Cashier', '{袋|ふくろ}は いりますか。', 'Do you need a bag?'], ['You', 'はい、おねがいします。カードで いいですか。', 'Yes, please. Is card OK?'], ['Cashier', 'はい、{大丈夫|だいじょうぶ}です。', 'Yes, that’s fine.'], ['You', 'レシートを ください。', 'The receipt, please.']],
+  cz: [['{袋|ふくろ}は いりますか。—いいえ、＿です。', ['{大丈夫|だいじょうぶ}', 'ください', 'いくら', 'おねがい'], 0, 'Do you need a bag? — No, I’m fine.'], ['カード＿ いいですか。', ['で', 'を', 'に', 'が'], 0, 'Is card OK?'], ['これを {試着|しちゃく}しても ＿ですか。', ['いい', 'ください', 'いけません', 'あります'], 0, 'May I try this on?']] },
+
+{ id: 'tr-07', t: 'Sightseeing and manners', s: 'Visit temples and shrines politely', pat: '〜ても いいですか', pm: 'May I …?',
+  pts: ['Ask before photos: {写真|しゃしん}を {撮|と}っても いいですか.', 'Shoes come off in temples, ryokan and many homes: {靴|くつ}を {脱|ぬ}いで ください.', 'Signs: {撮影禁止|さつえいきんし} = no photos, {立入禁止|たちいりきんし} = no entry.', '{何時|なんじ}までですか = until what time are you open?'],
+  ex: [['すみません、{写真|しゃしん}を {撮|と}っても いいですか。', 'Excuse me, may I take a photo?'], ['ここで {靴|くつ}を {脱|ぬ}いで ください。', 'Please take off your shoes here.'], ['{何時|なんじ}までですか。', 'Until what time are you open?']],
+  w: [['お寺', 'おてら', 'temple'], ['神社', 'じんじゃ', 'shrine'], ['写真', 'しゃしん', 'photo'], ['入口', 'いりぐち', 'entrance'], ['並ぶ', 'ならぶ', 'to line up'], ['有名', 'ゆうめい', 'famous'], ['温泉', 'おんせん', 'hot spring'], ['禁止', 'きんし', 'prohibited']],
+  rd: [['{京都|きょうと}で {有名|ゆうめい}な お{寺|てら}に {行|い}きました。', 'In Kyoto I visited a famous temple.'], ['{入口|いりぐち}に {人|ひと}が たくさん {並|なら}んでいました。', 'Lots of people were lined up at the entrance.'], ['{中|なか}では {写真|しゃしん}は {禁止|きんし}でした。', 'Photos were not allowed inside.'], ['{夜|よる}は {温泉|おんせん}に {入|はい}りました。', 'At night I got into a hot spring.']],
+  tk: [['You', 'すみません、ここで {写真|しゃしん}を {撮|と}っても いいですか。', 'Excuse me, may I take a photo here?'], ['Staff', '{中|なか}は {撮影禁止|さつえいきんし}です。{外|そと}は どうぞ。', 'Photography isn’t allowed inside. Outside is fine.'], ['You', '{分|わ}かりました。{何時|なんじ}までですか。', 'I see. Until what time are you open?'], ['Staff', '{五時|ごじ}までです。', 'Until five.']],
+  cz: [['{写真|しゃしん}を {撮|と}っても ＿ですか。', ['いい', 'ください', 'いけません', 'ます'], 0, 'May I take a photo?'], ['{靴|くつ}を {脱|ぬ}いで ＿。', ['ください', 'いいです', 'います', 'ました'], 0, 'Please take off your shoes.'], ['{撮影|さつえい}＿ = no photos', ['{禁止|きんし}', '{入口|いりぐち}', '{有名|ゆうめい}', 'OK'], 0, 'No photography']] },
+
+{ id: 'tr-08', t: 'Help and emergencies', s: 'Ask for help when something goes wrong', pat: '〜を なくしました ／ {助|たす}けて ください', pm: 'I’ve lost … / Please help me',
+  pts: ['〜を なくしました = I’ve lost … . Go to a {交番|こうばん} (police box).', '{気分|きぶん}が {悪|わる}いです = I feel unwell. 〜が {痛|いた}いです = my … hurts.', '{英語|えいご}を {話|はな}せる {人|ひと}は いますか = is there someone who speaks English?', 'Emergency numbers in Japan: 110 police, 119 ambulance and fire.'],
+  ex: [['{財布|さいふ}を なくしました。', 'I’ve lost my wallet.'], ['{英語|えいご}を {話|はな}せる {人|ひと}は いますか。', 'Is there anyone who speaks English?'], ['{救急車|きゅうきゅうしゃ}を {呼|よ}んで ください。', 'Please call an ambulance.']],
+  w: [['財布', 'さいふ', 'wallet'], ['なくす', 'なくす', 'to lose'], ['交番', 'こうばん', 'police box'], ['警察', 'けいさつ', 'police'], ['薬局', 'やっきょく', 'pharmacy'], ['救急車', 'きゅうきゅうしゃ', 'ambulance'], ['呼ぶ', 'よぶ', 'to call'], ['助ける', 'たすける', 'to help, rescue']],
+  rd: [['{駅|えき}で {財布|さいふ}を なくしました。', 'I lost my wallet at the station.'], ['{近|ちか}くの {交番|こうばん}へ {行|い}きました。', 'I went to the nearby police box.'], ['{警察|けいさつ}の {人|ひと}は とても {親切|しんせつ}でした。', 'The police officer was very kind.'], ['{次|つぎ}の {日|ひ}、{財布|さいふ}が {見|み}つかりました。', 'The next day, my wallet was found.']],
+  tk: [['You', 'すみません、{財布|さいふ}を なくしました。', 'Excuse me, I’ve lost my wallet.'], ['Officer', 'どこで なくしましたか。', 'Where did you lose it?'], ['You', '{分|わ}かりません。{英語|えいご}を {話|はな}せる {人|ひと}は いますか。', 'I don’t know. Is there anyone who speaks English?'], ['Officer', 'ちょっと {待|ま}って ください。', 'Please wait a moment.']],
+  cz: [['{財布|さいふ}を ＿。', ['なくしました', 'なくします', 'ありました', 'いました'], 0, 'I’ve lost my wallet.'], ['{英語|えいご}を {話|はな}せる {人|ひと}は ＿か。', ['います', 'あります', 'です', 'ます'], 0, 'Is there anyone who speaks English?'], ['{救急車|きゅうきゅうしゃ}を {呼|よ}んで ＿。', ['ください', 'いいです', 'います', 'ません'], 0, 'Please call an ambulance.']] }
+];
+
+
+/* =====================================================================
+   PATH — guided units, the lesson player and the placement check
+   ===================================================================== */
+let pathSt = Object.assign({ done: {}, place: null }, store.get('path', {}));
+const savePath = () => store.set('path', pathSt);
+const PATHX = {};
+/** a unit word as a vocab item: the dictionary entry if there is one (matching spelling variants such as ご飯 / 御飯), else a lesson-only entry */
+function pathWord(w, r, m, lvl) {
+  const id = 'v:' + w + '|' + r;
+  if (VMAP[id]) return VMAP[id];
+  const rh = kata2hira(r), ks = hanOf(w).filter(c => c !== '御');
+  const hit = V.find(x => kata2hira(x.r) === rh && (x.w === w || x.alt === w || (ks.length && ks.every(c => x.w.includes(c)) && hanOf(x.w).filter(c => c !== '御').length === ks.length)));
+  if (hit) return hit;
+  if (!PATHX[id]) {
+    const x = normV({ i: null, w, r, f: furi(w, r), m, s: [{ p: [], g: m.split(/;\s*|,\s*/) }], g: 'other', q: 3, ex: [] }, lvl);
+    x.id = id; x.pic = STARTER_PICS.v[w] || null; PATHX[id] = x;
+  }
+  VMAP[id] = PATHX[id];
+  return PATHX[id];
+}
+/* ---------- units ---------- */
+let AUTO = {};   // level → generated units (rebuilt when that level's grammar / words load)
+function autoUnits(l) {
+  const gs = (DATA.grammar[l] || []).filter(g => g.m), sig = gs.length + ':' + (DATA.vocab[l] || []).length;
+  if (AUTO[l] && AUTO[l].sig === sig) return AUTO[l].units;
+  const words = (DATA.vocab[l] || []).slice().sort((a, b) => b.freq - a.freq), used = new Set(), units = [];
+  for (let i = 0, n = 1; i < gs.length; i += 3, n++) {
+    const g = gs.slice(i, i + 3);
+    const text = g.flatMap(x => x.ex.map(e => String(e.j).replace(MARK, '$1'))).join('\n');
+    let ws = words.filter(x => !used.has(x.id) && x.w.length >= (/[一-鿿]/.test(x.w) ? 1 : 3) && text.includes(x.w)).slice(0, 8);
+    for (const x of words) { if (ws.length >= 10) break; if (!used.has(x.id) && !ws.includes(x)) ws.push(x); }
+    ws.forEach(x => used.add(x.id));
+    units.push({ id: `${l.toLowerCase()}-g${String(n).padStart(2, '0')}`, auto: true, lvl: l, n, g, items: ws,
+      t: g.map(x => gSplitTitle(x.t).jp || x.t).join('・'), s: g.map(x => x.m).join(' / ') });
+  }
+  AUTO[l] = { sig, units }; return units;
+}
+const trackUnits = tr => tr === 'travel' ? PATH_TRAVEL.map((u, i) => Object.assign(u, { lvl: 'N5', n: i + 1, tr: 'travel' }))
+  : [...PATH_N5.map((u, i) => Object.assign(u, { lvl: 'N5', n: i + 1, tr: 'jlpt' })), ...LV.slice(1).flatMap(autoUnits).map(u => Object.assign(u, { tr: 'jlpt' }))];
+const unitById = id => trackUnits(id.startsWith('tr-') ? 'travel' : 'jlpt').find(u => u.id === id);
+function unitItems(u) {
+  const words = u.auto ? u.items : u.w.map(([w, r, m]) => pathWord(w, r, m, u.lvl));
+  // kanji: new ones from this unit's words that weren't taught in an earlier unit of the same track
+  const seen = new Set();
+  for (const p of trackUnits(u.tr)) { if (p === u) break; (p.auto ? p.items.map(x => x.w) : p.w.map(x => x[0])).forEach(w => hanOf(w).forEach(c => seen.add(c))); }
+  const kanji = [...new Set(words.flatMap(x => hanOf(x.w)))].filter(c => KMAP[c] && !seen.has(c)).slice(0, 5).map(c => KMAP[c]);
+  return { words, kanji };
+}
+const unitLabel = u => u.tr === 'travel' ? `Travel ${u.n}` : `${u.lvl} · Unit ${u.n}`;
+function nextUnit(tr) {
+  const us = trackUnits(tr), start = tr === 'jlpt' && pathSt.place && pathSt.place.unit ? Math.max(0, us.findIndex(u => u.id === pathSt.place.unit)) : 0;
+  return us.slice(start).find(u => !pathSt.done[u.id]) || us.find(u => !pathSt.done[u.id]) || us[us.length - 1];
+}
+const loadPathData = () => DATA.mode === 'full' ? Promise.all([loadAllVocab(), loadGrammar(LV)]).catch(() => {}) : Promise.resolve();
+
+/* ---------- Path view ---------- */
+function vPath() {
+  const tr = S.ptab || 'jlpt', us = trackUnits(tr), cur = nextUnit(tr);
+  const done = us.filter(u => pathSt.done[u.id]).length;
+  const pl = pathSt.place;
+  const placeCard = tr !== 'jlpt' ? '' : pl
+    ? `<div class="card pcheck done"><div><b>Placement: start at ${esc(pl.label)}</b><span>${esc(pl.note || '')}</span></div><button class="btn line sm" onclick="App.placeStart()">Retake</button></div>`
+    : `<div class="card pcheck"><div><b>Not sure where to start?</b><span>A 5-minute check of your kana, words, kanji and grammar finds the right unit for you.</span></div><button class="btn sm" onclick="App.placeStart()">Take the check</button></div>`;
+  const row = u => { const d = pathSt.done[u.id], isCur = u === cur;
+    return `<button class="unit${d ? ' done' : ''}${isCur ? ' cur' : ''}" onclick="App.lesson('${u.id}')" style="--lc:${lcVar(u.lvl)}"><span class="un">${d ? '✓' : u.n}</span><span class="ut"><b class="jp-mix">${esc(u.t)}</b><span>${esc(u.s)}</span></span><span class="ugo">${isCur ? 'Start' : d ? `${d.sc}%` : ''}</span></button>`; };
+  let body;
+  if (tr === 'travel') body = `<div class="ulist">${us.map(row).join('')}</div>`;
+  else body = LV.map(l => {
+    const lu = us.filter(u => u.lvl === l); const ld = lu.filter(u => pathSt.done[u.id]).length, open = lu.includes(cur) || (S.popen || {})[l];
+    const empty = !lu.length ? `<p class="note">${DATA.mode === 'full' ? 'Loading this level’s units…' : `${l} units are built from the full grammar and word data, which loads once the GitHub Action has run.`}</p>` : '';
+    return `<details class="plevel" style="--lc:${lcVar(l)}"${open ? ' open' : ''} ontoggle="(S.popen=S.popen||{})['${l}']=this.open"><summary><span class="tag lv">${l}</span><b>${l === 'N5' ? 'Foundations' : l === 'N4' ? 'Everyday Japanese' : l === 'N3' ? 'Bridging to real Japanese' : l === 'N2' ? 'Newspapers and work' : 'Fluent reading'}</b><span class="pl-n">${ld} / ${lu.length}</span></summary>${empty}<div class="ulist">${lu.map(row).join('')}</div></details>`;
+  }).join('');
+  return `<h1>Path</h1><p class="sub">Short lessons that teach one pattern, the words that go with it and their kanji, then let you read them together.</p>
+  ${placeCard}
+  <div class="seg ptabs"><button class="${tr === 'jlpt' ? 'on' : ''}" onclick="App.ptab('jlpt')">JLPT course</button><button class="${tr === 'travel' ? 'on' : ''}" onclick="App.ptab('travel')">Travel Japanese</button></div>
+  ${cur ? `<div class="card pnext" style="--lc:${lcVar(cur.lvl)}"><div class="pn-k">${pathSt.done[cur.id] ? 'Review' : done ? 'Up next' : 'Start here'} · ${esc(unitLabel(cur))}</div><div class="pn-t">${esc(cur.t)}</div><div class="pn-s">${esc(cur.s)}</div><button class="btn" onclick="App.lesson('${cur.id}')">${done ? 'Continue' : 'Start lesson'} · about 15 min</button></div>` : ''}
+  ${body}`;
+}
+
+/* ---------- lesson player ---------- */
+const STEP_NAME = { pat: 'Pattern', words: 'Words', kanji: 'Kanji', read: 'Read', talk: 'Talk', quiz: 'Practice', done: 'Done' };
+function startLesson(id) {
+  const u = unitById(id); if (!u) return;
+  const { words, kanji } = unitItems(u);
+  const steps = ['pat', 'words', ...(kanji.length ? ['kanji'] : []), 'read', ...(u.tk && u.tk.length ? ['talk'] : []), 'quiz', 'done'];
+  S.lesson = { u, words, kanji, steps, i: 0, showEn: {}, quiz: null };
+  S.view = 'lesson'; render(); window.scrollTo(0, 0);
+}
+function lessonQuiz(L) {
+  const u = L.u, qs = [];
+  // a couple of words from earlier units in this track, so they keep coming back
+  const earlier = trackUnits(u.tr).filter(p => p !== u && pathSt.done[p.id]).flatMap(p => unitItems(p).words);
+  shuffle(earlier.filter(x => !progress[x.id] || isDue(x.id))).slice(0, 2).forEach(x => { const q = makeQ('vocab', x, 'jp2en'); q.review = true; qs.push(q); });
+  if (u.auto) u.g.forEach(g => qs.push(makeGrammarQ(g, 'gfill')));
+  else u.cz.forEach(c => qs.push(clozeQ(c)));
+  shuffle(L.words).slice(0, 5).forEach((x, i) => qs.push(makeQ('vocab', x, i % 2 ? 'en2jp' : 'jp2en')));
+  L.kanji.slice(0, 2).forEach(k => qs.push(makeQ('kanji', k, 'k2m')));
+  return { qs, i: 0, answered: false, chosen: -1, ok: 0, n: 0, missed: [] };
+}
+function clozeQ(c) {
+  const [sent, opts, ai, en] = c, order = shuffle(opts.map((_, i) => i));
+  return { cloze: true, hint: 'Fill the blank', grid: true, meta: '', jp: false,
+    prompt: `<div class="psent jp">${ruby(sent.replace('＿', '\u0007'), true).replace('\u0007', '<span class="blank">　</span>')}</div><div class="proma">${esc(en)}</div>`,
+    opts: order.map(i => ({ html: `<span class="jp cjp">${ruby(opts[i], true)}</span>`, ok: i === ai })) };
+}
+const jpLine = j => `<span class="jp">${ruby(j.includes('{') ? j : autoFuri(j), true)}</span>`;
+function vLesson() {
+  const L = S.lesson; if (!L) return vPath();
+  const u = L.u, step = L.steps[L.i];
+  const dots = L.steps.map((s, i) => `<i class="${i < L.i ? 'ok' : i === L.i ? 'cur' : ''}" title="${STEP_NAME[s]}"></i>`).join('');
+  const head = `<div class="qtop"><button class="ghost" onclick="App.lessonClose()">✕ Close</button><span class="qtitle">${esc(unitLabel(u))} · ${STEP_NAME[step]}</span><span style="width:34px"></span></div><div class="track lsteps" aria-hidden="true">${dots}</div>`;
+  let body = '', next = 'Next';
+  if (step === 'pat') {
+    const pats = u.auto ? u.g : null;
+    body = u.auto
+      ? `<div class="ls-h"><div class="ls-k">This lesson</div><h2>${esc(u.t)}</h2></div>${pats.map(g => `<div class="card lpat"><div class="lp-t">${gTitleHtml(g.t)}</div><div class="lp-m">${esc(g.m)}</div>${g.fm ? `<div class="gform">${gFormHtml(g.fm)}</div>` : ''}${g.ex.slice(0, 2).map(e => `<div class="lex">${jpLine(e.j)}<span class="en">${esc(e.e || '')}</span></div>`).join('')}</div>`).join('')}`
+      : `<div class="ls-h"><div class="ls-k">${esc(u.t)}</div><h2>${esc(u.s)}</h2></div>
+        <div class="card lpat"><div class="lp-t jp">${ruby(u.pat, true)}</div><div class="lp-m">${esc(u.pm)}</div></div>
+        <ul class="lpts">${u.pts.map(p => `<li>${ruby(p, true)}</li>`).join('')}</ul>
+        <div class="label">Examples</div>${u.ex.map(([j, e]) => `<div class="lex ex"><div class="jp">${ruby(j, true)}</div><span class="en">${esc(e)}</span></div>`).join('')}`;
+  } else if (step === 'words') {
+    body = `<div class="ls-h"><div class="ls-k">New words</div><h2>${L.words.length} words for this lesson</h2><p class="note">Say each one out loud. Tap a card for the full entry.</p></div>
+      <div class="lwords">${L.words.map(x => `<button class="lword" data-open="${esc(x.id)}">${x.pic && settings.pics ? `<span class="lw-pic">${picHtml(x.pic, 'md')}</span>` : '<span class="lw-pic none"></span>'}<span class="lw-w jp">${ruby(x.f || x.w, true)}</span><span class="lw-r">${esc(toRomaji(x.r))}</span><span class="lw-m">${esc(x.m)}</span>${sayBtn(x.au)}</button>`).join('')}</div>`;
+  } else if (step === 'kanji') {
+    body = `<div class="ls-h"><div class="ls-k">Kanji in these words</div><h2>${L.kanji.map(k => k.k).join(' ')}</h2><p class="note">Learn each kanji through a word you already know. Tap one for its story, parts and stroke order.</p></div>
+      <div class="lkanji">${L.kanji.map(k => { const w = L.words.find(x => x.w.includes(k.k));
+        return `<button class="lk" data-open="k:${esc(k.k)}"><span class="lk-k jp">${k.k}</span><span class="lk-b"><b>${esc(k.mean.slice(0, 2).join(', '))}</b><span class="jp">${esc([...k.on.slice(0, 1).map(kataOf), ...k.kun.slice(0, 1)].join('・'))}</span>${k.og ? (k.og.t === 'S' ? (k.og.sem || k.og.pho ? `<span class="lk-o">${k.og.sem ? `${esc(k.og.sem)} gives the meaning` : ''}${k.og.sem && k.og.pho ? ', ' : ''}${k.og.pho ? `${esc(k.og.pho)} gives the sound` : ''}</span>` : '') : k.og.h ? `<span class="lk-o">${esc(k.og.h)}</span>` : '') : ''}${w ? `<span class="lk-w">in <span class="jp">${esc(w.w)}</span> ${esc(w.m.split(/[;,]/)[0])}</span>` : ''}</span></button>`; }).join('')}</div>`;
+  } else if (step === 'read') {
+    const lines = u.auto ? u.g.flatMap(g => g.ex.slice(0, 2).map(e => [e.j, e.e || ''])) : u.rd;
+    body = `<div class="ls-h"><div class="ls-k">Read</div><h2>Read it out loud</h2><p class="note">Try each line first. Tap “English” only if you need it, and tap any kanji to look it up.</p></div>
+      <div class="lread">${lines.map(([j, e], i) => `<div class="lline ex"><div class="jp">${u.auto ? jpLine(j) : ruby(j, true)}</div>${e ? `<button class="ghost len${L.showEn[i] ? ' on' : ''}" onclick="App.lessonEn(${i})">${L.showEn[i] ? esc(e) : 'English'}</button>` : ''}</div>`).join('')}</div>`;
+  } else if (step === 'talk') {
+    body = `<div class="ls-h"><div class="ls-k">Conversation</div><h2>Hear it in a conversation</h2><p class="note">Read both parts. Then cover one side and say it yourself.</p></div>
+      <div class="ltalk">${u.tk.map(([who, j, e], i) => { const me = who === 'B' || who === 'You'; return `<div class="bub${me ? ' me' : ''}"><span class="who">${esc(who)}</span><div class="ex"><div class="jp">${ruby(j, true)}</div></div><button class="ghost len${L.showEn['t' + i] ? ' on' : ''}" onclick="App.lessonEn('t${i}')">${L.showEn['t' + i] ? esc(e) : 'English'}</button></div>`; }).join('')}</div>`;
+  } else if (step === 'quiz') {
+    if (!L.quiz) L.quiz = lessonQuiz(L);
+    const Q = L.quiz, q = Q.qs[Q.i];
+    if (!q) { L.i++; return vLesson(); }
+    const opts = q.opts.map((o, i) => { let c = 'choice'; if (Q.answered) c += (o.ok ? ' ok' : i === Q.chosen ? ' bad' : ' dim') + (i === Q.chosen ? ' picked' : ''); return `<button class="${c}" onclick="App.lessonAns(${i})"${Q.answered ? ' disabled' : ''}><span class="n">${i + 1}</span><span>${o.html}</span></button>`; }).join('');
+    const ok = Q.answered && q.opts[Q.chosen].ok, right = (q.opts.find(o => o.ok) || {}).html || '';
+    body = `<div class="ls-h"><div class="ls-k">Practice · ${Q.i + 1} of ${Q.qs.length}${q.review ? ' · from an earlier unit' : ''}</div></div>
+      <div class="card prompt">${q.prompt}${q.meta ? `<div class="pmeta">${q.meta}</div>` : ''}${Q.answered ? sayBtn(q.au, 'say') : ''}</div>
+      <div class="hint">${q.hint || ''}</div><div class="choices ${q.grid ? 'grid2' : ''}">${opts}</div>
+      ${Q.answered ? `<div class="feedback ${ok ? 'good' : 'bad'}" role="status"><div class="fv">${ok ? pick(['正解! Correct', 'いいね! Nice', 'すごい! Great']) : 'おしい! Not quite'}<small>${ok ? '' : 'Answer: '}${ok ? '' : right}</small></div><button class="btn" onclick="App.lessonQNext()">${Q.i + 1 < Q.qs.length ? 'Next' : 'Finish'}</button></div>` : ''}`;
+    return `${head}<div class="lesson">${body}</div>`;
+  } else if (step === 'done') {
+    const Q = L.quiz || { ok: 0, n: 0, missed: [] }, pct = Q.n ? Math.round(Q.ok / Q.n * 100) : 100;
+    if (!L.saved) finishLesson(L, pct);
+    const nu = nextUnit(u.tr);
+    body = `<div class="card score"><div class="arrive">終点</div><div class="muted">${esc(unitLabel(u))} complete</div><div class="big">${pct}%</div><div>${Q.ok} of ${Q.n} right in practice</div></div>
+      <p class="note" style="text-align:center">${L.words.length} words${L.kanji.length ? ` and ${L.kanji.length} kanji` : ''} from this lesson are now in your reviews. They’ll come back on Home when they’re due.</p>
+      ${Q.missed.length ? `<div class="label">Worth another look</div><div class="list">${[...new Set(Q.missed)].map(x => x.kind === 'kanji' ? `<button class="row" data-open="${esc(x.id)}"><span class="rw jp" style="font-size:24px">${x.k}</span><span class="rm">${esc(x.m)}</span></button>` : vRow(x)).join('')}</div>` : ''}
+      ${nu && nu !== u && !pathSt.done[nu.id] ? `<button class="btn" onclick="App.lesson('${nu.id}')">Next: ${esc(nu.t)}</button>` : ''}
+      <button class="btn line" onclick="App.go('path')">Back to Path</button>`;
+    return `${head}<div class="lesson">${body}</div>`;
+  }
+  return `${head}<div class="lesson">${body}</div>
+    <div class="lnav">${L.i ? `<button class="btn line" onclick="App.lessonStep(-1)">‹ Back</button>` : '<span></span>'}<button class="btn" onclick="App.lessonStep(1)">${L.steps[L.i + 1] === 'quiz' ? 'Practice' : next} ›</button></div>`;
+}
+function finishLesson(L, pct) {
+  L.saved = true;
+  for (const x of [...L.words, ...L.kanji]) if (!progress[x.id]) schedule(x, 2);   // new words and kanji join the review schedule
+  const prev = pathSt.done[L.u.id];
+  pathSt.done[L.u.id] = { d: today(), sc: Math.max(pct, prev ? prev.sc : 0) }; savePath(); dayFlag('lesson');
+}
+
+/* ---------- placement check ---------- */
+function placeQs(l) {
+  const qs = [];
+  const ws = shuffle((DATA.vocab[l] || []).filter(x => x.m).sort((a, b) => b.freq - a.freq).slice(0, 60)).slice(0, 3);   // common words of the level
+  const ks = shuffle(K.filter(k => k.lvl === l)).slice(0, 3);
+  const gs = shuffle((DATA.grammar[l] || []).filter(g => g.m)).slice(0, 3);
+  ws.forEach(x => qs.push(Object.assign(makeQ('vocab', x, 'jp2en'), { sk: 'v' })));
+  ks.forEach(k => qs.push(Object.assign(makeQ('kanji', k, 'k2m'), { sk: 'k' })));
+  gs.forEach(g => qs.push(Object.assign(makeGrammarQ(g, 'gfill'), { sk: 'g' })));
+  return shuffle(qs);
+}
+function vPlace() {
+  const P = S.place; if (!P) return vPath();
+  const head = `<div class="qtop"><button class="ghost" onclick="App.placeQuit()">✕ Close</button><span class="qtitle">Placement check${P.stage === 'run' ? ` · ${P.lv}` : ''}</span><span style="width:34px"></span></div>`;
+  if (P.stage === 'intro') return `${head}<div class="lesson"><div class="ls-h"><div class="ls-k">About 5 minutes</div><h2>Let’s find where you should start</h2>
+    <p class="note">You’ll answer a few questions on words, kanji and grammar, starting easy. It stops when a level gets hard, so don’t worry about not knowing things. Guessing is fine; “I don’t know” is better than a lucky guess.</p></div>
+    <div class="label">Do you know hiragana and katakana?</div>
+    <div class="choices"><button class="choice" onclick="App.placeKana(true)"><span>Yes, check me quickly</span></button><button class="choice" onclick="App.placeKana(false)"><span>Not yet, or only some</span></button></div></div>`;
+  if (P.stage === 'loading') return `${head}<div class="lesson"><p class="note">Getting questions ready…</p></div>`;
+  if (P.stage === 'done') {
+    const r = P.result;
+    return `${head}<div class="lesson"><div class="card score"><div class="arrive">Start here</div><div class="big" style="font-size:34px">${esc(r.label)}</div><div>${esc(r.note)}</div></div>
+      ${r.rows.length ? `<div class="label">How you did</div><div class="card placerows">${r.rows.map(x => `<div class="lnrow" style="--lc:${lcVar(x.l)}"><span class="tag lv">${x.l}</span><div class="pbar"><i style="width:${x.pct}%"></i></div><span>${x.pct}%</span></div><div class="psk">Words ${x.v} · Kanji ${x.k} · Grammar ${x.g}</div>`).join('')}</div>` : ''}
+      ${r.tip ? `<p class="note">${esc(r.tip)}</p>` : ''}
+      ${r.kana ? `<button class="btn" onclick="App.go('kana')">Learn kana first</button>` : ''}
+      <button class="btn${r.kana ? ' line' : ''}" onclick="App.lesson('${r.unit}')">Start ${esc(r.label)}</button>
+      <button class="btn line" onclick="App.go('path')">See the whole Path</button></div>`;
+  }
+  const q = P.qs[P.i]; if (!q) return `${head}<div class="lesson"><p class="note">…</p></div>`;
+  const opts = q.opts.map((o, i) => { let c = 'choice'; if (P.answered) c += (o.ok ? ' ok' : i === P.chosen ? ' bad' : ' dim'); return `<button class="${c}" onclick="App.placeAns(${i})"${P.answered ? ' disabled' : ''}><span class="n">${i + 1}</span><span>${o.html}</span></button>`; }).join('');
+  return `${head}<div class="track lsteps" aria-hidden="true">${P.qs.map((_, i) => `<i class="${i < P.i ? 'ok' : i === P.i ? 'cur' : ''}"></i>`).join('')}</div>
+    <div class="lesson"><div class="card prompt">${q.prompt}</div><div class="hint">${q.hint || ''}</div>
+    <div class="choices ${q.grid ? 'grid2' : ''}">${opts}<button class="choice idk${P.answered && P.chosen === -1 ? ' bad' : ''}" onclick="App.placeAns(-1)"${P.answered ? ' disabled' : ''}><span>I don’t know</span></button></div>
+    ${P.answered ? `<div class="lnav"><span></span><button class="btn" onclick="App.placeNext()">Next ›</button></div>` : ''}</div>`;
+}
+async function placeLevel() {
+  const P = S.place, l = P.lv;
+  P.stage = 'loading'; render();
+  if (DATA.mode === 'full') { try { await Promise.all([load('vocab', l), load('grammar', l)]); } catch (e) {} }
+  P.qs = placeQs(l); P.i = 0; P.answered = false; P.chosen = -1; P.stage = 'run';
+  if (P.qs.length < 4) return placeFinish();   // not enough data for this level (starter set): stop here
+  render();
+}
+function placeFinish() {
+  const P = S.place, rows = Object.entries(P.tally).map(([l, t]) => ({ l, pct: t.n ? Math.round(t.ok / t.n * 100) : 0, v: `${t.v[0]}/${t.v[1]}`, k: `${t.k[0]}/${t.k[1]}`, g: `${t.g[0]}/${t.g[1]}` }));
+  const last = rows[rows.length - 1], us = trackUnits('jlpt');
+  let unit, label, note, tip = '';
+  const failed = last && last.pct < 70 ? last.l : null;
+  if (P.kanaWeak) { unit = PATH_N5[0].id; label = 'N5 · Unit 1'; note = 'Your kana needs a little more work first. Learn it in the Kana section, then start Unit 1.'; }
+  else if (!failed && last) {
+    const li = LV.indexOf(last.l), nl = LV[li + 1];
+    const first = nl && us.find(u => u.lvl === nl);
+    if (first) { unit = first.id; label = `${nl} · Unit 1`; note = `You passed ${last.l}. Start at the beginning of ${nl}.`; }
+    else { unit = us[0].id; label = 'N5 · Unit 1'; note = DATA.mode === 'full' ? 'You passed every level we tested. Pick any unit you like.' : 'The higher levels need the full data. Start the Path or explore the Library meanwhile.'; }
+  } else if (failed === 'N5' || !last) {
+    const pct = last ? last.pct : 0; const u = pct >= 50 ? PATH_N5[8] : PATH_N5[0];
+    unit = u.id; label = `N5 · Unit ${PATH_N5.indexOf(u) + 1}`;
+    note = pct >= 50 ? 'You know the basics. Skip the first lessons and start where verbs come in.' : 'Start from the first unit. The early lessons go quickly if you already know some of it.';
+  } else { const u = us.find(x => x.lvl === failed) || us[0]; unit = u.id; label = `${failed} · Unit 1`; note = `You’re solid up to ${LV[LV.indexOf(failed) - 1]}. ${failed} is where you start.`; }
+  const t = last && P.tally[last.l];
+  if (t && t.k[1] && t.v[1] && t.k[0] / t.k[1] < t.v[0] / t.v[1] - 0.3) tip = 'Your kanji is behind your vocabulary. Take the Kanji step in each lesson slowly, and open each kanji’s story.';
+  else if (t && t.g[1] && t.v[1] && t.g[0] / t.g[1] < t.v[0] / t.v[1] - 0.3) tip = 'Grammar is your weak spot. Read the Pattern step carefully and do the Read step out loud.';
+  P.result = { unit, label, note, tip, rows, kana: !!P.kanaWeak };
+  pathSt.place = { d: today(), unit, label, note }; savePath();
+  P.stage = 'done'; render();
+}
 
 const App = {
   leaveExam() { const s = S.session; if (s && s.mode === 'exam' && !s.done && !confirm('Leave the exam? Your answers will be lost.')) return false; stopExamTimer(); return true; },
@@ -3175,6 +3788,41 @@ const App = {
     toast(added ? `Added ${added} word${added === 1 ? '' : 's'}` : 'Nothing added — check the format'); render();
   },
   clearWords() { if (!confirm('Remove all your custom words?')) return; custom = []; store.set('custom', custom); settings.levels = settings.levels.filter(l => l !== 'MY'); if (!settings.levels.length) settings.levels = ['N5']; saveSettings(); rebuild(); render(); },
+  ptab(t) { S.ptab = t; render(); },
+  lesson(id) { App.closeSheet(); if (!App.leaveExam()) return; S.session = null; const go = () => startLesson(id); if (!unitById(id)) { loadPathData().then(go); } else go(); },
+  lessonStep(d) { const L = S.lesson; if (!L) return; L.i = Math.max(0, Math.min(L.steps.length - 1, L.i + d)); render(); window.scrollTo(0, 0); },
+  lessonEn(i) { const L = S.lesson; L.showEn[i] = !L.showEn[i]; render(); },
+  lessonAns(i) {
+    const Q = S.lesson.quiz; if (!Q || Q.answered) return; const q = Q.qs[Q.i], ok = !!q.opts[i].ok;
+    Q.answered = true; Q.chosen = i; Q.n++; if (ok) Q.ok++; else if (q.item) Q.missed.push(q.item);
+    if (q.item) rec(q.item, ok); else logAct(false, 'grammar');
+    if (ok && settings.playOnCorrect && q.au && hasRec(q.au)) playAudio(q.au);
+    render();
+  },
+  lessonQNext() { const Q = S.lesson.quiz; Q.i++; Q.answered = false; Q.chosen = -1; if (Q.i >= Q.qs.length) S.lesson.i = S.lesson.steps.indexOf('done'); render(); window.scrollTo(0, 0); },
+  lessonClose() { const L = S.lesson; if (L && L.steps[L.i] !== 'done' && L.i > 0 && !confirm('Leave this lesson? You can start it again any time.')) return; S.lesson = null; App.go('path'); },
+  placeStart() { S.place = { stage: 'intro', tally: {}, lv: null }; S.view = 'place'; App.closeSheet(); render(); window.scrollTo(0, 0); },
+  placeKana(knows) {
+    const P = S.place; if (!knows) { P.kanaWeak = true; return placeFinish(); }
+    const pool = KANA.filter(x => x.group === 'basic'), hs = shuffle(pool.filter(x => x.script === 'h')).slice(0, 3), ks = shuffle(pool.filter(x => x.script === 'k')).slice(0, 3);
+    P.lv = 'Kana'; P.qs = shuffle([...hs, ...ks]).map(x => Object.assign(makeKanaQ(x, 'k2r'), { sk: 'a' })); P.i = 0; P.kanaOk = 0; P.answered = false; P.stage = 'run'; render();
+  },
+  placeAns(i) {
+    const P = S.place; if (P.answered) return; const q = P.qs[P.i], ok = i >= 0 && !!q.opts[i].ok;
+    P.answered = true; P.chosen = i;
+    if (P.lv === 'Kana') { if (ok) P.kanaOk++; }
+    else { const t = P.tally[P.lv] = P.tally[P.lv] || { ok: 0, n: 0, v: [0, 0], k: [0, 0], g: [0, 0] }; t.n++; if (ok) t.ok++; const sk = t[q.sk]; if (sk) { sk[1]++; if (ok) sk[0]++; } }
+    render();
+  },
+  placeNext() {
+    const P = S.place; P.i++; P.answered = false; P.chosen = -1;
+    if (P.i < P.qs.length) return render();
+    if (P.lv === 'Kana') { if (P.kanaOk < 5) { P.kanaWeak = true; return placeFinish(); } P.lv = 'N5'; return placeLevel(); }
+    const t = P.tally[P.lv], li = LV.indexOf(P.lv);
+    if (t && t.n && t.ok / t.n >= 0.7 && li < LV.length - 1) { P.lv = LV[li + 1]; return placeLevel(); }
+    placeFinish();
+  },
+  placeQuit() { if (S.place && S.place.stage === 'run' && !confirm('Stop the placement check?')) return; S.place = null; App.go('path'); },
   knote(el) { const k = el.dataset.knote, v = el.value.trim(); if (v) knotes[k] = el.value; else delete knotes[k]; store.set('knotes', knotes); const s2 = el.parentElement.querySelector('.kr-saved'); if (s2) { s2.textContent = 'Saved on this device'; clearTimeout(el._t); el._t = setTimeout(() => { s2.textContent = ''; }, 1500); } },
   exportProgress() {
     const blob = new Blob([JSON.stringify({ app: 'kotoba-dojo', v: 2, exported: new Date().toISOString(), progress, log: actLog, custom, settings, knotes }, null, 1)], { type: 'application/json' });
