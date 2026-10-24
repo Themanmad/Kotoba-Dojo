@@ -99,7 +99,7 @@ h1 .muted{font-weight:500}
 .f3 .bars i.on{background:var(--warn)}
 .f2 .bars i.on,.f1 .bars i.on{background:var(--muted)}
 /* ruby */
-ruby rt{font-size:.48em;color:var(--muted);font-weight:400}
+ruby rt{font-size:.55em;color:color-mix(in srgb,var(--ink) 72%,transparent);font-weight:500;letter-spacing:.02em}
 body.furi-tap ruby:not(.show) rt{visibility:hidden}
 body.furi-tap .force ruby rt{visibility:visible}
 body.furi-tap .prompt ruby,body.furi-tap .fcard ruby{cursor:pointer}
@@ -111,7 +111,7 @@ body.furi-tap .prompt ruby,body.furi-tap .fcard ruby{cursor:pointer}
 .pword{font-size:42px;font-weight:500;line-height:1.7;word-break:keep-all}
 .pkanji{font-size:80px;line-height:1.2;font-weight:500}
 .pmean{font-size:22px;font-weight:600;line-height:1.35;padding:10px 0}
-.proma{color:var(--muted);font-size:14px;margin-top:-4px;display:block}
+.proma{color:var(--muted);font-size:16px;margin-top:10px;display:block}
 .pmeta{margin-top:12px;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}
 .say{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:16px;display:grid;place-items:center}
 .say.inl{position:static;width:32px;height:32px;font-size:14px;flex:none}
@@ -266,7 +266,8 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 .gform{margin-top:10px;padding:10px 12px;border-radius:12px;border:1px dashed var(--line);font-size:14px}
 .gform b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px}
 .gexpl{margin-top:10px;font-size:14px;line-height:1.6}
-.psent{font-size:22px;line-height:1.9;text-align:left}
+.psent{font-size:34px;line-height:2.2;text-align:left}
+@media (max-width:599px){.psent{font-size:28px}}
 .psent u{text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-color:var(--accent)}
 .blank{display:inline-block;min-width:3.2em;border-bottom:2px solid var(--accent);margin:0 2px}
 .slot{display:inline-block;width:2.6em;border-bottom:2px solid var(--muted);margin:0 3px;text-align:center;font-size:15px;color:var(--accent);vertical-align:baseline}
@@ -423,6 +424,20 @@ body > main .ulist:not(.plevel .ulist){border:1px solid var(--line);border-radiu
 .lt-d{font-size:13.5px;color:var(--muted)}
 .nav-sub{display:none;font-size:12px;font-weight:700;color:var(--muted);padding:14px 18px 4px;text-transform:none}
 @media (min-width:900px){ .nav-sub.nav-extra{display:block!important} nav.tabs button.lib{padding-top:8px;padding-bottom:8px;font-size:15px} nav.tabs button.lib b{font-size:20px} }
+.ansc{display:flex;gap:16px;align-items:center;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;margin-top:12px;cursor:pointer;color:var(--ink);font:inherit;position:relative}
+.ansc:hover{border-color:var(--accent)}
+.ac-big{font-size:56px;line-height:1.1;flex:none;min-width:64px;text-align:center}
+.ac-big.ac-word{font-size:34px;line-height:1.7}
+.ac-body{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.ac-m{font-size:17px;font-weight:700}
+.ac-r{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;font-size:18px}
+.ac-r b{font-size:12px;color:var(--muted);min-width:30px}
+.ac-ro{font-size:14px;color:var(--muted)}
+.ac-ex{font-size:15px;margin-top:2px}
+.ac-ex .jp{font-size:18px}
+.ac-g{font-size:20px}
+.ac-more{position:absolute;right:14px;bottom:8px;font-size:12px;font-weight:700;color:var(--accent)}
+.lesson,.page-session .after{padding-bottom:110px}
 .kc-hint{font-size:12.5px;color:var(--muted);margin:2px 0 6px}
 .kcx.kc-sel{background:var(--accent-soft);color:var(--accent);text-decoration:none}
 ::highlight(kp-word){background-color:var(--accent-soft);color:var(--accent)}
@@ -475,7 +490,7 @@ body > main .ulist:not(.plevel .ulist){border:1px solid var(--line);border-radiu
 .gtitle .gnote{font-size:14px}
 .row .rw.gt{min-width:120px;max-width:50%}
 .exrev .exs{line-height:2}
-.psent ruby rt{font-size:.45em}
+.psent ruby rt{font-size:max(15px,.5em)}
 .row .rw.gt .gpat{font-size:18px;line-height:1.4}
 .pword.gq .gpat{font-size:36px;justify-content:center}
 .cjp .gpat{font-size:20px;justify-content:center}
@@ -1755,6 +1770,7 @@ function autoFuri(t) {
     for (let L = Math.min(maxLen, t.length - i); L >= 1 && !hit; L--) {
       const sub = t.slice(i, i + L), f = words.get(sub); if (!f) continue;
       if (L === 1 && ((i > 0 && isK(t[i - 1])) || (t[i + 1] && isK(t[i + 1])))) continue;
+      if (L === 1 && stems.has(t[i]) && /[ぁ-ん]/.test(t[i + 1] || '')) continue;
       hit = [L, f];
     }
     if (!hit && stems.has(t[i]) && /[ぁ-ん]/.test(t[i + 1] || '') && !(i > 0 && isK(t[i - 1]))) hit = [1, stems.get(t[i])];
@@ -2298,7 +2314,7 @@ function renderSession() {
     const ok = q.opts[s.chosen].ok, last = s.idx + 1 >= list.length;
     const right = (q.opts.find(o => o.ok) || {}).html || '';
     after = `<div class="feedback ${ok ? 'good' : 'bad'}" role="status"><div class="fv">${ok ? (s.streak >= 3 ? `正解! ${s.streak} in a row` : pick(['正解! Correct', 'いいね! Nice one', 'すごい! Great'])) : 'おしい! Not quite'}<small>${ok ? '' : 'Answer: '}${right}</small></div>${hasRec(q.au) ? `<button class="vplay" data-audio="${esc(q.au)}" aria-label="Play the word">🔊</button>` : ''}<button class="btn" onclick="App.next()">${last ? 'See results' : 'Next'}</button></div>
-      ${test ? '' : `<div class="card" style="margin-top:12px">${detail(q.item)}</div>`}`;
+      ${test ? answerCard(q.item) : `<div class="card" style="margin-top:12px">${detail(q.item)}</div>`}`;
   }
   return `<div class="qtop"><button class="ghost" onclick="App.endSession()">✕ End</button>${head}</div>
   ${track}
@@ -2388,7 +2404,7 @@ function gFillOpts(item, v, pool, sentence) {
   for (const x of shuffle(pool)) {
     if (x === item || grammarOverlap(item, x)) continue;
     const vs = gVariants(x); const c = vs.find(o => o.tag === v.tag) || vs[0];
-    if (!c || seen.has(c.v) || c.v.includes(v.v) || v.v.includes(c.v)) continue;
+    if (!c || seen.has(c.v) || c.v.includes(v.v) || v.v.includes(c.v) || /[。、？！?!,.]/.test(c.v)) continue;
     seen.add(c.v); cands.push({ v: c.v, score: Math.abs(c.v.length - L) + (c.tag === v.tag ? 0 : 2) });
   }
   // prefer options that look like the answer: similar length, same politeness
@@ -3544,6 +3560,25 @@ function vPath() {
 
 /* ---------- lesson player ---------- */
 const STEP_NAME = { pat: 'Pattern', words: 'Words', kanji: 'Kanji', read: 'Read', talk: 'Talk', quiz: 'Practice', done: 'Done' };
+/* compact answer card after a quiz question: how to say it, what it means, a word to hang it on */
+function answerCard(x) {
+  if (!x) return '';
+  let inner = '';
+  if (x.kind === 'kanji') {
+    const ex = (x.ex || [])[0], on = x.on.slice(0, 3), kun = x.kun.slice(0, 3);
+    inner = `<div class="ac-big jp">${esc(x.k)}</div><div class="ac-body"><div class="ac-m">${esc(x.mean.slice(0, 3).join('; '))}</div>
+      ${on.length ? `<div class="ac-r"><b>On</b><span class="jp">${esc(on.join('、'))}</span><span class="ac-ro">${esc(on.map(toRomaji).join(', '))}</span></div>` : ''}
+      ${kun.length ? `<div class="ac-r"><b>Kun</b><span class="jp">${kunHtml(kun)}</span><span class="ac-ro">${esc(kun.map(r => toRomaji(r)).join(', '))}</span></div>` : ''}
+      ${ex ? `<div class="ac-ex">e.g. <span class="jp">${ruby(furi(ex.w, ex.r), true)}</span> <span class="ac-ro">${esc(toRomaji(ex.r))}</span> ${esc(String(ex.m || '').split(/[;,]/)[0])}</div>` : ''}</div>`;
+  } else if (x.kind === 'vocab') {
+    inner = `<div class="ac-big jp ac-word">${ruby(x.f || x.w, true)}</div><div class="ac-body"><div class="ac-r"><span class="jp">${esc(x.r)}</span><span class="ac-ro">${esc(toRomaji(x.r))}</span>${sayBtn(x.au)}</div><div class="ac-m">${esc(x.m)}</div></div>`;
+  } else if (x.kind === 'grammar') {
+    inner = `<div class="ac-body"><div class="ac-g">${gTitleHtml(x.t)}</div><div class="ac-m">${esc(x.m)}</div>${x.fm ? `<div class="ac-ro">${esc(x.fm)}</div>` : ''}</div>`;
+  } else if (x.kind === 'kana') {
+    inner = `<div class="ac-big jp">${esc(x.ch)}</div><div class="ac-body"><div class="ac-m">${esc(x.ro)}</div>${x.other ? `<div class="ac-ro">${x.script === 'h' ? 'Katakana' : 'Hiragana'}: <span class="jp">${esc(x.other)}</span></div>` : ''}</div>`;
+  }
+  return inner ? `<button class="ansc" data-open="${esc(x.id)}" title="Open the full entry">${inner}<span class="ac-more">Full entry ›</span></button>` : '';
+}
 function startLesson(id) {
   const u = unitById(id); if (!u) return;
   const { words, kanji } = unitItems(u);
@@ -3606,7 +3641,7 @@ function vLesson() {
     body = `<div class="ls-h"><div class="ls-k">Practice · ${Q.i + 1} of ${Q.qs.length}${q.review ? ' · from an earlier unit' : ''}</div></div>
       <div class="card prompt">${q.prompt}${q.meta ? `<div class="pmeta">${q.meta}</div>` : ''}${Q.answered ? sayBtn(q.au, 'say') : ''}</div>
       <div class="hint">${q.hint || ''}</div><div class="choices ${q.grid ? 'grid2' : ''}">${opts}</div>
-      ${Q.answered ? `<div class="feedback ${ok ? 'good' : 'bad'}" role="status"><div class="fv">${ok ? pick(['正解! Correct', 'いいね! Nice', 'すごい! Great']) : 'おしい! Not quite'}<small>${ok ? '' : 'Answer: '}${ok ? '' : right}</small></div><button class="btn" onclick="App.lessonQNext()">${Q.i + 1 < Q.qs.length ? 'Next' : 'Finish'}</button></div>` : ''}`;
+      ${Q.answered ? answerCard(q.item) : ''}${Q.answered ? `<div class="feedback ${ok ? 'good' : 'bad'}" role="status"><div class="fv">${ok ? pick(['正解! Correct', 'いいね! Nice', 'すごい! Great']) : 'おしい! Not quite'}<small>${ok ? '' : 'Answer: '}${ok ? '' : right}</small></div><button class="btn" onclick="App.lessonQNext()">${Q.i + 1 < Q.qs.length ? 'Next' : 'Finish'}</button></div>` : ''}`;
     return `${head}<div class="lesson">${body}</div>`;
   } else if (step === 'done') {
     const Q = L.quiz || { ok: 0, n: 0, missed: [] }, pct = Q.n ? Math.round(Q.ok / Q.n * 100) : 100;
@@ -3662,7 +3697,7 @@ function vPlace() {
   return `${head}<div class="track lsteps" aria-hidden="true">${P.qs.map((_, i) => `<i class="${i < P.i ? 'ok' : i === P.i ? 'cur' : ''}"></i>`).join('')}</div>
     <div class="lesson"><div class="card prompt">${q.prompt}</div><div class="hint">${q.hint || ''}</div>
     <div class="choices ${q.grid ? 'grid2' : ''}">${opts}<button class="choice idk${P.answered && P.chosen === -1 ? ' bad' : ''}" onclick="App.placeAns(-1)"${P.answered ? ' disabled' : ''}><span>I don’t know</span></button></div>
-    ${P.answered ? `<div class="lnav"><span></span><button class="btn" onclick="App.placeNext()">Next ›</button></div>` : ''}</div>`;
+    ${P.answered ? `${answerCard(q.item)}<div class="lnav"><span></span><button class="btn" onclick="App.placeNext()">Next ›</button></div>` : ''}</div>`;
 }
 async function placeLevel() {
   const P = S.place, l = P.lv;
