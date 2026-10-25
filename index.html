@@ -4224,6 +4224,22 @@ function ankiPbMedia(u8) {
   return out;
 }
 
+/* Anki 2.1.28+ collections sort names with its own "unicase" collation, which plain SQLite doesn't have:
+   any query on those tables fails ("no query solution" / "no such collation sequence: unicase").
+   Strip the collation from the schema and drop the indexes built with it, then reopen the copy in memory.
+   (Reading only; the deck file itself is never changed.) */
+function ankiOpenDb(SQL, bytes) {
+  let db = new SQL.Database(bytes);
+  const n = db.exec("select count(*) from sqlite_master where sql like '%unicase%'");
+  if (!n.length || !n[0].values[0][0]) return db;
+  db.exec(`PRAGMA writable_schema = ON;
+    DELETE FROM sqlite_master WHERE type = 'index' AND sql IS NOT NULL AND tbl_name IN (SELECT name FROM sqlite_master WHERE type = 'table' AND sql LIKE '%unicase%');
+    UPDATE sqlite_master SET sql = replace(replace(replace(sql, ' COLLATE unicase', ''), ' collate unicase', ''), ' COLLATE UNICASE', '') WHERE sql LIKE '%unicase%';
+    PRAGMA writable_schema = OFF;`);
+  const fixed = db.export(); db.close();
+  return new SQL.Database(fixed);
+}
+
 /* ---------- reading a package ---------- */
 async function ankiRead(file, step) {
   step('Loading the deck reader…');
@@ -4242,7 +4258,7 @@ async function ankiRead(file, step) {
     else ankiPbMedia(raw).forEach((e, i) => { if (e.name) media[e.name] = String(e.legacy ?? i); });
   }
   step('Reading the cards…');
-  const db = new SQL.Database(colBytes);
+  const db = ankiOpenDb(SQL, colBytes);
   try {
     const q = sql => { const r = db.exec(sql); if (!r.length) return []; const { columns, values } = r[0]; return values.map(v => Object.fromEntries(columns.map((c, i) => [c, v[i]]))); };
     const has = t => q(`select name from sqlite_master where type='table' and name='${t}'`).length > 0;
@@ -4572,7 +4588,7 @@ const ankiApp = {
       const r = await ankiRead(file, step);
       const { map, P } = ankiAutoMap(r.types[0]);
       ANKI.draft = Object.assign(r, { ti: 0, map, P, opts: { voices: true, sentences: true, pics: true, progress: true } });
-    } catch (e) { toast(e && e.message ? e.message : 'Could not read that deck'); console.error(e); S.view = 'settings'; }
+    } catch (e) { toast('Couldn’t read that deck: ' + (e && e.message ? e.message : 'unknown error')); console.error(e); S.view = 'settings'; }
     ANKI.busy = ''; render(); window.scrollTo(0, 0);
   },
   ankiType(i) { const D = ANKI.draft; if (!D) return; D.ti = +i; const a = ankiAutoMap(D.types[D.ti]); D.map = a.map; D.P = a.P; render(); },
