@@ -39,7 +39,8 @@ import zlib from 'node:zlib';
 import readline from 'node:readline';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, execFile } from 'node:child_process';
+import os from 'node:os';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
@@ -202,16 +203,16 @@ function getAudioDir() {
    1) hand-picked table per part of speech (verbs / adjectives / nouns) — checked first
    2) for nouns and kanji only: an OpenMoji whose name is exactly the meaning ("dog", "train")
    Verbs and adjectives never fall through to name matching (that's how "to fly" becomes an insect). */
-const PIC_VERB = 'eat:🍽️|drink:🥤|sleep:😴|wake up:⏰|get up:⏰|walk:🚶|run:🏃|swim:🏊|read:📖|write:✍️|listen:🎧|hear:👂|see:👀|look:👀|look at:👀|watch:📺|speak:🗣️|talk:💬|say:💬|buy:🛒|sell:🏷️|cook:🍳|study:📚|learn:📚|teach:🧑‍🏫|work:💼|think:🤔|laugh:😂|cry:😢|sing:🎤|dance:💃|drive:🚗|fly:✈️|call:📞|telephone:📞|wash:🧼|bathe:🛁|take a bath:🛁|open:🔓|close:🔒|shut:🔒|wait:⏳|take a photo:📸|photograph:📸|send:📤|receive:📥|pay:💳|rest:🛌|sit:🪑|sit down:🪑|stand:🧍|stand up:🧍|meet:🤝|give:🎁|love:❤️|like:👍|remember:💭|cut:✂️|climb:🧗|ride:🚃|get on:🚃|board:🚃|turn:↪️|cross:🚸|carry:📦|clean:🧹|smoke:🚬|fish:🎣|grow:🌱|be born:👶|marry:💍|get married:💍|win:🏆|begin:🏁|start:🏁|finish:🏁|end:🏁|hug:🤗|shower:🚿|draw:🎨|paint:🎨|worry:😟|be surprised:😲|get angry:😠|be angry:😠|get tired:😩|be tired:😩|tire:😩|throw:🤾|kick:⚽|push:👉|play:🎲|travel:✈️|exercise:🏋️|train:🏋️|stretch:🤸|lose weight:⚖️|gain weight:⚖️|rain:🌧️|snow:🌨️|shine:☀️|blow:🌬️|cool:🍃|heat:🔥|warm:🔥|sweat:💦|cough:😷|sneeze:🤧|smile:😊|kiss:💋|knock:✊|dress:👕|put on:👕|wear:👕|take off:👕|brush:🪥|cook rice:🍚|bake:🍞|boil:♨️|fry:🍳|pour:🫗|mix:🥣|ring:🔔|count:🔢|measure:📏|lock:🔒|knit:🧶|sew:🧵|plant:🌱|water:🚿|steal:🦹|fight:🥊|hit:🥊|search:🔍|look for:🔍|find:🔍';
-const PIC_ADJ = 'okay:👌|all right:👌|fine:👌|hot:🥵|cold:🥶|warm:🌤️|cool:🍃|big:🐘|large:🐘|small:🐜|little:🐜|tall:🦒|high:🔝|expensive:💰|cheap:🏷️|delicious:😋|tasty:😋|sweet:🍬|spicy:🌶️|salty:🧂|sour:🍋|happy:😊|glad:😊|sad:😢|lonely:😔|scary:😱|frightening:😱|afraid:😱|fun:🎉|enjoyable:🎉|interesting:🤩|busy:⏱️|sleepy:😪|painful:🤕|sore:🤕|cute:🥰|beautiful:🌸|pretty:🌸|clean:✨|new:🆕|old:🏚️|young:🧒|fast:⚡|quick:⚡|slow:🐢|early:🌅|heavy:🏋️|light:🪶|strong:💪|bright:💡|dark:🌑|quiet:🤫|noisy:📢|loud:📢|healthy:💪|energetic:💪|famous:⭐|kind:😇|red:🔴|blue:🔵|white:⚪|black:⚫|yellow:🟡|green:🟢|brown:🟤|long:📏|short:🤏|near:📍|close:📍|far:🔭|wide:↔️|angry:😠|difficult:🧩|hard:🧩|easy:👌|convenient:👍|dangerous:⚠️|safe:🛡️|free:🆓|full:🈵|empty:🈳|round:⚪|sick:🤒|ill:🤒|tired:😩|embarrassed:😳|surprised:😲|cloudy:☁️|sunny:☀️|rainy:🌧️|thin:🥢|fat:🍔|good at:👍|skilful:👍|rich:💰|poor:🪙|delightful:😊|soft:🧸|hard (firm):🪨|wet:💦|dry:🏜️|deep:🌊|shallow:🏖️|round (shape):⚪|square:🟥|sharp:🔪|smelly:🦨|bitter:☕|lucky:🍀|sick (ill):🤒';
-const PIC_NOUN = 'water:💧|tree:🌳|wood:🪵|person:🧑|people:👥|human:🧑|man:👨|woman:👩|child:🧒|children:🧒|kid:🧒|baby:👶|mother:👩|father:👨|parents:👪|family:👪|friend:🧑‍🤝‍🧑|teacher:🧑‍🏫|student:🧑‍🎓|doctor:🧑‍⚕️|police:👮|police officer:👮|police box:👮|hand:✋|foot:🦶|leg:🦵|face:🙂|body:🧍|tooth:🦷|teeth:🦷|hair:💇|heart:❤️|rain:🌧️|snow:❄️|cloud:☁️|wind:🌬️|sky:🌤️|river:🏞️|stream:🏞️|sea:🌊|ocean:🌊|wave:🌊|mountain:⛰️|moon:🌙|star:⭐|flower:🌸|cherry blossom:🌸|cherry blossoms:🌸|rice:🍚|cooked rice:🍚|rice (cooked):🍚|meal:🍱|breakfast:🍳|lunch:🍱|dinner:🍽️|bread:🍞|meat:🍖|fish:🐟|egg:🥚|eggs:🥚|vegetable:🥦|vegetables:🥦|fruit:🍎|apple:🍎|tea:🍵|green tea:🍵|coffee:☕|beer:🍺|alcohol:🍶|sake:🍶|milk:🥛|juice:🧃|house:🏠|home:🏠|school:🏫|station:🚉|railway station:🚉|train:🚃|bus:🚌|car:🚗|automobile:🚗|taxi:🚕|bicycle:🚲|bike:🚲|airplane:✈️|aeroplane:✈️|plane:✈️|airport:🛫|ship:🚢|boat:⛵|hotel:🏨|hospital:🏥|bank:🏦|shop:🏪|store:🏪|convenience store:🏪|department store:🏬|post office:🏣|park:🏞️|library:📚|toilet:🚻|restroom:🚻|bathroom:🛁|room:🚪|door:🚪|window:🪟|chair:🪑|bed:🛏️|book:📕|books:📚|newspaper:📰|letter:✉️|envelope:✉️|telephone:☎️|phone:📱|mobile phone:📱|smartphone:📱|computer:💻|television:📺|tv:📺|camera:📷|photograph:📷|photo:📷|picture:🖼️|painting:🖼️|drawing:🖼️|music:🎵|song:🎵|movie:🎬|film:🎬|game:🎮|sport:⚽|sports:⚽|soccer:⚽|baseball:⚾|money:💴|yen:💴|ticket:🎫|map:🗺️|umbrella:☂️|clothes:👕|clothing:👕|shirt:👕|shoes:👟|hat:👒|bag:👜|key:🔑|lock:🔒|clock:🕰️|watch:⌚|time:⏰|hour:⏰|morning:🌅|night:🌙|evening:🌆|today:📅|tomorrow:📅|yesterday:📅|day:📅|date:📅|calendar:📅|week:🗓️|month:🗓️|year:🗓️|spring:🌸|summer:🌻|autumn:🍁|fall:🍁|winter:⛄|weather:🌤️|sun:☀️|sunshine:☀️|fire:🔥|earth:🌍|world:🌍|globe:🌍|japan:🗾|island:🏝️|cat:🐈|dog:🐕|bird:🐦|horse:🐎|cow:🐄|pig:🐖|insect:🐛|bug:🐛|chopsticks:🥢|cup:🥤|glass:🥛|plate:🍽️|knife:🔪|spoon:🥄|medicine:💊|drug:💊|fever:🤒|cold:🤧|a cold:🤧|cold (illness):🤧|injury:🩹|wound:🩹|gift:🎁|present:🎁|souvenir:🎁|birthday:🎂|party:🎉|festival:🏮|temple:🛕|shrine:⛩️|castle:🏯|hot spring:♨️|hot springs:♨️|kimono:👘|sushi:🍣|ramen:🍜|noodles:🍜|curry:🍛|rice ball:🍙|boxed lunch:🍱|lunch box:🍱|bento:🍱|cake:🍰|sweets:🍬|candy:🍬|ice cream:🍦|salt:🧂|gym:🏋️|exercise:🏋️|training:🏋️|strength training:🏋️|muscle:💪|muscles:💪|muscle soreness:💪|sweat:💦|weight:⚖️|body weight:⚖️|number:🔢|east:🧭|west:🧭|south:🧭|north:🧭|direction:🧭|right:➡️|left:⬅️|up:⬆️|above:⬆️|top:⬆️|down:⬇️|below:⬇️|under:⬇️|entrance:🚪|exit:🚪|road:🛣️|way:🛣️|street:🛣️|bridge:🌉|traffic light:🚦|traffic lights:🚦|signal:🚦|language:🗣️|word:💬|words:💬|japanese:🗾|japanese language:🗾|english:🔤|question:❓|answer:💡|homework:📝|test:📝|exam:📝|examination:📝|job:💼|work:💼|company:🏢|office:🏢|meeting:👥|business card:📇|email:📧|e-mail:📧|mail:📧|document:📄|documents:📄|paper:📄|deadline:⏰|salary:💴|holiday:🏖️|vacation:🏖️|day off:🏖️|trip:🧳|travel:✈️|journey:🧳|passport:🛂|luggage:🧳|baggage:🧳|suitcase:🧳|reservation:📋|booking:📋|seat:💺|menu:📋|order:📝|bill:🧾|receipt:🧾|cash:💴|card:💳|credit card:💳|discount:🏷️|sale:🏷️|price:🏷️|size:📏|colour:🎨|color:🎨|ambulance:🚑|fire engine:🚒|earthquake:🫨|typhoon:🌀|cloudy weather:☁️|sunny weather:☀️|temperature:🌡️|rainy season:☔|hobby:🎨|cooking:🍳|cuisine:🍳|happiness:😊|worry:😟|nervousness:😬|relief:😌|love:❤️|dream:💭|idea:💡|light:💡|lamp:💡|electricity:⚡|picture book:📖|sound:🔊|noise:🔊|voice:🗣️|name:📛|okay:👌|ok:👌|all right:👌|grandfather:👴|grandmother:👵|bath:🛁|shower:🚿|mirror:🪞|soap:🧼|towel:🧺|box:📦|stamp:📮|pen:🖊️|pencil:✏️|notebook:📓|dictionary:📖|glasses:👓|eyeglasses:👓|nose:👃|ear:👂|eye:👁️|eyes:👀|mouth:👄|lips:👄|neck:🧣|finger:☝️|arm:💪|bone:🦴|blood:🩸|tooth decay:🦷|dentist:🦷|nurse:🧑‍⚕️|pharmacy:💊|chemist:💊|police station:🚓|fire station:🚒|stairs:🪜|elevator:🛗|lift:🛗|escalator:🛗|front desk:🛎️|reception:🛎️|towels:🧺|internet:🌐|website:🌐|smartphone app:📱|desk:🗄️|table:🍽️|kitchen:🍳|garden:🌷|grass:🌿|leaf:🍃|leaves:🍂|forest:🌲|woods:🌲|stone:🪨|rock:🪨|sand:🏖️|beach:🏖️|field:🌾|rice field:🌾|rice paddy:🌾|village:🏘️|town:🏘️|city:🏙️|capital:🏙️|building:🏢|tower:🗼|tokyo tower:🗼|mt fuji:🗻|mount fuji:🗻|fuji:🗻|bamboo:🎍|pine:🌲|maple:🍁|rose:🌹|sunflower:🌻|tulip:🌷|mushroom:🍄|potato:🥔|carrot:🥕|tomato:🍅|onion:🧅|garlic:🧄|corn:🌽|banana:🍌|grape:🍇|grapes:🍇|strawberry:🍓|peach:🍑|orange:🍊|mandarin orange:🍊|lemon:🍋|melon:🍈|watermelon:🍉|pear:🍐|cherry:🍒|chicken:🐔|chicken (meat):🍗|beef:🥩|pork:🥓|tofu:🍢|soup:🍲|miso soup:🍲|pizza:🍕|hamburger:🍔|sandwich:🥪|cookie:🍪|chocolate:🍫|honey:🍯|water bottle:🧴|bottle:🍾|can:🥫|snake:🐍|mouse:🐁|rat:🐀|rabbit:🐇|bear:🐻|monkey:🐒|elephant:🐘|lion:🦁|tiger:🐅|fox:🦊|frog:🐸|turtle:🐢|whale:🐋|dolphin:🐬|octopus:🐙|crab:🦀|shrimp:🦐|butterfly:🦋|bee:🐝|ant:🐜|spider:🕷️|duck:🦆|crow:🐦‍⬛|owl:🦉|dragon:🐉|ghost:👻|robot:🤖|king:🤴|queen:👸|prince:🤴|princess:👸|soldier:💂|army:🪖|war:⚔️|peace:☮️|god:⛩️|buddha:🛕|church:⛪|guitar:🎸|piano:🎹|drum:🥁|violin:🎻|singer:🎤|concert:🎤|ball:⚽|tennis:🎾|basketball:🏀|golf:⛳|swimming:🏊|skiing:🎿|marathon:🏃|bicycle race:🚴|race:🏁|trophy:🏆|medal:🥇|prize:🏆|ring:💍|wedding:💒|marriage:💍|jewel:💎|gem:💎|treasure:💎|crown:👑|scissors:✂️|hammer:🔨|tool:🔧|tools:🛠️|machine:⚙️|battery:🔋|candle:🕯️|flashlight:🔦|magnet:🧲|microscope:🔬|telescope:🔭|rocket:🚀|space:🌌|planet:🪐|satellite:🛰️|cigarette:🚬|newspaper article:📰|magazine:📰|novel:📖|story:📖|poem:📜|letter (alphabet):🔤|alphabet:🔤|kanji:🈁|calendar page:📅|one:1️⃣|two:2️⃣|three:3️⃣|four:4️⃣|five:5️⃣|six:6️⃣|seven:7️⃣|eight:8️⃣|nine:9️⃣|ten:🔟|hundred:💯|thousand:💴|ten thousand:💴|half:🌗|circle:⭕|yes:⭕|no:❌|ok:👌|danger:⚠️|help:🆘|sos:🆘|emergency:🚨|rice plant:🌾|grain:🌾|wheat:🌾|thread:🧵|cloth:🧶|silk:🧵|paper (sheet):📄|wall:🧱|roof:🏠|garden (japanese):🏯|pond:🪷|lake:🏞️|valley:🏞️|hill:⛰️|volcano:🌋|desert:🏜️|snowman:☃️|ice:🧊|steam:♨️|smoke:💨|thunder:⚡|lightning:⚡|rainbow:🌈|fog:🌫️|tornado:🌪️|sunrise:🌅|sunset:🌇|shadow:👤|crowd:👥|guest:🛎️|customer:🛎️|waiter:🧑‍🍳|chef:🧑‍🍳|cook:🧑‍🍳|farmer:🧑‍🌾|scientist:🧑‍🔬|artist:🧑‍🎨|pilot:🧑‍✈️|firefighter:🧑‍🚒|judge:🧑‍⚖️|office worker:🧑‍💼|company employee:🧑‍💼|boss:🧑‍💼|colleague:🧑‍💼|president:🧑‍💼|department manager:🧑‍💼';
+const PIC_VERB = 'eat:🍽️|drink:🥤|sleep:😴|wake up:⏰|get up:⏰|walk:🚶|run:🏃|swim:🏊|read:📖|write:✍️|listen:🎧|hear:👂|see:👀|look:👀|look at:👀|watch:📺|speak:🗣️|talk:💬|say:💬|buy:🛒|sell:🏷️|cook:🍳|study:📚|learn:📚|teach:🧑‍🏫|work:💼|think:🤔|laugh:😂|cry:😢|sing:🎤|dance:💃|drive:🚗|fly:✈️|call:📞|telephone:📞|wash:🧼|bathe:🛁|take a bath:🛁|open:🔓|close:🔒|shut:🔒|wait:⏳|take a photo:📸|photograph:📸|send:📤|receive:📥|pay:💳|rest:🛌|sit:🪑|sit down:🪑|stand:🧍|stand up:🧍|meet:🤝|give:🎁|love:❤️|like:👍|remember:💭|cut:✂️|climb:🧗|ride:🚃|get on:🚃|board:🚃|turn:↪️|cross:🚸|carry:📦|clean:🧹|smoke:🚬|fish:🎣|grow:🌱|be born:👶|marry:💍|get married:💍|win:🏆|begin:🏁|start:🏁|finish:🏁|end:🏁|hug:🤗|shower:🚿|draw:🎨|paint:🎨|worry:😟|be surprised:😲|get angry:😠|be angry:😠|get tired:😩|be tired:😩|tire:😩|throw:🤾|kick:⚽|push:👉|play:🎲|travel:✈️|exercise:🏋️|train:🏋️|stretch:🤸|lose weight:⚖️|gain weight:⚖️|rain:🌧️|snow:🌨️|shine:☀️|blow:🌬️|cool:🍃|heat:🔥|warm:🔥|sweat:💦|cough:😷|sneeze:🤧|smile:😊|kiss:💋|knock:✊|dress:👕|put on:👕|wear:👕|take off:👕|brush:🪥|cook rice:🍚|bake:🍞|boil:🍲|fry:🍳|pour:🫗|mix:🥣|ring:🔔|count:🔢|measure:📏|lock:🔒|knit:🧶|sew:🧵|plant:🌱|water:🚿|steal:🦹|fight:🥊|hit:🥊|search:🔍|look for:🔍|find:🔍';
+const PIC_ADJ = 'okay:👌|all right:👌|fine:👌|hot:🥵|cold:🥶|warm:🌤️|cool:🍃|big:🐘|large:🐘|small:🐜|little:🐜|tall:🦒|high:🔝|expensive:💰|cheap:🏷️|delicious:😋|tasty:😋|sweet:🍬|spicy:🌶️|salty:🧂|sour:🍋|happy:😊|glad:😊|sad:😢|lonely:😔|scary:😱|frightening:😱|afraid:😱|fun:🎉|enjoyable:🎉|interesting:🤩|busy:⏱️|sleepy:😪|painful:🤕|sore:🤕|cute:🥰|beautiful:🌸|pretty:🌸|clean:✨|new:🆕|old:🏚️|young:🧒|fast:⚡|quick:⚡|slow:🐢|early:🌅|heavy:🏋️|light:🪶|strong:💪|bright:💡|dark:🌑|quiet:🤫|noisy:📢|loud:📢|healthy:💪|energetic:💪|famous:⭐|kind:😇|red:🔴|blue:🔵|white:⚪|black:⚫|yellow:🟡|green:🟢|brown:🟤|long:📏|short:🤏|near:📍|close:📍|far:🔭|wide:↔️|angry:😠|difficult:🧩|hard:🧩|easy:👌|convenient:👍|dangerous:⚠️|safe:🛡️|free:🆓|round:⚪|sick:🤒|ill:🤒|tired:😩|embarrassed:😳|surprised:😲|cloudy:☁️|sunny:☀️|rainy:🌧️|fat:🍔|good at:👍|skilful:👍|rich:💰|poor:🪙|delightful:😊|soft:🧸|hard (firm):🪨|wet:💦|dry:🏜️|deep:🌊|shallow:🏖️|round (shape):⚪|square:🟥|sharp:🔪|smelly:🦨|bitter:☕|lucky:🍀|sick (ill):🤒';
+const PIC_NOUN = 'water:💧|tree:🌳|wood:🪵|person:🧑|people:👥|human:🧑|man:👨|woman:👩|child:🧒|children:🧒|kid:🧒|baby:👶|mother:👩|father:👨|parents:👪|family:👪|friend:🧑‍🤝‍🧑|teacher:🧑‍🏫|student:🧑‍🎓|doctor:🧑‍⚕️|police:👮|police officer:👮|police box:👮|hand:✋|foot:🦶|leg:🦵|face:🙂|body:🧍|tooth:🦷|teeth:🦷|hair:💇|heart:❤️|rain:🌧️|snow:❄️|cloud:☁️|wind:🌬️|sky:🌤️|river:🏞️|stream:🏞️|sea:🌊|ocean:🌊|wave:🌊|mountain:⛰️|moon:🌙|star:⭐|flower:🌸|cherry blossom:🌸|cherry blossoms:🌸|rice:🍚|cooked rice:🍚|rice (cooked):🍚|meal:🍽️|breakfast:🍳|lunch:🍱|dinner:🍽️|bread:🍞|meat:🍖|fish:🐟|egg:🥚|eggs:🥚|vegetable:🥦|vegetables:🥦|fruit:🍎|apple:🍎|tea:🍵|green tea:🍵|coffee:☕|beer:🍺|alcohol:🍻|sake:🍶|milk:🥛|juice:🧃|house:🏠|home:🏠|school:🏫|station:🚉|railway station:🚉|train:🚃|bus:🚌|car:🚗|automobile:🚗|taxi:🚕|bicycle:🚲|bike:🚲|airplane:✈️|aeroplane:✈️|plane:✈️|airport:🛫|ship:🚢|boat:⛵|hotel:🏨|hospital:🏥|bank:🏦|shop:🏪|store:🏪|convenience store:🏪|department store:🏬|post office:🏣|park:🏞️|library:📚|toilet:🚻|restroom:🚻|bathroom:🛁|room:🚪|door:🚪|window:🪟|chair:🪑|bed:🛏️|book:📕|books:📚|newspaper:📰|letter:✉️|envelope:✉️|telephone:☎️|phone:📱|mobile phone:📱|smartphone:📱|computer:💻|television:📺|tv:📺|camera:📷|photograph:📷|photo:📷|picture:🖼️|painting:🖼️|drawing:🖼️|music:🎵|song:🎵|movie:🎬|film:🎬|game:🎮|sport:⚽|sports:⚽|soccer:⚽|baseball:⚾|money:💴|yen:💴|ticket:🎫|map:🗺️|umbrella:☂️|clothes:👕|clothing:👕|shirt:👕|shoes:👟|hat:👒|bag:👜|key:🔑|lock:🔒|clock:🕰️|watch:⌚|time:⏰|hour:⏰|morning:🌅|night:🌙|evening:🌆|today:📅|tomorrow:📅|yesterday:📅|day:📅|date:📅|calendar:📅|week:🗓️|month:🗓️|year:🗓️|spring:🌸|summer:🌻|autumn:🍁|fall:🍁|winter:⛄|weather:🌤️|sun:☀️|sunshine:☀️|fire:🔥|earth:🌍|world:🌍|globe:🌍|japan:🗾|island:🏝️|cat:🐈|dog:🐕|bird:🐦|horse:🐎|cow:🐄|pig:🐖|insect:🐛|bug:🐛|chopsticks:🥢|cup:🥤|glass:🥛|plate:🍽️|knife:🔪|spoon:🥄|medicine:💊|drug:💊|fever:🤒|cold:🤧|a cold:🤧|cold (illness):🤧|injury:🩹|wound:🩹|gift:🎁|present:🎁|souvenir:🎁|birthday:🎂|party:🎉|festival:🎊|shrine:⛩️|castle:🏯|hot spring:♨️|hot springs:♨️|kimono:👘|sushi:🍣|ramen:🍜|noodles:🍜|curry:🍛|rice ball:🍙|boxed lunch:🍱|lunch box:🍱|bento:🍱|cake:🍰|sweets:🍬|candy:🍬|ice cream:🍦|salt:🧂|gym:🏋️|exercise:🏋️|training:🏋️|strength training:🏋️|muscle:💪|muscles:💪|muscle soreness:💪|sweat:💦|weight:⚖️|body weight:⚖️|number:🔢|east:🧭|west:🧭|south:🧭|north:🧭|direction:🧭|right:➡️|left:⬅️|up:⬆️|above:⬆️|top:⬆️|down:⬇️|below:⬇️|under:⬇️|entrance:🚪|exit:🚪|road:🛣️|way:🛣️|street:🛣️|bridge:🌉|traffic light:🚦|traffic lights:🚦|signal:🚦|language:🗣️|word:💬|words:💬|japanese:🗾|japanese language:🗾|english:🔤|question:❓|answer:💡|homework:📝|test:📝|exam:📝|examination:📝|job:💼|work:💼|company:🏢|office:🏢|meeting:👥|business card:📇|email:📧|e-mail:📧|mail:📧|document:📄|documents:📄|paper:📄|deadline:⏰|salary:💴|holiday:🏖️|vacation:🏖️|day off:🏖️|trip:🧳|travel:✈️|journey:🧳|passport:🛂|luggage:🧳|baggage:🧳|suitcase:🧳|reservation:📋|booking:📋|seat:💺|menu:📋|order:📝|bill:🧾|receipt:🧾|cash:💴|card:💳|credit card:💳|discount:🏷️|sale:🏷️|price:🏷️|size:📏|colour:🎨|color:🎨|ambulance:🚑|fire engine:🚒|earthquake:🫨|typhoon:🌀|cloudy weather:☁️|sunny weather:☀️|temperature:🌡️|rainy season:☔|hobby:🎨|cooking:🍳|cuisine:🍳|happiness:😊|worry:😟|nervousness:😬|relief:😌|love:❤️|dream:💭|idea:💡|light:💡|lamp:💡|electricity:⚡|picture book:📖|sound:🔊|noise:🔊|voice:🗣️|name:🏷️|okay:👌|ok:👌|all right:👌|grandfather:👴|grandmother:👵|bath:🛁|shower:🚿|mirror:🪞|soap:🧼|towel:🧺|box:📦|stamp:📮|pen:🖊️|pencil:✏️|notebook:📓|dictionary:📖|glasses:👓|eyeglasses:👓|nose:👃|ear:👂|eye:👁️|eyes:👀|mouth:👄|lips:👄|neck:🧣|finger:☝️|arm:💪|bone:🦴|blood:🩸|tooth decay:🦷|dentist:🦷|nurse:🧑‍⚕️|pharmacy:💊|chemist:💊|police station:🚓|fire station:🚒|stairs:🪜|elevator:🛗|lift:🛗|escalator:🛗|front desk:🛎️|reception:🛎️|towels:🧺|internet:🌐|website:🌐|smartphone app:📱|desk:🗄️|table:🍽️|kitchen:🍳|garden:🌷|grass:🌿|leaf:🍃|leaves:🍂|forest:🌲|woods:🌲|stone:🪨|rock:🪨|sand:🏖️|beach:🏖️|field:🌾|rice field:🌾|rice paddy:🌾|village:🏘️|town:🏘️|city:🏙️|capital:🏙️|building:🏢|tower:🗼|tokyo tower:🗼|mt fuji:🗻|mount fuji:🗻|fuji:🗻|bamboo:🎋|pine:🌲|maple:🍁|rose:🌹|sunflower:🌻|tulip:🌷|mushroom:🍄|potato:🥔|carrot:🥕|tomato:🍅|onion:🧅|garlic:🧄|corn:🌽|banana:🍌|grape:🍇|grapes:🍇|strawberry:🍓|peach:🍑|orange:🍊|mandarin orange:🍊|lemon:🍋|melon:🍈|watermelon:🍉|pear:🍐|cherry:🍒|chicken:🐔|chicken (meat):🍗|beef:🥩|pork:🥓|soup:🍲|miso soup:🍲|pizza:🍕|hamburger:🍔|sandwich:🥪|cookie:🍪|chocolate:🍫|honey:🍯|water bottle:🧴|bottle:🍾|can:🥫|snake:🐍|mouse:🐁|rat:🐀|rabbit:🐇|bear:🐻|monkey:🐒|elephant:🐘|lion:🦁|tiger:🐅|fox:🦊|frog:🐸|turtle:🐢|whale:🐋|dolphin:🐬|octopus:🐙|crab:🦀|shrimp:🦐|butterfly:🦋|bee:🐝|ant:🐜|spider:🕷️|duck:🦆|crow:🐦‍⬛|owl:🦉|dragon:🐉|ghost:👻|robot:🤖|king:🤴|queen:👸|prince:🤴|princess:👸|soldier:💂|army:🪖|war:⚔️|peace:☮️|god:🙏|church:⛪|guitar:🎸|piano:🎹|drum:🥁|violin:🎻|singer:🎤|concert:🎤|ball:⚽|tennis:🎾|basketball:🏀|golf:⛳|swimming:🏊|skiing:🎿|marathon:🏃|bicycle race:🚴|race:🏁|trophy:🏆|medal:🥇|prize:🏆|ring:💍|wedding:💒|marriage:💍|jewel:💎|gem:💎|treasure:💎|crown:👑|scissors:✂️|hammer:🔨|tool:🔧|tools:🛠️|machine:⚙️|battery:🔋|candle:🕯️|flashlight:🔦|magnet:🧲|microscope:🔬|telescope:🔭|rocket:🚀|space:🌌|planet:🪐|satellite:🛰️|cigarette:🚬|newspaper article:📰|magazine:📰|novel:📖|story:📖|poem:📜|letter (alphabet):🔤|alphabet:🔤|kanji:🖌️|calendar page:📅|one:1️⃣|two:2️⃣|three:3️⃣|four:4️⃣|five:5️⃣|six:6️⃣|seven:7️⃣|eight:8️⃣|nine:9️⃣|ten:🔟|hundred:💯|thousand:💴|ten thousand:💴|half:🌗|circle:⭕|yes:✅|no:❌|ok:👌|danger:⚠️|help:🆘|sos:🆘|emergency:🚨|rice plant:🌾|grain:🌾|wheat:🌾|thread:🧵|cloth:🧶|silk:🧵|paper (sheet):📄|wall:🧱|roof:🏠|garden (japanese):🌳|pond:🪷|lake:🏞️|valley:🏞️|hill:⛰️|volcano:🌋|desert:🏜️|snowman:☃️|ice:🧊|steam:♨️|smoke:💨|thunder:⚡|lightning:⚡|rainbow:🌈|fog:🌫️|tornado:🌪️|sunrise:🌅|sunset:🌇|shadow:👤|crowd:👥|guest:🛎️|customer:🛎️|waiter:🧑‍🍳|chef:🧑‍🍳|cook:🧑‍🍳|farmer:🧑‍🌾|scientist:🧑‍🔬|artist:🧑‍🎨|pilot:🧑‍✈️|firefighter:🧑‍🚒|judge:🧑‍⚖️|office worker:🧑‍💼|company employee:🧑‍💼|boss:🧑‍💼|colleague:🧑‍💼|president:🧑‍💼|department manager:🧑‍💼';
 /* emoji names that are the wrong sense of a common meaning, never matched by name */
 const PIC_NAME_SKIP = new Set(['fly', 'bat', 'pen', 'fork', 'rose', 'jack', 'mail', 'can', 'bow', 'match', 'nail', 'seal', 'pound', 'bar', 'trunk', 'kite', 'spring', 'pitcher', 'tie', 'organ', 'palm', 'chip', 'chips', 'bill', 'jam', 'bank', 'date', 'trip', 'ring', 'cold', 'light', 'right', 'left', 'top', 'cut', 'drill', 'saw', 'file', 'rule', 'scale', 'sheet', 'net', 'ward', 'arms', 'lead', 'mine', 'rock']);
 /* pictographic kanji: the picture the character grew out of */
 const KANJI_PICS = new Map([...'日☀️月🌙山⛰️川🏞️木🌳林🌳森🌲火🔥水💧土🌱金💰人🧑口👄目👁️耳👂手✋足🦶田🌾雨🌧️女👩男👨子🧒車🚗門🚪犬🐕魚🐟鳥🐦馬🐎牛🐄竹🎋花🌸草🌿石🪨米🍚糸🧵貝🐚虫🐛雪❄️電⚡本📕力💪王👑玉💎刀🔪弓🏹矢🏹舟⛵船🚢心❤️羊🐑豚🐖象🐘竜🐉亀🐢皿🍽️箱📦傘☂️桜🌸梅🌸菊🌼星⭐空🌤️海🌊池🪷島🏝️橋🌉家🏠店🏪駅🚉'.matchAll(/(\p{Script=Han})([^\p{Script=Han}]+)/gu)].map(m => [m[1], m[2]]));
 const parsePics = str => new Map(str.split('|').map(p => { const i = p.lastIndexOf(':'); return [p.slice(0, i), p.slice(i + 1)]; }));
 /* more hand-picked pictures for common N5–N4 words (these win where both list a meaning) */
-const PIC_NOUN_MORE = `university:🎓|college:🎓|graduation:🎓|classroom:🏫|junior high school:🏫|high school:🏫|elementary school:🏫|café:☕|cafe:☕|coffee shop:☕|tearoom:☕|cafeteria:🍽️|dining hall:🍽️|restaurant:🍽️|embassy:🏛️|museum:🏛️|art museum:🖼️|art gallery:🖼️|intersection:🚦|crossing:🚸|vase:🏺|flower vase:🏺|postage stamp:📮|postage stamps:📮|postal stamps:📮|postcard:📮|ashtray:🚬|refrigerator:🧊|fridge:🧊|greengrocer:🥬|vegetable store:🥬|barber:💈|barber's:💈|barbershop:💈|barber's shop:💈|zoo:🦁|doll:🪆|futon:🛏️|glove:🧤|gloves:🧤|comic:📖|comic book:📖|judo:🥋|diary:📔|journal:📔|injection:💉|drawer:🗄️|scenery:🏞️|landscape:🏞️|coast:🏖️|seashore:🏖️|inn:🏨|japanese inn:🏨|vehicle:🚗|express train:🚄|limited express:🚄|parking lot:🅿️|parking:🅿️|weather forecast:🌦️|broadcasting:📡|broadcast:📡|television program:📺|tv program:📺|countryside:🌾|rural area:🌾|buddhist temple:🛕|population:👥|science:🔬|mathematics:➗|math:➗|literature:📚|geography:🗺️|industry:🏭|telegram:📨|air:💨|cherry-blossom viewing:🌸|cherry blossom viewing:🌸|sightseeing:📸|hot water:♨️|dance:💃|dancing:💃|uncooked rice:🌾|husband:👨|wife:👩|daughter:👧|son:👦|uncle:👨|aunt:👩|adult:🧑|shopping:🛍️|food:🍱|drink:🥤|beverage:🥤|animal:🐾|animals:🐾|chicken meat:🍗|illness:🤒|sickness:🤒|disease:🤒|laundry:🧺|washing:🧺|cleaning:🧹|sweeping:🧹|suit:👔|men's suit:👔|business suit:👔|western-style clothes:👗|eye glasses:👓|spectacles:👓|black tea:🫖|rice bowl:🍚|zero:0️⃣|monday:🌙|tuesday:🔥|wednesday:💧|thursday:🌳|friday:💰|saturday:🌱|sunday:☀️|study:📚|practice:🏋️|practise:🏋️|homework:📝|shrine:⛩️|new year:🎍|new year's day:🎍|summer vacation:🏖️|summer holiday:🏖️|lunch break:🍱|zoo animal:🦁|science laboratory:🔬|laboratory:🔬|teacher's office:🏫|newspaper company:📰|driver:🚗|chauffeur:🚗|clerk:🧑‍💼|shop assistant:🧑‍💼|receptionist:🛎️|reception desk:🛎️|government worker:🧑‍💼|citizen:🧑|section manager:🧑‍💼|company president:🧑‍💼|principal:🧑‍🏫|headmaster:🧑‍🏫|girlfriend:👩|boyfriend:👨|rich person:💰|exhibition:🖼️|graduation ceremony:🎓|invitation:✉️|explanation:💬|opinion:💬|conversation:💬|consultation:💬|meeting:👥|conference:👥|conference room:👥|heating:🌡️|electric light:💡|light bulb:💡|water supply:🚰|water service:🚰|tap water:🚰|rule:📏|regulation:📏|plan:📋|schedule:📅|education:🧑‍🏫|culture:🎎|society:👥|experience:🧗|safety:🦺|security:🛡️|traffic:🚗|transportation:🚌|departure:🛫|attendance:🙋|pronunciation:🗣️|preparation:📋|review:📝|diary entry:📔|cotton:🧵|doll festival:🎎|camera:📷|tea ceremony:🍵`;
+const PIC_NOUN_MORE = `university:🎓|college:🎓|graduation:🎓|classroom:🏫|junior high school:🏫|high school:🏫|elementary school:🏫|café:☕|cafe:☕|coffee shop:☕|tearoom:☕|cafeteria:🍽️|dining hall:🍽️|restaurant:🍽️|embassy:🏛️|museum:🏛️|art museum:🖼️|art gallery:🖼️|intersection:🚦|crossing:🚸|vase:🏺|flower vase:🏺|postage stamp:📮|postage stamps:📮|postal stamps:📮|postcard:📮|ashtray:🚬|refrigerator:🧊|fridge:🧊|greengrocer:🥬|vegetable store:🥬|barber:💈|barber's:💈|barbershop:💈|barber's shop:💈|zoo:🦁|doll:🪆|futon:🛏️|glove:🧤|gloves:🧤|comic:📖|comic book:📖|judo:🥋|diary:📔|journal:📔|injection:💉|drawer:🗄️|scenery:🏞️|landscape:🏞️|coast:🏖️|seashore:🏖️|inn:🏨|japanese inn:🏨|vehicle:🚗|express train:🚄|limited express:🚄|parking lot:🅿️|parking:🅿️|weather forecast:🌦️|broadcasting:📡|broadcast:📡|television program:📺|tv program:📺|countryside:🌾|rural area:🌾|population:👥|science:🔬|mathematics:➗|math:➗|literature:📚|geography:🗺️|industry:🏭|telegram:📨|air:💨|cherry-blossom viewing:🌸|cherry blossom viewing:🌸|sightseeing:📸|hot water:♨️|dance:💃|dancing:💃|uncooked rice:🌾|husband:👨|wife:👩|daughter:👧|son:👦|uncle:👨|aunt:👩|adult:🧑|shopping:🛍️|food:🍽️|drink:🥤|beverage:🥤|animal:🐾|animals:🐾|chicken meat:🍗|illness:🤒|sickness:🤒|disease:🤒|laundry:🧺|washing:🧺|cleaning:🧹|sweeping:🧹|suit:👔|men's suit:👔|business suit:👔|western-style clothes:👗|eye glasses:👓|spectacles:👓|black tea:🫖|rice bowl:🍚|zero:0️⃣|monday:🌙|tuesday:🔥|wednesday:💧|thursday:🌳|friday:💰|saturday:🌱|sunday:☀️|study:📚|practice:🏋️|practise:🏋️|homework:📝|shrine:⛩️|new year:🎆|new year's day:🎆|summer vacation:🏖️|summer holiday:🏖️|lunch break:🍱|zoo animal:🦁|science laboratory:🔬|laboratory:🔬|teacher's office:🏫|newspaper company:📰|driver:🚗|chauffeur:🚗|clerk:🧑‍💼|shop assistant:🧑‍💼|receptionist:🛎️|reception desk:🛎️|government worker:🧑‍💼|citizen:🧑|section manager:🧑‍💼|company president:🧑‍💼|principal:🧑‍🏫|headmaster:🧑‍🏫|girlfriend:👩|boyfriend:👨|rich person:💰|exhibition:🖼️|graduation ceremony:🎓|invitation:✉️|explanation:💬|opinion:💬|conversation:💬|consultation:💬|meeting:👥|conference:👥|conference room:👥|heating:🌡️|electric light:💡|light bulb:💡|water supply:🚰|water service:🚰|tap water:🚰|rule:📏|regulation:📏|plan:📋|schedule:📅|education:🧑‍🏫|culture:🎭|society:👥|experience:🧗|safety:🦺|security:🛡️|traffic:🚗|transportation:🚌|departure:🛫|attendance:🙋|pronunciation:🗣️|preparation:📋|review:📝|diary entry:📔|cotton:🧵|doll festival:🎎|camera:📷|tea ceremony:🍵`;
 const PIC_VERB_MORE = `bloom:🌸|flower:🌸|answer:🙋|reply:💬|arrive:📍|arrive at:📍|reach:📍|go out:🚶|depart:🚶|leave:🚪|return something:↩️|give back:↩️|raise:🙋|lift:🏋️|take out:📤|show:🫴|display:🫴|stop:🛑|halt:🛑|come to a halt:🛑|cease:🛑|know:💡|understand:💡|become cloudy:☁️|get cloudy:☁️|step on:👣|tread on:👣|pray:🙏|wish:🙏|do one's best:💪|try one's best:💪|persevere:💪|compare:⚖️|help:🤝|assist:🤝|hurry:🏃|rush:🏃|rejoice:😊|be delighted:😊|be heard:👂|be audible:👂|be visible:👀|can be seen:👀|be found:🔍|be discovered:🔍|get dark:🌆|grow dark:🌆|burn:🔥|be burned:🔥|grow cold:🥶|get cold:🥶|cool down:🧊|be late:⏰|become late:⏰|add:➕|notify:📢|inform:📢|invite:✉️|explain:💬|consult:💬|graduate:🎓|attend:🙋|prepare:📋|practice:🏋️|practise:🏋️|review:📝|transfer:🔁|change trains:🔁|export:🚢|import:📦|catch:🫴|arrest:🚓|dry:☀️|get dry:☀️|break:💔|snap:💔|be broken:💔|crack:💔|switch on:💡|be switched on:💡|come on:💡`;
 const PIC_ADJ_MORE = `it's ok:👌|it's okay:👌|it's all right:👌|important:❗|valuable:💎|serious:❗|very important:❗|lukewarm:🌡️|tepid:🌡️|polite:🙇|courteous:🙇|simple:👌|complex:🧩|complicated:🧩|inconvenient:🚫|enthusiastic:🔥|kind:😇|kindness:😇|diligent:📚|safe:🛡️|together:🤝|a little:🤏|a few:🤏|few:🤏|little:🤏|many:🔢|much:🔢|a lot:🔢|lots:🔢|happy:😊|glad:😊|blue:🔵|red:🔴|yellow:🟡|green:🟢|black:⚫|white:⚪|brown:🟤|famous:⭐|skillful:👍|skilful:👍|be good at:👍|unskillful:👎|bad at:👎|pitiful:🥺|pitiable:🥺|pathetic:🥺|poor thing:🥺|sorry for:🥺|pity:🥺|sympathy:🥺|compassion:🥺|miserable:😞|wretched:😞`;
 const mergePics = (more, base) => new Map([...parsePics(base), ...parsePics(more)]);
@@ -231,6 +232,8 @@ function buildPicIndex(list) {
   }
   return { byName, byChar };
 }
+// glosses that must stay picture-less: the only emoji is wrong (🛕 is a Hindu temple, 🍢 is oden) or a Japan-only sign (🈵 🈳)
+const PIC_BLOCK = new Set(['tofu', 'bean curd', 'temple', 'buddhist temple', 'buddha', 'full', 'empty', 'thin', 'vacant']);
 const glossKeys = gs => {
   const out = [];
   for (const g of gs.slice(0, 2)) {
@@ -239,7 +242,7 @@ const glossKeys = gs => {
     const full = String(g).toLowerCase().replace(/^(to|a|an|the)\s+/, '').trim();
     if (full !== n && !out.includes(full)) out.unshift(full);   // "cold (illness)" before "cold"
   }
-  return out;
+  return out.filter(k => !PIC_BLOCK.has(k));
 };
 /** pos: 'verb' | 'i-adj' | 'na-adj' | 'noun' | other; kanji: true for kanji meanings */
 /* per-word fixes where the first meaning picks the wrong picture (null = no picture) */
@@ -314,14 +317,14 @@ function buildExtIndex(sets) {
   return byName;
 }
 const singular = k => k.endsWith('ies') ? k.slice(0, -3) + 'y' : k.endsWith('s') && !/(ss|us|is)$/.test(k) ? k.slice(0, -1) : k;
-const extKeys = gs => { const out = []; for (const g of gs.slice(0, 2)) { const n = String(g).toLowerCase().replace(/\^/g, '').replace(/\(.*?\)/g, '').replace(/^(to|a|an|the)\s+/, '').replace(/[!?.~]/g, '').replace(/\s+/g, ' ').trim(); if (n && !out.includes(n)) out.push(n); } return out; };
+const extKeys = gs => { const out = []; for (const g of gs.slice(0, 2)) { const n = String(g).toLowerCase().replace(/\^/g, '').replace(/\(.*?\)/g, '').replace(/^(to|a|an|the)\s+/, '').replace(/[!?.~]/g, '').replace(/\s+/g, ' ').trim(); if (n && !out.includes(n)) out.push(n); } return out.filter(k => !PIC_BLOCK.has(k)); };
 /** second-chance picture for a noun or kanji meaning: exact icon name, then the head noun of a 2–3 word gloss ("electric train" → train) in OpenMoji */
 function extPictureFor(idx, ext, glosses, pos) {
   if (pos !== 'noun') return null;
   const keys = extKeys(glosses);
   for (const k0 of keys) for (const k of new Set([k0, singular(k0)])) { if (EXT_SKIP.has(k) || k.length < 3) continue; const h = ext.get(k); if (h) return h.id; }
   for (const k of keys) {
-    const ws = k.split(' '); if (ws.length < 2 || ws.length > 3) continue; const h = singular(ws[ws.length - 1]); if (h.length < 4 || EXT_SKIP.has(h)) continue;
+    const ws = k.split(' '); if (ws.length < 2 || ws.length > 3) continue; const h = singular(ws[ws.length - 1]); if (h.length < 4 || EXT_SKIP.has(h) || PIC_BLOCK.has(h)) continue;
     const c = PICS.noun.get(h); if (c && idx.byChar.get(stripFE(c))) return idx.byChar.get(stripFE(c));
     const o = idx.byName.get(h); if (o) return o;
   }
@@ -577,6 +580,90 @@ async function loadTokenizer() {
     return null;
   }
 }
+/* ---------------------------------------------------------------- audio padding
+   The word recordings are trimmed tight (about 0.07 s of silence before the voice). Phones and Bluetooth
+   headphones take 0.1–0.3 s to wake their audio output, so the start of the word was lost and learners
+   heard only half of it. Every recording is copied with 0.35 s of silence before and 0.25 s after. */
+let FFMPEG = null;
+const hasFfmpeg = () => { if (FFMPEG === null) { try { execFileSync('ffmpeg', ['-version'], { stdio: 'ignore' }); FFMPEG = true; } catch (e) { FFMPEG = false; } } return FFMPEG; };
+const audioJobs = [];
+const PAD_TAG = 'pad350-250';
+/** queue src → out with silence around it (plain copy when ffmpeg is missing) */
+function queueAudio(src, out) { audioJobs.push([src, out]); }
+async function flushAudio(label) {
+  const jobs = audioJobs.splice(0), pc = path.join(CACHE, 'padded-audio', PAD_TAG); fs.mkdirSync(pc, { recursive: true });
+  if (!jobs.length) return;
+  if (!hasFfmpeg()) { warn(`ffmpeg not found: ${label} recordings copied without padding (the first syllable may be cut on some phones)`); for (const [a, b] of jobs) fs.copyFileSync(a, b); return; }
+  let k = 0, made = 0;
+  const one = ([src, out]) => new Promise(res => {
+    const c = path.join(pc, path.basename(out));
+    if (fs.existsSync(c) && fs.statSync(c).size > 500) { fs.copyFileSync(c, out); return res(); }
+    execFile('ffmpeg', ['-y', '-v', 'error', '-i', src, '-af', 'adelay=350:all=1,apad=pad_dur=0.25', '-ac', '1', '-codec:a', 'libmp3lame', '-q:a', '4', c], err => {
+      if (err || !fs.existsSync(c) || fs.statSync(c).size < 500) { try { fs.rmSync(c, { force: true }); } catch (e) {} fs.copyFileSync(src, out); }
+      else { fs.copyFileSync(c, out); made++; }
+      res();
+    });
+  });
+  await Promise.all(Array.from({ length: Math.max(2, os.cpus().length) }, async () => { while (k < jobs.length) await one(jobs[k++]); }));
+  log(`  ${jobs.length} ${label} recordings padded with silence (${made} new)`);
+}
+
+/* ---------------------------------------------------------------- translation check for example sentences
+   Community translations (Tatoeba, Tanaka corpus, hanabira) sometimes drop detail Japanese always gives:
+   弟 is a *younger* brother, 姉 an *older* sister. The English must say so. Where it can be made exact by
+   naming the relationship it is fixed ("my brother" → "my younger brother"); where it can't, the sentence is dropped. */
+const KIN = [
+  // [Japanese (with words like 兄弟 / 姉妹 / 弟子 excluded), English that is exact, word to fix in the English, exact wording]
+  [/(?<![兄姉師子徒舎従義])弟(?!子)/u, /\b(younger|little|kid|baby|small|youngest) brothers?\b/i, 'brother', 'younger brother'],
+  [/(?<![義従])兄(?![弟妹姉])/u, /\b(older|elder|big|eldest|oldest) brothers?\b|\bbig bro\b/i, 'brother', 'older brother'],
+  [/(?<![義従兄])姉(?![妹弟])/u, /\b(older|elder|big|eldest|oldest) sisters?\b|\bsis\b/i, 'sister', 'older sister'],
+  [/(?<![姉兄義従])妹/u, /\b(younger|little|kid|baby|small|youngest) sisters?\b/i, 'sister', 'younger sister'],
+  [/祖父/u, /\bgrand(father|pa|dad)s?\b/i, null, null],
+  [/祖母/u, /\bgrand(mother|ma|mom|mum)s?\b|\bgranny\b/i, null, null],
+  [/(叔|伯)父/u, /\buncles?\b/i, null, null],
+  [/(叔|伯)母/u, /\baunt(s|ie)?\b/i, null, null],
+  // single-kanji family words only when they stand alone (not 大丈夫, 稲妻, 継母, 農夫, names like 久夫)
+  [/(?<!\p{Script=Han})母(?!\p{Script=Han})|お母さん/u, /\b(mother|mom|mum|mama|mommy|mummy|ma|parent)s?\b/i, null, null],
+  [/(?<!\p{Script=Han})父(?!\p{Script=Han})|お父さん/u, /\b(father|dad|daddy|papa|pa|parent)s?\b|\bold man\b/i, null, null],
+  [/息子/u, /\b(son|boy)s?\b/i, null, null],
+  [/(?<!\p{Script=Han})娘(?!\p{Script=Han})/u, /\b(daughter|girl|lass)s?\b|\byoung (woman|lady|women)\b/i, null, null],
+  [/(?<!\p{Script=Han})夫(?!\p{Script=Han})/u, /\b(husband|hubby)s?\b/i, null, null],
+  [/(?<!\p{Script=Han})妻(?!\p{Script=Han})|家内/u, /\b(wife|wives|missus)\b/i, null, null]
+];
+/** the word's English glosses, simplified for matching ("to eat" → "eat", "shop (store)" → "shop") */
+function glossesOf(senses) {
+  const out = new Set();
+  for (const s of senses || []) for (const g of s.g || []) {
+    const t = String(g).toLowerCase().replace(/\(.*?\)/g, '').replace(/^(to|a|an|the)\s+/, '').replace(/\s+/g, ' ').trim();
+    if (t.length >= 2) out.add(t);
+  }
+  return [...out];
+}
+/** 1 when the English uses one of the glosses (or an inflected form of a one-word gloss), else 0 */
+function glossHit(en, glosses) {
+  const e = ' ' + String(en || '').toLowerCase().replace(/[^a-z' -]/g, ' ') + ' ';
+  for (const g of glosses) {
+    if (e.includes(' ' + g + ' ') || e.includes(' ' + g + 's ') || e.includes(' ' + g + 'es ') || e.includes(' ' + g + "'s ")) return 1;
+    if (!g.includes(' ') && g.length >= 4) { const stem = g.replace(/e$/, ''); if (new RegExp(`\\b${stem}(s|es|ed|d|ing|er|ers)?\\b`).test(e)) return 1; }
+  }
+  return 0;
+}
+/** returns the (possibly corrected) English, or null when the translation can't be trusted */
+function checkTranslation(jp, en) {
+  const j = String(jp || '').replace(/\{([^|}]+)\|[^}]*\}/g, '$1'); let e = String(en || '');
+  if (!j || !e) return null;
+  for (const [jr, ok, word, exact] of KIN) {
+    if (!jr.test(j) || ok.test(e)) continue;
+    if (!word) return null;
+    const plain = new RegExp(`\\b${word}(s?)('s)?\\b`, 'gi'), hits = e.match(plain) || [];
+    // one plain "brother" and no other sibling term in the Japanese: name it exactly; otherwise drop
+    const others = KIN.slice(0, 4).filter(k => k[0] !== jr && k[2] === word && k[0].test(j)).length;
+    if (hits.length !== 1 || others || /s('s)?$/i.test(hits[0]) && !/'s$/i.test(hits[0])) return null;
+    e = e.replace(plain, (m, pl, poss) => (m[0] === m[0].toUpperCase() ? exact[0].toUpperCase() + exact.slice(1) : exact) + (poss || ''));
+  }
+  return e;
+}
+
 function sentenceFurigana(text) {
   if (!tokenizer) return safe(text);
   try {
@@ -777,10 +864,12 @@ async function main() {
       for (const s of w.sense || []) for (const e of s.examples || []) {
         const jp = (e.sentences || []).find(x => (x.land || x.lang) === 'jpn');
         const en = (e.sentences || []).find(x => (x.land || x.lang) === 'eng');
-        if (jp && en && !ex.some(x => x.j === jp.text)) ex.push({ j: jp.text, e: en.text, t: e.source && e.source.type === 'tatoeba' ? String(e.source.value) : null });
+        const en2 = jp && en && checkTranslation(jp.text, en.text);   // drops or corrects loose translations (弟 → "younger brother")
+        if (en2 && !ex.some(x => x.j === jp.text)) ex.push({ j: jp.text, e: en2, t: e.source && e.source.type === 'tatoeba' ? String(e.source.value) : null });
       }
-      // sentences with a native recording first (stable sort keeps sense order otherwise)
-      ex = ex.map((x, k) => [x, k]).sort((a, b) => (hasAu(b[0].t) - hasAu(a[0].t)) || a[1] - b[1]).map(a => a[0]).slice(0, MAX_EX);
+      // English that names the word first (a faithful translation), then sentences with a native recording, then sense order
+      const gl = glossesOf(senses);
+      ex = ex.map((x, k) => [x, k, glossHit(x.e, gl)]).sort((a, b) => (b[2] - a[2]) || (hasAu(b[0].t) - hasAu(a[0].t)) || a[1] - b[1]).map(a => a[0]).slice(0, MAX_EX);
     }
     const level = row.level;
     const entry = {
@@ -837,14 +926,17 @@ async function main() {
       let filled = 0; const useCount = new Map();
       let swapped = 0;
       for (const [f, entries] of want) {
-        const cands = (index.get(f) || []).map((i, k) => [i, k]).sort((a, b) => (hasAu(jpn[b[0]].id) - hasAu(jpn[a[0]].id)) || a[1] - b[1]).map(a => a[0]);
+        const gl = glossesOf(entries[0].s || []), enOf = i => checkTranslation(jpn[i].text, eng.get(link.get(jpn[i].id)));
+        // faithful translations first (English names the word), then native recordings, then shortest
+        const cands = (index.get(f) || []).filter(i => enOf(i)).map((i, k) => [i, k, glossHit(enOf(i), gl)])
+          .sort((a, b) => (b[2] - a[2]) || (hasAu(jpn[b[0]].id) - hasAu(jpn[a[0]].id)) || a[1] - b[1]).map(a => a[0]);
         for (const e of entries) {
           for (const i of cands) {
-            const s = jpn[i]; const en = eng.get(link.get(s.id));
+            const s = jpn[i]; const en = enOf(i);
             if (!en || e.ex.some(x => x.j === s.text) || (useCount.get(i) || 0) >= 3) continue;
             if (e.ex.length >= MAX_EX) {
               // full already: swap the last example for one with a native recording, once
-              if (e.ex.some(x => hasAu(x.t)) || !hasAu(s.id)) break;
+              if (e.ex.some(x => hasAu(x.t)) || !hasAu(s.id) || glossHit(en, gl) < glossHit(e.ex[e.ex.length - 1].e, gl)) break;
               e.ex.pop(); swapped++;
             }
             e.ex.push({ j: s.text, e: en, t: s.id }); useCount.set(i, (useCount.get(i) || 0) + 1); filled++;
@@ -884,10 +976,11 @@ async function main() {
           await new Promise(res => setTimeout(res, 800 * (t + 1)));
         }
       }
-      if (fs.existsSync(c) && fs.statSync(c).size > 500) { fs.copyFileSync(c, path.join(outDir, id + '.mp3')); bytes += fs.statSync(c).size; ok.add(id); }
+      if (fs.existsSync(c) && fs.statSync(c).size > 500) { queueAudio(c, path.join(outDir, id + '.mp3')); bytes += fs.statSync(c).size; ok.add(id); }
     };
     if (FROM) { const local = path.join(FROM, 'tatoeba-audio'); if (fs.existsSync(local)) for (const n of fs.readdirSync(local)) fs.copyFileSync(path.join(local, n), path.join(dir, n)); }
     await Promise.all(Array.from({ length: 6 }, async () => { while (k < jobs.length) { const id = jobs[k++]; await one(id); await new Promise(r => setTimeout(r, 60)); } }));
+    await flushAudio('sentence');
     for (const e of order) for (const x of e.ex) if (x.au && !ok.has(x.au)) { delete x.au; delete x.by; delete x.lic; delete x.al; }
     meta.counts.saudio = ok.size;
     meta.sources.sentenceAudio = 'Tatoeba recordings with a reuse licence' + (COMMERCIAL_ONLY ? ' (commercial-use licences only)' : '') + '; each credited in the app';
@@ -1027,7 +1120,7 @@ async function main() {
       const rawEx = pickF(o, ['examples', 'example_sentences', 'sentences', 'example']) || [];
       const ex = (Array.isArray(rawEx) ? rawEx : [rawEx]).map(e => typeof e === 'string' ? { jp: e } : e || {})
         .map(e => ({ j: strip(pickF(e, ['jp', 'japanese', 'ja', 'sentence', 'jpn', 'text'])), e: strip(pickF(e, ['en', 'english', 'translation', 'eng', 'meaning'])), r: strip(pickF(e, ['romaji', 'romanization', 'romanized'])) }))
-        .filter(e => e.j && !/\(Note|[$][0-9]|\bNote:/i.test(e.j + ' ' + e.e)).slice(0, 6);   // drop examples that carry editor notes or template junk
+        .filter(e => e.j && !/\(Note|[$][0-9]|\bNote:/i.test(e.j + ' ' + e.e)).map(e => ({ ...e, e: checkTranslation(e.j, e.e) })).filter(e => e.e).slice(0, 6);   // drop examples that carry editor notes or template junk
       const entry = { t, m: strip(pickF(o, ['short_explanation', 'meaning', 'short', 'summary', 'english', 'translation'])),
         x: strip(pickF(o, ['long_explanation', 'explanation', 'description', 'details', 'long', 'notes'])),
         fm: strip(pickF(o, ['formation', 'structure', 'form', 'usage', 'construction', 'conjugation'])),
@@ -1059,9 +1152,11 @@ async function main() {
       if (!f) continue;
       const id = crypto.createHash('sha1').update(f).digest('hex').slice(0, 12);
       const out = path.join(OUT, 'audio', id + '.mp3');
-      if (!fs.existsSync(out)) { fs.copyFileSync(path.join(audioDir, f), out); bytes += fs.statSync(out).size; }
+      if (!fs.existsSync(out) && !audioJobs.some(j => j[1] === out)) queueAudio(path.join(audioDir, f), out);
       e.au = id; n++;
     }
+    await flushAudio('word');
+    for (const f of fs.readdirSync(path.join(OUT, 'audio'))) bytes += fs.statSync(path.join(OUT, 'audio', f)).size;
     meta.counts.audio = n;
     meta.sources.audio = 'tofugu/japanese-vocabulary-pronunciation-audio (native speakers, mp3)';
     log(`  ${n} words with native audio (${(bytes / 1e6).toFixed(1)} MB)`);
@@ -1093,9 +1188,10 @@ async function main() {
         const r = kata2hira(e.r), f = map.get(e.w + '|' + r) || (e.a && map.get(e.a + '|' + r)); if (!f) continue;
         const id = 'k' + crypto.createHash('sha1').update(f).digest('hex').slice(0, 11);
         const out = path.join(OUT, 'audio', id + '.mp3');
-        if (!fs.existsSync(out)) { fs.copyFileSync(f, out); bytes += fs.statSync(out).size; }
+        if (!fs.existsSync(out) && !audioJobs.some(j => j[1] === out)) { queueAudio(f, out); bytes += fs.statSync(f).size; }
         e.au = id; n++;
       }
+      await flushAudio('Kanji alive');
       meta.counts.audioKA = n;
       meta.sources.audioKA = 'Kanji alive example-word recordings (mp3)';
       log(`  ${n} more words with native audio (${(bytes / 1e6).toFixed(1)} MB)`);
@@ -1192,5 +1288,5 @@ async function main() {
   if (meta.notes.length) meta.notes.forEach(n => warn(n));
 }
 
-export { kvgParts, readKanjium, readOrigins, originFor, buildPicIndex, pictureFor, buildExtIndex, extPictureFor, iconSvg, hanOf };
+export { checkTranslation, kvgParts, readKanjium, readOrigins, originFor, buildPicIndex, pictureFor, buildExtIndex, extPictureFor, iconSvg, hanOf };
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch(e => { console.error('\nBuild failed:', e.message); process.exit(1); });

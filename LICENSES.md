@@ -18,6 +18,8 @@ generated `data/` files are distributed under **CC BY-SA 4.0**.
 | [Japanese vocabulary pronunciation audio](https://github.com/tofugu/japanese-vocabulary-pronunciation-audio) | [Tofugu](https://www.tofugu.com) & [WaniKani](https://www.wanikani.com) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Native-speaker word recordings in `data/audio/` (copied unchanged, renamed by hash) |
 | [Kanji alive](https://github.com/kanjialive/kanji-data-media) example-word audio | Kanji alive | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) | Native recordings for words the WaniKani set doesn't cover, in `data/audio/k*.mp3` |
 | [Tatoeba](https://tatoeba.org/) sentence audio | Individual Tatoeba members (named on each sentence in the app) | Each recording's own licence (CC BY, CC BY-SA, CC BY-NC, CC0 …). Recordings without a reuse licence are never included; build with `--commercial-audio-only` to keep only licences that allow commercial use | Native recordings of example sentences in `data/saudio/` (copied unchanged) |
+
+**Changes made to the recordings:** every word and sentence recording is re-encoded with 0.35 s of silence added before it and 0.25 s after it, so that phones and Bluetooth headphones don't cut off the first syllable. Nothing else in the recordings is changed. The padded files are shared under the same licence as the originals.
 | [OpenMoji](https://openmoji.org/) | OpenMoji – the open-source emoji and icon project (HfG Schwäbisch Gmünd) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Pictures for words and kanji, in `data/img/` (copied unchanged) |
 | [Make Me a Hanzi](https://github.com/skishore/makemeahanzi) `dictionary.txt` | Shaunak Kishore, derived from Unihan and CJKlib | [LGPL-3.0](https://www.gnu.org/licenses/lgpl-3.0.html) | The origin story of each kanji (e.g. 休 "A person 亻 leaning against a tree 木") and its meaning/sound parts, stored in `data/kanji-*.json` (field `og`). Japanese simplified forms are matched through their pre-1946 form. One hint is corrected (氣). You may redistribute and modify this data under the LGPL-3.0; the original is at the link. |
 | [Kanjium](https://github.com/mifunetoshiro/kanjium) | mifunetoshiro (built largely on EDRDG's KANJIDIC and KRADFILE) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | How each kanji was formed (picture, symbol, combined meanings, meaning + sound), sound components and their readings, look-alike kanji, radical names and meanings. Text data only; Kanjium's origin images (© Richard Sears, chineseetymology.org) are **not** used. Stored in `data/kanji-*.json` and `data/parts.json` |
@@ -35,3 +37,16 @@ here follow the widely used community lists above.
 
 This app uses the EDRDG files in conformance with the
 [EDRDG licence](https://www.edrdg.org/edrdg/licence.html).
+
+## Libraries for importing Anki decks
+
+Loaded only when you add an Anki deck. They are stored in `vendor/`.
+
+| Library | By | Licence |
+|---|---|---|
+| [JSZip](https://github.com/Stuk/jszip) 3.10.2 | Stuart Knightley and contributors | [MIT](https://github.com/Stuk/jszip/blob/main/LICENSE.markdown) (or GPLv3) |
+| [sql.js](https://github.com/sql-js/sql.js) 1.15.1 (SQLite compiled to WebAssembly) | sql.js contributors; SQLite is public domain | [MIT](https://github.com/sql-js/sql.js/blob/master/LICENSE) |
+| [fzstd](https://github.com/101arrowz/fzstd) 0.1.1 (Zstandard decompression) | Arjun Barrett | [MIT](https://github.com/101arrowz/fzstd/blob/master/LICENSE) |
+
+A deck you import is your own copy: it is stored only in your browser and never uploaded or published with the site.
+
