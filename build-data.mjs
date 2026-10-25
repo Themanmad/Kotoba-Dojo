@@ -1027,7 +1027,7 @@ async function main() {
       const rawEx = pickF(o, ['examples', 'example_sentences', 'sentences', 'example']) || [];
       const ex = (Array.isArray(rawEx) ? rawEx : [rawEx]).map(e => typeof e === 'string' ? { jp: e } : e || {})
         .map(e => ({ j: strip(pickF(e, ['jp', 'japanese', 'ja', 'sentence', 'jpn', 'text'])), e: strip(pickF(e, ['en', 'english', 'translation', 'eng', 'meaning'])), r: strip(pickF(e, ['romaji', 'romanization', 'romanized'])) }))
-        .filter(e => e.j).slice(0, 6);
+        .filter(e => e.j && !/\(Note|[$][0-9]|\bNote:/i.test(e.j + ' ' + e.e)).slice(0, 6);   // drop examples that carry editor notes or template junk
       const entry = { t, m: strip(pickF(o, ['short_explanation', 'meaning', 'short', 'summary', 'english', 'translation'])),
         x: strip(pickF(o, ['long_explanation', 'explanation', 'description', 'details', 'long', 'notes'])),
         fm: strip(pickF(o, ['formation', 'structure', 'form', 'usage', 'construction', 'conjugation'])),

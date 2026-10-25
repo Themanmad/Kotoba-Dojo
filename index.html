@@ -438,6 +438,51 @@ body > main .ulist:not(.plevel .ulist){border:1px solid var(--line);border-radiu
 .ac-g{font-size:20px}
 .ac-more{position:absolute;right:14px;bottom:8px;font-size:12px;font-weight:700;color:var(--accent)}
 .lesson,.page-session .after{padding-bottom:110px}
+.pl-plan{padding:4px 16px 12px;border-top:1px solid var(--line)}
+.pl-plan p{font-size:13.5px;color:var(--muted);margin:10px 0}
+.cov{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;font-size:13px;margin:6px 0}
+.cov b{font-weight:600}
+.stage-h{font-size:12px;font-weight:800;color:var(--lc);padding:12px 16px 6px;border-top:1px solid var(--line);letter-spacing:.04em}
+.unit.cp .un{border-style:dashed}
+.unit.cp b{color:var(--lc)}
+.unit.exam .un{border-radius:10px;background:var(--lc);color:#fff;border-color:var(--lc);font-family:var(--ffj)}
+.unit.exam{background:color-mix(in srgb,var(--lc) 8%,var(--card))}
+.ulist.boxed{border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.lline .say{margin-left:6px;vertical-align:middle}
+.exinstr{font-size:15px;color:var(--muted);margin-bottom:8px}
+.hook{font-size:15.5px;line-height:1.5;margin:4px 0 0;padding:10px 14px;border-radius:12px;background:var(--accent-soft);color:var(--ink)}
+.goalbar{display:flex;align-items:center;gap:12px;margin:12px 0}
+.gb-ring{--p:0;width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--ok) calc(var(--p)*1%),var(--chip) 0)}
+.gb-ring span{width:36px;height:36px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-weight:800;font-size:14px}
+.gb-t b{display:block;font-size:15px}
+.gb-t span{font-size:13px;color:var(--muted)}
+.goalbar.met .gb-t b{color:var(--ok)}
+.gcard{margin:14px 0}
+.gc-top{display:flex;align-items:center;gap:12px}
+.belt{display:inline-flex;align-items:center;gap:6px;background:var(--bc);color:var(--bt);font-weight:800;border-radius:8px;padding:6px 10px;font-family:var(--ffj);border:1px solid color-mix(in srgb,var(--ink) 15%,transparent)}
+.belt i{width:14px;height:6px;border-radius:2px;background:currentColor;opacity:.5}
+.gc-n b{display:block;font-size:16px}
+.gc-n span{font-size:13px;color:var(--muted)}
+.gc-bar{margin:12px 0 4px;height:10px}
+.gc-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.bdg{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:17px;background:var(--chip);filter:grayscale(1);opacity:.35}
+.bdg.got{filter:none;opacity:1;background:var(--accent-soft)}
+.gc-foot{font-size:12px;color:var(--muted);margin-top:6px}
+.stars{color:#E8A800;letter-spacing:1px;font-size:15px;white-space:nowrap}
+.stars-big .stars{font-size:40px}
+.xpline{font-weight:700;color:var(--accent);margin-bottom:6px}
+.hxp{display:inline-flex;align-items:center;gap:5px;margin-left:8px;font-weight:700}
+.hxp i{width:12px;height:12px;border-radius:3px;background:var(--bc);border:1px solid color-mix(in srgb,var(--ink) 25%,transparent)}
+.xppop{position:fixed;left:50%;top:40%;transform:translate(-50%,0);font-weight:800;font-size:22px;color:var(--ok);pointer-events:none;z-index:80;animation:xpup 1.1s ease-out forwards}
+@keyframes xpup{from{opacity:0;transform:translate(-50%,10px)}20%{opacity:1}to{opacity:0;transform:translate(-50%,-50px)}}
+.celebrate{position:fixed;left:50%;top:18%;transform:translate(-50%,0);z-index:90;background:var(--card);border:2px solid var(--accent);border-radius:18px;padding:16px 22px;box-shadow:0 14px 40px rgba(0,0,0,.25);text-align:center;animation:celin .3s ease-out;max-width:calc(100vw - 32px)}
+.celebrate b{display:block;font-size:20px}
+.celebrate span{font-size:14px;color:var(--muted)}
+.celebrate.out{opacity:0;transition:opacity .4s}
+@keyframes celin{from{opacity:0;transform:translate(-50%,-12px) scale(.96)}}
+.confetti{position:fixed;top:-12px;width:9px;height:14px;border-radius:2px;z-index:85;pointer-events:none;animation:fall 2s ease-in forwards}
+@keyframes fall{to{top:105vh;transform:rotate(540deg)}}
+@media (prefers-reduced-motion:reduce){.xppop,.celebrate{animation:none}.confetti{display:none}}
 .kc-hint{font-size:12.5px;color:var(--muted);margin:2px 0 6px}
 .kcx.kc-sel{background:var(--accent-soft);color:var(--accent);text-decoration:none}
 ::highlight(kp-word){background-color:var(--accent-soft);color:var(--accent)}
@@ -1176,7 +1221,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('kd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('kd_' + k, JSON.stringify(v)); } catch (e) {} }
 };
-let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
+let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, style: 'normal', goalMin: 15, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
 let progress = store.get('progress', {});
 let custom = store.get('custom', []);
 let actLog = store.get('log', {});
@@ -1359,6 +1404,7 @@ function rec(item, ok) {
   if (ok) { p.c++; if (isNew || now >= (p.d || 0)) { p.b = Math.min(IV.length - 1, p.b + 1); p.d = now + IV[p.b] * DAY; } }
   else { p.w++; p.b = Math.max(0, p.b - 2); p.d = now + 10 * 60e3; }
   p.t = now; progress[item.id] = p; save(); logAct(false, item.kind);
+  if (!rec.silent) gameAnswer(ok);
 }
 /** Flashcard grades: 0 again, 1 hard, 2 good, 3 easy. */
 function schedule(item, g, dry) {
@@ -1370,6 +1416,7 @@ function schedule(item, g, dry) {
   else { p.c++; p.b = Math.min(IV.length - 1, p.b + (g === 3 ? 2 : 1)); due = now + IV[p.b] * DAY; }
   if (dry) return due - now;
   p.d = due; p.t = now; p.l = item.lvl; progress[item.id] = p; save(); logAct(!p0, item.kind);
+  if (!schedule.silent) gameAnswer(g >= 1);
 }
 const fmtIv = ms => ms < 3600e3 ? `${Math.max(1, Math.round(ms / 60e3))}m` : ms < DAY ? `${Math.round(ms / 3600e3)}h` : ms < 30 * DAY ? `${Math.round(ms / DAY)}d` : `${Math.round(ms / (30 * DAY))}mo`;
 function levelStats(kind, l) {
@@ -1487,7 +1534,7 @@ function vHome() {
   const pu = nextUnit('jlpt'), tu = nextUnit('travel');
   const stops = [
     pathSt.place || Object.keys(pathSt.done).length
-      ? { title: `Lesson: ${pu.t}`, sub: `${unitLabel(pu)} · about 15 minutes`, done: flagged('lesson'), go: 'Start', act: `App.lesson('${pu.id}')` }
+      ? { title: pu.exam ? pu.t : pu.cp ? pu.t : `Lesson: ${pu.t}`, sub: pu.exam || pu.cp ? `${unitLabel(pu)} · ${pu.s}` : `${unitLabel(pu)} · about 15 minutes`, done: flagged('lesson'), go: 'Start', act: `App.lesson('${pu.id}')` }
       : { title: 'Find your starting point', sub: '5-minute placement check', done: false, go: 'Start', act: 'App.placeStart()' },
     { title: due ? `Review ${fmtN(due)} card${due === 1 ? '' : 's'}` : 'Reviews', sub: due ? 'Words and kanji from your lessons, due today' : 'Nothing due. New words arrive with each lesson', done: !due, go: 'Review', act: "App.go('vocab','cards')" },
     { title: `Travel: ${tu.t}`, sub: tu.s, done: !!pathSt.done[tu.id] && flagged('lesson'), go: 'Open', act: `App.lesson('${tu.id}')` },
@@ -1508,6 +1555,7 @@ function vHome() {
   <div class="home-grid"><div class="home-main">
     <h1 class="hello">おかえり<small>${allDone ? 'Every stop done today. Nice work.' : `Today's line has ${stops.length - stops.filter(x => x.done).length} stops left.`}</small></h1>
     <div class="badges"><span class="badge">🔥 <b>${streak()}</b> day streak</span><span class="badge"><b>${tl.r}</b> answers today</span></div>
+    ${gameCard()}
     <div class="route${draw ? ' draw' : ''}" style="--run:calc((100% - 44px) * ${frac})"><span class="run"></span>
       ${stops.map((x, i) => `<button class="stop ${x.done ? 'done' : i === nextI && !allDone ? 'next' : ''}" onclick="${x.act}"><span class="pin">${x.done ? '✓' : i + 1}</span><span class="sb"><span class="t"><b>${x.title}</b><span>${x.sub}</span></span>${x.done ? '' : `<span class="go">${x.go}</span>`}</span></button>`).join('')}
     </div>
@@ -1701,6 +1749,8 @@ function vSettings() {
     <div class="set" style="display:block"><b>Appearance</b><span>${settings.skin === 'terminal' ? 'The Terminal design is always dark' : 'System follows your phone or computer setting'}</span>
       ${settings.skin === 'terminal' ? '' : `<div style="margin-top:10px">${seg([['system', 'System'], ['light', '☀️ Light'], ['dark', '🌙 Dark']], settings.theme, 'App.theme')}</div>`}</div>
     <div class="set"><div><b>Pictures</b><span>Show a picture for words and kanji you can draw</span></div><label class="sw"><input type="checkbox" ${settings.pics ? 'checked' : ''} onchange="App.set('pics',this.checked)"><span></span></label></div>
+    <div class="set"><div><b>Learning style</b><span>Game adds belts, XP, stars, badges and celebrations. Normal keeps it calm.</span></div>${seg([['normal', 'Normal'], ['game', 'Game']], settings.style === 'game' ? 'game' : 'normal', 'App.styleSet')}</div>
+    <div class="set"><div><b>Daily goal</b><span>Minutes of study a day. Counts time in lessons, quizzes and reviews</span></div>${seg([['15', '15 min'], ['20', '20 min'], ['30', '30 min']], String(settings.goalMin || 15), 'App.goalSet')}</div>
     <div class="set"${settings.pics ? '' : ' style="display:none"'}><div><b>Picture style</b><span>3D pictures, or flat drawings</span></div>${seg([['3d', '3D'], ['flat', 'Flat']], settings.picStyle === 'flat' ? 'flat' : '3d', 'App.picStyle')}</div>
     <div class="set"><div><b>Modern quotes</b><span>Include Shuzo Matsuoka and anime catchphrases in Quote of the day</span></div><label class="sw"><input type="checkbox" ${settings.modernQuotes !== false ? 'checked' : ''} onchange="App.set('modernQuotes',this.checked)"><span></span></label></div>
     <div class="set" style="display:block"><b>Furigana</b><span>Reading shown above kanji</span>
@@ -2352,7 +2402,7 @@ function renderResults() {
    ===================================================================== */
 let G = [], GMAP = {};
 function normG(x, lvl) {
-  return { id: 'g:' + lvl + ':' + x.t, kind: 'grammar', t: x.t, m: x.m || '', x: x.x || '', fm: x.fm || '', ex: x.ex || [], lvl, freq: 3 };
+  return { id: 'g:' + lvl + ':' + x.t, kind: 'grammar', t: x.t, m: x.m || '', x: x.x || '', fm: x.fm || '', ex: (x.ex || []).filter(e => !/\(Note|[$][0-9]|\bNote:/i.test(String(e.j) + ' ' + String(e.e || ''))), lvl, freq: 3 };
 }
 function starterGrammar() {
   const out = {};
@@ -2733,7 +2783,8 @@ function finishExam(force) {
   if (!force && blank && !confirm(`${blank} question${blank === 1 ? ' is' : 's are'} unanswered. Finish anyway?`)) return;
   stopExamTimer();
   s.done = true; s.time = Date.now() - s.start;
-  s.qs.forEach((q, i) => rec(q.item, s.ans[i] === q.ans));
+  rec.silent = true; s.qs.forEach((q, i) => rec(q.item, s.ans[i] === q.ans)); rec.silent = false;
+  { const okN = s.qs.filter((q, i) => s.ans[i] === q.ans).length; addXP(okN * 5 + 100); checkBadges(); }
   const full = !s.scope || s.scope.type === 'full', ok = s.qs.filter((q, i) => s.ans[i] === q.ans).length;
   s.result = full ? scoreExam(s) : null;
   const hist = store.get('exams', []);
@@ -3156,7 +3207,7 @@ function navFoot(st) {
 function render() {
   const navOf = v => ['kana', 'vocab', 'kanji', 'grammar', 'library'].includes(v) ? 'library' : ['path', 'lesson', 'place'].includes(v) ? 'path' : v;
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === navOf(S.view) || b.dataset.v === S.view));
-  const st = streak(); $('#streak').textContent = st ? `🔥 ${st}` : '';
+  const st = streak(); $('#streak').innerHTML = (st ? `🔥 ${st}` : '') + (gameOn() ? `<span class="hxp" title="${esc(beltOf(game.xp).name)}">⭐ ${fmtN(game.xp)}</span>` : '');
   const nf = $('#navfoot'); if (nf) nf.innerHTML = navFoot(st);
   const page = S.session ? 'session' : S.view;
   if (S.view === 'path' && DATA.mode === 'full' && !S.pathLoading && (LV.some(l => !isLoaded('vocab', l)) || LV.some(l => !isLoaded('grammar', l)))) { S.pathLoading = true; loadPathData().then(() => { S.pathLoading = false; if (S.view === 'path') render(); }); }
@@ -3381,7 +3432,7 @@ const PATH_N5 = [
 { id: 'n5-20', t: 'May I? You mustn’t', s: 'Ask permission and understand rules', pat: '〜ても いいですか ／ 〜ては いけません', pm: 'May I …? / You must not …',
   pts: ['て-form + も いいですか = may I …? (literally “is it fine even if I …?”).', 'Say yes with はい、どうぞ.', 'て-form + は いけません = you must not … . On signs you’ll often see 〜ないでください (please don’t …).'],
   ex: [['{写真|しゃしん}を {撮|と}っても いいですか。', 'May I take a photo?'], ['ここで たばこを {吸|す}っては いけません。', 'You must not smoke here.'], ['{靴|くつ}を {脱|ぬ}いで ください。', 'Please take off your shoes.']],
-  w: [['吸う', 'すう', 'to smoke; to breathe in'], ['入る', 'はいる', 'to enter'], ['使う', 'つかう', 'to use'], ['電話', 'でんわ', 'telephone'], ['靴', 'くつ', 'shoes'], ['脱ぐ', 'ぬぐ', 'to take off (clothes)'], ['たばこ', 'たばこ', 'cigarette'], ['中', 'なか', 'inside']],
+  w: [['吸う', 'すう', 'to smoke; to breathe in'], ['入る', 'はいる', 'to enter'], ['使う', 'つかう', 'to use'], ['電話', 'でんわ', 'telephone'], ['靴', 'くつ', 'shoes'], ['脱ぐ', 'ぬぐ', 'to take off (clothes)'], ['たばこ', 'たばこ', 'tobacco; cigarettes'], ['中', 'なか', 'inside']],
   rd: [['お{寺|てら}の {中|なか}では {靴|くつ}を {脱|ぬ}ぎます。', 'You take off your shoes inside a temple.'], ['{写真|しゃしん}を {撮|と}っては いけません。', 'You must not take photos.'], ['{庭|にわ}では {撮|と}っても いいです。', 'You may take photos in the garden.'], ['{大|おお}きい {声|こえ}で {話|はな}さないで ください。', 'Please don’t talk loudly.']],
   tk: [['A', 'すみません、ここに {座|すわ}っても いいですか。', 'Excuse me, may I sit here?'], ['B', 'はい、どうぞ。', 'Yes, go ahead.'], ['A', 'この {電話|でんわ}を {使|つか}っても いいですか。', 'May I use this phone?'], ['B', 'すみません、それは ちょっと…。', 'Sorry, that’s a little…']],
   cz: [['{写真|しゃしん}を {撮|と}って＿ いいですか。', ['も', 'は', 'を', 'で'], 0, 'May I take a photo?'], ['ここで たばこを {吸|す}っては ＿。', ['いけません', 'いいです', 'ください', 'います'], 0, 'You must not smoke here.'], ['{靴|くつ}を {脱|ぬ}＿ ください。', ['いで', 'って', 'んで', 'いて'], 0, 'Please take off your shoes.']] },
@@ -3407,7 +3458,7 @@ const PATH_N5 = [
   ex: [['{頭|あたま}が {痛|いた}いですから、{休|やす}みます。', 'I have a headache, so I’ll rest.'], ['どうして {行|い}きませんか。—{忙|いそが}しいからです。', 'Why aren’t you going? — Because I’m busy.'], ['{日本語|にほんご}は {難|むずか}しいですが、{楽|たの}しいです。', 'Japanese is hard, but fun.']],
   w: [['頭', 'あたま', 'head'], ['痛い', 'いたい', 'painful, hurts'], ['お腹', 'おなか', 'stomach'], ['薬', 'くすり', 'medicine'], ['病気', 'びょうき', 'illness'], ['でも', 'でも', 'but, however'], ['どうして', 'どうして', 'why'], ['早く', 'はやく', 'early; quickly']],
   rd: [['{今日|きょう}は {朝|あさ}から {頭|あたま}が {痛|いた}いです。', 'I’ve had a headache since this morning.'], ['{薬|くすり}を {飲|の}みましたが、まだ {痛|いた}いです。', 'I took medicine, but it still hurts.'], ['{病気|びょうき}ですから、{会社|かいしゃ}を {休|やす}みます。', 'I’m ill, so I’m taking the day off work.'], ['{今晩|こんばん}は {早|はや}く {寝|ね}ます。', 'I’ll go to bed early tonight.']],
-  tk: [['A', 'どうしましたか。', 'What’s wrong?'], ['B', 'お{腹|なか}が {痛|いた}いです。', 'My stomach hurts.'], ['A', '{大丈夫|だいじょうぶ}ですか。{病院|びょういん}へ {行|い}きましょうか。', 'Are you OK? Shall we go to the hospital?'], ['B', 'ありがとう ございます。でも、{薬|くすり}を {飲|の}みましたから、{大丈夫|だいじょうぶ}です。', 'Thank you. But I took medicine, so I’m fine.']],
+  tk: [['A', 'どうしましたか。', 'What’s wrong?'], ['B', '{お腹|おなか}が {痛|いた}いです。', 'My stomach hurts.'], ['A', '{大丈夫|だいじょうぶ}ですか。{病院|びょういん}へ {行|い}きましょうか。', 'Are you OK? Shall we go to the hospital?'], ['B', 'ありがとう ございます。でも、{薬|くすり}を {飲|の}みましたから、{大丈夫|だいじょうぶ}です。', 'Thank you. But I took medicine, so I’m fine.']],
   cz: [['{雨|あめ}です＿、{行|い}きません。', ['から', 'が', 'まで', 'でも'], 0, 'It’s raining, so I won’t go.'], ['{高|たか}いです＿、おいしいです。', ['が', 'から', 'と', 'の'], 0, 'It’s expensive, but tasty.'], ['＿ {来|き}ませんでしたか。—{忙|いそが}しかったからです。', ['どうして', 'どこ', 'いつ', 'どれ'], 0, 'Why didn’t you come? — Because I was busy.']] }
 ];
 
@@ -3500,65 +3551,134 @@ function pathWord(w, r, m, lvl) {
   return PATHX[id];
 }
 /* ---------- units ---------- */
-let AUTO = {};   // level → generated units (rebuilt when that level's grammar / words load)
-function autoUnits(l) {
-  const gs = (DATA.grammar[l] || []).filter(g => g.m), sig = gs.length + ':' + (DATA.vocab[l] || []).length;
-  if (AUTO[l] && AUTO[l].sig === sig) return AUTO[l].units;
-  const words = (DATA.vocab[l] || []).slice().sort((a, b) => b.freq - a.freq), used = new Set(), units = [];
-  for (let i = 0, n = 1; i < gs.length; i += 3, n++) {
-    const g = gs.slice(i, i + 3);
-    const text = g.flatMap(x => x.ex.map(e => String(e.j).replace(MARK, '$1'))).join('\n');
-    let ws = words.filter(x => !used.has(x.id) && x.w.length >= (/[一-鿿]/.test(x.w) ? 1 : 3) && text.includes(x.w)).slice(0, 8);
-    for (const x of words) { if (ws.length >= 10) break; if (!used.has(x.id) && !ws.includes(x)) ws.push(x); }
-    ws.forEach(x => used.add(x.id));
-    units.push({ id: `${l.toLowerCase()}-g${String(n).padStart(2, '0')}`, auto: true, lvl: l, n, g, items: ws,
-      t: g.map(x => gSplitTitle(x.t).jp || x.t).join('・'), s: g.map(x => x.m).join(' / ') });
+/* ---------- the plan for each level ----------
+   Every level's Path teaches the whole level: all of its JLPT words, kanji and grammar points.
+   N5 starts with 23 hand-written core lessons; then coverage lessons (about 12 words and one or two
+   grammar points each, with real example sentences) until nothing is left out. Every 8 lessons a
+   checkpoint (80% to clear), and the level ends with a full mock exam. */
+const STAGE = 8, WPU = 12, CP_PASS = 80;
+/* which grammar points the hand-written N5 lessons already teach (matched against the grammar data's titles) */
+const N5_GK = { 'n5-01': ['は', 'です', 'AはBです'], 'n5-02': ['か', 'じゃない', 'じゃありません', 'ではありません', '何', '誰'], 'n5-03': ['これ', 'それ', 'あれ', 'どれ', 'この', 'その', 'あの', 'どの', 'こそあど'], 'n5-04': ['の'],
+  'n5-05': ['ここ', 'そこ', 'あそこ', 'どこ'], 'n5-06': ['いくら'], 'n5-07': ['から', 'まで', 'からまで'], 'n5-08': ['へ', 'ます', 'ません', 'に行く'], 'n5-09': ['を'], 'n5-10': ['で', 'に'],
+  'n5-11': ['ました', 'ませんでした', 'と'], 'n5-12': ['い-adjectives', 'い形容詞', 'くない', 'とても', 'あまり'], 'n5-13': ['な-adjectives', 'な形容詞'], 'n5-14': ['あります', 'います', 'ある', 'いる', 'がある', 'がいる'],
+  'n5-15': ['が', 'が好き', 'が上手', 'が分かる'], 'n5-16': ['たい', 'たいです'], 'n5-17': ['ませんか', 'ましょう', 'ましょうか'], 'n5-18': ['てください', 'て-form'], 'n5-19': ['ている', 'ています'],
+  'n5-20': ['てもいい', 'てもいいです', 'てはいけない', 'てはいけません', 'ないでください'], 'n5-21': ['かった', 'でした'], 'n5-22': ['より', 'ほうが', 'のほうが', '一番', 'どちら'], 'n5-23': ['から', 'が', 'でも'] };
+const gKey = g => String(gSplitTitle(g.t).jp || g.t).replace(/[〜～…・\s()（）＋+]/g, '').split(/[\/／,、]/)[0];
+const coreCovers = g => { const k = gKey(g).replace(/(です)?[。.]$/, ''); return !!k && Object.values(N5_GK).some(ts => ts.includes(k)); };
+let PLAN = {};
+function planUnits(l) {
+  const words = (DATA.vocab[l] || []).filter(x => x.w && x.m), gram = (DATA.grammar[l] || []).filter(g => g.m), kan = K.filter(k => k.lvl === l);
+  const sig = [words.length, gram.length, kan.length, V.length].join(':');
+  if (PLAN[l] && PLAN[l].sig === sig) return PLAN[l].units;
+  const taught = new Set(), lessons = [];
+  if (l === 'N5') PATH_N5.forEach((u, i) => { Object.assign(u, { lvl: 'N5', tr: 'jlpt', core: true, g: [] }); u.items = u.w.map(([w, r, m]) => pathWord(w, r, m, 'N5')); u.items.forEach(x => taught.add(x.id)); lessons.push(u); });
+  // grammar comes alphabetically from the source; teach it simplest first: short patterns with short, plain examples
+  const gDiff = g => { const ex = g.ex.map(e => plain(e.j)); const len = ex.length ? ex.reduce((a, t) => a + t.length, 0) / ex.length : 30; const hard = ex.join('').split('').filter(c => isK(c) && (!KMAP[c] || LV.indexOf(KMAP[c].lvl) < LV.indexOf(l))).length / Math.max(1, ex.length); return len + gKey(g).length * 3 + hard * 4; };
+  const restG = gram.filter(g => !(l === 'N5' && coreCovers(g))).map(g => [g, gDiff(g)]).sort((a, b) => a[1] - b[1]).map(x => x[0]);
+  const restW = words.filter(x => !taught.has(x.id)).sort((a, b) => b.freq - a.freq || (a.seq || 0) - (b.seq || 0));
+  const nGen = Math.max(restG.length ? Math.ceil(restG.length / 2) : 0, Math.ceil(restW.length / WPU));
+  const gen = Array.from({ length: nGen }, (_, i) => ({ id: `${l.toLowerCase()}-c${String(i + 1).padStart(3, '0')}`, gen: true, lvl: l, tr: 'jlpt', g: [], items: [] }));
+  restG.forEach((g, i) => gen[Math.floor(i * nGen / restG.length)].g.push(g));
+  const pool = new Set(restW);
+  gen.forEach(u => {   // words used in the lesson's grammar examples first, so the reading makes sense
+    const text = u.g.flatMap(g => g.ex.map(e => plain(e.j))).join('\n');
+    for (const x of pool) { if (u.items.length >= 4) break; if (x.w.length >= ([...x.w].some(isK) ? 1 : 3) && text.includes(x.w)) { u.items.push(x); pool.delete(x); } }
+  });
+  const rest = [...pool];
+  const target = Math.ceil(restW.length / Math.max(1, nGen));
+  gen.forEach(u => u.items.push(...rest.splice(0, Math.max(0, target - u.items.length))));
+  if (rest.length && gen.length) rest.forEach((x, i) => gen[i % gen.length].items.push(x));
+  // a grammar-only lesson still practises a few already-taught words that appear in its examples
+  gen.filter(u => !u.items.length).forEach(u => { const text = u.g.flatMap(g => g.ex.map(e => plain(e.j))).join('\n'); u.review = words.filter(x => x.w.length >= 2 && text.includes(x.w)).slice(0, 6); });
+  gen.forEach(u => {
+    u.t = u.g.length ? u.g.map(g => String(gSplitTitle(g.t).jp || g.t).replace(/\s*[+＋]\s*$/, '').replace(/\s+/g, '').trim()).join('・') : u.items.slice(0, 3).map(x => x.w).join('・');
+    u.s = u.g.length ? u.g.map(g => g.m).join(' / ') : `Words: ${u.items.slice(0, 4).map(x => x.m.split(/[;,]/)[0]).join(', ')}`;
+  });
+  lessons.push(...gen);
+  // kanji: each one taught with the first lesson that has a word using it; any left over join the lessons with the fewest
+  const kset = new Set(kan.map(k => k.k)), kdone = new Set();
+  lessons.forEach(u => { u.kan = [...new Set(u.items.flatMap(x => hanOf(x.w)))].filter(c => kset.has(c) && !kdone.has(c)).slice(0, 6); u.kan.forEach(c => kdone.add(c)); });
+  const leftK = kan.filter(k => !kdone.has(k.k));
+  const tgt = gen.length ? gen : lessons;
+  leftK.forEach(k => { const u = tgt.slice().sort((a, b) => a.kan.length - b.kan.length)[0]; if (u) { u.kan.push(k.k); kdone.add(k.k); } });
+  lessons.forEach((u, i) => { u.n = i + 1; u.kanji = u.kan.map(c => KMAP[c]).filter(Boolean); });
+  // stages with a checkpoint after each, then the level's mock exam
+  const units = [];
+  for (let i = 0, s = 1; i < lessons.length; i += STAGE, s++) {
+    const members = lessons.slice(i, i + STAGE); members.forEach(u => { u.stage = s; units.push(u); });
+    units.push({ id: `${l.toLowerCase()}-cp${String(s).padStart(2, '0')}`, cp: true, lvl: l, tr: 'jlpt', stage: s, members, t: `Checkpoint ${s}`, s: `Review lessons ${members[0].n}–${members[members.length - 1].n}. Score ${CP_PASS}% to clear it.` });
   }
-  AUTO[l] = { sig, units }; return units;
+  if (lessons.length) units.push({ id: `${l.toLowerCase()}-exam`, exam: true, lvl: l, tr: 'jlpt', t: `${l} mock exam`, s: `A full JLPT-style ${l} exam. Aim for 80% or more before the real thing.` });
+  PLAN[l] = { sig, units, stats: { words: words.length, kanji: kan.length, grammar: gram.length, lessons: lessons.length } };
+  return units;
 }
-const trackUnits = tr => tr === 'travel' ? PATH_TRAVEL.map((u, i) => Object.assign(u, { lvl: 'N5', n: i + 1, tr: 'travel' }))
-  : [...PATH_N5.map((u, i) => Object.assign(u, { lvl: 'N5', n: i + 1, tr: 'jlpt' })), ...LV.slice(1).flatMap(autoUnits).map(u => Object.assign(u, { tr: 'jlpt' }))];
+function travelUnits() {
+  const seen = new Set();
+  return PATH_TRAVEL.map((u, i) => {
+    Object.assign(u, { lvl: 'N5', n: i + 1, tr: 'travel', g: [] });
+    u.items = u.w.map(([w, r, m]) => pathWord(w, r, m, 'N5'));
+    u.kanji = [...new Set(u.items.flatMap(x => hanOf(x.w)))].filter(c => KMAP[c] && !seen.has(c)).slice(0, 5).map(c => KMAP[c]);
+    u.kanji.forEach(k => seen.add(k.k));
+    return u;
+  });
+}
+const trackUnits = tr => tr === 'travel' ? travelUnits() : LV.flatMap(planUnits);
 const unitById = id => trackUnits(id.startsWith('tr-') ? 'travel' : 'jlpt').find(u => u.id === id);
 function unitItems(u) {
-  const words = u.auto ? u.items : u.w.map(([w, r, m]) => pathWord(w, r, m, u.lvl));
-  // kanji: new ones from this unit's words that weren't taught in an earlier unit of the same track
-  const seen = new Set();
-  for (const p of trackUnits(u.tr)) { if (p === u) break; (p.auto ? p.items.map(x => x.w) : p.w.map(x => x[0])).forEach(w => hanOf(w).forEach(c => seen.add(c))); }
-  const kanji = [...new Set(words.flatMap(x => hanOf(x.w)))].filter(c => KMAP[c] && !seen.has(c)).slice(0, 5).map(c => KMAP[c]);
-  return { words, kanji };
+  if (u.cp) return { words: u.members.flatMap(m => m.items), kanji: u.members.flatMap(m => m.kanji || []) };
+  return { words: (u.items && u.items.length ? u.items : u.review) || [], kanji: u.kanji || [] };
 }
-const unitLabel = u => u.tr === 'travel' ? `Travel ${u.n}` : `${u.lvl} · Unit ${u.n}`;
+const unitLabel = u => u.tr === 'travel' ? `Travel ${u.n}` : u.cp ? `${u.lvl} · Checkpoint ${u.stage}` : u.exam ? `${u.lvl} · Mock exam` : `${u.lvl} · Lesson ${u.n}`;
+const bestExam = l => store.get('exams', []).filter(h => h.l === l && h.max).reduce((b, h) => Math.max(b, Math.round(h.total / h.max * 100)), -1);
+const unitDone = u => u.exam ? bestExam(u.lvl) >= 80 : u.cp ? !!pathSt.done[u.id] && pathSt.done[u.id].sc >= CP_PASS : !!pathSt.done[u.id];
 function nextUnit(tr) {
   const us = trackUnits(tr), start = tr === 'jlpt' && pathSt.place && pathSt.place.unit ? Math.max(0, us.findIndex(u => u.id === pathSt.place.unit)) : 0;
-  return us.slice(start).find(u => !pathSt.done[u.id]) || us.find(u => !pathSt.done[u.id]) || us[us.length - 1];
+  return us.slice(start).find(u => !unitDone(u)) || us.find(u => !unitDone(u)) || us[us.length - 1];
 }
 const loadPathData = () => DATA.mode === 'full' ? Promise.all([loadAllVocab(), loadGrammar(LV)]).catch(() => {}) : Promise.resolve();
+/** how much of a level the finished lessons have taught */
+function levelCoverage(l) {
+  planUnits(l); const P = PLAN[l]; if (!P) return null;
+  const done = P.units.filter(u => !u.cp && !u.exam && pathSt.done[u.id]);
+  const w = new Set(done.flatMap(u => u.items.filter(x => x.lvl === l).map(x => x.id))).size;
+  const k = new Set(done.flatMap(u => u.kan)).size;
+  const g = done.reduce((a, u) => a + (u.core ? (N5_GK[u.id] ? 1 : 0) : u.g.length), 0);
+  return { w, k, g, ...P.stats, lessonsDone: done.length };
+}
 
 /* ---------- Path view ---------- */
+const LEVEL_NAME = { N5: 'Foundations', N4: 'Everyday Japanese', N3: 'Bridging to real Japanese', N2: 'Newspapers and work', N1: 'Fluent reading' };
 function vPath() {
   const tr = S.ptab || 'jlpt', us = trackUnits(tr), cur = nextUnit(tr);
-  const done = us.filter(u => pathSt.done[u.id]).length;
   const pl = pathSt.place;
   const placeCard = tr !== 'jlpt' ? '' : pl
     ? `<div class="card pcheck done"><div><b>Placement: start at ${esc(pl.label)}</b><span>${esc(pl.note || '')}</span></div><button class="btn line sm" onclick="App.placeStart()">Retake</button></div>`
-    : `<div class="card pcheck"><div><b>Not sure where to start?</b><span>A 5-minute check of your kana, words, kanji and grammar finds the right unit for you.</span></div><button class="btn sm" onclick="App.placeStart()">Take the check</button></div>`;
-  const row = u => { const d = pathSt.done[u.id], isCur = u === cur;
-    return `<button class="unit${d ? ' done' : ''}${isCur ? ' cur' : ''}" onclick="App.lesson('${u.id}')" style="--lc:${lcVar(u.lvl)}"><span class="un">${d ? '✓' : u.n}</span><span class="ut"><b class="jp-mix">${esc(u.t)}</b><span>${esc(u.s)}</span></span><span class="ugo">${isCur ? 'Start' : d ? `${d.sc}%` : ''}</span></button>`; };
+    : `<div class="card pcheck"><div><b>Not sure where to start?</b><span>A 10-minute JLPT-style check of your kana, words, kanji, grammar and reading finds the right lesson for you.</span></div><button class="btn sm" onclick="App.placeStart()">Take the check</button></div>`;
+  const row = u => {
+    const d = pathSt.done[u.id], ok = unitDone(u), isCur = u === cur;
+    const mark = u.exam ? '試' : u.cp ? (ok ? '✓' : '★') : ok ? '✓' : u.n;
+    const right = isCur ? 'Start' : u.exam ? (bestExam(u.lvl) >= 0 ? `Best ${bestExam(u.lvl)}%` : '') : d ? (gameOn() ? starHtml(game.stars[u.id] || starsFor(d.sc)) : `${d.sc}%`) : '';
+    return `<button class="unit${ok ? ' done' : ''}${isCur ? ' cur' : ''}${u.cp ? ' cp' : ''}${u.exam ? ' exam' : ''}" onclick="App.lesson('${u.id}')" style="--lc:${lcVar(u.lvl)}"><span class="un">${mark}</span><span class="ut"><b>${esc(u.t)}</b><span>${esc(u.s)}</span></span><span class="ugo">${right}</span></button>`;
+  };
   let body;
-  if (tr === 'travel') body = `<div class="ulist">${us.map(row).join('')}</div>`;
+  if (tr === 'travel') body = `<div class="ulist boxed">${us.map(row).join('')}</div>`;
   else body = LV.map(l => {
-    const lu = us.filter(u => u.lvl === l); const ld = lu.filter(u => pathSt.done[u.id]).length, open = lu.includes(cur) || (S.popen || {})[l];
-    const empty = !lu.length ? `<p class="note">${DATA.mode === 'full' ? 'Loading this level’s units…' : `${l} units are built from the full grammar and word data, which loads once the GitHub Action has run.`}</p>` : '';
-    return `<details class="plevel" style="--lc:${lcVar(l)}"${open ? ' open' : ''} ontoggle="(S.popen=S.popen||{})['${l}']=this.open"><summary><span class="tag lv">${l}</span><b>${l === 'N5' ? 'Foundations' : l === 'N4' ? 'Everyday Japanese' : l === 'N3' ? 'Bridging to real Japanese' : l === 'N2' ? 'Newspapers and work' : 'Fluent reading'}</b><span class="pl-n">${ld} / ${lu.length}</span></summary>${empty}<div class="ulist">${lu.map(row).join('')}</div></details>`;
+    const lu = us.filter(u => u.lvl === l), c = lu.length ? levelCoverage(l) : null, open = lu.includes(cur) || (S.popen || {})[l];
+    const empty = !lu.length ? `<p class="note">${DATA.mode === 'full' ? 'Loading this level…' : `${l} lessons are built from the full word, kanji and grammar data, which loads once the GitHub Action has run.`}</p>` : '';
+    const bar = (lab, a, b) => `<div class="cov"><span>${lab}</span><div class="pbar"><i style="width:${b ? a / b * 100 : 0}%"></i></div><b>${a} / ${b}</b></div>`;
+    const stages = [...new Set(lu.filter(u => u.stage).map(u => u.stage))];
+    return `<details class="plevel" style="--lc:${lcVar(l)}"${open ? ' open' : ''} ontoggle="(S.popen=S.popen||{})['${l}']=this.open"><summary><span class="tag lv">${l}</span><b>${LEVEL_NAME[l]}</b><span class="pl-n">${c ? `${c.lessonsDone} / ${c.lessons} lessons` : ''}</span></summary>${empty}
+      ${c ? `<div class="pl-plan"><p>Covers every ${l} word, kanji and grammar point: ${c.lessons} lessons in ${stages.length} stage${stages.length === 1 ? '' : 's'}, a checkpoint after each stage, then a full mock exam. About ${Math.round(c.lessons * 15 / 60)} hours at 15 minutes a lesson.</p>${bar('Words', c.w, c.words)}${bar('Kanji', c.k, c.kanji)}</div>` : ''}
+      ${stages.map(s => `<div class="stage-h">Stage ${s}</div><div class="ulist">${lu.filter(u => u.stage === s).map(row).join('')}</div>`).join('')}
+      ${lu.filter(u => u.exam).map(u => `<div class="ulist">${row(u)}</div>`).join('')}</details>`;
   }).join('');
-  return `<h1>Path</h1><p class="sub">Short lessons that teach one pattern, the words that go with it and their kanji, then let you read them together.</p>
+  return `<h1>Path</h1><p class="sub">Short lessons that teach one pattern, the words that go with it and their kanji, then let you read them together. Finish a level’s Path and you’re ready for that JLPT exam.</p>
   ${placeCard}
   <div class="seg ptabs"><button class="${tr === 'jlpt' ? 'on' : ''}" onclick="App.ptab('jlpt')">JLPT course</button><button class="${tr === 'travel' ? 'on' : ''}" onclick="App.ptab('travel')">Travel Japanese</button></div>
-  ${cur ? `<div class="card pnext" style="--lc:${lcVar(cur.lvl)}"><div class="pn-k">${pathSt.done[cur.id] ? 'Review' : done ? 'Up next' : 'Start here'} · ${esc(unitLabel(cur))}</div><div class="pn-t">${esc(cur.t)}</div><div class="pn-s">${esc(cur.s)}</div><button class="btn" onclick="App.lesson('${cur.id}')">${done ? 'Continue' : 'Start lesson'} · about 15 min</button></div>` : ''}
+  ${cur ? `<div class="card pnext" style="--lc:${lcVar(cur.lvl)}"><div class="pn-k">${unitDone(cur) ? 'Review' : 'Up next'} · ${esc(unitLabel(cur))}</div><div class="pn-t">${esc(cur.t)}</div><div class="pn-s">${esc(cur.s)}</div><button class="btn" onclick="App.lesson('${cur.id}')">${cur.exam ? 'Start the mock exam' : cur.cp ? 'Start the checkpoint' : 'Start lesson · about 15 min'}</button></div>` : ''}
   ${body}`;
 }
 
-/* ---------- lesson player ---------- */
 const STEP_NAME = { pat: 'Pattern', words: 'Words', kanji: 'Kanji', read: 'Read', talk: 'Talk', quiz: 'Practice', done: 'Done' };
 /* compact answer card after a quiz question: how to say it, what it means, a word to hang it on */
 function answerCard(x) {
@@ -3581,20 +3701,58 @@ function answerCard(x) {
 }
 function startLesson(id) {
   const u = unitById(id); if (!u) return;
+  if (u.exam) { S.examLv = u.lvl; S.view = 'exam'; render(); return startExam({ type: 'full' }); }
   const { words, kanji } = unitItems(u);
-  const steps = ['pat', 'words', ...(kanji.length ? ['kanji'] : []), 'read', ...(u.tk && u.tk.length ? ['talk'] : []), 'quiz', 'done'];
-  S.lesson = { u, words, kanji, steps, i: 0, showEn: {}, quiz: null };
+  const steps = u.cp ? ['quiz', 'done'] : [...(u.core || u.g.length ? ['pat'] : []), ...(words.length ? ['words'] : []), ...(kanji.length ? ['kanji'] : []), ...(lessonLines(u).length ? ['read'] : []), ...(u.tk && u.tk.length ? ['talk'] : []), 'quiz', 'done'];
+  S.lesson = { u, words, kanji, steps, i: 0, showEn: {}, quiz: null, xp0: game.xp };
   S.view = 'lesson'; render(); window.scrollTo(0, 0);
 }
+/** reading lines: the hand-written text, or the grammar's examples plus real example sentences for the lesson's words (with native audio where there is a recording) */
+function lessonLines(u) {
+  if (u.rd) return u.rd.map(([j, e]) => ({ j, e }));
+  const out = [];
+  u.g.forEach(g => g.ex.slice(0, 2).forEach(e => out.push({ j: e.j, e: e.e || '' })));
+  for (const x of u.items) { if (out.length >= 7) break; const e = (x.ex || []).find(e => e.e && plain(e.j).length <= 40); if (e) out.push({ j: e.j, e: e.e, au: e.au ? 's' + e.au : null, w: x }); }
+  return out;
+}
+/** JLPT-style question from the exam generators, in the lesson's question format */
+function examStyleQ(key, x, l, pool) {
+  const g = EXAM_GEN[key]; if (!g) return null;
+  const q = g(x, l, pool); if (!q) return null;
+  const sec = EXAM_SECTIONS.find(s => s.key === key);
+  return { item: q.item, au: (q.item && q.item.au) || null, hint: sec ? sec.instrEn : '', grid: key !== 'ik' && key !== 'li', meta: sec ? `<span class="tag">${sec.jp}</span>` : '',
+    prompt: `${sec ? `<div class="exinstr jp">${sec.instr}</div>` : ''}${q.prompt}`, opts: q.opts.map((h, i) => ({ html: h, ok: i === q.ans })), sk: key };
+}
+/** reading comprehension: which English matches this sentence? */
+function readQ(x, pool) {
+  const e = (x.ex || []).find(e => e.e && plain(e.j).length >= 8 && plain(e.j).length <= 45); if (!e) return null;
+  const others = shuffle(pool.filter(y => y !== x).map(y => (y.ex || []).find(f => f.e && f.e !== e.e)).filter(Boolean)).slice(0, 3);
+  if (others.length < 3) return null;
+  const opts = shuffle([{ html: esc(e.e), ok: true }, ...others.map(f => ({ html: esc(f.e), ok: false }))]);
+  return { item: x, hint: 'What does this sentence mean?', grid: false, meta: '<span class="tag">読解</span>', prompt: `<div class="psent jp">${ruby(exMarkup(e), true)}</div>`, opts, sk: 'r', au: e.au ? 's' + e.au : null };
+}
 function lessonQuiz(L) {
-  const u = L.u, qs = [];
-  // a couple of words from earlier units in this track, so they keep coming back
-  const earlier = trackUnits(u.tr).filter(p => p !== u && pathSt.done[p.id]).flatMap(p => unitItems(p).words);
+  const u = L.u, qs = [], add = q => q && qs.push(q);
+  const pool = (DATA.vocab[u.lvl] || V).filter(x => x.w), words = L.words;
+  if (u.cp) {
+    // checkpoint: everything from the stage, JLPT-style where possible
+    shuffle(words).slice(0, 6).forEach((x, i) => add(makeQ('vocab', x, i % 2 ? 'en2jp' : 'jp2en')));
+    shuffle(words).slice(0, 4).forEach(x => add(examStyleQ('kr', x, u.lvl, pool) || makeQ('vocab', x, 'jp2en')));
+    shuffle(words).slice(0, 2).forEach(x => add(examStyleQ('bm', x, u.lvl, pool)));
+    shuffle(L.kanji).slice(0, 4).forEach(k => add(makeQ('kanji', k, 'k2m')));
+    const gs = u.members.flatMap(m => m.g || []); shuffle(gs).slice(0, 3).forEach(g => add(makeGrammarQ(g, 'gfill')));
+    u.members.filter(m => m.cz).forEach(m => add(clozeQ(pick(m.cz))));
+    shuffle(words).slice(0, 3).forEach(x => add(readQ(x, pool)));
+    return { qs: shuffle(qs).slice(0, 22), i: 0, answered: false, chosen: -1, ok: 0, n: 0, missed: [] };
+  }
+  // a couple of words from earlier lessons in this track, so they keep coming back
+  const earlier = trackUnits(u.tr).filter(p => p !== u && !p.cp && !p.exam && pathSt.done[p.id]).flatMap(p => unitItems(p).words);
   shuffle(earlier.filter(x => !progress[x.id] || isDue(x.id))).slice(0, 2).forEach(x => { const q = makeQ('vocab', x, 'jp2en'); q.review = true; qs.push(q); });
-  if (u.auto) u.g.forEach(g => qs.push(makeGrammarQ(g, 'gfill')));
-  else u.cz.forEach(c => qs.push(clozeQ(c)));
-  shuffle(L.words).slice(0, 5).forEach((x, i) => qs.push(makeQ('vocab', x, i % 2 ? 'en2jp' : 'jp2en')));
-  L.kanji.slice(0, 2).forEach(k => qs.push(makeQ('kanji', k, 'k2m')));
+  if (u.cz) u.cz.forEach(c => add(clozeQ(c)));
+  (u.g || []).forEach(g => add(makeGrammarQ(g, 'gfill')));
+  shuffle(words).slice(0, 5).forEach((x, i) => add(makeQ('vocab', x, i % 2 ? 'en2jp' : 'jp2en')));
+  add(shuffle(words).map(x => examStyleQ('kr', x, u.lvl, pool)).find(Boolean));
+  L.kanji.slice(0, 2).forEach(k => add(makeQ('kanji', k, 'k2m')));
   return { qs, i: 0, answered: false, chosen: -1, ok: 0, n: 0, missed: [] };
 }
 function clozeQ(c) {
@@ -3611,24 +3769,24 @@ function vLesson() {
   const head = `<div class="qtop"><button class="ghost" onclick="App.lessonClose()">✕ Close</button><span class="qtitle">${esc(unitLabel(u))} · ${STEP_NAME[step]}</span><span style="width:34px"></span></div><div class="track lsteps" aria-hidden="true">${dots}</div>`;
   let body = '', next = 'Next';
   if (step === 'pat') {
-    const pats = u.auto ? u.g : null;
-    body = u.auto
-      ? `<div class="ls-h"><div class="ls-k">This lesson</div><h2>${esc(u.t)}</h2></div>${pats.map(g => `<div class="card lpat"><div class="lp-t">${gTitleHtml(g.t)}</div><div class="lp-m">${esc(g.m)}</div>${g.fm ? `<div class="gform">${gFormHtml(g.fm)}</div>` : ''}${g.ex.slice(0, 2).map(e => `<div class="lex">${jpLine(e.j)}<span class="en">${esc(e.e || '')}</span></div>`).join('')}</div>`).join('')}`
-      : `<div class="ls-h"><div class="ls-k">${esc(u.t)}</div><h2>${esc(u.s)}</h2></div>
+    const pats = u.core ? null : u.g;
+    body = !u.core
+      ? `<div class="ls-h"><div class="ls-k">This lesson</div><h2>${esc(u.t)}</h2><p class="hook">Read what it means, look at how it’s built, then find the highlighted part in each example. Spotting it in real sentences is how it sticks.</p></div>${pats.map(g => `<div class="card lpat"><div class="lp-t">${gTitleHtml(g.t)}</div><div class="lp-m">${esc(g.m)}</div>${g.fm ? `<div class="gform">${gFormHtml(g.fm)}</div>` : ''}${g.ex.slice(0, 2).map(e => exHtml(e, g)).join('')}</div>`).join('')}`
+      : `<div class="ls-h"><div class="ls-k">${esc(u.t)}</div><h2>${esc(u.s)}</h2>${SIMPLE[u.id] ? `<p class="hook">${esc(SIMPLE[u.id].hook)}</p>` : ''}</div>
         <div class="card lpat"><div class="lp-t jp">${ruby(u.pat, true)}</div><div class="lp-m">${esc(u.pm)}</div></div>
-        <ul class="lpts">${u.pts.map(p => `<li>${ruby(p, true)}</li>`).join('')}</ul>
+        <ul class="lpts">${((SIMPLE[u.id] || {}).pts || u.pts).map(p => `<li>${ruby(p, true)}</li>`).join('')}</ul>
         <div class="label">Examples</div>${u.ex.map(([j, e]) => `<div class="lex ex"><div class="jp">${ruby(j, true)}</div><span class="en">${esc(e)}</span></div>`).join('')}`;
   } else if (step === 'words') {
-    body = `<div class="ls-h"><div class="ls-k">New words</div><h2>${L.words.length} words for this lesson</h2><p class="note">Say each one out loud. Tap a card for the full entry.</p></div>
+    body = `<div class="ls-h"><div class="ls-k">${u.items && !u.items.length ? 'Words in this lesson’s examples' : 'New words'}</div><h2>${L.words.length} words for this lesson</h2><p class="note">Say each one out loud. Tap a card for the full entry.</p></div>
       <div class="lwords">${L.words.map(x => `<button class="lword" data-open="${esc(x.id)}">${x.pic && settings.pics ? `<span class="lw-pic">${picHtml(x.pic, 'md')}</span>` : '<span class="lw-pic none"></span>'}<span class="lw-w jp">${ruby(x.f || x.w, true)}</span><span class="lw-r">${esc(toRomaji(x.r))}</span><span class="lw-m">${esc(x.m)}</span>${sayBtn(x.au)}</button>`).join('')}</div>`;
   } else if (step === 'kanji') {
     body = `<div class="ls-h"><div class="ls-k">Kanji in these words</div><h2>${L.kanji.map(k => k.k).join(' ')}</h2><p class="note">Learn each kanji through a word you already know. Tap one for its story, parts and stroke order.</p></div>
       <div class="lkanji">${L.kanji.map(k => { const w = L.words.find(x => x.w.includes(k.k));
         return `<button class="lk" data-open="k:${esc(k.k)}"><span class="lk-k jp">${k.k}</span><span class="lk-b"><b>${esc(k.mean.slice(0, 2).join(', '))}</b><span class="jp">${esc([...k.on.slice(0, 1).map(kataOf), ...k.kun.slice(0, 1)].join('・'))}</span>${k.og ? (k.og.t === 'S' ? (k.og.sem || k.og.pho ? `<span class="lk-o">${k.og.sem ? `${esc(k.og.sem)} gives the meaning` : ''}${k.og.sem && k.og.pho ? ', ' : ''}${k.og.pho ? `${esc(k.og.pho)} gives the sound` : ''}</span>` : '') : k.og.h ? `<span class="lk-o">${esc(k.og.h)}</span>` : '') : ''}${w ? `<span class="lk-w">in <span class="jp">${esc(w.w)}</span> ${esc(w.m.split(/[;,]/)[0])}</span>` : ''}</span></button>`; }).join('')}</div>`;
   } else if (step === 'read') {
-    const lines = u.auto ? u.g.flatMap(g => g.ex.slice(0, 2).map(e => [e.j, e.e || ''])) : u.rd;
+    const lines = lessonLines(u).map(x => [x.j, x.e, x.au]);
     body = `<div class="ls-h"><div class="ls-k">Read</div><h2>Read it out loud</h2><p class="note">Try each line first. Tap “English” only if you need it, and tap any kanji to look it up.</p></div>
-      <div class="lread">${lines.map(([j, e], i) => `<div class="lline ex"><div class="jp">${u.auto ? jpLine(j) : ruby(j, true)}</div>${e ? `<button class="ghost len${L.showEn[i] ? ' on' : ''}" onclick="App.lessonEn(${i})">${L.showEn[i] ? esc(e) : 'English'}</button>` : ''}</div>`).join('')}</div>`;
+      <div class="lread">${lines.map(([j, e, au], i) => `<div class="lline ex"><div class="jp">${u.core || u.rd ? ruby(j, true) : jpLine(j)}${au ? sayBtn(au) : ''}</div>${e ? `<button class="ghost len${L.showEn[i] ? ' on' : ''}" onclick="App.lessonEn(${i})">${L.showEn[i] ? esc(e) : 'English'}</button>` : ''}</div>`).join('')}</div>`;
   } else if (step === 'talk') {
     body = `<div class="ls-h"><div class="ls-k">Conversation</div><h2>Hear it in a conversation</h2><p class="note">Read both parts. Then cover one side and say it yourself.</p></div>
       <div class="ltalk">${u.tk.map(([who, j, e], i) => { const me = who === 'B' || who === 'You'; return `<div class="bub${me ? ' me' : ''}"><span class="who">${esc(who)}</span><div class="ex"><div class="jp">${ruby(j, true)}</div></div><button class="ghost len${L.showEn['t' + i] ? ' on' : ''}" onclick="App.lessonEn('t${i}')">${L.showEn['t' + i] ? esc(e) : 'English'}</button></div>`; }).join('')}</div>`;
@@ -3641,16 +3799,16 @@ function vLesson() {
     body = `<div class="ls-h"><div class="ls-k">Practice · ${Q.i + 1} of ${Q.qs.length}${q.review ? ' · from an earlier unit' : ''}</div></div>
       <div class="card prompt">${q.prompt}${q.meta ? `<div class="pmeta">${q.meta}</div>` : ''}${Q.answered ? sayBtn(q.au, 'say') : ''}</div>
       <div class="hint">${q.hint || ''}</div><div class="choices ${q.grid ? 'grid2' : ''}">${opts}</div>
-      ${Q.answered ? answerCard(q.item) : ''}${Q.answered ? `<div class="feedback ${ok ? 'good' : 'bad'}" role="status"><div class="fv">${ok ? pick(['正解! Correct', 'いいね! Nice', 'すごい! Great']) : 'おしい! Not quite'}<small>${ok ? '' : 'Answer: '}${ok ? '' : right}</small></div><button class="btn" onclick="App.lessonQNext()">${Q.i + 1 < Q.qs.length ? 'Next' : 'Finish'}</button></div>` : ''}`;
+      ${Q.answered ? answerCard(q.item) : ''}${Q.answered ? `<div class="feedback ${ok ? 'good' : 'bad'}" role="status"><div class="fv">${ok ? pick(['正解! Correct', 'いいね! Nice', 'すごい! Great']) + (gameOn() && game.combo >= 2 ? ` · ×${game.combo} combo` : '') : 'おしい! Not quite'}<small>${ok ? '' : 'Answer: '}${ok ? '' : right}</small></div><button class="btn" onclick="App.lessonQNext()">${Q.i + 1 < Q.qs.length ? 'Next' : 'Finish'}</button></div>` : ''}`;
     return `${head}<div class="lesson">${body}</div>`;
   } else if (step === 'done') {
     const Q = L.quiz || { ok: 0, n: 0, missed: [] }, pct = Q.n ? Math.round(Q.ok / Q.n * 100) : 100;
     if (!L.saved) finishLesson(L, pct);
     const nu = nextUnit(u.tr);
-    body = `<div class="card score"><div class="arrive">終点</div><div class="muted">${esc(unitLabel(u))} complete</div><div class="big">${pct}%</div><div>${Q.ok} of ${Q.n} right in practice</div></div>
-      <p class="note" style="text-align:center">${L.words.length} words${L.kanji.length ? ` and ${L.kanji.length} kanji` : ''} from this lesson are now in your reviews. They’ll come back on Home when they’re due.</p>
+    body = `<div class="card score"><div class="arrive">${u.cp ? (pct >= CP_PASS ? '合格' : 'もう少し') : '終点'}</div><div class="muted">${esc(unitLabel(u))} ${u.cp ? (pct >= CP_PASS ? 'cleared' : 'not cleared yet') : 'complete'}</div>${gameOn() ? `<div class="big stars-big">${starHtml(L.stars || starsFor(pct))}</div><div class="xpline">+${L.xp || 0} XP · ${esc(beltOf(game.xp).name)}</div>` : ''}<div class="big">${pct}%</div><div>${Q.ok} of ${Q.n} right${u.cp ? ` · ${CP_PASS}% clears it` : ' in practice'}</div></div>
+      <p class="note" style="text-align:center">${u.cp ? (pct >= CP_PASS ? 'Stage cleared. Everything in it stays in your reviews.' : 'Look over the items below, do your reviews, then try the checkpoint again. Missed items are already back in your reviews.') : `${L.words.length} words${L.kanji.length ? ` and ${L.kanji.length} kanji` : ''} from this lesson are now in your reviews. They’ll come back on Home when they’re due.`}</p>
       ${Q.missed.length ? `<div class="label">Worth another look</div><div class="list">${[...new Set(Q.missed)].map(x => x.kind === 'kanji' ? `<button class="row" data-open="${esc(x.id)}"><span class="rw jp" style="font-size:24px">${x.k}</span><span class="rm">${esc(x.m)}</span></button>` : vRow(x)).join('')}</div>` : ''}
-      ${nu && nu !== u && !pathSt.done[nu.id] ? `<button class="btn" onclick="App.lesson('${nu.id}')">Next: ${esc(nu.t)}</button>` : ''}
+      ${u.cp && pct < CP_PASS ? `<button class="btn" onclick="App.lesson('${u.id}')">Try the checkpoint again</button>` : ''}${nu && nu !== u && !unitDone(nu) ? `<button class="btn${u.cp && pct < CP_PASS ? ' line' : ''}" onclick="App.lesson('${nu.id}')">Next: ${esc(nu.t)}</button>` : ''}
       <button class="btn line" onclick="App.go('path')">Back to Path</button>`;
     return `${head}<div class="lesson">${body}</div>`;
   }
@@ -3659,34 +3817,46 @@ function vLesson() {
 }
 function finishLesson(L, pct) {
   L.saved = true;
-  for (const x of [...L.words, ...L.kanji]) if (!progress[x.id]) schedule(x, 2);   // new words and kanji join the review schedule
+  schedule.silent = true; for (const x of [...L.words, ...L.kanji]) if (!progress[x.id]) schedule(x, 2); schedule.silent = false;   // new words and kanji join the review schedule
   const prev = pathSt.done[L.u.id];
-  pathSt.done[L.u.id] = { d: today(), sc: Math.max(pct, prev ? prev.sc : 0) }; savePath(); dayFlag('lesson');
+  pathSt.done[L.u.id] = { d: today(), sc: Math.max(pct, prev ? prev.sc : 0) }; savePath(); if (!L.u.cp || pct >= CP_PASS) dayFlag('lesson');
+  L.stars = gameLesson(L.u, pct); L.xp = game.xp - (L.xp0 ?? game.xp);
+  if (gameOn()) setTimeout(() => celebrate(L.u.cp ? (pct >= CP_PASS ? 'Stage cleared!' : 'Almost there') : ['よくできました! Well done', 'すごい! Great job', 'やった! Lesson complete'][L.stars - 1] || 'Lesson complete', `${L.stars} ★ · +${L.xp} XP`), 150);
 }
 
-/* ---------- placement check ---------- */
+/* ---------- placement check ----------
+   JLPT-style questions from the mock-exam generators (kanji reading, writing, word in context,
+   paraphrase, grammar form, sentence order), reading comprehension and, with the full data, listening.
+   About 13 per level, from N5 up; it stops at the first level under 75%. */
+const PLACE_COUNTS = { kr: 2, hy: 1, bm: 2, ik: 1, gf: 3, ord: 1 }, PLACE_PASS = 0.75;
+const PLACE_SKILL = { kr: 'v', hy: 'v', bm: 'v', ik: 'v', gf: 'g', ord: 'g', li: 'l', r: 'r' };
 function placeQs(l) {
-  const qs = [];
-  const ws = shuffle((DATA.vocab[l] || []).filter(x => x.m).sort((a, b) => b.freq - a.freq).slice(0, 60)).slice(0, 3);   // common words of the level
-  const ks = shuffle(K.filter(k => k.lvl === l)).slice(0, 3);
-  const gs = shuffle((DATA.grammar[l] || []).filter(g => g.m)).slice(0, 3);
-  ws.forEach(x => qs.push(Object.assign(makeQ('vocab', x, 'jp2en'), { sk: 'v' })));
-  ks.forEach(k => qs.push(Object.assign(makeQ('kanji', k, 'k2m'), { sk: 'k' })));
-  gs.forEach(g => qs.push(Object.assign(makeGrammarQ(g, 'gfill'), { sk: 'g' })));
+  const words = (DATA.vocab[l] || []).filter(x => x.w && x.m), gram = G.filter(g => g.lvl === l), qs = [], used = new Set();
+  const common = words.slice().sort((a, b) => b.freq - a.freq).slice(0, 150);
+  for (const [key, n] of Object.entries(PLACE_COUNTS)) {
+    let k = n;
+    const cands = shuffle(key === 'gf' || key === 'ord' ? (key === 'ord' ? gram.concat(common) : gram) : common);
+    const pool = key === 'gf' ? (gram.length >= 6 ? gram : G) : words;
+    for (const it of cands) { if (k <= 0) break; if (used.has(key + it.id)) continue; const q = examStyleQ(key, it, l, pool); if (q) { q.sk = key; qs.push(q); used.add(key + it.id); k--; } }
+  }
+  for (const x of shuffle(common)) { if (qs.filter(q => q.sk === 'r').length >= 2) break; const q = readQ(x, common); if (q) qs.push(q); }
+  if (DATA.mode === 'full') for (const x of shuffle(common)) { const q = examStyleQ('li', x, l, words); if (q) { q.sk = 'li'; qs.push(q); break; } }
+  // kanji: a word written in kanji → its reading, and a kanji → its meaning
+  shuffle(K.filter(k => k.lvl === l)).slice(0, 1).forEach(k => { const q = makeQ('kanji', k, 'k2m'); q.sk = 'kj'; qs.push(q); });
   return shuffle(qs);
 }
 function vPlace() {
   const P = S.place; if (!P) return vPath();
   const head = `<div class="qtop"><button class="ghost" onclick="App.placeQuit()">✕ Close</button><span class="qtitle">Placement check${P.stage === 'run' ? ` · ${P.lv}` : ''}</span><span style="width:34px"></span></div>`;
-  if (P.stage === 'intro') return `${head}<div class="lesson"><div class="ls-h"><div class="ls-k">About 5 minutes</div><h2>Let’s find where you should start</h2>
-    <p class="note">You’ll answer a few questions on words, kanji and grammar, starting easy. It stops when a level gets hard, so don’t worry about not knowing things. Guessing is fine; “I don’t know” is better than a lucky guess.</p></div>
+  if (P.stage === 'intro') return `${head}<div class="lesson"><div class="ls-h"><div class="ls-k">About 10 minutes</div><h2>Let’s find where you should start</h2>
+    <p class="note">These are JLPT-style questions: readings, writing, words in context, grammar, sentence order and short reading, plus listening once the full data is built. It starts at N5 and moves up a level each time you score 75% or more, so it gets harder as you go. Don’t guess: “I don’t know” gives a truer result.</p></div>
     <div class="label">Do you know hiragana and katakana?</div>
-    <div class="choices"><button class="choice" onclick="App.placeKana(true)"><span>Yes, check me quickly</span></button><button class="choice" onclick="App.placeKana(false)"><span>Not yet, or only some</span></button></div></div>`;
-  if (P.stage === 'loading') return `${head}<div class="lesson"><p class="note">Getting questions ready…</p></div>`;
+    <div class="choices"><button class="choice" onclick="App.placeKana(true)"><span>Yes, check me</span></button><button class="choice" onclick="App.placeKana(false)"><span>Not yet, or only some</span></button></div></div>`;
+  if (P.stage === 'loading') return `${head}<div class="lesson"><p class="note">Getting ${esc(P.lv)} questions ready…</p></div>`;
   if (P.stage === 'done') {
     const r = P.result;
     return `${head}<div class="lesson"><div class="card score"><div class="arrive">Start here</div><div class="big" style="font-size:34px">${esc(r.label)}</div><div>${esc(r.note)}</div></div>
-      ${r.rows.length ? `<div class="label">How you did</div><div class="card placerows">${r.rows.map(x => `<div class="lnrow" style="--lc:${lcVar(x.l)}"><span class="tag lv">${x.l}</span><div class="pbar"><i style="width:${x.pct}%"></i></div><span>${x.pct}%</span></div><div class="psk">Words ${x.v} · Kanji ${x.k} · Grammar ${x.g}</div>`).join('')}</div>` : ''}
+      ${r.rows.length ? `<div class="label">How you did</div><div class="card placerows">${r.rows.map(x => `<div class="lnrow" style="--lc:${lcVar(x.l)}"><span class="tag lv">${x.l}</span><div class="pbar"><i style="width:${x.pct}%"></i></div><span>${x.pct}%</span></div><div class="psk">${x.parts}</div>`).join('')}</div>` : ''}
       ${r.tip ? `<p class="note">${esc(r.tip)}</p>` : ''}
       ${r.kana ? `<button class="btn" onclick="App.go('kana')">Learn kana first</button>` : ''}
       <button class="btn${r.kana ? ' line' : ''}" onclick="App.lesson('${r.unit}')">Start ${esc(r.label)}</button>
@@ -3695,7 +3865,7 @@ function vPlace() {
   const q = P.qs[P.i]; if (!q) return `${head}<div class="lesson"><p class="note">…</p></div>`;
   const opts = q.opts.map((o, i) => { let c = 'choice'; if (P.answered) c += (o.ok ? ' ok' : i === P.chosen ? ' bad' : ' dim'); return `<button class="${c}" onclick="App.placeAns(${i})"${P.answered ? ' disabled' : ''}><span class="n">${i + 1}</span><span>${o.html}</span></button>`; }).join('');
   return `${head}<div class="track lsteps" aria-hidden="true">${P.qs.map((_, i) => `<i class="${i < P.i ? 'ok' : i === P.i ? 'cur' : ''}"></i>`).join('')}</div>
-    <div class="lesson"><div class="card prompt">${q.prompt}</div><div class="hint">${q.hint || ''}</div>
+    <div class="lesson"><div class="card prompt">${q.prompt}${q.meta ? `<div class="pmeta">${q.meta}</div>` : ''}${q.sk === 'li' ? sayBtn(q.au, 'say') : ''}</div><div class="hint">${q.hint || ''}</div>
     <div class="choices ${q.grid ? 'grid2' : ''}">${opts}<button class="choice idk${P.answered && P.chosen === -1 ? ' bad' : ''}" onclick="App.placeAns(-1)"${P.answered ? ' disabled' : ''}><span>I don’t know</span></button></div>
     ${P.answered ? `${answerCard(q.item)}<div class="lnav"><span></span><button class="btn" onclick="App.placeNext()">Next ›</button></div>` : ''}</div>`;
 }
@@ -3704,31 +3874,197 @@ async function placeLevel() {
   P.stage = 'loading'; render();
   if (DATA.mode === 'full') { try { await Promise.all([load('vocab', l), load('grammar', l)]); } catch (e) {} }
   P.qs = placeQs(l); P.i = 0; P.answered = false; P.chosen = -1; P.stage = 'run';
-  if (P.qs.length < 4) return placeFinish();   // not enough data for this level (starter set): stop here
+  if (P.qs.length < 5) return placeFinish();   // not enough data for this level (starter set): stop here
   render();
 }
 function placeFinish() {
-  const P = S.place, rows = Object.entries(P.tally).map(([l, t]) => ({ l, pct: t.n ? Math.round(t.ok / t.n * 100) : 0, v: `${t.v[0]}/${t.v[1]}`, k: `${t.k[0]}/${t.k[1]}`, g: `${t.g[0]}/${t.g[1]}` }));
+  const P = S.place, lab = { v: 'Words', kj: 'Kanji', g: 'Grammar', r: 'Reading', l: 'Listening' };
+  const rows = Object.entries(P.tally).map(([l, t]) => ({ l, pct: t.n ? Math.round(t.ok / t.n * 100) : 0, t,
+    parts: Object.entries(lab).filter(([k]) => t[k] && t[k][1]).map(([k, n]) => `${n} ${t[k][0]}/${t[k][1]}`).join(' · ') }));
   const last = rows[rows.length - 1], us = trackUnits('jlpt');
   let unit, label, note, tip = '';
-  const failed = last && last.pct < 70 ? last.l : null;
-  if (P.kanaWeak) { unit = PATH_N5[0].id; label = 'N5 · Unit 1'; note = 'Your kana needs a little more work first. Learn it in the Kana section, then start Unit 1.'; }
-  else if (!failed && last) {
-    const li = LV.indexOf(last.l), nl = LV[li + 1];
-    const first = nl && us.find(u => u.lvl === nl);
-    if (first) { unit = first.id; label = `${nl} · Unit 1`; note = `You passed ${last.l}. Start at the beginning of ${nl}.`; }
-    else { unit = us[0].id; label = 'N5 · Unit 1'; note = DATA.mode === 'full' ? 'You passed every level we tested. Pick any unit you like.' : 'The higher levels need the full data. Start the Path or explore the Library meanwhile.'; }
-  } else if (failed === 'N5' || !last) {
-    const pct = last ? last.pct : 0; const u = pct >= 50 ? PATH_N5[8] : PATH_N5[0];
-    unit = u.id; label = `N5 · Unit ${PATH_N5.indexOf(u) + 1}`;
-    note = pct >= 50 ? 'You know the basics. Skip the first lessons and start where verbs come in.' : 'Start from the first unit. The early lessons go quickly if you already know some of it.';
-  } else { const u = us.find(x => x.lvl === failed) || us[0]; unit = u.id; label = `${failed} · Unit 1`; note = `You’re solid up to ${LV[LV.indexOf(failed) - 1]}. ${failed} is where you start.`; }
-  const t = last && P.tally[last.l];
-  if (t && t.k[1] && t.v[1] && t.k[0] / t.k[1] < t.v[0] / t.v[1] - 0.3) tip = 'Your kanji is behind your vocabulary. Take the Kanji step in each lesson slowly, and open each kanji’s story.';
-  else if (t && t.g[1] && t.v[1] && t.g[0] / t.g[1] < t.v[0] / t.v[1] - 0.3) tip = 'Grammar is your weak spot. Read the Pattern step carefully and do the Read step out loud.';
+  const startIn = (l, pct) => {   // where in a level to start: further in the better you did
+    const ls = us.filter(u => u.lvl === l && !u.cp && !u.exam); if (!ls.length) return null;
+    const f = Math.max(0, Math.min(0.6, (pct - 40) / 60)), u = ls[Math.floor(f * ls.length)];
+    return { u, label: `${l} · Lesson ${u.n}` };
+  };
+  if (P.kanaWeak) { unit = us[0].id; label = 'N5 · Lesson 1'; note = 'Your kana needs a little more work first. Learn it in the Kana section, then start Lesson 1.'; }
+  else if (last && last.pct >= PLACE_PASS * 100) {
+    const nl = LV[LV.indexOf(last.l) + 1], s = nl && startIn(nl, 0);
+    if (s) { unit = s.u.id; label = s.label; note = `You passed ${last.l} comfortably. ${nl} is where you start.`; }
+    else { const e = us.find(u => u.exam && u.lvl === last.l) || us[0]; unit = e.id; label = `${last.l} mock exam`; note = DATA.mode === 'full' ? 'You passed every level. Try the N1 mock exam, or review any lesson you like.' : 'Higher levels need the full data. Start the Path or explore the Library meanwhile.'; }
+  } else {
+    const l = last ? last.l : 'N5', pct = last ? last.pct : 0, s = startIn(l, pct) || { u: us[0], label: 'N5 · Lesson 1' };
+    unit = s.u.id; label = s.label;
+    note = pct >= 55 ? `You know a fair amount of ${l}. Start part-way in; earlier lessons stay open if you want to fill gaps.` : l === 'N5' ? 'Start from the first lesson. The early ones go quickly if you already know some of it.' : `You’re solid up to ${LV[LV.indexOf(l) - 1]}. ${l} starts here.`;
+  }
+  const t = last && last.t, r = k => t && t[k] && t[k][1] ? t[k][0] / t[k][1] : null, rv = r('v');
+  if (rv !== null && r('g') !== null && r('g') < rv - 0.25) tip = 'Grammar is behind your vocabulary. Take the Pattern step of each lesson slowly and read every line out loud.';
+  else if (rv !== null && r('kj') !== null && r('kj') < rv - 0.25) tip = 'Kanji is behind your vocabulary. Open each kanji’s story in the Kanji step; it makes them stick.';
+  else if (rv !== null && r('r') !== null && r('r') < rv - 0.25) tip = 'Reading whole sentences is harder for you than single words. The Read step in each lesson is where that improves.';
   P.result = { unit, label, note, tip, rows, kana: !!P.kanaWeak };
   pathSt.place = { d: today(), unit, label, note }; savePath();
   P.stage = 'done'; render();
+}
+
+/* simple explanations for the hand-written lessons: a hook ("why this is fun / useful") and short points a child could follow.
+   Furigana markup {漢字|かな} as elsewhere. Facts unchanged from the earlier points; only the wording is simpler. */
+const SIMPLE = {
+'n5-01': { hook: 'After this lesson you can introduce yourself to anyone in Japan.',
+  pts: ['は is a pointing finger. It points at who or what you’re talking about. It’s written は but you say “wa”.', 'です is a polite full stop. Put it at the end and your sentence sounds friendly and polite.', 'So {私|わたし}は {学生|がくせい}です means “Me → student.” = I am a student.', 'Japanese loves to skip the obvious. Everyone knows you mean yourself, so you can just say {学生|がくせい}です.', 'Say さん after other people’s names, like “Mr” or “Ms”. Never after your own name.'] },
+'n5-02': { hook: 'One tiny sound turns any sentence into a question.',
+  pts: ['Add か to the end and the sentence becomes a question, like raising your voice in English. {学生|がくせい}ですか = Are you a student?', 'Answer with はい (yes) or いいえ (no).', 'To say “not”, swap です for じゃないです. {学生|がくせい}じゃないです = I’m not a student.', 'Question words sit where the answer will go: あの{人|ひと}は {誰|だれ}ですか → あの{人|ひと}は {田中|たなか}さんです.'] },
+'n5-03': { hook: 'Point at anything in a shop and ask what it is.',
+  pts: ['これ = this thing, close to me.', 'それ = that thing, close to you.', 'あれ = that thing over there, far from both of us.', 'どれ = which one?', 'Glued to a noun they become この, その, あの, どの: この {本|ほん} = this book.'] },
+'n5-04': { hook: 'の is one of the most common words in Japanese. You’ll see it everywhere.',
+  pts: ['の is like an apostrophe-s. {私|わたし}の {本|ほん} = my book (me’s book).', 'It also means “about” or “of”: {日本語|にほんご}の {先生|せんせい} = a teacher of Japanese.', '{誰|だれ}の = whose?', 'If everyone knows the thing, drop it: {私|わたし}のです = it’s mine.'] },
+'n5-05': { hook: 'Never get lost again: ask where anything is.',
+  pts: ['ここ = here, そこ = there (near you), あそこ = over there, どこ = where?', 'Notice they match これ, それ, あれ, どれ. Same pattern, for places.', 'Ask: [place] は どこですか. Answer: [place] は あそこです.', 'Start politely with すみません, “excuse me”.'] },
+'n5-06': { hook: 'Shopping and prices: numbers you’ll use every single day in Japan.',
+  pts: ['Numbers are built like blocks: {十|じゅう} 10, {二十|にじゅう} 20 (two tens), {二十三|にじゅうさん} 23.', 'A few sounds change to be easier to say: {三百|さんびゃく} 300, {六百|ろっぴゃく} 600, {八百|はっぴゃく} 800, {三千|さんぜん} 3,000.', 'Big numbers count in ten-thousands: {一万|いちまん} = 10,000. So {一万円|いちまんえん} is ten thousand yen.', 'いくらですか = how much is it?'] },
+'n5-07': { hook: 'Know when the shop opens, when the train leaves, and when to meet.',
+  pts: ['{時|じ} = o’clock. {三時|さんじ} = three o’clock. {半|はん} = half past.', 'Three times sound a little different. Learn them as special: {四時|よじ}, {七時|しちじ}, {九時|くじ}.', '{午前|ごぜん} = a.m. and {午後|ごご} = p.m. They go in front: {午後|ごご} {二時|にじ} = 2 p.m.', 'から = from, まで = until. {九時|くじ}から {五時|ごじ}まで = from 9 to 5.'] },
+'n5-08': { hook: 'Your first verbs: go, come and go home.',
+  pts: ['Polite verbs end in ます. {行|い}く (go) becomes {行|い}きます.', 'To say you don’t: ません. {行|い}きません = I don’t go / won’t go.', 'へ marks where you’re heading, like an arrow →. It’s written へ but you say “e”. に works too.', 'The verb always comes last: {学校|がっこう}へ {行|い}きます = school → go.'] },
+'n5-09': { hook: 'Eat, drink, watch, read: talk about your day.',
+  pts: ['を marks the thing you do the action to. パンを {食|た}べます = bread ← eat. You say を like “o”.', 'Two easy kinds of verbs to start with:', 'Verbs ending in -eru or -iru usually just drop る: {食|た}べる → {食|た}べます, {見|み}る → {見|み}ます.', 'Most other verbs change their last sound from u to i: {飲|の}む → {飲|の}みます, {買|か}う → {買|か}います.', 'A few sneaky verbs look like the first kind but follow the second: {帰|かえ}る → {帰|かえ}ります, {入|はい}る → {入|はい}ります. The word cards tell you which is which.'] },
+'n5-10': { hook: 'Three tiny words that tell where, how and when.',
+  pts: ['で = where something happens: {図書館|としょかん}で {勉強|べんきょう}します (study at the library).', 'で also = how you do it: {電車|でんしゃ}で {行|い}きます (go by train).', 'に = at a clock time: {七時|しちじ}に {起|お}きます (get up at seven).', 'Words like {今日|きょう}, {明日|あした}, {毎日|まいにち} don’t need に. They’re already “when” words.'] },
+'n5-11': { hook: 'Tell stories about yesterday.',
+  pts: ['Past tense is easy: ます → ました. {食|た}べました = I ate.', 'Didn’t: ません → ませんでした. {行|い}きませんでした = I didn’t go.', 'と = with someone: {友達|ともだち}と = with a friend.', 'Time words: {昨日|きのう} yesterday, {先週|せんしゅう} last week, {去年|きょねん} last year.'] },
+'n5-12': { hook: 'Describe things: big, small, cheap, delicious.',
+  pts: ['These describing words end in い: {高|たか}い (expensive), {安|やす}い (cheap), おいしい (tasty).', 'Put them right before a thing: {高|たか}い {時計|とけい} = an expensive watch.', 'To end a sentence, add です: {高|たか}いです.', 'To say “not”, change い to くない: {高|たか}くないです. One odd one: いい (good) → よくないです.', 'とても = very. あまり … ない = not very.'] },
+'n5-13': { hook: 'The other family of describing words.',
+  pts: ['Some describing words need な before a thing: {静|しず}かな {町|まち} = a quiet town.', 'At the end of a sentence they act like nouns: {静|しず}かです, {静|しず}かじゃないです.', 'Trick word: きれい ends in い but it’s a な word: きれいな {部屋|へや}.'] },
+'n5-14': { hook: 'Say what’s where: in, on, under, next to.',
+  pts: ['あります = there is (things that can’t move by themselves: books, shops, trees).', 'います = there is (living things that move: people, cats, dogs).', '[place] に [thing] が あります: {机|つくえ}の {上|うえ}に {本|ほん}が あります = on the desk there is a book.', 'Position words use の: {机|つくえ}の {上|うえ} (on), {下|した} (under), {中|なか} (inside), {前|まえ} (front), {後|うし}ろ (behind), {隣|となり} (next to).'] },
+'n5-15': { hook: 'Talk about what you love, hate and are good at.',
+  pts: ['With “like” and “good at” words, the thing gets が, not を: {音楽|おんがく}が {好|す}きです.', 'The same for {嫌|きら}い (dislike), {上手|じょうず} (good at), {下手|へた} (bad at), {分|わ}かる (understand).', '{大好|だいす}き = really love. {好|す}きじゃないです is a softer way to say you don’t like something.', 'Japanese people are modest: never call yourself {上手|じょうず}. Say {少|すこ}し {分|わ}かります instead.'] },
+'n5-16': { hook: 'Wishes and dreams: “I want to go to Japan!”',
+  pts: ['Take a ます verb, swap ます for たいです: {行|い}きます → {行|い}きたいです (want to go).', 'Don’t want to: たくないです.', 'Use it for your own wishes. To ask someone else: {何|なに}を したいですか.'] },
+'n5-17': { hook: 'Make plans and invite friends.',
+  pts: ['〜ませんか is a polite invitation: “won’t you …?” {行|い}きませんか = won’t you come?', '〜ましょう = let’s … {行|い}きましょう = let’s go!', '〜ましょうか = shall we? or shall I?', 'To say no kindly, just say ちょっと… and let it trail off. Everyone understands.'] },
+'n5-18': { hook: 'The て-form is a super-power: you’ll use it in dozens of later lessons.',
+  pts: ['て-form + ください = please do it. {待|ま}ってください = please wait.', 'Making it, part 1: -eru / -iru verbs swap る for て: {食|た}べる → {食|た}べて, {見|み}る → {見|み}て.', 'Making it, part 2 (other verbs), by last sound: う・つ・る → って; む・ぶ・ぬ → んで; く → いて; ぐ → いで; す → して.', 'Rule-breakers: {行|い}く → {行|い}って, する → して, {来|く}る → {来|き}て.', 'Tip: sing the endings to a tune. Lots of learners remember them as a little song.'] },
+'n5-19': { hook: 'Say what’s happening right now.',
+  pts: ['て-form + います = happening now: {雨|あめ}が {降|ふ}っています = it’s raining.', 'It also means a state that keeps going: {東京|とうきょう}に {住|す}んでいます = I live in Tokyo.', 'Same idea: {働|はたら}いています (I work), {結婚|けっこん}しています (I’m married), {知|し}っています (I know).', 'Watch out: “I don’t know” is {知|し}りません.'] },
+'n5-20': { hook: 'Ask “may I?” and understand signs and rules.',
+  pts: ['て-form + も いいですか = may I …? {座|すわ}っても いいですか = may I sit?', 'Yes: はい、どうぞ (go ahead).', 'て-form + は いけません = you must not … {撮|と}っては いけません = no photos.', 'On signs you’ll often see 〜ないでください = please don’t.'] },
+'n5-21': { hook: 'How was it? Talk about your trip, a film, a meal.',
+  pts: ['い words: drop い, add かったです. {楽|たの}しい → {楽|たの}しかったです (it was fun).', 'Wasn’t: くなかったです. {寒|さむ}くなかったです (it wasn’t cold).', 'な words and nouns: でした. {静|しず}かでした (it was quiet).', 'いい is the odd one again: よかったです (it was good).'] },
+'n5-22': { hook: 'Bigger, faster, best: compare things.',
+  pts: ['A より B のほうが … = B is more … than A. バスより {電車|でんしゃ}のほうが {速|はや}いです.', 'Ask which of two: A と B と どちらが …ですか.', 'The best of a group: [group] の {中|なか}で [thing] が {一番|いちばん} … .', 'The describing word never changes. より and {一番|いちばん} do all the work.'] },
+'n5-23': { hook: 'Join your ideas: because, and but.',
+  pts: ['から = because. Reason から, result: {雨|あめ}ですから、{行|い}きません (it’s raining, so I won’t go).', 'Answer “why?” (どうして) with … からです.', 'が = but, joining two sentences: {高|たか}いですが、おいしいです (expensive but tasty).', 'でも = but, starting a new sentence.'] }
+};
+
+
+/* =====================================================================
+   GAME MODE — dojo belts earned with XP, stars per lesson, badges, combos and a daily time goal.
+   XP and badges are always counted, so switching to game mode shows what you've already earned;
+   they're only shown when Settings → Learning style is “Game”. The daily goal shows in both styles.
+   ===================================================================== */
+const BELTS = [
+  { xp: 0, name: 'White belt', jp: '白帯', c: '#E9ECEF', t: '#1C2127' }, { xp: 400, name: 'Yellow belt', jp: '黄帯', c: '#F4C430', t: '#1C2127' },
+  { xp: 1200, name: 'Orange belt', jp: '橙帯', c: '#F0802A', t: '#fff' }, { xp: 2500, name: 'Green belt', jp: '緑帯', c: '#3FA34D', t: '#fff' },
+  { xp: 4500, name: 'Blue belt', jp: '青帯', c: '#2B6CC4', t: '#fff' }, { xp: 7500, name: 'Purple belt', jp: '紫帯', c: '#7B4BB7', t: '#fff' },
+  { xp: 12000, name: 'Brown belt', jp: '茶帯', c: '#7A4A26', t: '#fff' }, { xp: 18000, name: 'Black belt, 1st dan', jp: '初段', c: '#16181C', t: '#fff' },
+  { xp: 30000, name: 'Black belt, 2nd dan', jp: '二段', c: '#16181C', t: '#F4C430' }, { xp: 50000, name: 'Black belt, 3rd dan', jp: '三段', c: '#16181C', t: '#F4C430' }
+];
+const BADGES = [
+  { id: 'first', icon: '🎌', name: 'First step', how: 'Finish your first lesson' },
+  { id: 'perfect', icon: '💯', name: 'Perfect', how: 'Get every practice question right in a lesson' },
+  { id: 'goal', icon: '🎯', name: 'On target', how: 'Reach your daily goal' },
+  { id: 'streak3', icon: '🔥', name: 'Warming up', how: 'Study 3 days in a row' },
+  { id: 'streak7', icon: '🔥', name: 'One week strong', how: 'Study 7 days in a row' },
+  { id: 'streak30', icon: '🏮', name: 'Habit master', how: 'Study 30 days in a row' },
+  { id: 'words100', icon: '📚', name: '100 words', how: 'Have 100 words in your reviews' },
+  { id: 'words500', icon: '📖', name: '500 words', how: 'Have 500 words in your reviews' },
+  { id: 'kanji50', icon: '字', name: '50 kanji', how: 'Have 50 kanji in your reviews' },
+  { id: 'stage', icon: '⛩️', name: 'Stage cleared', how: 'Clear a checkpoint' },
+  { id: 'combo10', icon: '⚡', name: 'On fire', how: 'Answer 10 in a row correctly' },
+  { id: 'travel', icon: '✈️', name: 'Ready to travel', how: 'Finish every Travel lesson' },
+  { id: 'exam', icon: '🏆', name: 'Exam ready', how: 'Score 80%+ on a mock exam' }
+];
+let game = Object.assign({ xp: 0, badges: {}, stars: {}, combo: 0, goalDays: {} }, store.get('game', {}));
+const saveGame = () => store.set('game', game);
+const gameOn = () => settings.style === 'game';
+const beltOf = xp => { let b = BELTS[0]; for (const x of BELTS) if (xp >= x.xp) b = x; return b; };
+const nextBelt = xp => BELTS.find(b => b.xp > xp) || null;
+function addXP(n) {
+  if (!n) return;
+  const before = beltOf(game.xp); game.xp += n; saveGame();
+  const after = beltOf(game.xp);
+  if (gameOn()) { xpPop(n); if (after !== before) setTimeout(() => celebrate(`New belt: ${after.name}!`, `${after.jp} · keep going`), 400); }
+}
+function earn(id) {
+  if (game.badges[id]) return; game.badges[id] = today(); saveGame();
+  const b = BADGES.find(x => x.id === id); if (b && gameOn()) setTimeout(() => celebrate(`Badge: ${b.icon} ${b.name}`, b.how), 900);
+}
+/** answer hook used by lessons, quizzes and flashcards */
+function gameAnswer(ok) {
+  if (ok) { game.combo++; addXP(10 + (game.combo >= 5 ? 5 : 0)); if (game.combo >= 10) earn('combo10'); }
+  else game.combo = 0;
+  saveGame();
+}
+const starsFor = pct => pct >= 90 ? 3 : pct >= 70 ? 2 : 1;
+const starHtml = n => `<span class="stars" aria-label="${n} of 3 stars">${'★'.repeat(n)}${'☆'.repeat(3 - n)}</span>`;
+function gameLesson(u, pct) {
+  const st = starsFor(pct), prev = game.stars[u.id] || 0;
+  if (st > prev) game.stars[u.id] = st;
+  addXP(u.cp ? (pct >= CP_PASS ? 150 : 20) : 50 + (pct === 100 ? 25 : 0));
+  earn('first'); if (pct === 100 && !u.cp) earn('perfect'); if (u.cp && pct >= CP_PASS) earn('stage');
+  if (travelUnits().every(t => pathSt.done[t.id])) earn('travel');
+  checkBadges(); saveGame();
+  return st;
+}
+function checkBadges() {
+  const st = streak(); if (st >= 3) earn('streak3'); if (st >= 7) earn('streak7'); if (st >= 30) earn('streak30');
+  const ids = Object.keys(progress), w = ids.filter(i => i.startsWith('v:')).length, k = ids.filter(i => i.startsWith('k:')).length;
+  if (w >= 100) earn('words100'); if (w >= 500) earn('words500'); if (k >= 50) earn('kanji50');
+  if (store.get('exams', []).some(h => h.max && h.total / h.max >= 0.8)) earn('exam');
+}
+
+/* ---------- daily time goal: counts real study time (lessons, quizzes, reviews, the placement check) ---------- */
+let lastAct = Date.now();
+['click', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, () => { lastAct = Date.now(); }, { capture: true, passive: true }));
+const studyMin = () => Math.floor(((actLog[today()] || {}).sec || 0) / 60);
+setInterval(() => {
+  if (document.hidden || Date.now() - lastAct > 90e3) return;                     // away from the screen: don't count
+  const studying = S.session || ['lesson', 'place'].includes(S.view) || $('#sheet').classList.contains('open');
+  if (!studying) return;
+  const d = today(), e = actLog[d] || { r: 0 }; e.sec = (e.sec || 0) + 15; actLog[d] = e; store.set('log', actLog);
+  if (studyMin() >= (settings.goalMin || 15) && !game.goalDays[d]) { game.goalDays[d] = 1; saveGame(); earn('goal'); addXP(50); if (gameOn()) celebrate('Daily goal reached!', `${settings.goalMin || 15} minutes today. お疲れさま!`); else toast(`Daily goal reached: ${settings.goalMin || 15} minutes`); }
+  const g = $('#goalbar'); if (g) g.outerHTML = goalBar();
+}, 15e3);
+function goalBar() {
+  const m = studyMin(), goal = settings.goalMin || 15, pct = Math.min(100, m / goal * 100);
+  return `<div class="goalbar${pct >= 100 ? ' met' : ''}" id="goalbar"><div class="gb-ring" style="--p:${pct}"><span>${Math.min(m, 999)}</span></div><div class="gb-t"><b>${pct >= 100 ? 'Daily goal reached' : 'Today’s goal'}</b><span>${m} of ${goal} minutes${pct >= 100 ? ' · nice work' : ''}</span></div></div>`;
+}
+/* ---------- the game card on Home ---------- */
+function gameCard() {
+  if (!gameOn()) return goalBar();
+  const b = beltOf(game.xp), n = nextBelt(game.xp), pct = n ? (game.xp - b.xp) / (n.xp - b.xp) * 100 : 100;
+  const got = BADGES.filter(x => game.badges[x.id]);
+  return `<div class="card gcard"><div class="gc-top"><span class="belt" style="--bc:${b.c};--bt:${b.t}"><i></i>${esc(b.jp)}</span><div class="gc-n"><b>${esc(b.name)}</b><span>${fmtN(game.xp)} XP${n ? ` · ${fmtN(n.xp - game.xp)} to ${esc(n.name.replace(', ', ' '))}` : ''}</span></div></div>
+    <div class="pbar gc-bar"><i style="width:${pct}%;background:${n ? n.c : b.c}"></i></div>
+    ${goalBar()}
+    <div class="gc-badges">${BADGES.map(x => `<span class="bdg${game.badges[x.id] ? ' got' : ''}" title="${esc(x.name)}: ${esc(x.how)}">${x.icon}</span>`).join('')}</div>
+    <div class="gc-foot">${got.length} of ${BADGES.length} badges</div></div>`;
+}
+/* ---------- little celebrations (game mode only; nothing moves with reduced motion) ---------- */
+function xpPop(n) {
+  const el = document.createElement('div'); el.className = 'xppop'; el.textContent = `+${n} XP`; document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1100);
+}
+function celebrate(title, sub) {
+  const box = document.createElement('div'); box.className = 'celebrate'; box.setAttribute('role', 'status');
+  box.innerHTML = `<b>${esc(title)}</b><span>${esc(sub || '')}</span>`; document.body.appendChild(box);
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const cols = ['#4DAF4A', '#F0802A', '#1BA1D8', '#D9A800', '#C2337A', '#22408F'];
+    for (let i = 0; i < 36; i++) { const c = document.createElement('i'); c.className = 'confetti'; c.style.left = Math.random() * 100 + 'vw'; c.style.background = cols[i % cols.length]; c.style.animationDelay = Math.random() * .3 + 's'; c.style.transform = `rotate(${Math.random() * 360}deg)`; document.body.appendChild(c); setTimeout(() => c.remove(), 2200); }
+  }
+  setTimeout(() => box.classList.add('out'), 2200); setTimeout(() => box.remove(), 2700);
 }
 
 const App = {
@@ -3772,6 +4108,8 @@ const App = {
       const r = $('#sres'); if (r && S.view === 'search' && !S.session) r.innerHTML = searchResults();
     }, 220);
   },
+  styleSet(v) { App.set('style', v); if (v === 'game') { checkBadges(); toast('Game mode on: earn XP and belts as you learn'); } },
+  goalSet(v) { App.set('goalMin', +v); },
   picStyle(v) { settings.picStyle = v; App.set('picStyle', v); },
   quoteNext() { S.quoteOff = ((S.quoteOff || 0) + 1) % quotePool().length; const el = document.querySelector('.quote'); if (el) { el.outerHTML = quoteCard().replace(/^[\s\S]*?<figure/, '<figure'); const q = document.querySelector('.quote'); if (q) hydrate(q.parentElement); } },
   wotdAdd() {
@@ -3839,22 +4177,22 @@ const App = {
   placeStart() { S.place = { stage: 'intro', tally: {}, lv: null }; S.view = 'place'; App.closeSheet(); render(); window.scrollTo(0, 0); },
   placeKana(knows) {
     const P = S.place; if (!knows) { P.kanaWeak = true; return placeFinish(); }
-    const pool = KANA.filter(x => x.group === 'basic'), hs = shuffle(pool.filter(x => x.script === 'h')).slice(0, 3), ks = shuffle(pool.filter(x => x.script === 'k')).slice(0, 3);
+    const pool = KANA.filter(x => ['basic', 'dakuten', 'combo'].includes(x.group)), hs = shuffle(pool.filter(x => x.script === 'h')).slice(0, 4), ks = shuffle(pool.filter(x => x.script === 'k')).slice(0, 4);
     P.lv = 'Kana'; P.qs = shuffle([...hs, ...ks]).map(x => Object.assign(makeKanaQ(x, 'k2r'), { sk: 'a' })); P.i = 0; P.kanaOk = 0; P.answered = false; P.stage = 'run'; render();
   },
   placeAns(i) {
     const P = S.place; if (P.answered) return; const q = P.qs[P.i], ok = i >= 0 && !!q.opts[i].ok;
     P.answered = true; P.chosen = i;
     if (P.lv === 'Kana') { if (ok) P.kanaOk++; }
-    else { const t = P.tally[P.lv] = P.tally[P.lv] || { ok: 0, n: 0, v: [0, 0], k: [0, 0], g: [0, 0] }; t.n++; if (ok) t.ok++; const sk = t[q.sk]; if (sk) { sk[1]++; if (ok) sk[0]++; } }
+    else { const t = P.tally[P.lv] = P.tally[P.lv] || { ok: 0, n: 0 }; t.n++; if (ok) t.ok++; const k = PLACE_SKILL[q.sk] || q.sk; const sk = t[k] = t[k] || [0, 0]; sk[1]++; if (ok) sk[0]++; }
     render();
   },
   placeNext() {
     const P = S.place; P.i++; P.answered = false; P.chosen = -1;
     if (P.i < P.qs.length) return render();
-    if (P.lv === 'Kana') { if (P.kanaOk < 5) { P.kanaWeak = true; return placeFinish(); } P.lv = 'N5'; return placeLevel(); }
+    if (P.lv === 'Kana') { if (P.kanaOk < 6) { P.kanaWeak = true; return placeFinish(); } P.lv = 'N5'; return placeLevel(); }
     const t = P.tally[P.lv], li = LV.indexOf(P.lv);
-    if (t && t.n && t.ok / t.n >= 0.7 && li < LV.length - 1) { P.lv = LV[li + 1]; return placeLevel(); }
+    if (t && t.n && t.ok / t.n >= PLACE_PASS && li < LV.length - 1) { P.lv = LV[li + 1]; return placeLevel(); }
     placeFinish();
   },
   placeQuit() { if (S.place && S.place.stage === 'run' && !confirm('Stop the placement check?')) return; S.place = null; App.go('path'); },
