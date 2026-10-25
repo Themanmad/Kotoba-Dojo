@@ -44,6 +44,9 @@ jobs:
           key: sources-${{ steps.week.outputs.week }}
           restore-keys: sources-
 
+      - name: Install ffmpeg (pads recordings with silence so phones don't cut the first syllable)
+        run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+
       - name: Install tokenizer (furigana for example sentences)
         run: npm install --no-save --no-package-lock --no-audit --no-fund kuromoji@0.1.2
 
@@ -57,6 +60,7 @@ jobs:
         run: |
           cp index.html _site/
           [ -f LICENSES.md ] && cp LICENSES.md _site/ || true
+          [ -d vendor ] && cp -r vendor _site/ || true
           touch _site/.nojekyll
           du -sh _site/data && ls -la _site/data
 
