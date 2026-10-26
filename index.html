@@ -514,6 +514,24 @@ body > main .ulist:not(.plevel .ulist){border:1px solid var(--line);border-radiu
 .note.warn{color:var(--bad)}
 .ak-note{background:var(--accent-soft);border-radius:10px;padding:10px 12px;color:var(--ink)}
 .unit.known{opacity:.6}
+.kps{margin:12px 0 16px}
+.kps-row{display:flex;align-items:center;gap:6px}
+.kps figure{margin:0;flex:1;max-width:124px}
+.kps svg{width:100%;height:auto;display:block;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.kps-a{color:var(--muted);font-size:18px;flex:none}
+.kps-cap{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;margin-top:8px;line-height:1.4}
+.kps-tag{color:var(--accent);font-weight:700}
+.kps-play{flex:none;font-size:13px;white-space:nowrap}
+.kps.play .kps-mid .kps-art{animation:kpArt 2.8s ease forwards}
+.kps.play .kps-mid .kps-g{animation:kpG 2.8s ease forwards}
+@keyframes kpArt{0%,45%{opacity:1}100%{opacity:.3}}
+@keyframes kpG{0%,30%{opacity:0}100%{opacity:1}}
+.kps.sm{margin:4px 0 10px}
+.kps.sm figure{max-width:72px}
+.kps.sm .kps-play{display:none}
+.kps.sm .kps-cap{font-size:12.5px;margin-top:4px}
+@media (prefers-reduced-motion:reduce){.kps.play .kps-mid .kps-art,.kps.play .kps-mid .kps-g{animation:none}}
+.lw-known{font-size:11px;font-weight:700;color:var(--ok)}
 .dnote{margin:10px 0;padding:10px 12px;border-radius:10px;background:var(--accent-soft);font-size:14px}
 .dnote b{margin-right:6px}
 .dnote span{display:block;margin-top:4px;color:var(--muted)}
@@ -1256,7 +1274,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('kd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('kd_' + k, JSON.stringify(v)); } catch (e) {} }
 };
-let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, style: 'normal', goalMin: 15, deckVoiceFirst: false, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
+let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, style: 'normal', goalMin: 15, deckVoice: true, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
 let progress = store.get('progress', {});
 let custom = store.get('custom', []);
 let actLog = store.get('log', {});
@@ -1488,7 +1506,7 @@ const S = {
   gf: { q: '', limit: 100 }, open: {}, openAll: false, drew: false, gq: 'gfill', kanaQ: 'k2r', sit: null, back: null, examLv: null, examMode: 'full', examN: 10,
   session: null
 };
-const vSel = () => V.filter(x => (settings.levels.includes(x.lvl) || (x.dk && settings.levels.includes('ANKI'))) && (S.pos === 'all' || posBucket(x.pos) === S.pos));
+const vSel = () => { const seen = new Set(); return V.filter(x => (settings.levels.includes(x.lvl) || (x.dk && settings.levels.includes('ANKI'))) && (S.pos === 'all' || posBucket(x.pos) === S.pos) && !seen.has(x.id) && seen.add(x.id)); };   // one card per word, even when a list has it twice
 const kSorted = () => K.slice().sort((a, b) => (a.r || 9999) - (b.r || 9999) || LV.indexOf(a.lvl) - LV.indexOf(b.lvl));
 const K_CHUNK = 100;
 function kSelection() {
@@ -1586,7 +1604,7 @@ function vHome() {
       ? { title: pu.exam ? pu.t : pu.cp ? pu.t : `Lesson: ${pu.t}`, sub: pu.exam || pu.cp ? `${unitLabel(pu)} · ${pu.s}` : `${unitLabel(pu)} · about 15 minutes`, done: flagged('lesson'), go: 'Start', act: `App.lesson('${pu.id}')` }
       : { title: 'Find your starting point', sub: '5-minute placement check', done: false, go: 'Start', act: 'App.placeStart()' },
     { title: due ? `Review ${fmtN(due)} card${due === 1 ? '' : 's'}` : 'Reviews', sub: due ? 'Words and kanji from your lessons, due today' : 'Nothing due. New words arrive with each lesson', done: !due, go: 'Review', act: "App.go('vocab','cards')" },
-    ...(ANKI.decks.length && ankiUnits().length ? (() => { const au = nextUnit('anki'); return [{ title: `My deck: ${esc(au.t)}`, sub: `${esc(unitLabel(au))} · words from ${esc(au.deck)}`, done: unitDone(au) && flagged('lesson'), go: 'Start', act: `App.lesson('${au.id}')` }]; })() : []),
+    ...(ANKI.decks.length && ankiUnits().length ? (() => { const au = nextUnit('anki'); return [{ title: `Deck extras: ${esc(au.t)}`, sub: `${esc(unitLabel(au))} · words from ${esc(au.deck)}`, done: unitDone(au) && flagged('lesson'), go: 'Start', act: `App.lesson('${au.id}')` }]; })() : []),
     { title: `Travel: ${tu.t}`, sub: tu.s, done: !!pathSt.done[tu.id] && flagged('lesson'), go: 'Open', act: `App.lesson('${tu.id}')` },
     { title: 'Mock exam', sub: examToday ? 'Taken today' : `${lvl} · JLPT-style, timed`, done: examToday, go: 'Sit it', act: "App.go('exam')" }
   ];
@@ -1990,10 +2008,11 @@ function kDetail(k) {
   const p = progress[k.id];
   const words = k.ex.length ? k.ex : V.filter(x => x.w.includes(k.k)).slice(0, 5).map(x => ({ w: x.w, r: x.r, m: x.m, l: x.lvl }));
   return `<div class="detail force">
-    <div class="khead"><div class="kbig jp strokes" data-k="${esc(k.k)}">${k.k}</div><div style="flex:1;min-width:0">${k.pic && settings.pics ? `<div class="kpic">${picHtml(k.pic, 'md')}${picCredit(k.pic) ? `<span class="pic-credit">${picCredit(k.pic)}</span>` : ''}</div>` : ''}<div class="dmean" style="margin-top:0">${esc(k.mean.join('; '))}</div>
+    <div class="khead"><div class="kbig jp strokes" data-k="${esc(k.k)}">${k.k}</div><div style="flex:1;min-width:0">${k.pic && settings.pics && !KPIC[k.k] ? `<div class="kpic">${picHtml(k.pic, 'md')}${picCredit(k.pic) ? `<span class="pic-credit">${picCredit(k.pic)}</span>` : ''}</div>` : ''}<div class="dmean" style="margin-top:0">${esc(k.mean.join('; '))}</div>
       <div class="tags"><span class="tag lv">${k.lvl}</span>${k.s ? `<span class="tag">${k.s} strokes</span>` : ''}${k.gr ? `<span class="tag">${k.gr <= 6 ? 'grade ' + k.gr : k.gr === 8 ? 'jōyō (secondary)' : 'jinmeiyō'}</span>` : ''}</div>
       <div>${freqBadge(k.freq)}${k.r ? ` <span class="muted" style="font-size:12px">· #${k.r} of the 2,500 most used</span>` : ''}</div></div></div>
     <div class="frames" data-frames="${esc(k.k)}"></div>
+    ${kpStrip(k.k)}
     <div class="reads">
       <div class="read"><b>On'yomi</b><span class="jp">${k.on.length ? esc(k.on.join('、')) : '—'}</span><span class="muted" style="font-size:13px">${esc(k.on.map(toRomaji).join(', '))}</span></div>
       <div class="read"><b>Kun'yomi</b><span class="jp">${kunHtml(k.kun)}</span><span class="muted" style="font-size:13px">${esc(k.kun.map(toRomaji).join(', '))}</span></div>
@@ -3486,7 +3505,7 @@ const PATH_N5 = [
 { id: 'n5-20', t: 'May I? You mustn’t', s: 'Ask permission and understand rules', pat: '〜ても いいですか ／ 〜ては いけません', pm: 'May I …? / You must not …',
   pts: ['て-form + も いいですか = may I …? (literally “is it fine even if I …?”).', 'Say yes with はい、どうぞ.', 'て-form + は いけません = you must not … . On signs you’ll often see 〜ないでください (please don’t …).'],
   ex: [['{写真|しゃしん}を {撮|と}っても いいですか。', 'May I take a photo?'], ['ここで たばこを {吸|す}っては いけません。', 'You must not smoke here.'], ['{靴|くつ}を {脱|ぬ}いで ください。', 'Please take off your shoes.']],
-  w: [['吸う', 'すう', 'to smoke; to breathe in'], ['入る', 'はいる', 'to enter'], ['使う', 'つかう', 'to use'], ['電話', 'でんわ', 'telephone'], ['靴', 'くつ', 'shoes'], ['脱ぐ', 'ぬぐ', 'to take off (clothes)'], ['たばこ', 'たばこ', 'tobacco; cigarettes'], ['中', 'なか', 'inside']],
+  w: [['吸う', 'すう', 'to smoke; to breathe in'], ['入る', 'はいる', 'to enter'], ['使う', 'つかう', 'to use'], ['電話', 'でんわ', 'telephone'], ['靴', 'くつ', 'shoes'], ['脱ぐ', 'ぬぐ', 'to take off (clothes)'], ['たばこ', 'たばこ', 'tobacco; cigarettes']],
   rd: [['お{寺|てら}の {中|なか}では {靴|くつ}を {脱|ぬ}ぎます。', 'You take off your shoes inside a temple.'], ['{写真|しゃしん}を {撮|と}っては いけません。', 'You must not take photos.'], ['{庭|にわ}では {撮|と}っても いいです。', 'You may take photos in the garden.'], ['{大|おお}きい {声|こえ}で {話|はな}さないで ください。', 'Please don’t talk loudly.']],
   tk: [['A', 'すみません、ここに {座|すわ}っても いいですか。', 'Excuse me, may I sit here?'], ['B', 'はい、どうぞ。', 'Yes, go ahead.'], ['A', 'この {電話|でんわ}を {使|つか}っても いいですか。', 'May I use this phone?'], ['B', 'すみません、それは ちょっと…。', 'Sorry, that’s a little…']],
   cz: [['{写真|しゃしん}を {撮|と}って＿ いいですか。', ['も', 'は', 'を', 'で'], 0, 'May I take a photo?'], ['ここで たばこを {吸|す}っては ＿。', ['いけません', 'いいです', 'ください', 'います'], 0, 'You must not smoke here.'], ['{靴|くつ}を {脱|ぬ}＿ ください。', ['いで', 'って', 'んで', 'いて'], 0, 'Please take off your shoes.']] },
@@ -3621,7 +3640,9 @@ const gKey = g => String(gSplitTitle(g.t).jp || g.t).replace(/[〜～…・\s()�
 const coreCovers = g => { const k = gKey(g).replace(/(です)?[。.]$/, ''); return !!k && Object.values(N5_GK).some(ts => ts.includes(k)); };
 let PLAN = {};
 function planUnits(l) {
-  const words = (DATA.vocab[l] || []).filter(x => x.w && x.m), gram = (DATA.grammar[l] || []).filter(g => g.m), kan = K.filter(k => k.lvl === l);
+  // a word listed twice (in this level, or already in an easier one) is taught once
+  const lower = new Set(LV.slice(0, LV.indexOf(l)).flatMap(k => [...(DATA.vocab[k] || []).map(x => x.id), ...planUnits(k).flatMap(u => (u.items || []).map(x => x.id))])), once = new Set();
+  const words = (DATA.vocab[l] || []).filter(x => x.w && x.m && !lower.has(x.id) && !once.has(x.id) && once.add(x.id)), gram = (DATA.grammar[l] || []).filter(g => g.m), kan = K.filter(k => k.lvl === l);
   const dkey = ANKI.items.length ? ANKI.planKey : '';
   const sig = [words.length, gram.length, kan.length, V.length, dkey].join(':');
   if (PLAN[l] && PLAN[l].sig === sig) return PLAN[l].units;
@@ -3703,7 +3724,7 @@ function unitItems(u) {
   if (u.cp) return { words: u.members.flatMap(m => m.items), kanji: u.members.flatMap(m => m.kanji || []) };
   return { words: (u.items && u.items.length ? u.items : u.review) || [], kanji: u.kanji || [] };
 }
-const unitLabel = u => u.tr === 'anki' ? (u.cp ? `My deck · Checkpoint ${u.stage}` : `My deck · Lesson ${u.n}`) : u.tr === 'travel' ? `Travel ${u.n}` : u.cp ? `${u.lvl} · Checkpoint ${u.stage}` : u.exam ? `${u.lvl} · Mock exam` : `${u.lvl} · Lesson ${u.n}`;
+const unitLabel = u => u.tr === 'anki' ? (u.cp ? `Deck extras · Checkpoint ${u.stage}` : `Deck extras · Lesson ${u.n}`) : u.tr === 'travel' ? `Travel ${u.n}` : u.cp ? `${u.lvl} · Checkpoint ${u.stage}` : u.exam ? `${u.lvl} · Mock exam` : `${u.lvl} · Lesson ${u.n}`;
 const bestExam = l => store.get('exams', []).filter(h => h.l === l && h.max).reduce((b, h) => Math.max(b, Math.round(h.total / h.max * 100)), -1);
 const unitDone = u => u.exam ? bestExam(u.lvl) >= 80 : u.cp ? !!pathSt.done[u.id] && pathSt.done[u.id].sc >= CP_PASS : !!pathSt.done[u.id];
 function nextUnit(tr) {
@@ -3745,7 +3766,8 @@ function vPath() {
   let body;
   if (tr === 'travel') body = `<div class="ulist boxed">${us.map(row).join('')}</div>`;
   else if (tr === 'anki') body = ANKI.decks.map(d => { const du = us.filter(u => u.deck === d.name), st = [...new Set(du.map(u => u.stage))], all = ANKI.items.filter(x => x.dkId === d.id), kn = all.filter(x => status(x.id) === 'known').length;
-      return `<div class="card ak-sum"><b>${esc(d.name)}</b><span>${fmtN(all.length)} words in ${du.filter(u => !u.cp).length} lesson${du.filter(u => !u.cp).length === 1 ? '' : 's'} · ${fmtN(kn)} already known${kn ? '. Lessons where you know every word and kanji are skipped' : ''}. Lessons follow your deck’s order, with its sentences and recordings.</span></div>
+      const ex = all.filter(x => x.lvl === 'ANKI'), knx = ex.filter(x => status(x.id) === 'known').length;
+      return `<div class="card ak-sum"><b>${esc(d.name)}</b><span>${fmtN(all.length - ex.length)} of its words are JLPT words: the JLPT course teaches them (your deck’s first), so nothing is taught twice. ${ex.length ? `The other ${fmtN(ex.length)} are here, in your deck’s order${knx ? `; ${fmtN(knx)} you already know are skipped` : ''}.` : 'It has no other words, so there’s nothing extra to learn here.'}</span></div>
         ${st.map(s => `<div class="stage-h">Stage ${s}</div><div class="ulist">${du.filter(u => u.stage === s).map(row).join('')}</div>`).join('')}`; }).join('');
   else body = LV.map(l => {
     const lu = us.filter(u => u.lvl === l), c = lu.length ? levelCoverage(l) : null, open = lu.includes(cur) || (S.popen || {})[l];
@@ -3759,7 +3781,7 @@ function vPath() {
   }).join('');
   return `<h1>Path</h1><p class="sub">Short lessons that teach one pattern, the words that go with it and their kanji, then let you read them together. Finish a level’s Path and you’re ready for that JLPT exam.</p>
   ${placeCard}
-  <div class="seg ptabs"><button class="${tr === 'jlpt' ? 'on' : ''}" onclick="App.ptab('jlpt')">JLPT course</button><button class="${tr === 'travel' ? 'on' : ''}" onclick="App.ptab('travel')">Travel Japanese</button>${ANKI.decks.length ? `<button class="${tr === 'anki' ? 'on' : ''}" onclick="App.ptab('anki')">My deck</button>` : ''}</div>
+  <div class="seg ptabs"><button class="${tr === 'jlpt' ? 'on' : ''}" onclick="App.ptab('jlpt')">JLPT course</button><button class="${tr === 'travel' ? 'on' : ''}" onclick="App.ptab('travel')">Travel Japanese</button>${ANKI.decks.length ? `<button class="${tr === 'anki' ? 'on' : ''}" onclick="App.ptab('anki')">Deck extras</button>` : ''}</div>
   ${cur ? `<div class="card pnext" style="--lc:${lcVar(cur.lvl)}"><div class="pn-k">${unitDone(cur) ? 'Review' : 'Up next'} · ${esc(unitLabel(cur))}</div><div class="pn-t">${esc(cur.t)}</div><div class="pn-s">${esc(cur.s)}</div><button class="btn" onclick="App.lesson('${cur.id}')">${cur.exam ? 'Start the mock exam' : cur.cp ? 'Start the checkpoint' : 'Start lesson · about 15 min'}</button></div>` : ''}
   ${body}`;
 }
@@ -3864,11 +3886,11 @@ function vLesson() {
         <div class="label">Examples</div>${u.ex.map(([j, e]) => `<div class="lex ex"><div class="jp">${ruby(j, true)}</div><span class="en">${esc(e)}</span></div>`).join('')}`;
   } else if (step === 'words') {
     body = `<div class="ls-h"><div class="ls-k">${u.items && !u.items.length ? 'Words in this lesson’s examples' : 'New words'}</div><h2>${L.words.length} words for this lesson</h2><p class="note">Say each one out loud. Tap a card for the full entry.</p></div>
-      <div class="lwords">${L.words.map(x => `<button class="lword" data-open="${esc(x.id)}">${hasPic(x) ? `<span class="lw-pic">${wordPic(x, 'md')}</span>` : '<span class="lw-pic none"></span>'}<span class="lw-w jp">${ruby(x.f || x.w, true)}</span><span class="lw-r">${esc(toRomaji(x.r))}</span><span class="lw-m">${esc(x.m)}</span>${sayBtn(x.au)}</button>`).join('')}</div>`;
+      <div class="lwords">${L.words.map(x => `<button class="lword" data-open="${esc(x.id)}">${hasPic(x) ? `<span class="lw-pic">${wordPic(x, 'md')}</span>` : '<span class="lw-pic none"></span>'}<span class="lw-w jp">${ruby(x.f || x.w, true)}</span><span class="lw-r">${esc(toRomaji(x.r))}</span><span class="lw-m">${esc(x.m)}</span>${status(x.id) === 'known' ? '<span class="lw-known">✓ you know this</span>' : ''}${sayBtn(x.au)}</button>`).join('')}</div>`;
   } else if (step === 'kanji') {
     body = `<div class="ls-h"><div class="ls-k">Kanji in these words</div><h2>${L.kanji.map(k => k.k).join(' ')}</h2><p class="note">Learn each kanji through a word you already know. Tap one for its story, parts and stroke order.</p></div>
       <div class="lkanji">${L.kanji.map(k => { const w = L.words.find(x => x.w.includes(k.k));
-        return `<button class="lk" data-open="k:${esc(k.k)}"><span class="lk-k jp">${k.k}</span><span class="lk-b"><b>${esc(k.mean.slice(0, 2).join(', '))}</b><span class="jp">${esc([...k.on.slice(0, 1).map(kataOf), ...k.kun.slice(0, 1)].join('・'))}</span>${k.og ? (k.og.t === 'S' ? (k.og.sem || k.og.pho ? `<span class="lk-o">${k.og.sem ? `${esc(k.og.sem)} gives the meaning` : ''}${k.og.sem && k.og.pho ? ', ' : ''}${k.og.pho ? `${esc(k.og.pho)} gives the sound` : ''}</span>` : '') : k.og.h ? `<span class="lk-o">${esc(k.og.h)}</span>` : '') : ''}${w ? `<span class="lk-w">in <span class="jp">${esc(w.w)}</span> ${esc(w.m.split(/[;,]/)[0])}</span>` : ''}</span></button>`; }).join('')}</div>`;
+        return `<button class="lk" data-open="k:${esc(k.k)}"><span class="lk-k jp">${k.k}</span><span class="lk-b"><b>${esc(k.mean.slice(0, 2).join(', '))}</b><span class="jp">${esc([...k.on.slice(0, 1).map(kataOf), ...k.kun.slice(0, 1)].join('・'))}</span>${k.og ? (k.og.t === 'S' ? (k.og.sem || k.og.pho ? `<span class="lk-o">${k.og.sem ? `${esc(k.og.sem)} gives the meaning` : ''}${k.og.sem && k.og.pho ? ', ' : ''}${k.og.pho ? `${esc(k.og.pho)} gives the sound` : ''}</span>` : '') : k.og.h ? `<span class="lk-o">${esc(k.og.h)}</span>` : '') : ''}${w ? `<span class="lk-w">in <span class="jp">${esc(w.w)}</span> ${esc(w.m.split(/[;,]/)[0])}</span>` : ''}</span></button>${kpStrip(k.k, 'sm')}`; }).join('')}</div>`;
   } else if (step === 'read') {
     const lines = lessonLines(u).map(x => [x.j, x.e, x.au]);
     body = `<div class="ls-h"><div class="ls-k">Read</div><h2>Read it out loud</h2><p class="note">Try each line first. Tap “English” only if you need it, and tap any kanji to look it up.</p></div>
@@ -4153,6 +4175,90 @@ function celebrate(title, sub) {
   setTimeout(() => box.classList.add('out'), 2200); setTimeout(() => box.remove(), 2700);
 }
 
+/* =====================================================================
+   PICTURE KANJI: picture → picture with the kanji traced over it → kanji.
+   Drawn for this app (no outside artwork). Each drawing sits in a 100×100 box and is
+   laid out so the kanji's strokes land on the parts of the picture they came from.
+   r: 1 = the kanji really began as a drawing of this (pictograph, or a mark on one);
+      0 = a memory picture only. The true origin is in "How it came to be".
+   ===================================================================== */
+const KP_INK = '#3B3127';
+const kpO = `stroke="${KP_INK}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"`;
+const kpP = (d, fill = 'none') => `<path d="${d}" fill="${fill}" ${kpO}/>`;
+const kpL = (d, col, w = 6) => `<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const kpC = (cx, cy, r, fill, ol = true) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" ${ol ? kpO : ''}/>`;
+const kpE = (cx, cy, rx, ry, fill, ol = true, rot = 0) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" ${ol ? kpO : ''}${rot ? ` transform="rotate(${rot} ${cx} ${cy})"` : ''}/>`;
+const KPC = { leaf: '#7DBB6A', leaf2: '#5FA052', bark: '#8B5A2B', sky: '#DCEEFB', water: '#4A90D9', sun: '#F6C744', fire: '#F28C28', flame: '#FFD34D', skin: '#F2C9A5', soil: '#B98A5A', gold: '#E8B923', stone: '#A9A39A', red: '#E25B4F', grass: '#A9D18E' };
+/** a tree laid out like 木: trunk, a branch across, two roots, leaves on top */
+function kpTree(cx, top, w, h) {
+  const b = top + h * 0.3, r0 = top + h * 0.42, bot = top + h, rl = w * 0.17;
+  return kpC(cx - w * 0.3, top + h * 0.17, rl, KPC.leaf, false) + kpC(cx + w * 0.3, top + h * 0.17, rl, KPC.leaf, false) + kpC(cx, top + h * 0.08, rl * 1.1, KPC.leaf2, false)
+    + kpL(`M${cx} ${top} V${bot}`, KPC.bark, w * 0.13) + kpL(`M${cx - w / 2} ${b} H${cx + w / 2}`, KPC.bark, w * 0.09)
+    + kpL(`M${cx} ${r0} L${cx - w * 0.45} ${bot - h * 0.12}`, KPC.bark, w * 0.09) + kpL(`M${cx} ${r0} L${cx + w * 0.45} ${bot - h * 0.12}`, KPC.bark, w * 0.09);
+}
+const kpGround = (y = 93) => kpL(`M4 ${y} H96`, '#9C7B55', 3);
+const KPIC = {
+  '一': { r: 1, c: 'One counting stick', d: () => kpL('M14 50 H86', KPC.bark, 9) + kpL('M14 50 H86', '#C49A6C', 4) },
+  '二': { r: 1, c: 'Two counting sticks', d: () => kpL('M22 30 H78', KPC.bark, 9) + kpL('M10 74 H90', KPC.bark, 9) },
+  '三': { r: 1, c: 'Three counting sticks', d: () => kpL('M20 20 H80', KPC.bark, 9) + kpL('M26 50 H74', KPC.bark, 9) + kpL('M10 82 H90', KPC.bark, 9) },
+  '山': { r: 1, c: 'A mountain with three peaks', d: () => kpP('M4 90 L20 38 L31 62 L50 8 L69 62 L80 38 L96 90 Z', '#9CC77E') + kpP('M50 8 L42 27 L47 24 L51 29 L55 25 L58 27 Z', '#fff') + kpGround(90) },
+  '川': { r: 1, c: 'Water flowing between its banks', d: () => `<path d="M8 4 H92 L96 96 H4 Z" fill="${KPC.sky}"/>` + kpL('M24 8 C 20 35, 27 55, 13 90', KPC.water, 7) + kpL('M50 18 C 47 40, 53 55, 50 74', KPC.water, 7) + kpL('M78 6 C 81 40, 75 62, 80 92', KPC.water, 7) },
+  '木': { r: 1, c: 'A tree: its branches above and roots below', d: () => kpTree(50, 6, 76, 88) + kpGround(94) },
+  '林': { r: 1, c: 'Two trees together: a grove', d: () => kpTree(27, 10, 42, 82) + kpTree(73, 10, 42, 82) + kpGround(93) },
+  '森': { r: 1, c: 'Three trees together: a forest', d: () => kpTree(50, 3, 40, 44) + kpTree(27, 50, 40, 44) + kpTree(73, 50, 40, 44) + kpGround(95) },
+  '本': { r: 1, c: 'A tree with a mark at its roots: the root, the origin. It also means “book”', d: () => kpTree(50, 6, 76, 88) + kpL('M30 76 H70', KPC.red, 6) + kpGround(94) },
+  '日': { r: 1, c: 'The sun', d: () => [0, 45, 90, 135, 180, 225, 270, 315].map(a => { const t = a * Math.PI / 180; return kpL(`M${50 + 36 * Math.cos(t)} ${50 + 36 * Math.sin(t)} L${50 + 46 * Math.cos(t)} ${50 + 46 * Math.sin(t)}`, KPC.fire, 4); }).join('') + kpC(50, 50, 30, KPC.sun) + kpL('M40 50 H60', '#C98A0E', 4) },
+  '月': { r: 1, c: 'A crescent moon', d: () => `<rect x="4" y="4" width="92" height="92" rx="14" fill="#2E3B66"/>` + kpC(18, 20, 1.6, '#fff', false) + kpC(84, 30, 1.4, '#fff', false) + kpC(80, 78, 1.8, '#fff', false) + kpP('M64 8 C 18 20, 18 80, 64 94 C 42 76, 42 26, 64 8 Z', '#F3E6A0') + kpL('M33 42 H45', '#C9B860', 3) + kpL('M33 58 H44', '#C9B860', 3) },
+  '明': { r: 1, c: 'The sun and the moon together: bright', d: () => kpC(26, 50, 18, KPC.sun) + kpL('M18 50 H34', '#C98A0E', 3) + `<rect x="50" y="6" width="46" height="88" rx="10" fill="#2E3B66"/>` + kpP('M80 10 C 50 22, 50 78, 80 90 C 64 74, 64 26, 80 10 Z', '#F3E6A0') },
+  '火': { r: 1, c: 'A fire with sparks flying up', d: () => kpL('M16 92 L74 70', KPC.bark, 8) + kpL('M84 92 L26 70', KPC.bark, 8) + kpP('M50 10 C 64 30, 76 46, 67 66 C 62 79, 38 79, 33 66 C 26 48, 44 36, 50 10 Z', KPC.fire) + kpP('M50 38 C 57 50, 60 58, 56 68 C 53 74, 47 74, 44 68 C 41 58, 46 50, 50 38 Z', KPC.flame) + kpP('M24 26 C 30 32, 30 40, 24 42 C 18 40, 19 32, 24 26 Z', KPC.flame) + kpP('M76 22 C 82 28, 82 36, 76 38 C 70 36, 71 28, 76 22 Z', KPC.flame) },
+  '水': { r: 1, c: 'Water flowing, with drops splashing to each side', d: () => `<path d="M4 70 Q 50 60 96 70 V96 H4 Z" fill="${KPC.sky}"/>` + kpL('M50 6 V82 Q 50 90 42 86', KPC.water, 8) + kpL('M40 40 L14 76', KPC.water, 6) + kpL('M56 42 L88 84', KPC.water, 6) + kpL('M78 26 L62 44', KPC.water, 5) + kpC(26, 30, 3.5, KPC.water, false) + kpC(20, 50, 3, KPC.water, false) },
+  '金': { r: 0, c: 'Memory picture: nuggets of gold 丷 buried under a mountain 人', d: () => kpP('M8 50 L50 8 L92 50 V92 H8 Z', '#C9A46B') + kpL('M28 52 H72', '#8E6A3A', 3) + kpL('M22 70 H78', '#8E6A3A', 3) + kpL('M12 90 H88', '#8E6A3A', 3) + kpC(32, 76, 6, KPC.gold) + kpC(68, 76, 6, KPC.gold) + kpC(50, 62, 3.5, KPC.gold) },
+  '土': { r: 1, c: 'A mound of earth on the ground, a sprout growing from it', d: () => kpP('M18 88 Q 50 50 82 88 Z', KPC.soil) + kpL('M50 84 V18', KPC.leaf2, 5) + kpP('M50 44 C 40 34, 26 38, 22 46 C 32 52, 44 52, 50 44 Z', KPC.leaf) + kpP('M50 44 C 60 34, 74 38, 78 46 C 68 52, 56 52, 50 44 Z', KPC.leaf) + kpL('M6 88 H94', '#7A5A35', 4) },
+  '生': { r: 1, c: 'A plant growing out of the ground: life, to be born', d: () => kpL('M8 90 H92', '#7A5A35', 4) + kpL('M50 90 V12', KPC.leaf2, 5) + kpP('M50 38 C 38 26, 22 30, 18 40 C 30 46, 44 46, 50 38 Z', KPC.leaf) + kpP('M50 62 C 62 52, 78 56, 82 64 C 70 70, 56 70, 50 62 Z', KPC.leaf) + kpP('M50 12 C 44 6, 36 10, 36 16 C 42 18, 48 16, 50 12 Z', KPC.leaf) },
+  '田': { r: 1, c: 'A rice field divided by paths', d: () => kpP('M12 12 H88 V88 H12 Z', KPC.grass) + kpL('M50 14 V86', '#B98A5A', 5) + kpL('M14 50 H86', '#B98A5A', 5) + [[26, 26], [70, 26], [26, 70], [70, 70]].map(([x, y]) => kpL(`M${x} ${y + 8} V${y - 4} M${x - 5} ${y + 8} L${x - 7} ${y} M${x + 5} ${y + 8} L${x + 7} ${y}`, KPC.leaf2, 2.5)).join('') },
+  '人': { r: 1, c: 'A person seen from the side, walking', d: () => kpC(56, 12, 7, KPC.skin) + kpL('M54 20 C 52 34, 46 48, 38 60 L12 90', KPC.red, 7) + kpL('M44 50 L88 90', '#4A5A8C', 7) + kpL('M52 30 L68 44', KPC.red, 5) },
+  '大': { r: 1, c: 'A person standing with arms stretched wide: big', d: () => kpC(50, 13, 8, KPC.skin) + kpL('M10 36 H90', KPC.red, 7) + kpL('M50 22 V52', KPC.red, 8) + kpL('M50 52 L14 92', '#4A5A8C', 7) + kpL('M50 52 L86 92', '#4A5A8C', 7) },
+  '天': { r: 1, c: 'A person 大 with the sky above their head', d: () => `<path d="M6 4 H94 V24 H6 Z" fill="${KPC.sky}"/>` + kpL('M18 20 H82', KPC.water, 6) + kpC(50, 32, 7, KPC.skin) + kpL('M12 46 H88', KPC.red, 7) + kpL('M50 39 V60', KPC.red, 8) + kpL('M50 60 L16 94', '#4A5A8C', 7) + kpL('M50 60 L84 94', '#4A5A8C', 7) },
+  '立': { r: 1, c: 'A person standing on the ground', d: () => kpC(50, 12, 7, KPC.skin) + kpL('M20 28 H80', KPC.red, 6) + kpL('M50 20 V54', KPC.red, 7) + kpL('M50 54 L34 84', '#4A5A8C', 6) + kpL('M50 54 L66 84', '#4A5A8C', 6) + kpL('M6 88 H94', '#7A5A35', 5) },
+  '休': { r: 1, c: 'A person 亻 resting against a tree 木', d: () => kpC(20, 14, 6, KPC.skin) + kpL('M20 20 C 20 40, 22 60, 24 92', KPC.red, 6) + kpL('M20 30 L36 22', KPC.red, 4) + kpTree(68, 8, 54, 84) + kpGround(93) },
+  '口': { r: 1, c: 'An open mouth', d: () => kpP('M20 26 Q 50 16 80 26 Q 86 54 80 80 Q 50 90 20 80 Q 14 54 20 26 Z', KPC.red) + kpP('M28 36 Q 50 30 72 36 Q 76 54 72 70 Q 50 76 28 70 Q 24 54 28 36 Z', '#6B1E1E') + kpP('M32 38 H68 V44 H32 Z', '#fff') },
+  '目': { r: 1, c: 'An eye, turned on its side', d: () => kpP('M50 6 C 82 28, 82 72, 50 94 C 18 72, 18 28, 50 6 Z', '#fff') + kpC(50, 50, 15, '#5B8DB8') + kpC(50, 50, 6, '#1E2A3A', false) + kpC(46, 45, 2.5, '#fff', false) },
+  '見': { r: 1, c: 'A big eye 目 on legs 儿: to see', d: () => kpP('M50 6 C 72 18, 72 46, 50 58 C 28 46, 28 18, 50 6 Z', '#fff') + kpC(50, 32, 9, '#5B8DB8') + kpC(50, 32, 4, '#1E2A3A', false) + kpL('M42 58 C 40 74, 30 86, 14 90', '#4A5A8C', 7) + kpL('M58 58 V82 Q 60 90 86 88', '#4A5A8C', 7) },
+  '耳': { r: 1, c: 'An ear', d: () => kpP('M34 10 C 72 2, 92 30, 80 56 C 74 70, 62 72, 60 84 C 58 94, 40 96, 34 86', KPC.skin) + kpP('M34 10 C 24 30, 26 60, 34 86', KPC.skin) + kpL('M44 26 C 62 22, 72 36, 64 50 C 58 58, 50 56, 48 64', '#C98B6B', 4) },
+  '手': { r: 1, c: 'A hand with its fingers spread', d: () => kpE(48, 68, 24, 20, KPC.skin) + [[30, 52, 26, 18], [42, 50, 40, 8], [54, 50, 56, 8], [66, 54, 70, 20]].map(([x1, y1, x2, y2]) => kpL(`M${x1} ${y1} L${x2} ${y2}`, KPC.skin, 9) + kpL(`M${x1} ${y1} L${x2} ${y2}`, '#C98B6B', 1.2)).join('') + kpL('M70 70 L90 56', KPC.skin, 9) },
+  '足': { r: 1, c: 'A knee 口 above the leg and foot', d: () => kpC(50, 24, 16, KPC.skin) + kpC(50, 24, 7, '#E6B48E', false) + kpL('M50 40 V76', KPC.skin, 14) + kpL('M50 80 L86 88', KPC.skin, 12) + kpL('M50 76 Q 44 88 14 90', '#4A5A8C', 5) },
+  '子': { r: 1, c: 'A baby wrapped up, waving its arms', d: () => kpC(50, 20, 14, KPC.skin) + kpL('M12 50 H88', KPC.skin, 8) + kpP('M38 36 H62 C 64 56, 56 76, 50 90 Q 44 96 36 88 C 44 74, 40 52, 38 36 Z', '#9DC3E6') },
+  '女': { r: 1, c: 'A woman kneeling with her arms crossed', d: () => kpC(52, 12, 8, KPC.skin) + kpL('M50 20 C 40 40, 34 60, 26 88', '#C0507A', 7) + kpL('M50 20 C 60 44, 66 60, 74 88', '#C0507A', 7) + kpL('M12 52 H88', KPC.skin, 6) + kpL('M30 40 L70 70', KPC.skin, 5) },
+  '雨': { r: 1, c: 'Rain falling from the clouds in the sky', d: () => kpL('M8 10 H92', KPC.water, 5) + kpP('M14 32 Q 18 18 34 22 Q 44 12 58 20 Q 76 14 84 28 Q 90 36 84 40 H16 Q 10 38 14 32 Z', '#D5DCE6') + [[32, 56], [68, 56], [32, 78], [68, 78]].map(([x, y]) => kpP(`M${x} ${y - 9} C ${x + 6} ${y}, ${x + 5} ${y + 7}, ${x} ${y + 7} C ${x - 5} ${y + 7}, ${x - 6} ${y}, ${x} ${y - 9} Z`, KPC.water)).join('') + kpL('M50 40 V92', '#9FB2C8', 3) },
+  '門': { r: 1, c: 'A gate with two doors', d: () => kpP('M12 8 H46 V92 H12 Z', '#B7834F') + kpP('M54 8 H88 V92 H54 Z', '#B7834F') + [24, 40, 56, 72].map(y => kpL(`M16 ${y} H42 M58 ${y} H84`, '#8B5A2B', 2.5)).join('') + kpC(42, 52, 2, '#3B3127', false) + kpC(58, 52, 2, '#3B3127', false) },
+  '車': { r: 1, c: 'A cart seen from above: two wheels, the axle and the box', d: () => kpL('M50 4 V96', KPC.bark, 6) + kpP('M30 34 H70 V66 H30 Z', '#C49A6C') + kpL('M30 50 H70', KPC.bark, 3) + [16, 84].map(y => kpP(`M18 ${y - 6} H82 V${y + 6} H18 Z`, '#555') + kpL(`M26 ${y} H74`, '#999', 2)).join('') },
+  '魚': { r: 1, c: 'A fish standing on its tail: head, scaly body, tail fins', d: () => kpP('M50 4 L30 30 H70 Z', '#7FB3D5') + kpE(50, 52, 24, 24, '#7FB3D5') + kpL('M50 30 V76 M28 52 H72', '#4E86B0', 3) + kpC(44, 20, 2.5, '#1E2A3A', false) + [22, 40, 60, 78].map(x => kpP(`M${x} 80 L${x - 6} 94 H${x + 6} Z`, '#4E86B0')).join('') },
+  '竹': { r: 1, c: 'Two bamboo stalks with leaves', d: () => [26, 72].map(x => kpL(`M${x} 30 V94`, '#6BAF5B', 8) + kpL(`M${x - 5} 52 H${x + 5} M${x - 5} 74 H${x + 5}`, '#3F7D35', 3) + kpP(`M${x} 30 C ${x - 10} 22, ${x - 20} 14, ${x - 22} 6 C ${x - 10} 10, ${x - 2} 18, ${x} 30 Z`, KPC.leaf) + kpP(`M${x} 30 C ${x + 8} 26, ${x + 18} 24, ${x + 22} 18 C ${x + 14} 30, ${x + 6} 32, ${x} 30 Z`, KPC.leaf)).join('') },
+  '米': { r: 1, c: 'Grains of rice around a stalk', d: () => kpL('M50 6 V94', '#C2A15A', 5) + kpL('M10 46 H90', '#C2A15A', 5) + [[30, 22, -30], [70, 22, 30], [26, 74, 40], [74, 74, -40]].map(([x, y, a]) => kpE(x, y, 6, 11, '#F4ECD0', true, a)).join('') },
+  '糸': { r: 1, c: 'A twisted bundle of silk thread', d: () => kpP('M50 6 C 30 16, 66 26, 44 36 C 26 46, 70 52, 50 62', 'none') + kpL('M50 6 C 30 16, 66 26, 44 36 C 26 46, 70 52, 50 62', '#E7A6C1', 6) + kpL('M50 62 V94 M50 66 L28 88 M50 66 L72 88', '#E7A6C1', 5) },
+  '貝': { r: 1, c: 'A cowrie shell (shells were once used as money)', d: () => kpP('M50 6 C 78 6, 82 64, 50 74 C 18 64, 22 6, 50 6 Z', '#F2DDC1') + kpL('M50 14 C 46 30, 54 48, 50 66', '#8B6A4A', 3) + [26, 40, 54].map(y => kpL(`M42 ${y} H46 M54 ${y} H58`, '#8B6A4A', 2.5)).join('') + kpL('M38 74 L22 92 M62 74 L78 92', '#8B6A4A', 5) },
+  '心': { r: 1, c: 'A heart', d: () => kpP('M50 88 C 18 66, 6 44, 18 26 C 28 12, 46 16, 50 32 C 54 16, 72 12, 82 26 C 94 44, 82 66, 50 88 Z', KPC.red) + kpL('M40 22 C 38 12, 44 6, 50 8', '#A8323A', 4) + kpC(64, 36, 4, '#F28C8C', false) },
+  '石': { r: 1, c: 'A rock 口 at the foot of a cliff 厂', d: () => kpP('M4 14 H96 V22 H22 C 16 50, 12 74, 4 94 Z', '#9C8F80') + kpP('M38 56 Q 60 46 82 56 Q 90 74 82 90 Q 60 96 38 90 Q 30 74 38 56 Z', KPC.stone) + kpL('M46 66 L56 72', '#7E776E', 2) },
+  '牛': { r: 1, c: 'A cow’s head from the front: horns and ears', d: () => kpL('M18 30 C 22 14, 32 10, 40 22 M82 30 C 78 14, 68 10, 60 22', '#E8DCC4', 6) + kpP('M38 22 H62 C 66 50, 62 82, 50 92 C 38 82, 34 50, 38 22 Z', '#C49A6C') + kpL('M8 56 H38 M62 56 H92', '#C49A6C', 9) + kpC(44, 40, 2.5, '#1E2A3A', false) + kpC(56, 40, 2.5, '#1E2A3A', false) + kpE(50, 82, 9, 6, '#E8B4A0') },
+  '上': { r: 1, c: 'A mark above a line: up, above', d: () => kpL('M6 88 H94', '#7A5A35', 6) + kpL('M46 88 V36', '#666', 2.5) + kpC(46, 26, 13, KPC.red) + kpL('M46 56 L66 52', '#666', 2) + kpP('M66 46 L80 52 L66 58 Z', KPC.sun) },
+  '下': { r: 1, c: 'A mark below a line: down, below', d: () => kpL('M6 12 H94', KPC.bark, 7) + kpL('M48 12 V58', '#666', 2.5) + kpP('M36 58 H60 V84 Q 48 92 36 84 Z', KPC.red) + kpC(70, 40, 6, KPC.sun) },
+  '中': { r: 1, c: 'A pole through the middle of a box: the middle', d: () => kpP('M18 32 H82 V70 H18 Z', '#E8D5A8') + kpL('M50 4 V96', KPC.bark, 6) + kpP('M50 6 L74 12 L50 18 Z', KPC.red) },
+  '小': { r: 1, c: 'Tiny things: small grains', d: () => kpL('M50 8 V84 Q 50 92 42 88', '#C2A15A', 6) + kpE(24, 52, 7, 11, '#E8DCC0', true, 30) + kpE(76, 52, 7, 11, '#E8DCC0', true, -30) + kpC(50, 8, 4, '#E8DCC0') }
+};
+/** picture → traced → kanji strip */
+function kpStrip(k, cls = '') {
+  const p = KPIC[k]; if (!p) return '';
+  const art = p.d(), bg = `<rect x="0" y="0" width="100" height="100" rx="12" fill="#FBF7EE"/>`;
+  const glyph = op => `<text x="50" y="54" text-anchor="middle" dominant-baseline="middle" font-size="86" fill="${op ? '#C0392B' : KP_INK}" ${op ? 'fill-opacity=".92"' : ''} style="font-family:var(--ffj)">${esc(k)}</text>`;
+  const svg = (inner, lab) => `<svg viewBox="0 0 100 100" role="img" aria-label="${esc(lab)}">${bg}${inner}</svg>`;
+  return `<div class="kps ${cls}" data-kps="${esc(k)}">
+    <div class="kps-row"><figure>${svg(art, p.c)}</figure><span class="kps-a">→</span>
+      <figure class="kps-mid">${svg(`<g class="kps-art">${art}</g><g class="kps-g">${glyph(true)}</g>`, 'The kanji traced over the picture')}</figure><span class="kps-a">→</span>
+      <figure>${svg(glyph(false), k)}</figure></div>
+    <div class="kps-cap"><span>${p.r ? '' : '<b class="kps-tag">Memory picture</b> '}${esc(p.r ? p.c : p.c.replace(/^Memory picture:\s*/, ''))}</span><button class="ghost kps-play" onclick="App.kpPlay(this)">▶ Watch it change</button></div>
+  </div>`;
+}
+
 
 /* =====================================================================
    ANKI DECKS: import an .apkg and the dojo adapts to it.
@@ -4387,7 +4493,8 @@ function ankiNote(n, map) {
 const MIME = { mp3: 'audio/mpeg', ogg: 'audio/ogg', oga: 'audio/ogg', opus: 'audio/ogg', m4a: 'audio/mp4', aac: 'audio/aac', wav: 'audio/wav', flac: 'audio/flac', webm: 'audio/webm',
   png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', webp: 'image/webp', svg: 'image/svg+xml', avif: 'image/avif' };
 async function ankiSave(D, step) {
-  const t = D.types[D.ti], map = D.map, id = 'd' + Date.now().toString(36);
+  const t = D.types[D.ti], map = D.map, old = ANKI.decks.find(d => d.name === D.name && d.type === t.name), id = old ? old.id : 'd' + Date.now().toString(36);
+  if (old) { await ankiDb.delPrefix('media', id + '/'); for (const [k, u] of ANKI.urls) if (k.startsWith('a:' + id + '/')) { URL.revokeObjectURL(u); ANKI.urls.delete(k); } }   // the same deck again: update it, don't add a copy
   const notes = t.notes.map(n => ankiNote(n, map)).filter(x => x.w && x.m);
   const want = new Set(); notes.forEach(x => { if (D.opts.voices) { if (x.wa) want.add(x.wa); if (x.sa) want.add(x.sa); } if (D.opts.pics && x.pic) want.add(x.pic); });
   const names = [...want].filter(nm => D.media[nm] !== undefined && D.zip.file(D.media[nm]));
@@ -4417,7 +4524,7 @@ async function ankiBoot() {
   ANKI.sig = ''; ankiApply(); render();
 }
 function ankiApply() {
-  const base = V.filter(x => x.lvl !== 'ANKI'), sig = base.length + ':' + ANKI.decks.map(d => d.id).join(',') + ':' + settings.deckVoiceFirst;
+  const base = V.filter(x => x.lvl !== 'ANKI'), sig = base.length + ':' + ANKI.decks.map(d => d.id).join(',') + ':' + (settings.deckVoice !== false);
   if (sig === ANKI.sig) return;
   ANKI.sig = sig;
   // every object that can stand for a dictionary word: the data, Path-only words and situation phrases
@@ -4437,7 +4544,7 @@ function ankiApply() {
       if (seen.has(x.id)) continue;   // same word twice in the deck(s)
       for (const y of byId.get(x.id) || [x]) {
         y.dk = d.name; y.dkId = d.id; y.au0 = y.au;
-        if (dau) { y.dau = dau; if (!y.au || settings.deckVoiceFirst) y.au = dau; }
+        if (dau) { y.dau = dau; if (!y.au || settings.deckVoice !== false) y.au = dau; }   // the word plays your deck's voice everywhere
         if (sent && !y.ex.some(e => plain(e.j) === plain(sent.j))) y.ex = [sent, ...y.ex];
         if (d.opts.pics && n.pic) y.dpic = `a:${d.id}/${n.pic}`;
         if (n.note) y.dnote = n.note;
@@ -4513,11 +4620,11 @@ function ankiUnits() {
   if (ANKI.unitsSig === sig && ANKI.units) return ANKI.units;
   const units = [];
   for (const d of ANKI.decks) {
-    const its = ANKI.items.filter(x => x.dkId === d.id);
+    const its = ANKI.items.filter(x => x.dkId === d.id && x.lvl === 'ANKI');   // JLPT words are taught in the JLPT course: nothing is taught twice
     const lessons = [], seenK = new Set(), short = d.id.slice(-4);
     for (let i = 0; i < its.length; i += WPU) {
       const items = its.slice(i, i + WPU), n = lessons.length + 1;
-      const kan = [...new Set(items.flatMap(x => hanOf(x.w)))].filter(c => KMAP[c] && !seenK.has(c)).slice(0, 6); kan.forEach(c => seenK.add(c));
+      const kan = [];   // every JLPT kanji is taught in the JLPT course
       const lines = items.map(x => { const e = (x.ex || []).find(e => e.dkId === d.id) || (x.ex || []).find(e => e.e && plain(e.j).length <= 40); return e ? { j: e.j, e: e.e, au: e.dau || (e.au ? 's' + e.au : null) } : null; }).filter(Boolean).slice(0, 8);
       const lvc = {}; items.forEach(x => { if (LV.includes(x.lvl)) lvc[x.lvl] = (lvc[x.lvl] || 0) + 1; });
       const lvl = Object.entries(lvc).sort((a, b) => b[1] - a[1]).map(e => e[0])[0] || 'N5';
@@ -4545,9 +4652,12 @@ function vAnki() {
   if (ANKI.busy) return `<h1>Anki deck</h1><div class="card ak-busy"><div class="spin" aria-hidden="true"></div><p>${esc(ANKI.busy)}</p></div>`;
   if (ANKI.done) {
     const r = ANKI.done;
-    return `<h1>Deck added</h1><div class="card ak-done"><b>${esc(r.name)}</b>
-      <ul class="ak-stats"><li><b>${fmtN(r.notes)}</b> words imported</li><li><b>${fmtN(r.matched)}</b> matched to dictionary words, which now use your deck’s ${r.voices ? 'voice and ' : ''}sentence</li><li><b>${fmtN(r.extra)}</b> new words in the “My deck” level</li>${r.voices ? `<li><b>${fmtN(r.media)}</b> recordings and pictures saved on this device</li>` : ''}${r.seeded ? `<li><b>${fmtN(r.seeded)}</b> words you’ve already studied in Anki keep their progress. The Path skips lessons where you know every word and kanji</li>` : ''}</ul>
-      <div class="btnrow"><button class="btn" onclick="App.ptab('anki');App.go('path')">Open My deck on the Path</button><button class="btn line" onclick="App.go('settings')">Done</button></div></div>`;
+    return `<h1>${r.replaced ? 'Deck updated' : 'Deck added'}</h1><div class="card ak-done"><b>${esc(r.name)}</b>
+      <ul class="ak-stats"><li><b>${fmtN(r.notes)}</b> words synced. <b>${fmtN(r.matched)}</b> are words the dojo already has, so they stay one word each, now with your deck’s sentence${r.voices && r.voiced ? ` and voice (${fmtN(r.voiced)} recordings)` : ''}</li>
+        ${r.extra ? `<li><b>${fmtN(r.extra)}</b> words aren’t on the JLPT lists. They’re in Deck extras on the Path and the “My deck” word level</li>` : ''}
+        ${r.seeded ? `<li><b>${fmtN(r.seeded)}</b> words keep your Anki progress: same review schedule, no starting over</li>` : ''}
+        ${r.plan.map(p => `<li><b>${p.l} Path re-planned:</b> ${p.known ? `${fmtN(p.known)} words you already know won’t be taught again${p.saved ? ` (${fmtN(p.saved)} fewer lessons)` : ''}` : ''}${p.known && p.first ? '; ' : ''}${p.first ? `your deck’s other ${p.l} words come first, over the next ${fmtN(p.first)} lessons` : ''}</li>`).join('')}</ul>
+      <div class="btnrow"><button class="btn" onclick="App.ptab('jlpt');App.go('path')">See your Path</button>${r.extra ? `<button class="btn line" onclick="App.ptab('anki');App.go('path')">Deck extras</button>` : ''}<button class="btn line" onclick="App.go('home')">Home</button></div></div>`;
   }
   if (!D) return `<h1>Anki deck</h1><div class="card"><p>Choose an .apkg file exported from Anki.</p><button class="btn" onclick="$('#ankiFile').click()">Choose a deck</button></div>`;
   const t = D.types[D.ti], P = D.P, opt = i => i < 0 ? '' : esc(P[i].name);
@@ -4562,8 +4672,8 @@ function vAnki() {
     <div class="ak-grid"><div class="card ak-map"><div class="label" style="margin-top:0">Fields</div>${ANKI_ROLES.map(([r, lab, hint]) => `<label class="ak-row"><span><b>${lab}</b><small>${hint}</small></span>${sel(r)}</label>`).join('')}</div>
     <div><div class="label" style="margin-top:0">Preview</div>${prev.map(card).join('')}${ok < prev.length ? `<p class="note warn">Some cards have no word or meaning with these fields. Pick the right fields on the left.</p>` : ''}</div></div>
     <div class="card ak-opts">
-      <label><input type="checkbox" ${D.opts.voices ? 'checked' : ''} onchange="App.ankiOpt('voices', this.checked)"> <span><b>Use the deck’s recordings</b><small>Words without a recording here get your deck’s voice</small></span></label>
-      <label><input type="checkbox" ${D.opts.sentences ? 'checked' : ''} onchange="App.ankiOpt('sentences', this.checked)"> <span><b>Use the deck’s sentences</b><small>Shown first in each word’s examples and in My deck lessons</small></span></label>
+      <label><input type="checkbox" ${D.opts.voices ? 'checked' : ''} onchange="App.ankiOpt('voices', this.checked)"> <span><b>Use the deck’s recordings</b><small>Your deck’s words play its voice everywhere, including words the dojo already has</small></span></label>
+      <label><input type="checkbox" ${D.opts.sentences ? 'checked' : ''} onchange="App.ankiOpt('sentences', this.checked)"> <span><b>Use the deck’s sentences</b><small>Shown first in each word’s examples and in lessons</small></span></label>
       <label><input type="checkbox" ${D.opts.pics ? 'checked' : ''} onchange="App.ankiOpt('pics', this.checked)"> <span><b>Use the deck’s pictures</b><small>Shown on word cards when Pictures are on</small></span></label>
       <label><input type="checkbox" ${D.opts.progress ? 'checked' : ''} onchange="App.ankiOpt('progress', this.checked)"> <span><b>Bring my Anki progress</b><small>${fmtN(reviewed)} of these cards have been studied in Anki. Words you’ve learned there count as known, and the Path skips lessons where you already know everything</small></span></label>
     </div>
@@ -4571,9 +4681,9 @@ function vAnki() {
 }
 function ankiSettingsCard() {
   return `<div class="label">Anki decks</div>
-  <div class="card"><span class="muted" style="font-size:13px">Add an Anki deck (.apkg) and the dojo adapts to it: its words get a My deck track on the Path, your deck’s recordings and sentences are used, and words you already know in Anki are skipped. The deck stays on this device.</span>
+  <div class="card"><span class="muted" style="font-size:13px">Add an Anki deck (.apkg) and the dojo syncs to it: the JLPT Path is re-planned around it (words you know aren’t taught again, the rest come in your deck’s order), your deck’s voices and sentences go on the same words here, and Anki progress carries over. Adding the same deck again updates it. The deck stays on this device.</span>
     ${ANKI.decks.map(d => `<div class="ak-deck"><div><b>${esc(d.name)}</b><span>${fmtN(d.notes.length)} words${d.media ? ` · ${fmtN(d.media)} recordings and pictures` : ''} · added ${new Date(d.imported).toLocaleDateString()}</span></div><button class="btn line sm" onclick="App.ankiRemove('${d.id}')">Remove</button></div>`).join('')}
-    ${ANKI.decks.length ? `<div class="set" style="padding:10px 0 0"><div><b>Deck voice first</b><span>Use your deck’s recording even when the dojo has its own</span></div><label class="sw"><input type="checkbox" ${settings.deckVoiceFirst ? 'checked' : ''} onchange="App.deckVoice(this.checked)"><span></span></label></div>` : ''}
+    ${ANKI.decks.length ? `<div class="set" style="padding:10px 0 0"><div><b>Use my deck’s voice</b><span>Words in your deck play your deck’s recording everywhere. Turn off to keep the dojo’s own recording where it has one</span></div><label class="sw"><input type="checkbox" ${settings.deckVoice !== false ? 'checked' : ''} onchange="App.deckVoice(this.checked)"><span></span></label></div>` : ''}
     <button class="btn sec" onclick="$('#ankiFile').click()">Add an Anki deck</button>
     <input type="file" id="ankiFile" accept=".apkg,.colpkg,application/zip" style="display:none" onchange="App.ankiPick(this.files[0]); this.value=''">
   </div>`;
@@ -4602,21 +4712,24 @@ const ankiApp = {
       step('Saving your deck…');
       const deck = await ankiSave(D, step);
       if (DATA.mode === 'full') { step('Matching words to the dictionary…'); await loadAllVocab().catch(() => {}); }
-      ANKI.decks.push(deck); ANKI.sig = ''; ankiApply();
+      const replaced = ANKI.decks.some(x => x.id === deck.id);
+      ANKI.decks = ANKI.decks.filter(x => x.id !== deck.id).concat(deck); ANKI.sig = ''; ankiApply();
       const mine = ANKI.items.filter(x => x.dkId === deck.id);
       const seeded = D.opts.progress ? ankiSeed(deck) : 0;
       if (!settings.levels.includes('ANKI')) { settings.levels.push('ANKI'); saveSettings(); }
-      ANKI.done = { name: deck.name, notes: deck.notes.length, matched: mine.filter(x => x.lvl !== 'ANKI').length, extra: mine.filter(x => x.lvl === 'ANKI').length, media: deck.media, voices: D.opts.voices, seeded };
+      const plan = LV.map(l => { if (!(DATA.vocab[l] || []).length) return null; planUnits(l); const st = PLAN[l].stats; return st.known || st.deckFirst ? { l, known: st.known, first: st.deckFirst, saved: st.saved } : null; }).filter(Boolean);
+      ANKI.done = { name: deck.name, replaced, notes: deck.notes.length, matched: mine.filter(x => x.lvl !== 'ANKI').length, extra: mine.filter(x => x.lvl === 'ANKI').length, voiced: mine.filter(x => x.lvl !== 'ANKI' && x.dau).length, media: deck.media, voices: D.opts.voices, seeded, plan };
       ANKI.draft = null;
     } catch (e) { console.error(e); toast(e && e.name === 'QuotaExceededError' ? 'Not enough storage space on this device for the deck' : 'Could not save the deck: ' + (e && e.message || e)); }
     ANKI.busy = ''; render(); window.scrollTo(0, 0);
   },
   async ankiRemove(id) { const d = ANKI.decks.find(x => x.id === id); if (!d || !confirm(`Remove “${d.name}” from this device? Your progress on its words stays.`)) return; await ankiRemove(id); toast('Deck removed'); render(); },
-  deckVoice(v) { settings.deckVoiceFirst = !!v; saveSettings(); ANKI.sig = ''; ankiApply(); render(); }
+  deckVoice(v) { settings.deckVoice = !!v; saveSettings(); ANKI.sig = ''; ankiApply(); render(); }
 };
 
 const App = {
   ...ankiApp,
+  kpPlay(b) { const s = b.closest('.kps'); if (!s) return; s.classList.remove('play'); void s.offsetWidth; s.classList.add('play'); },
   leaveExam() { const s = S.session; if (s && s.mode === 'exam' && !s.done && !confirm('Leave the exam? Your answers will be lost.')) return false; stopExamTimer(); return true; },
   go(v, tab) { if (!App.leaveExam()) return; S.session = null; if (v === 'vocab' && tab === 'sit') { S.sit = null; if (DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) loadAllVocab().then(render, render); } S.view = v; if (tab) S.vtab = tab; App.closeSheet(); render(); window.scrollTo(0, 0); if (v === 'search') { const q = $('#q'); if (q && !S.search.q) q.focus(); } },
   vtab(t) { S.vtab = t; S.browse.limit = 100; if (t !== 'sit') S.sit = null; render(); if (t === 'sit' && DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) loadAllVocab().then(render, render); },
