@@ -2232,11 +2232,11 @@ function makeQ(kind, item, dir) {
   if (kind === 'grammar') return makeGrammarQ(item, dir);
   if (kind === 'vocab') {
     const pool = V.length > 40 ? V.filter(x => x.lvl === item.lvl || Math.abs(LV.indexOf(x.lvl) - LV.indexOf(item.lvl)) <= 1) : V;
-    if (dir === 'p2w' && item.pic && settings.pics) {
-      const ppool = pool.filter(x => x.pic && x.pic !== item.pic), bigger = ppool.length >= 3 ? ppool : pool;
+    if (dir === 'p2w' && hasPic(item)) {
+      const ppool = pool.filter(x => hasPic(x) && picKey(x) !== picKey(item)), bigger = ppool.length >= 3 ? ppool : pool;
       const opts = shuffle([item, ...distract(item, bigger, x => x.w, x => x.pos === item.pos)]);
       return { item, dir, jp: false, say: wordSay(item.r), au: item.au, hint: 'Which word is this?',
-        prompt: `<div class="ppic">${picHtml(item.pic, 'xl')}</div>`, meta: `<span class="tag lv">${lvName(item.lvl)}</span>`, grid: true,
+        prompt: `<div class="ppic">${wordPic(item, 'xl')}</div>`, meta: `<span class="tag lv">${lvName(item.lvl)}</span>`, grid: true,
         opts: opts.map(x => ({ html: `<span class="jp cjp">${ruby(x.f)}</span>`, ok: x === item })) };
     }
     if (dir === 'p2w') dir = 'en2jp';
@@ -2292,7 +2292,7 @@ function learnDeck(kind, exclude, custom) {
 function startLearn(kind, carry, custom) {
   const used = carry ? carry.used : new Set(); custom = custom || (carry && carry.custom) || null;
   const pdir = kind === 'vocab' ? S.vf.dir : kind === 'kanji' ? S.kf.qt : '';
-  if ((pdir === 'p2w' || pdir === 'p2k') && settings.pics) custom = (custom || basePool(kind)).filter(x => x.pic);
+  if ((pdir === 'p2w' || pdir === 'p2k') && settings.pics) custom = (custom || basePool(kind)).filter(x => kind === 'vocab' ? hasPic(x) : x.pic);
   const deck = learnDeck(kind, used, custom);
   if (deck.length < 2 && !carry) return toast('Select at least two items');
   if (!deck.length) { toast("You've been through everything in this selection"); return; }
@@ -2308,7 +2308,7 @@ function startTest(items, custom) {
   const pool = custom || (kind === 'vocab' ? vSel() : kind === 'grammar' ? G.filter(g => settings.levels.includes(g.lvl)) : kind === 'kana' ? kanaSel() : K.filter(k => settings.levels.includes(k.lvl)));
   if (pool.length < 2) return toast('Nothing to test');
   const picOnly = !custom && (S.tf.dir === 'p2w' || S.tf.dir === 'p2k') && settings.pics;
-  const queue = items || freshFirst(picOnly ? pool.filter(x => x.pic) : pool, 'test-' + kind).slice(0, S.tf.count);
+  const queue = items || freshFirst(picOnly ? pool.filter(x => kind === 'vocab' ? hasPic(x) : x.pic) : pool, 'test-' + kind).slice(0, S.tf.count);
   if (!items) markSeen(queue.map(x => ['test-' + kind, x.id]));
   S.session = { mode: 'test', kind, pool, queue, idx: 0, dir: custom ? 'mix' : S.tf.dir, results: [], back: S.back }; S.back = null;
   nextQ();
@@ -2319,7 +2319,7 @@ function nextQ() {
   if (s.idx >= list.length) { s.done = true; render(); window.scrollTo(0, 0); return; }
   item = list[s.idx];
   let dir = s.dir;
-  if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp', ...(item.pic && settings.pics ? ['p2w'] : [])] : s.kind === 'grammar' ? ['gfill', 'gfill', 'g2m', 'm2g'] : s.kind === 'kana' ? ['k2r', 'r2k', 'pair'] : ['k2m', 'm2k', 'k2r', ...(item.pic && settings.pics ? ['p2k'] : [])]);
+  if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp', ...(hasPic(item) ? ['p2w'] : [])] : s.kind === 'grammar' ? ['gfill', 'gfill', 'g2m', 'm2g'] : s.kind === 'kana' ? ['k2r', 'r2k', 'pair'] : ['k2m', 'm2k', 'k2r', ...(item.pic && settings.pics ? ['p2k'] : [])]);
   s.q = makeQ(s.kind, item, dir); s.answered = false; s.chosen = -1;
   render(); window.scrollTo(0, 0);
   if (settings.autoSpeak && s.q.jp) playAudio(s.q.au);
@@ -2394,7 +2394,7 @@ function renderCards() {
   }
   const item = s.queue[s.idx], vocab = s.kind === 'vocab';
   const frontJp = !vocab || settings.cardFront === 'jp';
-  const front = vocab ? (frontJp ? `<div class="pword jp">${ruby(item.f)}</div>${settings.romaji ? `<div class="proma">${esc(toRomaji(item.r))}</div>` : ''}` : `${item.pic && settings.pics ? `<div class="ppic">${wordPic(item, 'xl')}</div>` : ''}<div class="pmean">${esc(item.m)}</div>`)
+  const front = vocab ? (frontJp ? `<div class="pword jp">${ruby(item.f)}</div>${settings.romaji ? `<div class="proma">${esc(toRomaji(item.r))}</div>` : ''}` : `${hasPic(item) ? `<div class="ppic">${wordPic(item, 'xl')}</div>` : ''}<div class="pmean">${esc(item.m)}</div>`)
     : s.kind === 'grammar' ? `<div class="pword gq">${gTitleHtml(item.t, false)}</div>` : s.kind === 'kana' ? `<div class="pkanji jp">${esc(item.ch)}</div>` : `<div class="pkanji jp">${item.k}</div>`;
   const remaining = s.queue.length - s.idx;
   const head = `<div class="qtop"><span class="qnav"><button class="ghost" onclick="App.endSession()">✕ End</button>${s.hist.length ? `<button class="ghost backbtn" onclick="App.back()" title="Previous card (undo its rating)">‹ Back</button>` : ''}</span><span>${remaining} left · ${progress[item.id] ? (isDue(item.id) ? 'review' : 'again') : '<b style="color:var(--accent)">new</b>'}</span></div>
@@ -4612,6 +4612,7 @@ async function padWav(blob) {
   return new Blob([buf], { type: 'audio/wav' });
 }
 const hasPic = x => settings.pics && !!(x.dpic || x.pic);
+const picKey = x => x.dpic || x.pic || '';   // the deck's picture wins over the dojo's
 const dpicHtml = (x, cls) => `<img class="pic dpic ${cls}" data-dpic="${esc(x.dpic)}" alt="">`;
 
 /* ---------- the "My deck" Path track ---------- */
@@ -4674,7 +4675,7 @@ function vAnki() {
     <div class="card ak-opts">
       <label><input type="checkbox" ${D.opts.voices ? 'checked' : ''} onchange="App.ankiOpt('voices', this.checked)"> <span><b>Use the deck’s recordings</b><small>Your deck’s words play its voice everywhere, including words the dojo already has</small></span></label>
       <label><input type="checkbox" ${D.opts.sentences ? 'checked' : ''} onchange="App.ankiOpt('sentences', this.checked)"> <span><b>Use the deck’s sentences</b><small>Shown first in each word’s examples and in lessons</small></span></label>
-      <label><input type="checkbox" ${D.opts.pics ? 'checked' : ''} onchange="App.ankiOpt('pics', this.checked)"> <span><b>Use the deck’s pictures</b><small>Shown on word cards when Pictures are on</small></span></label>
+      <label><input type="checkbox" ${D.opts.pics ? 'checked' : ''} onchange="App.ankiOpt('pics', this.checked)"> <span><b>Use the deck’s pictures</b><small>They replace the dojo’s picture for those words everywhere: word cards, lessons, flashcards and picture quizzes</small></span></label>
       <label><input type="checkbox" ${D.opts.progress ? 'checked' : ''} onchange="App.ankiOpt('progress', this.checked)"> <span><b>Bring my Anki progress</b><small>${fmtN(reviewed)} of these cards have been studied in Anki. Words you’ve learned there count as known, and the Path skips lessons where you already know everything</small></span></label>
     </div>
     <div class="btnrow"><button class="btn" onclick="App.ankiSave()"${ok ? '' : ' disabled'}>Add the deck</button><button class="btn line" onclick="App.ankiCancel()">Cancel</button></div>`;
