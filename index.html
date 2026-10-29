@@ -5722,6 +5722,14 @@ function townBuild() {
     pxR(c, x + 10, y + 30, 18, 16, '#9ED6EE'); pxR(c, x + w - 32, y + 26, 20, h - 26, '#8B5A2B');
   });
   labels.push({ x: 6 * TS, y: 22 * TS + 4, t: '家', size: 8, col: '#fff' });
+  if (ANKI.decks.length) {   // the bookshop opens once you've added an Anki deck: your decks live here
+    building(18, 21, 6, 4, (x, y, w, h) => {
+      pxR(c, x, y + 10, w, h - 10, '#EADBC4'); pxR(c, x - 4, y + 2, w + 8, 10, '#2F6B5A'); for (let i = x - 4; i < x + w + 4; i += 6) pxR(c, i, y + 10, 3, 3, '#24564A');
+      pxR(c, x + 6, y + 22, 34, 34, '#9ED6EE'); for (let i = 0; i < 5; i++) pxR(c, x + 8 + i * 6, y + 40, 4, 14, ['#D94848', '#F2C744', '#3B5BA5', '#3FA34D', '#E86A8A'][i]);
+      pxR(c, x + w - 34, y + 20, 24, h - 20, '#7A4A25'); pxR(c, x + w - 24, y + 34, 2, 4, '#F2C744');
+    });
+    labels.push({ x: 21 * TS, y: 21 * TS + 7, t: '本屋', size: 8, col: '#fff' });
+  }
   // station
   building(39, 11, 8, 6, (x, y, w, h) => {
     pxR(c, x, y + 14, w, h - 14, '#E9E2D6'); c.fillStyle = '#7E8794'; c.beginPath(); c.moveTo(x - 8, y + 16); c.lineTo(x + 6, y + 2); c.lineTo(x + w - 6, y + 2); c.lineTo(x + w + 8, y + 16); c.fill();
@@ -5755,7 +5763,7 @@ function townBuild() {
 const DOORS = [
   { tx: 23, ty: 10, id: 'dojo', name: '道場', en: 'Dojo' }, { tx: 7, ty: 8, id: 'school', name: '学校', en: 'School' }, { tx: 6, ty: 16, id: 'konbini', name: 'コンビニ', en: 'Konbini' },
   { tx: 16, ty: 21, id: 'cafe', name: 'カフェ', en: 'Café' }, { tx: 6, ty: 21, id: 'home', name: '家', en: 'Home' }, { tx: 43, ty: 17, id: 'station', name: '駅', en: 'Station' },
-  { tx: 19, ty: 14, id: 'board', name: '掲示板', en: 'Notice board' }
+  { tx: 19, ty: 14, id: 'board', name: '掲示板', en: 'Notice board' }, { tx: 22, ty: 20, id: 'books', name: '本屋', en: 'Bookshop · your Anki decks' }
 ];
 function townNpcs() {
   TG.npcs = [
@@ -5814,11 +5822,22 @@ function talkReply(text) {
 
 /* ---------- quiz battle with Sensei: 3 hits to win, 3 misses and you lose ---------- */
 function battleStart() {
-  const pool = (DATA.vocab.N5 || []).filter(x => x.w && x.m), qs = [];
-  for (const x of shuffle(pool).slice(0, 12)) { const q = makeQ('vocab', x, pick(['jp2en', 'en2jp'])); if (q) qs.push(q); }
-  TG.battle = { qs, i: 0, me: 3, foe: 3, answered: -1, ok: null, done: false };
-  townUI();
+  const qs = [];
+  if (ANKI.items.length >= 8) {
+    // your Anki deck words: due and shaky ones first, then any; every Deck quiz question type, with your deck's voice and sentences
+    const now = Date.now(), its = ANKI.items, due = shuffle(its.filter(x => progress[x.id] && (isDue(x.id, now) || status(x.id) === 'learning')));
+    const weak = its.filter(x => progress[x.id] && progress[x.id].w > 0 && !due.includes(x)).sort((a, b) => progress[b.id].w - progress[a.id].w);
+    const rest = shuffle(its.filter(x => !due.includes(x) && !weak.includes(x)));
+    for (const x of [...due, ...weak, ...rest]) { if (qs.length >= 12) break; const q = ankiQuizQ(x, its); if (q) qs.push(q); }
+  }
+  if (qs.length < 5) {
+    const pool = (DATA.vocab.N5 || []).filter(x => x.w && x.m);
+    for (const x of shuffle(pool).slice(0, 12)) { const q = makeQ('vocab', x, pick(['jp2en', 'en2jp'])); if (q) qs.push(q); }
+  }
+  TG.battle = { qs, i: 0, me: 3, foe: 3, answered: -1, ok: null, done: false, deck: ANKI.items.length >= 8 && qs.some(q => q.item && q.item.dk) };
+  townUI(); battleSay();
 }
+const battleSay = () => { const B = TG.battle, q = B && !B.done && B.qs[B.i]; if (q && q.autoplay) setTimeout(() => playAudio(q.autoplay), 300); };
 function battleAns(k) {
   const B = TG.battle; if (!B || B.answered >= 0) return; const q = B.qs[B.i], ok = !!q.opts[k].ok;
   B.answered = k; B.ok = ok; if (ok) B.foe--; else B.me--;
@@ -5827,7 +5846,7 @@ function battleAns(k) {
   townUI();
   const el = $(ok ? '.tb-foe' : '.tb-me'); if (el) { el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit'); }
 }
-function battleNext() { const B = TG.battle; if (!B) return; if (B.done || B.i + 1 >= B.qs.length) { TG.battle = null; townUI(); return; } B.i++; B.answered = -1; B.ok = null; townUI(); }
+function battleNext() { const B = TG.battle; if (!B) return; if (B.done || B.i + 1 >= B.qs.length) { TG.battle = null; townUI(); return; } B.i++; B.answered = -1; B.ok = null; townUI(); battleSay(); }
 
 /* ---------- interacting ---------- */
 function townInteract() {
@@ -5857,6 +5876,9 @@ function townDoorGo(id) {
   else if (id === 'station') { App.lesson(nextUnit('travel').id); }
   else if (id === 'school') { S.fromPlay = false; S.view = 'play'; S.back = { view: 'play' }; startCards('vocab'); render(); }   // the review session comes back to the town
   else if (id === 'home') { S.fromPlay = false; App.go('home'); }
+  else if (id === 'quick') { S.dq = { sel: ANKI.decks.map(d => d.id), n: 10, focus: 'mix' }; ankiStartQuiz(); }
+  else if (id === 'dquiz') { App.dquiz(); }
+  else if (id === 'extras') { const u = nextUnit('anki'); if (u) App.lesson(u.id); }
   else if (id === 'board') { App.go('home'); }
 }
 
@@ -5885,17 +5907,19 @@ function townUI() {
   } else if (C) {
     if (C.k === 'kanji') card = `<div class="tcard"><div class="tc-body" style="width:100%"><div class="ls-k">${C.first ? 'Kanji found! +20 XP' : 'You found this one already'} · ${esc(C.s.hint)}</div>${kpStrip(C.s.k)}
       <div class="tc-acts"><button class="btn sm line" onclick="App.townKanji('${C.s.k}')">Open ${C.s.k}</button><button class="btn sm" onclick="App.townClose()">OK</button></div></div></div>`;
-    else if (C.k === 'door') card = `<div class="tcard"><div class="tc-av">${C.d.id === 'dojo' ? '🥋' : C.d.id === 'school' ? '🏫' : C.d.id === 'station' ? '🚉' : C.d.id === 'home' ? '🏠' : '📋'}<b>${esc(C.d.name)}</b></div><div class="tc-body">
+    else if (C.k === 'door') card = `<div class="tcard"><div class="tc-av">${C.d.id === 'dojo' ? '🥋' : C.d.id === 'school' ? '🏫' : C.d.id === 'station' ? '🚉' : C.d.id === 'home' ? '🏠' : C.d.id === 'books' ? '📚' : '📋'}<b>${esc(C.d.name)}</b></div><div class="tc-body">
       <div class="tc-say">${C.d.id === 'dojo' ? (() => { const us = planUnits('N5'), u = us.find(x => !unitDone(x) && !unitKnown(x)); return u ? `Next N5 lesson: <b>${esc(u.t)}</b><br><span class="muted">${esc(u.s)}</span>` : 'You’ve finished every N5 lesson!'; })()
         : C.d.id === 'school' ? `${dueCount() ? `<b>${fmtN(dueCount())}</b> reviews are due.` : 'Nothing due right now.'} Review your words with flashcards.`
         : C.d.id === 'station' ? `Travel Japanese: <b>${esc(nextUnit('travel').t)}</b>`
         : C.d.id === 'home' ? 'Back home: leave the town and go to the main app.'
-        : `<b>今日のしごと · Today’s jobs</b><br>${dueCount() ? `📚 ${fmtN(dueCount())} reviews at the school<br>` : ''}🥋 A lesson at the dojo<br>💬 Chat with Yui in the plaza<br>字 Find the hidden kanji (${Object.keys(TOWN.found).length}/${TG.spots.length})`}</div>
-      <div class="tc-acts">${C.d.id === 'board' ? '' : `<button class="btn sm" onclick="App.townDoor('${C.d.id}')">${C.d.id === 'home' ? 'Go home' : 'Go in'}</button>`}<button class="btn sm line" onclick="App.townClose()">${C.d.id === 'board' ? 'OK' : 'Not now'}</button></div></div></div>`;
+        : C.d.id === 'books' ? (() => { const its = ANKI.items, kn = its.filter(x => status(x.id) === 'known').length, du = its.filter(x => isDue(x.id)).length, ex = ANKI.extra.length;
+            return `<b>いらっしゃいませ！</b> Your Anki decks: ${ANKI.decks.map(d => esc(d.name)).join(', ')}<br><span class="muted">${fmtN(its.length)} words · ${fmtN(kn)} known · ${fmtN(du)} due${ex ? ` · ${fmtN(ex)} extra words not on the JLPT lists` : ''}</span>`; })()
+        : `<b>今日のしごと · Today’s jobs</b><br>${dueCount() ? `📚 ${fmtN(dueCount())} reviews at the school<br>` : ''}🥋 A lesson at the dojo<br>💬 Chat with Yui in the plaza<br>${ANKI.decks.length ? '📚 Quiz your Anki decks at the bookshop<br>' : ''}字 Find the hidden kanji (${Object.keys(TOWN.found).length}/${TG.spots.length})`}</div>
+      <div class="tc-acts">${C.d.id === 'board' ? '' : C.d.id === 'books' ? `<button class="btn sm" onclick="App.townDoor('quick')">Quick deck quiz · 10</button><button class="btn sm line" onclick="App.townDoor('dquiz')">Choose a quiz</button>${ankiUnits().length ? `<button class="btn sm line" onclick="App.townDoor('extras')">Deck extras lesson</button>` : ''}` : `<button class="btn sm" onclick="App.townDoor('${C.d.id}')">${C.d.id === 'home' ? 'Go home' : 'Go in'}</button>`}<button class="btn sm line" onclick="App.townClose()">${C.d.id === 'board' ? 'OK' : 'Not now'}</button></div></div></div>`;
     else if (C.k === 'yuiTopics') card = `<div class="tcard"><div class="tc-av">🌸<b>ゆい</b></div><div class="tc-body"><div class="tc-say jp">あ、おはよ〜！なに{話|はな}す？`.replace('{話|はな}', '<ruby>話<rt>はな</rt></ruby>') + `</div>
       <div class="tc-topics">${shuffle(OFF_TOPICS).slice(0, 6).map(t => `<button class="chip" onclick="App.townYui('${t.id}')"><span class="jp">${ruby(t.t, true)}</span><small>${esc(t.en)}</small></button>`).join('')}</div>
       <div class="tc-acts"><button class="btn sm line" onclick="App.townClose()">またね</button></div></div></div>`;
-    else if (C.k === 'sensei') card = `<div class="tcard"><div class="tc-av">🥋<b>先生</b></div><div class="tc-body"><div class="tc-say">「{勝負|しょうぶ}だ！」 A quiz battle on N5 words: 3 right answers wins, 3 wrong and you lose.${TOWN.beat ? ` <span class="muted">You’ve won ${TOWN.beat} time${TOWN.beat === 1 ? '' : 's'}.</span>` : ''}`.replace('{勝負|しょうぶ}', '<ruby>勝負<rt>しょうぶ</rt></ruby>') + `</div>
+    else if (C.k === 'sensei') card = `<div class="tcard"><div class="tc-av">🥋<b>先生</b></div><div class="tc-body"><div class="tc-say">「{勝負|しょうぶ}だ！」 ${ANKI.items.length >= 8 ? 'A quiz battle on <b>your Anki deck words</b>, the ones due or you get wrong first: meaning, reading, listening and your deck’s sentences.' : 'A quiz battle on N5 words.'} 3 right answers wins, 3 wrong and you lose.${TOWN.beat ? ` <span class="muted">You’ve won ${TOWN.beat} time${TOWN.beat === 1 ? '' : 's'}.</span>` : ''}`.replace('{勝負|しょうぶ}', '<ruby>勝負<rt>しょうぶ</rt></ruby>') + `</div>
       <div class="tc-acts"><button class="btn sm" onclick="App.townBattle()">はい！ Fight</button><button class="btn sm line" onclick="App.townClose()">Not now</button></div></div></div>`;
     else if (C.k === 'jii') card = `<div class="tcard"><div class="tc-av">👴<b>おじいさん</b></div><div class="tc-body"><div class="tc-say">今日の言葉じゃ… <span class="muted">Today’s word:</span></div>
       ${C.w ? `<div class="tc-word jp">${ruby(C.w.f || C.w.w, true)} ${sayBtn(C.w.au)}</div><div class="muted">${esc(C.w.m)}</div>` : ''}<div class="tc-acts">${C.w ? `<button class="btn sm line" onclick="App.townWord('${esc(C.w.id)}')">Open the word</button>` : ''}<button class="btn sm" onclick="App.townClose()">ありがとう！</button></div></div></div>`;
@@ -5938,7 +5962,7 @@ function townStep(dt) {
   const near = (x, y, r) => Math.abs(x - TOWN.x) < r && Math.abs(y - TOWN.y) < r;
   let found = null;
   for (const n of TG.npcs) if (near(n.x, n.y, 20)) { found = { type: 'npc', o: n }; break; }
-  if (!found) for (const d of DOORS) if (near(d.tx * TS + 8, d.ty * TS + 8, 21)) { found = { type: 'door', o: d }; break; }
+  if (!found) for (const d of DOORS) if ((d.id !== 'books' || ANKI.decks.length) && near(d.tx * TS + 8, d.ty * TS + 8, 21)) { found = { type: 'door', o: d }; break; }
   if (!found) for (const s of TG.spots) if (near(s.tx * TS + 8, s.ty * TS + 8, 16)) { found = { type: 'spot', o: s }; break; }
   if ((found && found.o) !== (TG.near && TG.near.o)) { TG.near = found; townUI(); }
 }
@@ -5984,7 +6008,7 @@ function townLoop(now) {
 }
 function townMount() {
   const cv = $('#towncv'); if (!cv) return;
-  if (!TG.world) { townBuild(); townNpcs(); }
+  if (!TG.world || TG.decks !== ANKI.decks.length) { TG.decks = ANKI.decks.length; townBuild(); if (!TG.npcs.length) townNpcs(); }   // redraw when decks are added or removed
   const wrap = cv.parentElement, W = wrap.clientWidth, H = wrap.clientHeight;
   TG.scale = W < 520 ? 2 : 3;
   cv.width = W; cv.height = H; TG.cv = cv; TG.ctx = cv.getContext('2d');
