@@ -1456,6 +1456,17 @@ const pick = a => a[Math.random() * a.length | 0];
 const DAY = 864e5;
 const LV = ['N5', 'N4', 'N3', 'N2', 'N1'];
 const kata2hira = s => String(s).replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+/** Keep a reading on its kanji only. Kana caught inside a ruby base move out of it:
+    {が赤|あか} → が{赤|あか} (the あ was sitting on が), {お茶|おちゃ} → お{茶|ちゃ}, {食べ|たべ} → {食|た}べ. */
+const KLIKE = /[\u3400-\u9fff々〆ヵヶ]/;
+function fixRuby(b, r) {
+  let pre = '', post = '';
+  const same = (a, c) => !!a && !!c && kata2hira(a) === kata2hira(c);
+  while (b.length > 1 && !KLIKE.test(b[0])) { if (same(r[0], b[0]) && r.length > 1) r = r.slice(1); pre += b[0]; b = b.slice(1); }
+  while (b.length > 1 && !KLIKE.test(b[b.length - 1]) && r.length > 1 && same(r[r.length - 1], b[b.length - 1])) { post = b[b.length - 1] + post; b = b.slice(0, -1); r = r.slice(0, -1); }
+  return KLIKE.test(b) && r ? [pre, b, r, post] : null;
+}
+const fixMark = s => String(s).replace(MARK, (all, b, r) => { const f = fixRuby(b, r); return f ? `${f[0]}{${f[1]}|${f[2]}}${f[3]}` : all; });
 const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 const fmtN = n => Number(n).toLocaleString('en');
@@ -1479,7 +1490,7 @@ function furi(surface, reading) {
   let g = 1; return segs.map(s => s.k ? `{${s.t}|${m[g++]}}` : s.t).join('');
 }
 function ruby(s, force) {
-  const h = esc(s);
+  const h = esc(fixMark(s));
   if (settings.furigana === 'off' && !force) return h.replace(MARK, '$1');
   // kanji read one by one next to each other (周|しゅう 辺|へん) share one reading, so a long reading doesn't push the kanji apart
   return h.replace(/(?:\{[^|}]+\|[^}]+\}){2,}/g, m => { const ps = [...m.matchAll(MARK)]; return ps.every(p => [...p[1]].every(isK)) ? `{${ps.map(p => p[1]).join('')}|${ps.map(p => p[2]).join('')}}` : m; })
@@ -2113,7 +2124,7 @@ const fillFuri = j => !String(j).includes('{') ? autoFuri(String(j)) : String(j)
    furigana on every other kanji (honouring the Show / Tap / Hide setting).        */
 function rubyTag(t, r) { return settings.furigana === 'off' ? esc(t) : `<ruby>${esc(t)}<rt>${esc(r)}</rt></ruby>`; }
 function segsOf(m) {
-  const out = []; let last = 0;
+  m = fixMark(m); const out = []; let last = 0;
   for (const x of String(m).matchAll(MARK)) { if (x.index > last) out.push({ t: m.slice(last, x.index), r: null }); out.push({ t: x[1], r: x[2] }); last = x.index + x[0].length; }
   if (last < m.length) out.push({ t: m.slice(last), r: null });
   return out;
@@ -4640,7 +4651,7 @@ function ankiSegs(s) {
   return out.map(([b, r]) => [b.replace(/^ /, ''), r]);
 }
 const jpJoin = s => s.replace(/(?<=[^\x00-\x7f]) +| +(?=[^\x00-\x7f])/g, '');
-const ankiFuri = s => jpJoin(ankiSegs(s).map(([b, r]) => r && [...b].some(isK) ? `{${b}|${r}}` : b).join(''));
+const ankiFuri = s => fixMark(jpJoin(ankiSegs(s).map(([b, r]) => r && [...b].some(isK) ? `{${b}|${r}}` : b).join('')));   // a base without its space (が赤[あか]) is split back to が{赤|あか}
 const ankiReading = s => kata2hira(ankiSegs(s).map(([b, r]) => r || b).join('').replace(/\s+/g, ''));
 const ankiBase = s => jpJoin(ankiSegs(s).map(([b]) => b).join('')).trim();
 const soundOf = html => { const m = /\[sound:([^\]]+)\]/.exec(String(html || '')); return m ? m[1].trim() : ''; };
