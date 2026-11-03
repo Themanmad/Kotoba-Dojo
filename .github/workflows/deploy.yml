@@ -59,6 +59,7 @@ jobs:
       - name: Assemble site
         run: |
           cp index.html _site/
+          for f in manifest.webmanifest sw.js icon-192.png icon-512.png; do [ -f "$f" ] && cp "$f" _site/ || true; done
           [ -f LICENSES.md ] && cp LICENSES.md _site/ || true
           [ -d vendor ] && cp -r vendor _site/ || true
           touch _site/.nojekyll
