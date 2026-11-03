@@ -247,20 +247,45 @@ const glossKeys = gs => {
 /** pos: 'verb' | 'i-adj' | 'na-adj' | 'noun' | other; kanji: true for kanji meanings */
 /* per-word fixes where the first meaning picks the wrong picture (null = no picture) */
 const WORD_PICS = { 'かわいそう': '🥺', '可哀想': '🥺', '可哀相': '🥺', '気の毒': '🥺', '貧しい': '🪙', '貧乏': '🪙', '弾く': '🎸', '丁度': null, 'ちょうど': null, '賑やか': '🎉', 'にぎやか': '🎉', '外': null, '他': null, '程': null };
+/* A gloss with more than one sense only gets its picture when the other meanings confirm that sense:
+   現 "present; existing; actual" is now, not a gift; 落 "fall" is dropping, not autumn; 産 "bear" is giving birth. */
+const PIC_SENSE = {
+  present: /\bgift|\bgiv/, gift: /\bgift|\bpresent\b|\bgiv/, give: /\bgift|\bpresent\b/, bear: /animal|grizzly|polar|\bcub\b/, board: /\btrain|\bship|vehicle|airplane|\bbus\b|aboard/,
+  party: /celebrat|festiv|banquet|\bfun\b/, kind: /gentle|kindness|\bnice\b|\bwarm|generous|caring/, fall: /autumn/, spring: /season|springtime|\bmarch\b/,
+  plane: /airplane|aircraft|\bfly|airport/, ear: /\bhear|listen|deaf/, watch: /clock|wrist|\btime/, bank: /money|financ|deposit/, customs: /border|tariff|passport/,
+  pick: /pickaxe|\bmin(e|ing)\b|\bdig/, play: /\bgame|\btoy|\bsport|amuse|pleasant|hang out|\bfun\b/, cold: /illness|\bflu\b|sneez|\bcatch\b/, rule: /ruler|\bmeasur|\blength/, long: /\blength|\bdistance|\bmeasur/,
+  hit: /strike|punch|\bbeat|\bblow\b/, suit: /clothes|\bwear|jacket|garment/, answer: /solution|\bidea|\bsolve/, turn: /rotat|curve|direction|\bbend\b/,
+  face: /expression|countenance|features|\bcheek/, heart: /\bmind|\blove|spirit|feeling/, peace: /\bwar\b|harmony|peaceful|tranquil/, ghost: /spirit|phantom|devil|demon|haunt/,
+  cry: /weep|tear|\bsob/, air: /\bwind|breath|\bblow/, space: /universe|outer|cosmos|\bstar/, leaf: /\btree|\bplant|foliage|\bgreen/, raise: /\blift|\bhand\b|hoist|elevat/,
+  receive: /\bget\b|accept|\bgift/, call: /phone|telephone|\bring\b/, invite: /invitation|\bguest|\bparty/, stamp: /postage|\bmail|\bletter/, pound: /\bweight|currency|sterling/,
+  simple: /\beasy|\bplain|uncomplicated/, help: /rescue|\bsave|emergency|\baid\b|\bassist/, number: /\bcount|\bdigit|numeral|figure/, label: /\btag\b|sticker|price/,
+  wave: /\bsea\b|\bocean|\bsurf|\bwater/, shake: /\bsea\b|\bwater/, deliver: /parcel|package|\bpost\b|\bmail/, reach: /arriv|destination/, mix: /\bstir|blend|\bbowl|cook/,
+  fat: /\bfood|greas|\boil\b|\bobese/, oil: /\bfood|\bfry|cook|petrol|\bfuel/, eat: /\bfood|\bmeal|\bdine/, table: /\bdesk|furniture|\bdine|\bmeal/
+};
+const senseOk = (key, glosses) => { const re = PIC_SENSE[key]; if (!re) return true; const all = glosses.map(g => String(g).toLowerCase()); return all.length <= 1 || all.every(g => g.replace(/\(.*?\)/g, '').trim() === key) || re.test(all.join('; ')); };
+/* kanji whose meaning list still sends them to the wrong picture (null = no picture) */
+const KANJI_PIC_FIX = { 葉: '🍃', 校: '🏫', 寒: '🥶', 凜: '🥶', 泉: '⛲', 掃: '🧹', 表: null, 局: null, 役: null, 番: null, 当: null, 合: null, 返: null, 応: null, 叶: null, 様: null, 産: null, 忍: null, 板: null, 載: null, 賄: null, 隊: null, 党: null, 種: null, 類: null, 削: null,
+  穂: null, 眺: null, 陸: null, 参: null, 某: null, 伯: null, 諸: null, 堤: null, 俗: null, 侍: null, 堅: null, 硬: null, 間: null, 宙: null, 鳴: null, 喚: null, 落: null, 倒: null, 墜: null, 片: null, 圧: null,
+  振: null, 揮: null, 飼: null, 蓄: null, 頂: null, 享: null, 召: null, 呉: null, 施: null, 妥: null, 康: null, 臨: null, 冒: null, 顧: null, 順: null, 志: null, 規: null, 則: null, 綜: null, 儀: null,
+  掌: null, 永: null, 只: null, 敦: null, 酉: null, 冶: null, 奥: null, 精: null, 折: null, 創: null, 貯: null, 印: null, 採: null, 摘: null, 劇: null, 砕: null, 如: null, 拓: null, 繊: null, 啓: null,
+  屯: null, 汰: null, 尾: null, 始: null, 台: null, 字: null, 回: null, 次: null, 詰: null, 抵: null, 般: null, 厚: null, 努: null, 卓: null, 甲: null, 単: null, 易: null, 朴: null, 公: null, 安: null,
+  仕: null, 担: null, 膚: null, 油: null, 脂: null, 肪: null, 壊: null, 亮: null, 伸: null, 暢: null, 焦: null, 秩: null, 罷: null, 黎: null, 迪: null, 捷: null, 晏: null, 遭: null };
 function pictureFor(idx, glosses, pos, kanji, word) {
+  if (kanji && kanji in KANJI_PIC_FIX) { const w = KANJI_PIC_FIX[kanji]; return w ? idx.byChar.get(stripFE(w)) || null : null; }
   if (word && word in WORD_PICS) { const w = WORD_PICS[word]; return w ? idx.byChar.get(stripFE(w)) || null : null; }
   const kind = pos === 'verb' ? 'verb' : (pos === 'i-adj' || pos === 'na-adj') ? 'adj' : 'noun';
   const keys = glossKeys(glosses), hex = e => e && idx.byChar.get(stripFE(e));
   if (kanji) {
     // kanji is the literal character: pictographs first, then each meaning in order across all tables
     const kp = KANJI_PICS.get(kanji); if (kp && hex(kp)) return hex(kp);
-    for (const k of keys) for (const t of ['noun', 'adj', 'verb']) { const h = hex(PICS[t].get(k)); if (h) return h; }
+    // a doubtful sense skips the noun and verb pictures: 寒 "cold" is 🥶 (adjective), not a cold you catch
+    for (const k of keys) for (const t of ['noun', 'adj', 'verb']) { if (t !== 'adj' && !senseOk(k, glosses)) continue; const h = hex(PICS[t].get(k)); if (h) return h; }
   } else {
-    for (const k of keys) { const h = hex(PICS[kind].get(k)); if (h) return h; }
+    for (const k of keys) { if (!senseOk(k, glosses)) continue; const h = hex(PICS[kind].get(k)); if (h) return h; }
     if (kind !== 'noun') return null;
-    for (const k of keys) { const h = hex(PICS.adj.get(k)); if (h) return h; }   // 青 "blue", 一緒 "together" (not verbs: "the rest" isn't resting)
+    for (const k of keys) { if (!senseOk(k, glosses)) continue; const h = hex(PICS.adj.get(k)); if (h) return h; }   // 青 "blue", 一緒 "together" (not verbs: "the rest" isn't resting)
   }
-  for (const k of keys) { if (PIC_NAME_SKIP.has(k) || k.length < 3) continue; const h = idx.byName.get(k); if (h) return h; }
+  for (const k of keys) { if (PIC_NAME_SKIP.has(k) || k.length < 3 || !senseOk(k, glosses)) continue; const h = idx.byName.get(k); if (h) return h; }
   return null;
 }
 
@@ -1270,6 +1295,7 @@ async function main() {
     { name: 'KanjiVG', by: 'Ulrich Apel and contributors', license: 'CC BY-SA 3.0', url: 'https://kanjivg.tagaini.net/' },
     { name: 'Kanji origin stories', by: 'Make Me a Hanzi (Shaunak Kishore), from Unihan and CJKlib', license: 'LGPL-3.0', url: 'https://github.com/skishore/makemeahanzi' },
     { name: 'Kanji types, sound parts, look-alikes', by: 'Kanjium (mifunetoshiro), built on EDRDG data', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' },
+    { name: 'More look-alike kanji', by: 'Lars Yencken, “Orthographic support for passing the reading hurdle in Japanese” (PhD thesis, University of Melbourne, 2010): radical and stroke-edit similarity, as packaged by the Niai project', license: 'CC BY 3.0', url: 'https://github.com/mwil/wanikani-userscripts/tree/master/wanikani-similar-kanji' },
     { name: 'Tatoeba', by: 'Tatoeba contributors', license: 'CC BY 2.0 FR', url: 'https://tatoeba.org/' },
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },
     { name: 'Kanji JLPT levels', by: 'David Luz Gouveia (kanji-data)', license: 'MIT', url: 'https://github.com/davidluzgouveia/kanji-data' },
