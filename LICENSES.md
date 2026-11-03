@@ -31,6 +31,8 @@ generated `data/` files are distributed under **CC BY-SA 4.0**.
 
 The mock exam's questions are generated from the data above, not taken from JLPT papers (those are the Japan Foundation's copyright). Pass marks are the official ones published at [jlpt.jp](https://www.jlpt.jp/e/guideline/results.html).
 
+The memory pictures for kana and 100 kanji, their captions, and the part pictures and one-line stories in the picture breakdowns were made for this app and are released with it. They are original drawings built on KanjiVG stroke paths (CC BY-SA 3.0, so the drawings that include those strokes are shared under CC BY-SA 3.0 too); the part pictures are standard emoji. They were inspired by the general idea of picture mnemonics, but no drawing, story or character list was taken from *Kanji Pict-O-Graphix* or any other book.
+
 The starter grammar set and the Situations word lists built into `index.html` were written for this app. Quote of the day uses public-domain works (poems, classical texts and proverbs; each is credited in the app). It can also show a few short, famous catchphrases by Shuzo Matsuoka and from anime/manga (SLAM DUNK, ONE PIECE, NARUTO, Evangelion, Demon Slayer, Detective Conan, Fullmetal Alchemist). These are not public domain: they remain © their creators and publishers, are quoted as single lines with the speaker, work, creator and rights holder shown, and can be switched off in Settings → Modern quotes; the English translations were written for this app. Kana stroke order comes from KanjiVG (above).
 
 The Japan Foundation doesn't publish official JLPT word lists. The N5–N1 levels

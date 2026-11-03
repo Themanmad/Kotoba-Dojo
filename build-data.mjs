@@ -410,6 +410,28 @@ function getFluent3D() {
    names and meanings for radicals and parts. */
 const KANJIUM_REPO = 'https://github.com/mifunetoshiro/kanjium';
 /** top-level parts of a KanjiVG drawing: [[part, position, role]] (role: 'r' radical, 'p' sound part) */
+/** which part (index into kvgParts) each stroke belongs to, so diagrams can colour a kanji by its parts */
+function kvgStrokeParts(svg, c) {
+  const hex = c.codePointAt(0).toString(16).padStart(5, '0'), rootId = `kvg:${hex}`;
+  const attr = (t, a) => { const m = new RegExp(`kvg:${a}="([^"]*)"`).exec(t); return m ? m[1] : null; };
+  const toks = [...svg.matchAll(/<g\b[^>]*>|<\/g>|<path\b[^>]*>/g)].map(m => m[0]);
+  let depth = 0, rootDepth = -1; const names = [], stack = [], out = [];
+  for (const t of toks) {
+    if (t === '</g>') { depth--; stack.pop(); if (rootDepth >= 0 && depth < rootDepth) break; continue; }
+    if (t.startsWith('<path')) { if (rootDepth < 0) continue; const id = /-s(\d+)"/.exec(t); if (id) out[+id[1] - 1] = stack.reduce((a, b) => b == null ? a : b, -1); continue; }
+    depth++;
+    if (rootDepth < 0) { stack.push(null); if (new RegExp(`\\bid="${rootId}"`).test(t)) rootDepth = depth; continue; }
+    let idx = null; const el = attr(t, 'element'), part = attr(t, 'part');
+    const parentIdx = stack.slice(rootDepth).find(x => typeof x === "number");
+    if (depth === rootDepth + 1 || (depth === rootDepth + 2 && parentIdx == null && stack[stack.length - 1] === 'U')) {
+      if (el) { if (part && part !== '1' && names.lastIndexOf(el) >= 0) idx = names.lastIndexOf(el); else { names.push(el); idx = names.length - 1; } }
+      else if (depth === rootDepth + 1) idx = 'U';
+    }
+    stack.push(idx);
+  }
+  const g = out.map(x => typeof x === 'number' ? x : -1);
+  return g.length && g.every(x => x >= 0) && names.length > 1 ? g : null;
+}
 function kvgParts(svg, c) {
   const hex = c.codePointAt(0).toString(16).padStart(5, '0'), rootId = `kvg:${hex}`;
   const toks = [...svg.matchAll(/<g\b[^>]*>|<\/g>/g)].map(m => m[0]);
@@ -1081,7 +1103,7 @@ async function main() {
         .sort((a, b) => +a[3] - +b[3]).map(m => [+(+m[1]).toFixed(1), +(+m[2]).toFixed(1)]);
       if (!paths.length) continue;
       strokes[l][c] = { d: paths.map(p => p[1]), n: nums.length === paths.length ? nums : [] };
-      if (l !== 'KANA') { const pt = kvgParts(svg, c); if (pt) kvgPartsOf.set(c, pt); }
+      if (l !== 'KANA') { const pt = kvgParts(svg, c); if (pt) { kvgPartsOf.set(c, pt); const g = kvgStrokeParts(svg, c); if (g && Math.max(...g) === pt.length - 1) strokes[l][c].g = g; } }
       n++;
     }
     meta.sources.kanjivg = kv.label;
@@ -1314,5 +1336,5 @@ async function main() {
   if (meta.notes.length) meta.notes.forEach(n => warn(n));
 }
 
-export { checkTranslation, kvgParts, readKanjium, readOrigins, originFor, buildPicIndex, pictureFor, buildExtIndex, extPictureFor, iconSvg, hanOf };
+export { checkTranslation, kvgParts, kvgStrokeParts, readKanjium, readOrigins, originFor, buildPicIndex, pictureFor, buildExtIndex, extPictureFor, iconSvg, hanOf };
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch(e => { console.error('\nBuild failed:', e.message); process.exit(1); });
