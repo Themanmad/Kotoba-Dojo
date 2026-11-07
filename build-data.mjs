@@ -246,7 +246,9 @@ const glossKeys = gs => {
 };
 /** pos: 'verb' | 'i-adj' | 'na-adj' | 'noun' | other; kanji: true for kanji meanings */
 /* per-word fixes where the first meaning picks the wrong picture (null = no picture) */
-const WORD_PICS = { 'かわいそう': '🥺', '可哀想': '🥺', '可哀相': '🥺', '気の毒': '🥺', '貧しい': '🪙', '貧乏': '🪙', '弾く': '🎸', '丁度': null, 'ちょうど': null, '賑やか': '🎉', 'にぎやか': '🎉', '外': null, '他': null, '程': null };
+const WORD_PICS = { '明かり': '💡', '灯': '💡', '明い': "☀️", '明るい': "☀️", '消える': null, '預ける': null, '残す': null, '組む': null, '汲む': "🪣", '苦手': null, '親しい': null, '濃い': null, '跳ぶ': null, '営む': null, '公然': null, '高尚': null, '帯びる': null, '煙る': "💨", '折る': null, '折れる': null, '切れる': null, '壊す': null, '壊れる': null, '割れる': null, '砕く': null, '砕ける': null, 
+  '甘い': "🍬", 'お菓子': "🍬", '菓子': "🍬", '女': "👩", '靴': "👟", '曇り': "☁️", '曇': "☁️", '答える': "💬", '閉まる': "🔒", '食堂': "🍽️", '生徒': "🧑‍🎓", 'たばこ': "🚬", '煙草': "🚬", 'ネクタイ': "👔", '初め': "🏁", '始め': "🏁", '冒頭': "🏁", 'やり遂げる': "🏁", '医学': "💊", '一杯': "🥤", '思い出す': "💭", '親': "👪", '父母': "👪", '高校': "🏫", '高等学校': "🏫", '小学校': "🏫", '心': "❤️", '恋する': "❤️", '探す': "🔍", '捜す': "🔍", '見つける': "🔍", '見付ける': "🔍", '店員': "🧑‍💼", '上司': "🧑‍💼", '鳴る': "🔔", 'チャイム': "🔔", '恥ずかしい': "😳", '飛行場': "🛫", '太る': "⚖️", '痩せる': "⚖️", '漫画': "📖", '物語': "📖", '図鑑': "📖", '召し上がる': "🍽️", '優しい': "😇", 'レポート': "📄", 'リポート': "📄", '沸く': "🍲", '合図': "🚦", '十字路': "🚦", '集まり': "👥", '群れ': "👥", '泉': "⛲", '牛': "🐄", '画家': "🧑‍🎨", '額': "🖼️", '学問': "📚", '火災': "🔥", '岸': "🏖️", '貴重': "💎", '尊い': "💎", '貴い': "💎", '疑問': "❓", '強力': "💪", '力強い': "💪", '逞しい': "💪", '健やか': "💪", '臭い': "🦨", '鎖': "⛓️", '高価': "💰", '資金': "💰", '小包': "📦", '包み': "📦", '桜': "🌸", '札': "💴", '給与': "💴", '覚める': "⏰", '思想': "💡", '点ける': "💡", '芝生': "🌿", '停留所': "🚏", '日光': "☀️", '干す': "☀️", '人間': "🧑", '願う': "🙏", '筆': "🖌️", '豆': "🫘", '虫歯': "🦷", '宿': "🏨", '愉快': "😊", '欠伸': "🥱", '乾電池': "🔋", '休息': "😌", '芸能': "🎭", '四角': "🟥", '時間割': "📅", '時刻表': "📅", '失恋': "💔", '住居': "🏠", '住まい': "🏠", '新幹線': "🚅", '針路': "🧭", '寸法': "📏", '面積': "📏", '繋がり': "🔗", 'なぐる': "🥊", '殴る': "🥊", '掃く': "🧹", '蒔く': "🌱", '窓口': "🪟", 'マフラー': "🧣", '呼び出す': "📞", '映像': "📺", '看護': "🧑‍⚕️", '正解': "✅", '船舶': "🚢", '助け': "🆘", '忠告': "⚠️", '告げる': "📢", '伝言': "💬", '壷': "🏺", '田園': "🌾", '荷': "🧳", '値引き': "🏷️", '配偶者': "💍", '褒美': "🏆", '闇': "🌑", 'レバー': "🕹️", 'ゴール': "🥅", 'コップ': "🥛", '引っ張る': null, 
+  'かわいそう': '🥺', '可哀想': '🥺', '可哀相': '🥺', '気の毒': '🥺', '貧しい': '🪙', '貧乏': '🪙', '弾く': '🎸', '丁度': null, 'ちょうど': null, '賑やか': '🎉', 'にぎやか': '🎉', '外': null, '他': null, '程': null };
 /* A gloss with more than one sense only gets its picture when the other meanings confirm that sense:
    現 "present; existing; actual" is now, not a gift; 落 "fall" is dropping, not autumn; 産 "bear" is giving birth. */
 const PIC_SENSE = {
@@ -260,11 +262,14 @@ const PIC_SENSE = {
   receive: /\bget\b|accept|\bgift/, call: /phone|telephone|\bring\b/, invite: /invitation|\bguest|\bparty/, stamp: /postage|\bmail|\bletter/, pound: /\bweight|currency|sterling/,
   simple: /\beasy|\bplain|uncomplicated/, help: /rescue|\bsave|emergency|\baid\b|\bassist/, number: /\bcount|\bdigit|numeral|figure/, label: /\btag\b|sticker|price/,
   wave: /\bsea\b|\bocean|\bsurf|\bwater/, shake: /\bsea\b|\bwater/, deliver: /parcel|package|\bpost\b|\bmail/, reach: /arriv|destination/, mix: /\bstir|blend|\bbowl|cook/,
-  fat: /\bfood|greas|\boil\b|\bobese/, oil: /\bfood|\bfry|cook|petrol|\bfuel/, eat: /\bfood|\bmeal|\bdine/, table: /\bdesk|furniture|\bdine|\bmeal/
+  draw: /\bpaint|sketch|picture|illustrat|pencil|crayon/, light: /\bweight|heavy|feather/, run: /\bjog|sprint|\bdash|\brace\b|on foot|\bhurry/,
+  'go out': /excursion|outing|\bhome\b|\bexit|\bleave/, leave: /\bexit|go out|depart|go away|\bdoor/, poor: /needy|money|poverty|impoverish|\bbroke\b/,
+  close: /\bshut|\bdoor|\block|\bopen/, break: /smash|shatter|\bsnap|fractur|destroy|pieces/, cross: /\broad|street|travers|\bover\b|\bbridge/,
+    fat: /\bfood|greas|\boil\b|\bobese/, oil: /\bfood|\bfry|cook|petrol|\bfuel/, eat: /\bfood|\bmeal|\bdine/, table: /\bdesk|furniture|\bdine|\bmeal/
 };
 const senseOk = (key, glosses) => { const re = PIC_SENSE[key]; if (!re) return true; const all = glosses.map(g => String(g).toLowerCase()); return all.length <= 1 || all.every(g => g.replace(/\(.*?\)/g, '').trim() === key) || re.test(all.join('; ')); };
 /* kanji whose meaning list still sends them to the wrong picture (null = no picture) */
-const KANJI_PIC_FIX = { 葉: '🍃', 校: '🏫', 寒: '🥶', 凜: '🥶', 泉: '⛲', 掃: '🧹', 表: null, 局: null, 役: null, 番: null, 当: null, 合: null, 返: null, 応: null, 叶: null, 様: null, 産: null, 忍: null, 板: null, 載: null, 賄: null, 隊: null, 党: null, 種: null, 類: null, 削: null,
+const KANJI_PIC_FIX = { 光: '✨', 駆: '🏃', 葉: '🍃', 校: '🏫', 寒: '🥶', 凜: '🥶', 泉: '⛲', 掃: '🧹', 表: null, 局: null, 役: null, 番: null, 当: null, 合: null, 返: null, 応: null, 叶: null, 様: null, 産: null, 忍: null, 板: null, 載: null, 賄: null, 隊: null, 党: null, 種: null, 類: null, 削: null,
   穂: null, 眺: null, 陸: null, 参: null, 某: null, 伯: null, 諸: null, 堤: null, 俗: null, 侍: null, 堅: null, 硬: null, 間: null, 宙: null, 鳴: null, 喚: null, 落: null, 倒: null, 墜: null, 片: null, 圧: null,
   振: null, 揮: null, 飼: null, 蓄: null, 頂: null, 享: null, 召: null, 呉: null, 施: null, 妥: null, 康: null, 臨: null, 冒: null, 顧: null, 順: null, 志: null, 規: null, 則: null, 綜: null, 儀: null,
   掌: null, 永: null, 只: null, 敦: null, 酉: null, 冶: null, 奥: null, 精: null, 折: null, 創: null, 貯: null, 印: null, 採: null, 摘: null, 劇: null, 砕: null, 如: null, 拓: null, 繊: null, 啓: null,
@@ -274,7 +279,9 @@ function pictureFor(idx, glosses, pos, kanji, word) {
   if (kanji && kanji in KANJI_PIC_FIX) { const w = KANJI_PIC_FIX[kanji]; return w ? idx.byChar.get(stripFE(w)) || null : null; }
   if (word && word in WORD_PICS) { const w = WORD_PICS[word]; return w ? idx.byChar.get(stripFE(w)) || null : null; }
   const kind = pos === 'verb' ? 'verb' : (pos === 'i-adj' || pos === 'na-adj') ? 'adj' : 'noun';
-  const keys = glossKeys(glosses), hex = e => e && idx.byChar.get(stripFE(e));
+  // a word's picture comes from its main meaning only: 引っ張る "to pull; to draw" is pulling, not a paint palette,
+  // and コップ is a cup, not a "cop". Good pictures for a later meaning are listed by hand in WORD_PICS.
+  const keys = glossKeys(kanji ? glosses : glosses.slice(0, 1)), hex = e => e && idx.byChar.get(stripFE(e));
   if (kanji) {
     // kanji is the literal character: pictographs first, then each meaning in order across all tables
     const kp = KANJI_PICS.get(kanji); if (kp && hex(kp)) return hex(kp);
@@ -1056,7 +1063,8 @@ async function main() {
   const allVocab = LEVELS.flatMap(l => vocab[l].map(v => ({ v, l })));
   for (const ch of KD.characters) {
     const c = ch.literal, misc = ch.misc || {};
-    const level = kLevels[c] || (!kl && misc.jlptLevel ? OLD[misc.jlptLevel] : null);
+    // the new-level list leaves out a few common kanji (分, 身, 的, 無, 可 …): use KANJIDIC's pre-2010 level for those
+    const level = kLevels[c] || (misc.jlptLevel ? OLD[misc.jlptLevel] : null);
     if (!level) continue;
     const groups = (ch.readingMeaning && ch.readingMeaning.groups) || [];
     const rd = groups.flatMap(g => g.readings || []);
@@ -1248,7 +1256,9 @@ async function main() {
   if (!audioTotal) meta.notes.push('No native word audio in this build; words use the device voice.');
 
   /* ---- 8e. Pictures (OpenMoji) */
-  if (!flag('no-pictures')) {
+  // built-in word and kanji pictures are off: the app shows only the pictures from your own Anki decks.
+  // --pictures turns the old OpenMoji pictures back on in the data (the app no longer displays them).
+  if (flag('pictures')) {
     log('Pictures (OpenMoji)');
     const om = getOpenMoji();
     if (om) {
@@ -1263,7 +1273,7 @@ async function main() {
       for (const l of LEVELS) for (const e of vocab[l]) {
         const gl = (e.s[0] && e.s[0].g) || [e.m];
         let h = pictureFor(idx, gl, e.g, false, e.w);
-        if (!h && !(e.w in WORD_PICS)) { h = extPictureFor(idx, ext, gl, e.g); if (h) nx++; }
+        if (!h && !(e.w in WORD_PICS)) { h = extPictureFor(idx, ext, gl.slice(0, 1), e.g); if (h) nx++; }
         if (h) { e.pic = h; used.add(h); nv++; }
       }
       // pictures for the app's own Situations phrases (listed in index.html as SIT_PICS)
