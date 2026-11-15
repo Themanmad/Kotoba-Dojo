@@ -1006,7 +1006,10 @@ async function main() {
       for (const e of need) { const f = e.w; if (!want.has(f)) want.set(f, []); want.get(f).push(e); }
       // form -> [[sentence idx, reading]] (reading '*' = any reading of the form)
       const index = new Map();
-      const add = (f, i, rd = '*') => { if (want.has(f)) { const a = index.get(f) || [], l = a[a.length - 1]; if (!l || l[0] !== i || l[1] !== rd) a.push([i, rd]); index.set(f, a); } };
+      // sentences are sorted shortest first; a word keeps its first 200 (plenty to choose 2 good ones from),
+      // otherwise common words like する collect tens of thousands and ranking them takes hours
+      const PER_FORM = 200;
+      const add = (f, i, rd = '*') => { if (want.has(f)) { const a = index.get(f) || [], l = a[a.length - 1]; if (a.length < PER_FORM && (!l || l[0] !== i || l[1] !== rd)) a.push([i, rd]); index.set(f, a); } };
       jpn.sort((a, b) => a.text.length - b.text.length);
       if (tokenizer) {
         // Words match on their dictionary form (食べた → 食べる). A spelling with two readings among our words
