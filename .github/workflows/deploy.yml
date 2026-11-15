@@ -46,8 +46,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .cache
-          key: sources-${{ steps.week.outputs.week }}
-          restore-keys: sources-
+          # a new key every run, so new downloads (e.g. sentence recordings) are saved; the newest cache is restored first
+          key: sources-${{ steps.week.outputs.week }}-${{ github.run_id }}
+          restore-keys: |
+            sources-${{ steps.week.outputs.week }}-
+            sources-
 
       - name: Install ffmpeg (pads recordings with silence so phones don't cut the first syllable)
         run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
