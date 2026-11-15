@@ -278,7 +278,7 @@ function townDoorGo(id) {
 function townUI() {
   const box = $('#townui'); if (!box) return;
   const hud = `<div class="th-l"><b>はじまりの町</b><span class="tag lv" style="--lc:var(--n5)">N5</span></div>
-    <div class="th-r"><span title="Kanji found">字 ${Object.keys(TOWN.found).length}/${TG.spots.length}</span><span>⭐ ${fmtN(game.xp)}</span><button class="ghost" onclick="App.go('home')" title="Leave the town">✕</button></div>`;
+    <div class="th-r"><span title="Kanji found">字 ${Object.keys(TOWN.found).length}/${TG.spots.length}</span><span>⭐ ${fmtN(game.xp)}</span><button class="ghost" onclick="App.go('home')" title="Leave the town" aria-label="Leave the town">✕</button></div>`;
   let card = '';
   const T = TG.talk, B = TG.battle, C = TG.card;
   if (T) {

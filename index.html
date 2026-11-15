@@ -524,7 +524,7 @@ body > main .ulist:not(.plevel .ulist){border:1px solid var(--line);border-radiu
 #townui>*{pointer-events:auto}
 .thud{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
 .thud>div{pointer-events:auto;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.94);border-radius:20px;padding:6px 12px;box-shadow:0 3px 10px rgba(0,0,0,.15);font-size:14px;color:#2B2B3A}
-.thud .th-r span{font-weight:700}.thud .ghost{padding:0 4px;color:#2B2B3A}
+.thud .th-r span{font-weight:700}.thud .ghost{padding:0 4px;color:#2B2B3A;min-width:36px;min-height:36px;font-size:18px}
 .tprompt{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);border:0;background:#fff;color:#2B2B3A;border-radius:22px;padding:10px 18px;font:inherit;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.2);cursor:pointer;white-space:nowrap}
 .tprompt b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#2E5AAC;color:#fff;margin-right:6px;font-size:12px}
 .twrap{position:absolute;left:10px;right:10px;bottom:10px;display:flex;justify-content:center;max-height:calc(100% - 64px)}
@@ -6382,7 +6382,7 @@ function townDoorGo(id) {
 function townUI() {
   const box = $('#townui'); if (!box) return;
   const hud = `<div class="th-l"><b>はじまりの町</b><span class="tag lv" style="--lc:var(--n5)">N5</span></div>
-    <div class="th-r"><span title="Kanji found">字 ${Object.keys(TOWN.found).length}/${TG.spots.length}</span><span>⭐ ${fmtN(game.xp)}</span><button class="ghost" onclick="App.go('home')" title="Leave the town">✕</button></div>`;
+    <div class="th-r"><span title="Kanji found">字 ${Object.keys(TOWN.found).length}/${TG.spots.length}</span><span>⭐ ${fmtN(game.xp)}</span><button class="ghost" onclick="App.go('home')" title="Leave the town" aria-label="Leave the town">✕</button></div>`;
   let card = '';
   const T = TG.talk, B = TG.battle, C = TG.card;
   if (T) {

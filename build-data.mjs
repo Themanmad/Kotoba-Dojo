@@ -628,11 +628,12 @@ async function loadTokenizer() {
     const require = createRequire(path.join(process.cwd(), 'noop.js'));
     const kuromoji = require('kuromoji');
     let dir = path.dirname(require.resolve('kuromoji'));
-    while (dir !== path.dirname(dir) && !fs.existsSync(path.join(dir, 'dict'))) dir = path.dirname(dir);
+    // walk up to the folder whose dict/ holds the dictionary files (kuromoji/src/dict is code, not the dictionary)
+    while (dir !== path.dirname(dir) && !fs.existsSync(path.join(dir, 'dict', 'base.dat.gz'))) dir = path.dirname(dir);
     const dicPath = path.join(dir, 'dict');
     return await new Promise((res, rej) => kuromoji.builder({ dicPath }).build((e, t) => e ? rej(e) : res(t)));
   } catch (e) {
-    warn('kuromoji not available — example sentences will have no furigana (run `npm install kuromoji` to enable)');
+    warn(`kuromoji not available (${e.message}) — example sentences will have no furigana (run \`npm install kuromoji\` to enable)`);
     return null;
   }
 }
@@ -720,13 +721,48 @@ function checkTranslation(jp, en) {
   return e;
 }
 
+/** readings kuromoji (IPADIC) gives that learners' materials don't use */
+const READING_FIX = { '日本': 'ニホン' };
+/** JMdict spelling → entries, set once JMdict is loaded (used for number + counter readings) */
+let JM_BY_TEXT = null;
+/** the reading of a spelling when exactly one JMdict entry has it; otherwise null (ambiguous or unknown) */
+function jmUniqueReading(form) {
+  const es = JM_BY_TEXT && (JM_BY_TEXT.get(form) || []).filter(w => (w.kanji || []).some(k => k.text === form));
+  if (!es || es.length !== 1) return null;
+  const k = es[0].kana.find(r => !r.appliesToKanji || r.appliesToKanji.includes('*') || r.appliesToKanji.includes(form));
+  return k ? k.text : null;
+}
+const isNum = t => t && t.pos === '名詞' && t.pos_detail_1 === '数';
+const isCounter = t => t && t.pos_detail_1 === '接尾' && t.pos_detail_2 === '助数詞';
 function sentenceFurigana(text) {
   if (!tokenizer) return safe(text);
   try {
-    return tokenizer.tokenize(text).map(t => {
-      const s = t.surface_form;
-      return hasKanji(s) && t.reading && t.reading !== '*' ? furigana(s, t.reading) : safe(s);
-    }).join('');
+    const ts = tokenizer.tokenize(text), out = [];
+    for (let i = 0; i < ts.length; i++) {
+      const t = ts[i], s = t.surface_form;
+      // a number with its counter (二人, 二日, 四時, 六本): kuromoji reads the parts separately (に + にん),
+      // so read the whole from JMdict, and leave it without furigana when JMdict can't say (十分: ten minutes or enough)
+      if (isNum(t) && hasKanji(s)) {
+        let j = i, form = '';
+        while (isNum(ts[j])) form += ts[j++].surface_form;
+        if (isCounter(ts[j]) && hasKanji(ts[j].surface_form)) {
+          form += ts[j++].surface_form;
+          // 三日間, 一日中, 二回目: take the suffix along when JMdict has the whole word
+          const suf = ts[j] && ['間', '中', '目'].includes(ts[j].surface_form) ? ts[j].surface_form : null;
+          if (suf && jmUniqueReading(form + suf)) { form += suf; j++; }
+          const rd = jmUniqueReading(form);
+          out.push(rd ? furigana(form, rd) : safe(form));
+          if (ts[j] && ts[j].surface_form === '中') { out.push(safe('中')); j++; }   // after a time it's じゅう, kuromoji says ちゅう
+          i = j - 1; continue;
+        }
+      }
+      // 方 after この/その/あの/どの can be ほう (この方がいい) or かた (あの方は先生): don't guess
+      if (s === '方' && i && /^[こそあど]の$/.test(ts[i - 1].surface_form)) { out.push(safe(s)); continue; }
+      if (s === '何' && ts[i + 1] && ts[i + 1].surface_form === 'でも') { out.push(furigana(s, 'なん')); continue; }   // 何でも
+      const rd = READING_FIX[s] || t.reading;
+      out.push(hasKanji(s) && rd && rd !== '*' ? furigana(s, rd) : safe(s));
+    }
+    return out.join('');
   } catch { return safe(text); }
 }
 
@@ -795,6 +831,7 @@ async function main() {
     for (const f of w.kana || []) { push(byText, f.text, w); push(byHira, kata2hira(f.text), w); }
   }
   log(`  ${J.words.length} entries`);
+  JM_BY_TEXT = byText;
 
   /* ---- 3. match JLPT rows to JMdict */
   log('Matching JLPT words to JMdict');
@@ -967,11 +1004,19 @@ async function main() {
       // forms we want sentences for
       const want = new Map(); // form -> [entries]
       for (const e of need) { const f = e.w; if (!want.has(f)) want.set(f, []); want.get(f).push(e); }
-      const index = new Map(); // form -> [sentence idx]
-      const add = (f, i) => { if (want.has(f)) { const a = index.get(f) || []; if (a[a.length - 1] !== i) a.push(i); index.set(f, a); } };
+      // form -> [[sentence idx, reading]] (reading '*' = any reading of the form)
+      const index = new Map();
+      const add = (f, i, rd = '*') => { if (want.has(f)) { const a = index.get(f) || [], l = a[a.length - 1]; if (!l || l[0] !== i || l[1] !== rd) a.push([i, rd]); index.set(f, a); } };
       jpn.sort((a, b) => a.text.length - b.text.length);
       if (tokenizer) {
-        jpn.forEach((s, i) => { for (const t of tokenizer.tokenize(s.text)) { add(t.basic_form, i); add(t.surface_form, i); } });
+        // Words match on their dictionary form (食べた → 食べる). A spelling with two readings among our words
+        // (方 ほう/かた, 一日 いちにち/ついたち) gets no examples this way: kuromoji can't tell which reading
+        // a sentence uses (it reads この方 as ほう), and a wrong example teaches the wrong word.
+        const homo = new Set([...want].filter(([, es]) => new Set(es.map(e => kata2hira(e.r))).size > 1).map(([f]) => f));
+        jpn.forEach((s, i) => { for (const t of tokenizer.tokenize(s.text)) {
+          const f = t.surface_form === t.basic_form ? t.surface_form : t.basic_form;
+          if (!homo.has(f)) add(f, i);
+        } });
       } else {
         // fallback: substring match, only for forms unlikely to give false hits
         for (const f of want.keys()) {
@@ -984,9 +1029,11 @@ async function main() {
       for (const [f, entries] of want) {
         const gl = glossesOf(entries[0].s || []), enOf = i => checkTranslation(jpn[i].text, eng.get(link.get(jpn[i].id)));
         // faithful translations first (English names the word), then native recordings, then shortest
-        const cands = (index.get(f) || []).filter(i => enOf(i)).map((i, k) => [i, k, glossHit(enOf(i), gl)])
-          .sort((a, b) => (b[2] - a[2]) || (hasAu(jpn[b[0]].id) - hasAu(jpn[a[0]].id)) || a[1] - b[1]).map(a => a[0]);
+        const ranked = (index.get(f) || []).filter(([i]) => enOf(i)).map(([i, rd], k) => [i, k, glossHit(enOf(i), gl), rd])
+          .sort((a, b) => (b[2] - a[2]) || (hasAu(jpn[b[0]].id) - hasAu(jpn[a[0]].id)) || a[1] - b[1]);
         for (const e of entries) {
+          // only sentences where the word has this entry's reading (or where the reading can't be told)
+          const er = kata2hira(e.r), cands = [...new Set(ranked.filter(a => a[3] === '*' || a[3] === er).map(a => a[0]))];
           for (const i of cands) {
             const s = jpn[i]; const en = enOf(i);
             if (!en || e.ex.some(x => x.j === s.text) || (useCount.get(i) || 0) >= 3) continue;
