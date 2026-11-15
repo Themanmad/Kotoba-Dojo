@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kotoba Dojo</title>
+<meta name="description" content="Learn Japanese vocabulary and kanji (JLPT N5–N1) with flashcards, quizzes, tests, furigana, stroke order and example sentences.">
+<meta name="theme-color" content="#F5F7F6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script>/* apply the saved theme before first paint (no flash) */
+try { var st = JSON.parse(localStorage.getItem('kd_settings') || '{}'), t = st.theme || 'system'; if (t !== 'system') document.documentElement.setAttribute('data-theme', t); if (st.skin && st.skin !== 'washi') document.documentElement.setAttribute('data-skin', st.skin); } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600;700&family=M+PLUS+1+Code:wght@400;600&display=swap" rel="stylesheet">
+<style>
+@@include css/00-base.css
+@@include css/01-tablet.css
+@@include css/02-desktop.css
+@@include css/03-station.css
+@@include css/04-station-sign.css
+@@include css/05-home.css
+@@include css/06-study-screens.css
+@@include css/07-design-templates.css
+@@include css/08-grammar.css
+@@include css/09-look-alike-kanji.css
+@@include css/10-typed-answers-trouble-spots-vacation.css
+@@include css/11-kanji-page.css
+@@include css/12-picture-breakdown.css
+@@include css/13-textbooks.css
+@@include css/14-conjugation-drill.css
+@@include css/15-genki-practice.css
+@@include css/16-pitch-accent.css
+@@include css/17-reading.css
+@@include css/18-writing.css
+</style>
+</head>
+<body>
+<header class="top"><div class="in"><div class="logo">語</div><div class="brand">Kotoba Dojo<small>JLPT N5–N1 trainer</small></div><div class="streak" id="streak"></div><button class="themebtn hdr-extra" onclick="App.go('search')" aria-label="Search">🔍</button><button class="themebtn hdr-extra" onclick="App.go('settings')" aria-label="Settings">⚙️</button><button class="themebtn" id="themebtn" onclick="App.toggleTheme()" aria-label="Toggle dark mode"></button></div></header>
+<main id="app"><div class="loading">読み込み中… loading</div></main>
+<nav class="tabs"><div class="in">
+  <button data-v="home" onclick="App.go('home')"><b>家</b>Home</button>
+  <button data-v="path" onclick="App.go('path')"><b>道</b>Path</button>
+  <button data-v="library" onclick="App.go('library')"><b>本</b>Library</button>
+  <button data-v="exam" onclick="App.go('exam')"><b>試</b>Exam</button>
+  <button data-v="chat" onclick="App.go('chat')"><b>話</b>Chat</button>
+  <button data-v="play" onclick="App.go('play')"><b>町</b>Play</button>
+  <div class="nav-sub nav-extra">Library</div>
+  <button class="nav-extra lib" data-v="kana" onclick="App.go('kana')"><b>あ</b>Kana</button>
+  <button class="nav-extra lib" data-v="vocab" onclick="App.go('vocab')"><b>語</b>Words</button>
+  <button class="nav-extra lib" data-v="kanji" onclick="App.go('kanji')"><b>字</b>Kanji</button>
+  <button class="nav-extra lib" data-v="grammar" onclick="App.go('grammar')"><b>文</b>Grammar</button>
+  <button class="nav-extra lib" data-v="books" onclick="App.go('books')"><b>課</b>Textbooks</button>
+  <button class="nav-extra lib" data-v="conj" onclick="App.go('conj')"><b>活</b>Conjugation</button>
+  <button class="nav-extra lib" data-v="read" onclick="App.go('read')"><b>読</b>Reading</button>
+  <button class="nav-extra" data-v="search" onclick="App.go('search')"><b>探</b>Search</button>
+  <button class="nav-extra" data-v="settings" onclick="App.go('settings')"><b>設</b>Settings</button>
+</div><div class="nav-foot" id="navfoot"></div></nav>
+<div id="sheet"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+@@include js/00-starter-data.js
+@@include js/01-helpers.js
+@@include js/02-data-layer.js
+@@include js/03-progress-spaced-repetition.js
+@@include js/04-state.js
+@@include js/05-views.js
+@@include js/06-quiz-engine.js
+@@include js/07-grammar-data.js
+@@include js/08-jlpt-style-mock-exam.js
+@@include js/09-situations.js
+@@include js/10-kana.js
+@@include js/11-quote-of-the-day.js
+@@include js/12-render-actions.js
+@@include js/13-path-course.js
+@@include js/14-path-player.js
+@@include js/15-game-mode.js
+@@include js/16-picture-kanji.js
+@@include js/17-anki-decks.js
+@@include js/18-chat.js
+@@include js/19-free-chat.js
+@@include js/20-play.js
+@@include js/21-grammar-chapters.js
+@@include js/22-look-alike-kanji.js
+@@include js/23-learner-requests.js
+@@include js/24-kanji-readings-in-use.js
+@@include js/25-picture-breakdowns.js
+@@include js/26-picture-kana.js
+@@include js/27-conjugation.js
+@@include js/28-textbooks.js
+@@include js/29-conjugation-drill.js
+@@include js/30-genki-practice.js
+@@include js/31-pitch-accent.js
+@@include js/32-reading-data.js
+@@include js/33-reading.js
+@@include js/34-writing.js
+</script>
+</body>
+</html>

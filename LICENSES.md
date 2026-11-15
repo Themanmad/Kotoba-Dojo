@@ -1,6 +1,6 @@
 # Data sources and licences
 
-The app code (`index.html`, `build-data.mjs`) is yours to use and change.
+The app code (`index.html`, `src/`, `build.mjs`, `build-data.mjs`, `lib/`, `tests/`) is under the MIT licence: see [LICENSE](LICENSE).
 The files in `data/` are built from the open datasets below and must keep
 their attribution. Because JMdict, KANJIDIC2 and KanjiVG are share-alike, the
 generated `data/` files are distributed under **CC BY-SA 4.0**.
@@ -10,7 +10,9 @@ generated `data/` files are distributed under **CC BY-SA 4.0**.
 | [JMdict](https://www.edrdg.org/jmdict/j_jmdict.html) | Electronic Dictionary Research and Development Group (EDRDG) | [CC BY-SA 4.0](https://www.edrdg.org/edrdg/licence.html) | Word meanings, readings, parts of speech, frequency bands |
 | [KANJIDIC2](https://www.edrdg.org/wiki/index.php/KANJIDIC_Project) | EDRDG | [CC BY-SA 4.0](https://www.edrdg.org/edrdg/licence.html) | Kanji meanings, on/kun readings, stroke counts, frequency ranks |
 | [jmdict-simplified](https://github.com/scriptin/jmdict-simplified) | scriptin | CC BY-SA 4.0 (data) | JSON conversion of JMdict and KANJIDIC2 |
-| [KanjiVG](https://kanjivg.tagaini.net/) | Ulrich Apel and contributors | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) | Stroke-order diagrams |
+| [KanjiVG](https://kanjivg.tagaini.net/) | Ulrich Apel and contributors | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) | Stroke-order diagrams and checking strokes in writing practice (a small sample is kept in `tests/fixtures/` for the tests) |
+| [Kanjium](https://github.com/mifunetoshiro/kanjium) accents.txt | Pitch accent notation by Uros O. | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | Pitch accent of words (exact spelling + reading matches only) |
+| [FSRS](https://github.com/open-spaced-repetition/fsrs4anki) | open-spaced-repetition | [MIT](https://github.com/open-spaced-repetition/fsrs4anki/blob/main/LICENSE) | The review-scheduling algorithm (FSRS-5) and its default parameters, implemented in the app |
 | [Tatoeba](https://tatoeba.org/) | Tatoeba contributors | [CC BY 2.0 FR](https://creativecommons.org/licenses/by/2.0/fr/) | Example sentences and translations (each one links to its source page) |
 | [JLPT vocabulary lists](https://www.tanos.co.uk/jlpt/) | Jonathan Waller | [CC BY](https://creativecommons.org/licenses/by/4.0/) | Which words belong to N5–N1 (via [yomitan-jlpt-vocab](https://github.com/stephenmk/yomitan-jlpt-vocab) or [open-anki-jlpt-decks](https://github.com/jamsinclair/open-anki-jlpt-decks)) |
 | [kanji-data](https://github.com/davidluzgouveia/kanji-data) | David Luz Gouveia | MIT | Current (post-2010) JLPT levels for kanji |
@@ -51,3 +53,4 @@ Loaded only when you add an Anki deck. They are stored in `vendor/`.
 
 A deck you import is your own copy: it is stored only in your browser and never uploaded or published with the site.
 
+Reading passages and their questions, practice sentences, grammar notes and explanations are written for this app and fall under the code's MIT licence.

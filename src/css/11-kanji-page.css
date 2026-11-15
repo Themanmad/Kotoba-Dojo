@@ -1,0 +1,30 @@
+/* ---------- kanji page: tabs, readings in use ---------- */
+.kq-reads{display:flex;flex-wrap:wrap;gap:4px 16px;margin:6px 0 8px;font-size:15px}
+.kq-reads b{font-size:11px;font-weight:800;color:var(--muted);margin-right:4px;text-transform:none}
+.ktabs{display:flex;gap:4px;margin:14px 0 12px;border-bottom:1.5px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.ktabs::-webkit-scrollbar{display:none}
+.ktabs button{flex:none;border:0;background:none;font:inherit;font-size:14px;font-weight:700;color:var(--muted);padding:9px 12px;border-bottom:3px solid transparent;margin-bottom:-1.5px;cursor:pointer;white-space:nowrap}
+.ktabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
+.ktabs button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:6px}
+.kpane[hidden]{display:none}
+.kr-rule{font-size:13.5px;color:var(--muted);margin:0 0 10px;line-height:1.5}.kr-rule b{color:var(--ink)}
+.krd{display:grid;gap:8px}
+.krd-row{display:grid;grid-template-columns:112px 1fr;gap:10px;align-items:start;padding:8px 10px;border-radius:var(--r-tile);background:var(--chip)}
+.krd-h{display:flex;flex-direction:column;gap:2px}
+.krd-t{align-self:flex-start;font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--accent);color:#fff}
+.krd-row.kun .krd-t{background:var(--ok)}.krd-row.sp .krd-t{background:var(--warn)}
+.krd-r{font-size:22px;font-weight:700;line-height:1.3}.krd-row.sp .krd-r{font-size:13px;font-weight:600;color:var(--muted)}
+.krd-r .okr{color:var(--muted);font-weight:500}.krd-r .okr::before{content:'·';margin:0 1px}
+.krd-ro{font-size:12px;color:var(--muted)}
+.krd-ws{display:flex;flex-wrap:wrap;gap:8px}
+.krd-none{font-size:13px;color:var(--muted);align-self:center;padding:8px 0}
+.kw{display:flex;flex-direction:column;align-items:flex-start;gap:0;min-width:110px;max-width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:2px 11px 7px;cursor:pointer;color:var(--ink);font:inherit;text-align:left;position:relative}
+.kw:hover{border-color:var(--accent)}
+.kw:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.kw-w{font-size:21px;line-height:1.95;font-weight:600}.kw-w rt{font-size:.48em;letter-spacing:-.02em}
+.kw-w ruby.hl{color:var(--accent)}.kw-w ruby.hl rt{color:var(--accent);font-weight:700}
+.kw-m{font-size:13px;color:var(--muted);line-height:1.3}
+.kw-l{font-size:10px;font-weight:800;color:var(--lc);margin-right:5px}
+@media (max-width:560px){.krd-row{grid-template-columns:1fr}.krd-h{flex-direction:row;align-items:baseline;gap:8px}.kw{flex:1 1 calc(50% - 4px);min-width:0}}
+.kr-rare{font-size:13px;color:var(--muted);margin:8px 2px 0}.kr-rare .okr{color:var(--muted)}
+

@@ -1,0 +1,14 @@
+/* ---------- station sign (駅名標): words on Home and in details ---------- */
+.sign{border-radius:var(--r-sign);background:var(--card);border:1px solid var(--line);overflow:hidden;box-shadow:var(--shadow);position:relative}
+.sign-top{display:flex;align-items:center;gap:10px;padding:12px 14px 0}
+.sign-no{font-family:var(--ff);font-weight:700;font-size:12px;color:#fff;background:var(--lc);border-radius:5px;padding:3px 7px;letter-spacing:.02em}
+.sign-kana{color:var(--muted);font-size:15px;flex:1}
+.sign-word{font-family:var(--ffj);font-weight:900;font-size:46px;line-height:1.15;text-align:center;padding:6px 14px 12px;letter-spacing:.04em;word-break:keep-all}
+.sign-band{background:var(--lc);color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;padding:6px 14px;font-weight:600;font-size:15px;min-height:34px;position:relative}
+.sign-band::before,.sign-band::after{content:"";position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:#fff;transform:translateY(-50%);opacity:.9}
+.sign-band::before{left:12px}.sign-band::after{right:12px}
+.sign-mean{padding:12px 14px 14px;font-size:18px;font-weight:600;text-align:center}
+.sign .say{top:8px;right:8px}
+.sign .say.inl{position:absolute}
+.detail .sign{margin:4px 0 10px}
+

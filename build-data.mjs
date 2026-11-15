@@ -22,6 +22,7 @@
  *   Word audio, more    (CC BY 4.0, Kanji alive)  example-word recordings for 1,235 kanji (optional)
  *   Sentence audio      (per recording, Tatoeba)   native recordings; only ones with a reuse licence (optional)
  *   Pictures            (CC BY-SA 4.0, OpenMoji)  pictures for words and kanji you can draw (optional)
+ *   Pitch accent        (CC BY-SA 4.0, Kanjium)   accents.txt by Uros O., exact word + reading matches only (optional)
  *
  * Usage
  *   node build-data.mjs [--out data] [--cache .cache] [--from-dir DIR]
@@ -44,6 +45,7 @@ import os from 'node:os';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
+import { parseAccents, pitchFor } from './lib/pitch.mjs';
 
 /* ---------------------------------------------------------------- args */
 const argv = process.argv.slice(2);
@@ -1189,6 +1191,19 @@ async function main() {
     log(`  ${gCount} grammar points`);
   } else meta.notes.push('Grammar data unavailable in this build; the app uses its built-in starter grammar.');
 
+  /* ---- 8b2. Pitch accent (Kanjium accents.txt): only exact spelling + reading matches */
+  if (!flag('no-pitch')) {
+    log('Pitch accent (Kanjium)');
+    const kmDir = getKanjium(), f = kmDir && path.join(kmDir, 'raw', 'accents.txt');
+    if (f && fs.existsSync(f)) {
+      const map = parseAccents(fs.readFileSync(f, 'utf8')); let n = 0, t = 0;
+      for (const l of LEVELS) for (const e of vocab[l]) { t++; const p = pitchFor(map, e.w, e.r, e.a); if (p) { e.pa = p; n++; } }
+      meta.counts.pitch = n;
+      meta.sources.pitch = 'Kanjium accents.txt (pitch accent notation by Uros O.)';
+      log(`  pitch accent for ${n} of ${t} words`);
+    } else meta.notes.push('Pitch accent unavailable in this build.');
+  }
+
   /* ---- 8c. Word audio (native recordings) */
   log('Word audio (WaniKani / Tofugu)');
   const audioDir = getAudioDir();
@@ -1327,6 +1342,7 @@ async function main() {
     { name: 'KanjiVG', by: 'Ulrich Apel and contributors', license: 'CC BY-SA 3.0', url: 'https://kanjivg.tagaini.net/' },
     { name: 'Kanji origin stories', by: 'Make Me a Hanzi (Shaunak Kishore), from Unihan and CJKlib', license: 'LGPL-3.0', url: 'https://github.com/skishore/makemeahanzi' },
     { name: 'Kanji types, sound parts, look-alikes', by: 'Kanjium (mifunetoshiro), built on EDRDG data', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' },
+    { name: 'Pitch accent', by: 'Kanjium accents.txt, pitch accent notation by Uros O.', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' },
     { name: 'More look-alike kanji', by: 'Lars Yencken, “Orthographic support for passing the reading hurdle in Japanese” (PhD thesis, University of Melbourne, 2010): radical and stroke-edit similarity, as packaged by the Niai project', license: 'CC BY 3.0', url: 'https://github.com/mwil/wanikani-userscripts/tree/master/wanikani-similar-kanji' },
     { name: 'Tatoeba', by: 'Tatoeba contributors', license: 'CC BY 2.0 FR', url: 'https://tatoeba.org/' },
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },

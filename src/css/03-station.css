@@ -1,0 +1,88 @@
+/* =====================================================================
+   STATION — default design. Japanese rail signage: platform white,
+   asphalt ink, Shinkansen indigo for actions, JLPT levels as line colours.
+   Skins (Terminal / Sakura / Ocean) below override the tokens.
+   ===================================================================== */
+:root{
+  --bg:#F5F7F6;--card:#FFFFFF;--ink:#1C2127;--muted:#5D6670;--line:#E3E7E5;--chip:#EDF0EE;
+  --accent:#22408F;--accent-soft:#E7ECF8;--ok:#2B9348;--ok-soft:#E3F3E7;--bad:#D7263D;--bad-soft:#FBE7EA;
+  --warn:#B98000;--warn-soft:#FFF3CF;--yellow:#F2C200;
+  --n5:#4DAF4A;--n4:#F0802A;--n3:#1BA1D8;--n2:#D9A800;--n1:#C2337A;--lc:var(--accent);
+  --shadow:0 1px 0 rgba(28,33,39,.06);--lift:0 10px 28px -12px rgba(28,33,39,.28);
+  --r-sign:8px;--r-tile:14px;--r-pill:999px;
+  --ff:"Barlow",system-ui,sans-serif;--ffj:"Zen Kaku Gothic New","Noto Sans JP",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1317;--card:#171C22;--ink:#E8ECEF;--muted:#98A2AC;--line:#28303A;--chip:#1E242B;
+    --accent:#86A2FF;--accent-soft:#1C2645;--ok:#4CC47A;--ok-soft:#13301F;--bad:#FF5D6E;--bad-soft:#3A1820;
+    --warn:#F2C200;--warn-soft:#30280B;--shadow:none;--lift:0 10px 28px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1317;--card:#171C22;--ink:#E8ECEF;--muted:#98A2AC;--line:#28303A;--chip:#1E242B;
+  --accent:#86A2FF;--accent-soft:#1C2645;--ok:#4CC47A;--ok-soft:#13301F;--bad:#FF5D6E;--bad-soft:#3A1820;
+  --warn:#F2C200;--warn-soft:#30280B;--shadow:none;--lift:0 10px 28px -12px rgba(0,0,0,.6);
+}
+body{font-family:var(--ff);font-size:16px;line-height:1.45;letter-spacing:.005em}
+.jp,nav.tabs button b,.logo{font-family:var(--ffj)}
+h1{font-family:var(--ffj);font-weight:900;font-size:26px;letter-spacing:-.01em;line-height:1.25;margin:2px 0 6px}
+h1 .muted{font-weight:500;font-family:var(--ff)}
+.sub{font-size:15px;max-width:60ch}
+.label{text-transform:none;letter-spacing:0;font-size:14px;font-weight:700;color:var(--ink);margin:22px 0 8px}
+.note{font-size:13px}
+.muted{color:var(--muted)}
+
+/* header + navigation */
+header.top{background:color-mix(in srgb,var(--bg) 88%,transparent);border-bottom:1px solid var(--line)}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#fff;font-weight:900;font-size:17px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.18)}
+.brand{font-weight:700;font-size:16px}
+.brand small{font-size:12px}
+nav.tabs{background:var(--card);border-top:1px solid var(--line)}
+nav.tabs button{position:relative;font-weight:600;font-size:11px;padding:8px 0 10px}
+nav.tabs button b{font-size:19px;font-weight:700}
+nav.tabs button.on{color:var(--ink)}
+nav.tabs button.on::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--accent)}
+nav.tabs button.on b{color:var(--accent)}
+
+/* controls */
+.btn{border-radius:12px;font-weight:700;font-size:16px;padding:14px 18px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18);transition:transform .08s}
+.btn:active{transform:translateY(1px);box-shadow:inset 0 -1px 0 rgba(0,0,0,.18)}
+.btn.sec{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.line{background:none;box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn:focus-visible,.choice:focus-visible,.row:focus-visible,.chip:focus-visible,.seg button:focus-visible,summary:focus-visible,.mode:focus-visible,.stop:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.seg{background:var(--chip);border-radius:12px;padding:4px}
+.seg button{font-weight:600;font-size:14px;border-radius:9px}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 0 rgba(0,0,0,.08),0 0 0 1px var(--line)}
+.chip{font-weight:600;font-size:14px;padding:7px 13px;background:var(--card);border-color:var(--line)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip.on small{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.card{border-radius:var(--r-tile);box-shadow:var(--shadow)}
+
+/* level badges = line colours (set by paintLevels) */
+.tag{font-weight:600;border-radius:6px}
+.tag.lv{background:var(--lc);color:#fff;font-weight:700;letter-spacing:.02em;border-radius:5px;padding:3px 7px}
+.lvl{color:var(--lc)!important}
+.pbar{background:var(--chip);border-radius:99px;height:8px}
+.pbar i{background:var(--lc)}
+.pbar i.l{background:color-mix(in srgb,var(--lc) 35%,var(--chip))}
+
+/* options drawer: settings tucked behind one summary row */
+details.opts{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+details.opts>summary{list-style:none;display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;font-size:14px}
+details.opts>summary::-webkit-details-marker{display:none}
+details.opts>summary .ot{font-weight:700}
+details.opts>summary .os{flex:1;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
+details.opts>summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translateY(-2px);transition:transform .15s;flex:none}
+details.opts[open]>summary::after{transform:rotate(-135deg) translateY(-2px)}
+details.opts .ob{padding:0 14px 14px;border-top:1px solid var(--line)}
+details.opts .ob>.label:first-child{margin-top:12px}
+
+/* vocab modes */
+.vtabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:4px -16px 0;padding:2px 16px 6px}
+.vtabs::-webkit-scrollbar{display:none}
+.mode{flex:none;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:var(--r-pill);padding:8px 14px 8px 8px;font-weight:600;font-size:14px;cursor:pointer;color:var(--ink)}
+.mode b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--chip);font-family:var(--ffj);font-size:14px}
+.mode.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mode.on b{background:var(--accent);color:#fff}
+

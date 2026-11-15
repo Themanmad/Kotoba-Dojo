@@ -1,0 +1,20 @@
+# Runs the tests and checks that index.html was rebuilt from src/.
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]   # main is tested by the deploy workflow before it publishes
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: index.html matches src/
+        run: node build.mjs --check
+      - name: Unit tests
+        run: node --test tests/*.test.mjs

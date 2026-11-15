@@ -1,0 +1,79 @@
+/* =====================================================================
+   RENDER + ACTIONS
+   ===================================================================== */
+/* desktop sidebar footer: progress on the line you're riding */
+function navFoot(st) {
+  const l = userLevel(); if (!l || l === 'MY') return '';
+  const row = (name, kind) => { const x = levelStats(kind, l); const pc = x.total ? Math.round(100 * x.known / x.total) : 0; return x.total ? `<div class="nf-row"><span>${name}</span><div class="nf-bar"><span style="width:${Math.max(pc, x.known ? 2 : 0)}%"></span></div><b>${pc}%</b></div>` : ''; };
+  const due = dueCount();
+  return `<div style="--lc:${lcVar(l)}"><div class="nf-head"><i></i>${esc(lvName(l))} line</div>${row('Words', 'vocab')}${row('Kanji', 'kanji')}${row('Grammar', 'grammar')}
+  <div class="nf-meta"><span>🔥 ${st} day${st === 1 ? '' : 's'}</span><span>${due ? `${due} due` : 'Nothing due'}</span></div></div>`;
+}
+function render() {
+  const navOf = v => v === 'anki' ? 'settings' : v === 'dquiz' ? 'path' : ['kana', 'vocab', 'kanji', 'grammar', 'library', 'books', 'conj', 'read', 'write'].includes(v) ? 'library' : ['path', 'lesson', 'place'].includes(v) ? 'path' : v;
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === navOf(S.view) || b.dataset.v === S.view));
+  const st = streak(); $('#streak').innerHTML = (st ? `🔥 ${st}` : '') + (gameOn() ? `<span class="hxp" title="${esc(beltOf(game.xp).name)}">⭐ ${fmtN(game.xp)}</span>` : '');
+  const nf = $('#navfoot'); if (nf) nf.innerHTML = navFoot(st);
+  const page = S.session ? 'session' : S.view;
+  if (S.view === 'path' && DATA.mode === 'full' && !S.pathLoading && (LV.some(l => !isLoaded('vocab', l)) || LV.some(l => !isLoaded('grammar', l)))) { S.pathLoading = true; loadPathData().then(() => { S.pathLoading = false; if (S.view === 'path') render(); }); }
+  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite })[S.view]()}</div>`;
+  hydrate($('#app')); paintLevels($('#app'));
+  if (S.view === 'write' && !S.session) writeHydrate();
+  if (S.fromPlay && S.view !== 'play' && !S.session) $('#app').insertAdjacentHTML('afterbegin', `<button class="backtown" onclick="S.fromPlay=false;App.go('play')">🏯 Back to town</button>`);
+  if (S.view === 'play' && !S.session) townMount();
+}
+const SKINS = [
+  { id: 'washi', name: 'Station', desc: 'Platform white, line colours', bg: '#F5F7F6', ink: '#1C2127', accent: '#22408F', line: '#4DAF4A', font: 'Zen Kaku Gothic New', sample: '駅 Aa', glow: 'none', meta: ['#F5F7F6', '#0F1317'] },
+  { id: 'terminal', name: 'Terminal', desc: 'Green hacker console', bg: '#010b05', ink: '#3dff7a', accent: '#39ff14', line: '#0d4020', font: 'JetBrains Mono, monospace', sample: '> 語_', glow: '0 0 8px #39ff14', meta: ['#010b05', '#010b05'] },
+  { id: 'sakura', name: 'Sakura', desc: 'Soft cherry-blossom pink', bg: '#fdf6f8', ink: '#2a1d22', accent: '#d6336c', line: '#f1dde4', font: 'Noto Sans JP', sample: '桜 Aa', glow: 'none', meta: ['#fdf6f8', '#1a1216'] },
+  { id: 'ocean', name: 'Ocean', desc: 'Calm blue', bg: '#f4f8fb', ink: '#14202b', accent: '#1769aa', line: '#dbe6ef', font: 'Noto Sans JP', sample: '海 Aa', glow: 'none', meta: ['#f4f8fb', '#0d151d'] }
+];
+const darkQuery = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : { matches: false };
+const isDark = () => settings.skin === 'terminal' || settings.theme === 'dark' || (settings.theme === 'system' && darkQuery.matches);
+function applyTheme() {
+  const r = document.documentElement;
+  if (settings.theme === 'system') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', settings.theme);
+  if (!settings.skin || settings.skin === 'washi') r.removeAttribute('data-skin'); else r.setAttribute('data-skin', settings.skin);
+  const sk = SKINS.find(k => k.id === settings.skin) || SKINS[0];
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = isDark() ? sk.meta[1] : sk.meta[0];
+  const b = $('#themebtn');
+  if (b) { b.style.display = settings.skin === 'terminal' ? 'none' : ''; b.textContent = isDark() ? '☀️' : '🌙'; b.title = isDark() ? 'Switch to light mode' : 'Switch to dark mode'; }
+}
+if (darkQuery.addEventListener) darkQuery.addEventListener('change', () => { if (settings.theme === 'system') applyTheme(); });
+function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); applyTheme(); }
+const saveSettings = () => store.set('settings', settings);
+/* ---------- detail panel with history ----------
+   Opening a word / kanji / grammar point from inside the panel stacks it, so
+   "‹ Back" (or the phone's back gesture) returns to where you were.          */
+const itemById = id => id.startsWith('k:') ? KMAP[id.slice(2)] : id.startsWith('g:') ? GMAP[id] : id.startsWith('a:') ? KANAMAP[id.slice(2)] : VMAP[id];
+const itemLabel = x => !x ? '' : x.kind === 'kana' ? x.ch : x.kind === 'kanji' ? x.k : x.kind === 'grammar' ? (gSplitTitle(x.t).jp || x.t) : x.w;
+let sheetStack = [], sheetPushed = 0, sheetClosing = false;
+function renderSheet() {
+  closeWordPop();
+  const sh = $('#sheet'), top = sheetStack[sheetStack.length - 1]; if (!top) return hideSheet();
+  const item = itemById(top.id), prev = sheetStack[sheetStack.length - 2];
+  sh.innerHTML = `<div class="sheet-bg" onclick="App.closeSheet()"></div><div class="sheet">
+    <div class="sheet-nav">${prev ? `<button class="ghost sheet-back" onclick="App.sheetBack()" aria-label="Back">‹ <span class="jp">${esc(itemLabel(itemById(prev.id)))}</span></button>` : '<span></span>'}
+    <button class="ghost close" onclick="App.closeSheet()" aria-label="Close">✕</button></div>${detail(item)}</div>`;
+  sh.classList.add('open'); hydrate(sh); paintLevels(sh);
+  const panel = sh.querySelector('.sheet'); if (panel) panel.scrollTop = top.scroll || 0;
+}
+function hideSheet() { closeWordPop(); sheetStack = []; const sh = $('#sheet'); sh.classList.remove('open'); sh.innerHTML = ''; }
+function openSheet(id) {
+  if (!itemById(id)) return;
+  const sh = $('#sheet'), open = sh.classList.contains('open');
+  if (!open) { sheetStack = []; sheetPushed = 0; }
+  const top = sheetStack[sheetStack.length - 1];
+  if (top && top.id === id) return;
+  if (top) { const panel = sh.querySelector('.sheet'); top.scroll = panel ? panel.scrollTop : 0; }
+  sheetStack.push({ id, scroll: 0 });
+  try { history.pushState({ kdSheet: sheetStack.length }, ''); sheetPushed++; } catch (e) {}
+  renderSheet();
+}
+function popSheet() { sheetStack.pop(); if (sheetStack.length) renderSheet(); else hideSheet(); }
+window.addEventListener('popstate', () => {
+  if (sheetClosing) { sheetClosing = false; return hideSheet(); }
+  if ($('#sheet').classList.contains('open')) { sheetPushed = Math.max(0, sheetPushed - 1); popSheet(); }
+});
+let searchTimer = null;
+

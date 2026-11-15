@@ -1,0 +1,24 @@
+/* ---------- reading ---------- */
+.rd-list{margin-top:12px;border:1.5px solid var(--line);border-radius:var(--r-tile);background:var(--card);overflow:hidden}
+.rd-row{width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;min-height:58px}
+.rd-row:last-child{border-bottom:0}.rd-row:hover{background:var(--chip)}
+.rd-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.rd-t b{font-size:16px}.rd-t small{color:var(--muted);font-size:12.5px}
+.rd-go{color:var(--accent);font-weight:700;font-size:13.5px;flex:none}.rd-score{font-weight:800;font-size:14px;flex:none}
+.rd-head{margin:8px 0 10px}.rd-head h1{margin:6px 0 2px}.rd-head .tag{color:#fff}
+.rd-text{padding:6px 18px}.rd-text p{font-size:18px;line-height:2.05;margin:10px 0;overflow-wrap:anywhere}
+.rd-gl{display:flex;flex-wrap:wrap;gap:6px 14px;margin:10px 2px 4px;font-size:13.5px}.rd-gl .mini{width:100%;margin:0}
+.rd-gw b{font-size:15px}
+.rd-q{margin:14px 0 18px}
+.rd-qq{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}.rd-qq>span:last-child{display:flex;flex-direction:column;gap:2px}
+.rd-qq .jp{font-size:16.5px;line-height:1.9}.rd-qq small{color:var(--muted);font-size:13px}
+.rd-qn{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:13px;margin-top:4px}
+.rd-q .choice .jp{text-align:left;line-height:1.8}
+.rd-why{margin-top:8px;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);font-size:14px;line-height:1.55}
+.rd-why.ok{border-color:var(--ok)}.rd-why.ok b{color:var(--ok)}.rd-why.no{border-color:var(--bad, #d64545)}.rd-why.no b{color:var(--bad, #d64545)}
+.rd-done{margin-top:8px}.rd-done>b{font-size:17px}
+.rd-en{margin-top:10px}.rd-en summary{cursor:pointer;font-weight:700;color:var(--accent)}.rd-en p{color:var(--muted);line-height:1.6;margin:8px 0}
+.rd-ex-pass{text-align:left;max-height:46vh;overflow:auto;padding:2px 4px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.rd-ex-pass p{font-size:16.5px;line-height:2;margin:6px 0}
+.rd-ex-gl{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;color:var(--muted);text-align:left;margin-bottom:8px}.rd-ex-gl b{color:var(--ink)}
+.rd-ex-q{font-size:17px;line-height:1.9;text-align:left;font-weight:600}
+@media (max-width:520px){.rd-text{padding:4px 14px}.rd-text p{font-size:17px}}

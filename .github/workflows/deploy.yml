@@ -33,6 +33,11 @@ jobs:
         with:
           node-version: 20
 
+      - name: Check index.html matches src/ and run the tests (nothing is published if these fail)
+        run: |
+          node build.mjs --check
+          node --test tests/*.test.mjs
+
       - name: Week number (refreshes the download cache weekly)
         id: week
         run: echo "week=$(date +%G-%V)" >> "$GITHUB_OUTPUT"

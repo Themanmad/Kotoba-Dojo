@@ -1329,6 +1329,58 @@ details.opts .ob>.label:first-child{margin-top:12px}
 .gkp-miss{padding:8px 0;border-bottom:1px solid var(--line)}.gkp-miss:last-child{border-bottom:0}.gkp-miss small{color:var(--muted)}
 @media (max-width:520px){.gkp-q{font-size:19px}.gkp-word{font-size:30px}.gkp-opt{font-size:15px}}
 
+/* ---------- pitch accent ---------- */
+.pa{margin:12px 0 4px;padding:10px 14px;border:1.5px solid var(--line);border-radius:var(--r-tile);background:var(--card)}
+.pa-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:4px 0}
+.pa-line{display:inline-flex;font-size:20px;line-height:1;padding:6px 0}
+.pa-m{padding:5px 2px;border-color:var(--accent);border-style:solid;border-width:0}
+.pa-m.h{border-top-width:2px}.pa-m.l{border-bottom-width:2px}
+.pa-m.step{border-left-width:2px}
+.pa-m.pa-p{color:var(--muted);border-color:color-mix(in srgb,var(--accent) 55%,transparent);border-style:dashed;font-size:15px;align-self:stretch;display:flex;align-items:center;margin-left:1px}
+.pa-name{font-size:13.5px;color:var(--muted);line-height:1.45}.pa-name b{color:var(--ink);font-weight:700}
+.pa-src{font-size:11.5px;color:var(--muted);margin-top:4px}
+/* ---------- reading ---------- */
+.rd-list{margin-top:12px;border:1.5px solid var(--line);border-radius:var(--r-tile);background:var(--card);overflow:hidden}
+.rd-row{width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;min-height:58px}
+.rd-row:last-child{border-bottom:0}.rd-row:hover{background:var(--chip)}
+.rd-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.rd-t b{font-size:16px}.rd-t small{color:var(--muted);font-size:12.5px}
+.rd-go{color:var(--accent);font-weight:700;font-size:13.5px;flex:none}.rd-score{font-weight:800;font-size:14px;flex:none}
+.rd-head{margin:8px 0 10px}.rd-head h1{margin:6px 0 2px}.rd-head .tag{color:#fff}
+.rd-text{padding:6px 18px}.rd-text p{font-size:18px;line-height:2.05;margin:10px 0;overflow-wrap:anywhere}
+.rd-gl{display:flex;flex-wrap:wrap;gap:6px 14px;margin:10px 2px 4px;font-size:13.5px}.rd-gl .mini{width:100%;margin:0}
+.rd-gw b{font-size:15px}
+.rd-q{margin:14px 0 18px}
+.rd-qq{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}.rd-qq>span:last-child{display:flex;flex-direction:column;gap:2px}
+.rd-qq .jp{font-size:16.5px;line-height:1.9}.rd-qq small{color:var(--muted);font-size:13px}
+.rd-qn{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:13px;margin-top:4px}
+.rd-q .choice .jp{text-align:left;line-height:1.8}
+.rd-why{margin-top:8px;padding:10px 14px;border-radius:12px;border:1.5px solid var(--line);font-size:14px;line-height:1.55}
+.rd-why.ok{border-color:var(--ok)}.rd-why.ok b{color:var(--ok)}.rd-why.no{border-color:var(--bad, #d64545)}.rd-why.no b{color:var(--bad, #d64545)}
+.rd-done{margin-top:8px}.rd-done>b{font-size:17px}
+.rd-en{margin-top:10px}.rd-en summary{cursor:pointer;font-weight:700;color:var(--accent)}.rd-en p{color:var(--muted);line-height:1.6;margin:8px 0}
+.rd-ex-pass{text-align:left;max-height:46vh;overflow:auto;padding:2px 4px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.rd-ex-pass p{font-size:16.5px;line-height:2;margin:6px 0}
+.rd-ex-gl{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;color:var(--muted);text-align:left;margin-bottom:8px}.rd-ex-gl b{color:var(--ink)}
+.rd-ex-q{font-size:17px;line-height:1.9;text-align:left;font-weight:600}
+@media (max-width:520px){.rd-text{padding:4px 14px}.rd-text p{font-size:17px}}
+/* ---------- writing practice ---------- */
+.wr-open{margin:10px 0 2px}.wr-set{margin-top:8px;width:100%}
+.wr-head{display:flex;align-items:center;gap:14px;margin:10px 0 8px}
+.wr-head b{font-size:40px;line-height:1;display:grid;place-items:center;width:62px;height:62px;border-radius:14px;background:var(--accent-soft);color:var(--accent)}
+.wr-meta{display:flex;flex-direction:column;gap:2px;font-size:15px}.wr-meta span:first-child{font-weight:700}
+.wr-pad{display:flex;justify-content:center}
+.wpad{width:min(100%,360px);aspect-ratio:1;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r-tile);touch-action:none;cursor:crosshair;user-select:none;-webkit-user-select:none}
+.wpad .grid line{stroke:var(--line);stroke-width:.6;stroke-dasharray:2 2}
+.wpad path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.wpad .wghost{opacity:.13}.wpad .wghost path{stroke:var(--ink);stroke-width:4}
+.wpad .wdone path{stroke:var(--ink);stroke-width:4}
+.wpad .wink{stroke:var(--accent);stroke-width:4}
+.wpad .wflash{stroke:var(--bad,#d64545);stroke-width:4.5;stroke-dasharray:200;stroke-dashoffset:200;animation:wflash 1.1s ease-out forwards}
+@keyframes wflash{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.wpad .wflash{animation:none;stroke-dashoffset:0}}
+.wr-status{text-align:center;margin:10px 0 4px;font-weight:600;min-height:1.5em}
+.wr-mode{display:flex;justify-content:center;margin-top:12px}
+.wr-res{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.wr-res:last-child{border-bottom:0}.wr-res b{font-size:26px}
 </style>
 </head>
 <body>
@@ -1348,6 +1400,7 @@ details.opts .ob>.label:first-child{margin-top:12px}
   <button class="nav-extra lib" data-v="grammar" onclick="App.go('grammar')"><b>文</b>Grammar</button>
   <button class="nav-extra lib" data-v="books" onclick="App.go('books')"><b>課</b>Textbooks</button>
   <button class="nav-extra lib" data-v="conj" onclick="App.go('conj')"><b>活</b>Conjugation</button>
+  <button class="nav-extra lib" data-v="read" onclick="App.go('read')"><b>読</b>Reading</button>
   <button class="nav-extra" data-v="search" onclick="App.go('search')"><b>探</b>Search</button>
   <button class="nav-extra" data-v="settings" onclick="App.go('settings')"><b>設</b>Settings</button>
 </div><div class="nav-foot" id="navfoot"></div></nav>
@@ -1678,7 +1731,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('kd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('kd_' + k, JSON.stringify(v)); } catch (e) {} }
 };
-let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, style: 'normal', goalMin: 15, deckVoice: true, cardFront: 'jp', newPerDay: 10, strokeNums: true, levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
+let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, style: 'normal', goalMin: 15, deckVoice: true, cardFront: 'jp', newPerDay: 10, strokeNums: true, pitch: true, writeMode: 'trace', levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
 let progress = store.get('progress', {});
 let custom = store.get('custom', []);
 let actLog = store.get('log', {});
@@ -1775,7 +1828,7 @@ const posBucket = g => ['noun', 'verb', 'i-adj', 'na-adj', 'adverb', 'expression
 function normV(x, lvl) {
   const id = 'v:' + x.w + '|' + x.r;
   return { id, kind: 'vocab', seq: x.i, w: x.w, r: x.r, f: x.f || furi(x.w, x.r), m: x.m, senses: x.s || [{ p: [], g: [x.m] }], pos: x.g || 'other',
-    lvl, freq: x.q || 2, common: !!x.c, ex: x.ex || [], alt: x.a || null, au: x.au || null, pic: null };
+    lvl, freq: x.q || 2, common: !!x.c, ex: x.ex || [], alt: x.a || null, au: x.au || null, pa: x.pa || null, pic: null };
 }
 /* how each starter kanji is built (KanjiVG parts + Kanjium), so the section works before the full data is built */
 const STARTER_KSTRUCT = {"k":{"日":{"ty":"P","rad":"日","og":{"t":"P","h":"The sun"}},"一":{"ty":"I","rad":"一","og":{"t":"C","h":"Represents heaven (天), earth (旦), or the number 1"}},"国":{"pt":[["囗","kamae","r"],["玉","","p"]],"ty":"C","rad":"囗","og":{"t":"C","h":"Treasure 玉 within a country's borders 囗"}},"会":{"pt":[["人","top","r"],["云","bottom",""]],"ty":"P","rad":"𠆢","lk":["今"],"og":{"t":"C","h":"People 人 speaking 云"}},"人":{"ty":"P","rad":"人","lk":["入","八"],"og":{"t":"P","h":"The legs of a human being"}},"年":{"pt":[["丿","","r"],["干","","r"]],"ty":"P","rad":"干","og":{"t":"C","h":"A man 干 carrying grain, representing the annual harvest"}},"大":{"ty":"P","rad":"大","og":{"t":"C","h":"A man 人 with outstretched arms"}},"十":{"ty":"P","rad":"十"},"二":{"ty":"C","rad":"二","og":{"t":"C","h":"Two  parallel lines; compare 一 (one) and 三 (three)"}},"本":{"ty":"I","rad":"木","lk":["休","体"],"og":{"t":"C","h":"A tree 木 with its roots highlighted"}},"中":{"pt":[["口","",""],["丨","","r"]],"ty":"I","rad":"丨","og":{"t":"C","h":"A line 丨 through the center of a box 口"}},"長":{"ty":"P","rad":"長","og":{"t":"P","h":"An old man with long hair and a cane"}},"出":{"pt":[["山","",""],["凵","","r"]],"ty":"C","rad":"凵","og":{"t":"C","h":"A sprout 屮 growing out of a container 凵"}},"三":{"pt":[["一","top","r"],["一","bottom",""],["一","bottom",""]],"ty":"C","rad":"一","og":{"t":"C","h":"Three  parallel lines; compare 一 (one) and 二 (two)"}},"時":{"pt":[["日","left","r"],["寺","right","p"]],"ty":"S","ph":"寺","phR":["ジ"],"rad":"日","og":{"t":"S","h":"day","sem":"日","pho":"寺"}},"事":{"pt":[["口","",""],["⺕","",""],["亅","","r"]],"ty":"C","rad":"亅"},"自":{"ty":"P","rad":"自","og":{"t":"P","h":"A nose; in China, people refer to themselves by pointing to their noses"}},"行":{"ty":"P","rad":"行","og":{"t":"C","h":"To take small steps 亍 with one's feet 彳"}},"社":{"pt":[["礻","left","r"],["土","right","p"]],"ty":"C","rad":"礻","og":{"t":"C","h":"An earth 土 spirit 礻; 礻 also provides the pronunciation"}},"見":{"pt":[["目","top",""],["儿","bottom",""]],"ty":"P","rad":"見","og":{"t":"C","h":"A man 儿 with the eye 目 emphasized"}},"月":{"ty":"P","rad":"月","og":{"t":"P","h":"A crescent moon"}},"分":{"pt":[["八","top","r"],["刀","bottom","r"]],"ty":"I","rad":"刀","og":{"t":"C","h":"Pieces 八 being further subdivided with a knife 刀 "}},"後":{"pt":[["彳","left","r"],["幺","right",""],["夂","right",""]],"ty":"C","rad":"彳","og":{"t":"C","h":"One step 彳 coming behind another 夂; 幺 provides the pronunciation"}},"前":{"pt":[["八","top","p"],["月","bottom",""],["刂","bottom",""]],"ty":"I","rad":"刂"},"生":{"ty":"I","rad":"生","og":{"t":"C","h":" A shoot 屮 growing in the soil 土"}},"五":{"ty":"P","rad":"二","og":{"t":"C","h":"Five elements (the cross with the extra stroke) between heaven 一 and earth 一 "}},"間":{"pt":[["門","kamae","r"],["日","",""]],"ty":"S","ph":"門","phR":["モン","カン"],"rad":"門","og":{"t":"C","h":"The sun 日 shining through a doorway 門"}},"上":{"pt":[["卜","","r"],["一","","r"]],"ty":"I","rad":"一","og":{"t":"C","h":"One stroke on top of another; compare 下 (below)"}},"東":{"pt":[["木","","r"],["日","",""]],"ty":"C","rad":"木","og":{"t":"C","h":"The sun 日 rising behind a tree 木; compare 西"}},"地":{"pt":[["土","left","r"],["也","right","p"]],"ty":"S","ph":"也","phR":["チ"],"rad":"土","og":{"t":"S","h":"earth","sem":"土","pho":"也"}},"方":{"ty":"P","rad":"方","lk":["万"]},"四":{"pt":[["囗","kamae","r"],["儿","",""]],"ty":"P","rad":"囗","og":{"t":"C","h":"A child 儿 in a room with four walls 囗"}},"今":{"pt":[["人","top","r"],["一","bottom",""]],"ty":"C","rad":"𠆢","lk":["会"],"og":{"t":"C","h":"A mouth 亼 talking about things"}},"新":{"pt":[["立","left","p"],["木","left","p"],["斤","right","r"]],"ty":"S","ph":"亲","phR":["シン"],"rad":"斤","og":{"t":"C","h":"A freshly chopped 斤 tree 亲"}},"場":{"pt":[["土","left","r"],["昜","right","p"]],"ty":"C","rad":"土","og":{"t":"S","h":"earth","sem":"土","pho":"昜"}},"金":{"ty":"P","rad":"金","og":{"t":"P","h":"A cast-iron bell"}},"九":{"pt":[["丿","","r"],["乙","","r"]],"ty":"P","rad":"乙","og":{"t":"P","h":"An elbow"}},"入":{"ty":"I","rad":"入","lk":["八","人"],"og":{"t":"C","h":"An arrow indicating \"enter\""}},"開":{"pt":[["門","kamae","r"],["开","",""]],"ty":"C","rad":"門","og":{"t":"S","h":"gate","sem":"門","pho":"开"}},"手":{"ty":"P","rad":"手","og":{"t":"P","h":"A hand with the fingers splayed"}},"力":{"ty":"P","rad":"力","og":{"t":"C","h":"A plow's head representing strength"}},"学":{"pt":[["⺍","top","p"],["冖","top","p"],["子","bottom","r"]],"ty":"C","rad":"子","og":{"t":"C","h":"A building 冖 where children 子 study; ⺍ provides the pronunciation"}},"高":{"pt":[["亠","top",""],["口","top",""],["冋","bottom",""]],"ty":"P","rad":"高","og":{"t":"P","h":"A tall palace"}},"円":{"ty":"C","rad":"冂","og":{"t":"S","h":"enclosure","sem":"囗","pho":"員","old":"圓"}},"子":{"ty":"P","rad":"子","og":{"t":"P","h":"A child in a wrap, with outstretched arms but bundled legs"}},"動":{"pt":[["重","left","p"],["力","right","r"]],"ty":"C","rad":"力","og":{"t":"S","h":"strength","sem":"力","pho":"重"}},"京":{"pt":[["亠","top","r"],["口","bottom",""],["小","bottom",""]],"ty":"C","rad":"亠","og":{"t":"P","h":"A capital building on a hill"}},"目":{"ty":"P","rad":"目","og":{"t":"P","h":"An eye drawn on its side"}},"外":{"pt":[["夕","left","r"],["卜","right",""]],"ty":"P","rad":"夕","og":{"t":"C","h":"Night-time 夕 divinations 卜; the supernatural, the foreign"}},"言":{"ty":"P","rad":"言","og":{"t":"C","h":"A tongue sticking out of a mouth 口"}},"体":{"pt":[["亻","left","r"],["本","right",""]],"ty":"C","rad":"亻","lk":["休","本"],"og":{"t":"S","h":"bone","sem":"骨","pho":"豊","old":"體"}},"田":{"ty":"P","rad":"田","og":{"t":"P","h":"The plots of a rice paddy"}},"八":{"ty":"I","rad":"八","lk":["人","入"],"og":{"t":"C","h":"Two bent lines meaning \"to divide\""}},"六":{"pt":[["亠","top","r"],["八","bottom","r"]],"ty":"P","rad":"八"},"下":{"pt":[["一","","r"],["卜","",""]],"ty":"I","rad":"一","og":{"t":"C","h":"One stroke under another; compare 上 (above)"}},"来":{"ty":"P","rad":"木","og":{"t":"C","h":"A wheat plant that has not yet borne fruit; compare 來"}},"気":{"pt":[["气","kamae","r"],["乂","",""]],"ty":"S","ph":"气","phR":["キ"],"rad":"气","og":{"t":"C","h":"Steam 气 rising from cooking rice 米","old":"氣"}},"小":{"ty":"I","rad":"小","og":{"t":"C","h":"Dividing 八 by a line 亅"}},"七":{"pt":[["一","","r"],["乙","","r"]],"ty":"I","rad":"一"},"山":{"ty":"P","rad":"山","og":{"t":"P","h":"Three mountain peaks"}},"思":{"pt":[["田","top","r"],["心","bottom","r"]],"ty":"C","rad":"心","og":{"t":"C","h":"Weighing something with your mind 囟 (altered) and heart 心"}},"話":{"pt":[["言","left","r"],["舌","right","p"]],"ty":"C","rad":"訁","og":{"t":"C","h":"A spoken 言 tongue 舌; 舌 also provides the pronunciation"}},"使":{"pt":[["亻","left","r"],["吏","right",""]],"ty":"S","ph":"史","phR":["シ"],"rad":"亻","og":{"t":"C","h":"A person 亻 working for the government 吏"}},"女":{"ty":"P","rad":"女","og":{"t":"P","h":"A woman turned to the side"}},"北":{"ty":"P","rad":"匕","og":{"t":"P","h":"Two people 匕 sitting back-to-back; phonetic loan for \"north\""}},"午":{"pt":[["丿","top",""],["干","top",""]],"ty":"P","rad":"十","lk":["千"]},"道":{"pt":[["首","nyoc","p"],["⻌","nyo","r"]],"ty":"C","rad":"辶","og":{"t":"S","h":"walk","sem":"辶","pho":"首"}},"百":{"pt":[["一","top","r"],["白","bottom","r"]],"ty":"S","rad":"白","og":{"t":"S","h":"one","sem":"一","pho":"白"}},"書":{"pt":[["聿","top","r"],["日","bottom","r"]],"ty":"C","rad":"曰","og":{"t":"C","h":"A brush 聿 used to write words 曰"}},"先":{"ty":"C","rad":"儿","og":{"t":"C","h":"Someone stepping 止 in front of another person 儿"}},"名":{"pt":[["夕","top","r"],["口","bottom","r"]],"ty":"C","rad":"口","og":{"t":"C","h":"A name called out 口 to hail someone at night 夕"}},"川":{"ty":"P","rad":"川","og":{"t":"C","h":"A river's flow; compare 巛"}},"千":{"pt":[["丿","top","r"],["十","bottom","r"]],"ty":"C","rad":"十","lk":["午"]},"水":{"ty":"P","rad":"水","og":{"t":"P","h":"A river running between two banks; compare 川"}},"半":{"pt":[["丶","","r"],["二","",""],["十","","r"]],"ty":"C","rad":"十","og":{"t":"C","h":"A cow 牛 splitting 丷 wood in half"}},"男":{"pt":[["田","top","r"],["力","bottom",""]],"ty":"C","rad":"田","og":{"t":"C","h":"Someone who can work 力 the farm 田"}},"私":{"pt":[["禾","left","r"],["厶","right","p"]],"ty":"C","rad":"禾","og":{"t":"C","h":"厶 provides the meaning and pronunciation"}},"西":{"ty":"P","rad":"西","og":{"t":"P","h":"A bird settling into its nest, representing sunset; compare 東"}},"電":{"pt":[["雨","top","r"],["日","bottom","p"]],"ty":"C","rad":"⻗","og":{"t":"C","h":"A thunderbolt 电 cast by a storm cloud 雨"}},"口":{"ty":"P","rad":"口","og":{"t":"P","h":"An open mouth"}},"校":{"pt":[["木","left","r"],["交","right","p"]],"ty":"S","ph":"交","phR":["コウ"],"rad":"木","og":{"t":"S","h":"wood","sem":"木","pho":"交"}},"語":{"pt":[["言","left","r"],["吾","right","p"]],"ty":"S","ph":"五","phR":["ゴ"],"rad":"訁","og":{"t":"S","h":"words","sem":"言","pho":"吾"}},"空":{"pt":[["穴","top","r"],["工","bottom","p"]],"ty":"S","rad":"穴","og":{"t":"S","h":"cave","sem":"穴","pho":"工"}},"土":{"ty":"P","rad":"土","og":{"t":"P","h":"A lump of clay on a potter's wheel"}},"木":{"ty":"P","rad":"木","og":{"t":"P","h":"A tree"}},"聞":{"pt":[["門","kamae","r"],["耳","","r"]],"ty":"S","ph":"門","phR":["モン","カン"],"rad":"耳","og":{"t":"S","h":"ear","sem":"耳","pho":"門"}},"食":{"ty":"C","rad":"食","og":{"t":"P","h":"A dish of food 良 with a lid on top 人"}},"車":{"ty":"P","rad":"車","og":{"t":"P","h":"A cart with two wheels, seen from above"}},"何":{"pt":[["亻","left","r"],["可","right","p"]],"ty":"S","ph":"可","phR":["カ"],"rad":"亻"},"南":{"pt":[["十","top","r"],["冂","bottom",""],["干","bottom",""]],"ty":"C","rad":"十","og":{"t":"P","h":"A musical bell"}},"足":{"pt":[["口","top",""],["龰","bottom",""]],"ty":"P","rad":"足","og":{"t":"P","h":"The leg 口 above the foot"}},"楽":{"pt":[["白","top",""],["冫","top",""],["木","bottom","r"]],"ty":"C","rad":"木","og":{"t":"C","h":"A musical instrument with wood 木, strings 幺, and a pick 白","old":"樂"}},"万":{"ty":"P","rad":"一","lk":["方"],"old":"萬"},"毎":{"pt":[["𠂉","top",""],["毋","bottom","r"]],"ty":"C","rad":"毋","og":{"t":"S","pho":"母","old":"每"}},"店":{"pt":[["广","tare","r"],["占","tarec","p"]],"ty":"S","ph":"占","phR":["テン"],"rad":"广","og":{"t":"S","h":"building","sem":"广","pho":"占"}},"白":{"ty":"P","rad":"白","og":{"t":"C","h":"A burning candle; the rays of the sun"}},"天":{"pt":[["一","top","r"],["大","bottom","r"]],"ty":"P","rad":"大","og":{"t":"C","h":"The heavens 一 above a man 大"}},"買":{"pt":[["罒","top","r"],["貝","bottom","r"]],"ty":"C","rad":"貝","og":{"t":"S","h":"money","sem":"貝"}},"母":{"ty":"P","rad":"母","og":{"t":"C","h":"A mother's breasts"}},"火":{"ty":"P","rad":"火","og":{"t":"P","h":"Flames"}},"花":{"pt":[["艹","top","r"],["化","bottom","p"]],"ty":"S","ph":"化","phR":["カ"],"rad":"艹","og":{"t":"C","h":"A flower 艹 in bloom 化; 化 also provides the pronunciation"}},"右":{"pt":[["丆","",""],["口","","r"]],"ty":"P","rad":"口"},"読":{"pt":[["言","left","r"],["売","right","p"]],"ty":"C","rad":"訁","og":{"t":"C","h":"To show off 賣 one's literacy 言","old":"讀"}},"休":{"pt":[["亻","left","r"],["木","right",""]],"ty":"C","rad":"亻","lk":["体","本"],"og":{"t":"C","h":"A person 亻 leaning against a tree 木"}},"駅":{"pt":[["馬","left","r"],["尺","right","p"]],"ty":"S","rad":"馬","og":{"t":"S","h":"horse","sem":"馬","pho":"睪","old":"驛"}},"父":{"ty":"C","rad":"父","og":{"t":"C","h":"A hand 乂 holding an axe 八"}},"友":{"pt":[["𠂇","kamae",""],["又","kamaec","r"]],"ty":"C","rad":"又","og":{"t":"C","h":"Two hands 又 joined, representing friendship; 又 also provides the pronunciation"}},"左":{"ty":"P","rad":"工","og":{"t":"P","h":"A left hand; compare 又"}},"旅":{"pt":[["方","left","r"],["𠂉","right",""],["亻","right",""]],"ty":"C","rad":"方","og":{"t":"C","h":"A man 方 traveling with a pack 氏 on his back"}},"雨":{"ty":"P","rad":"雨","og":{"t":"P","h":"Rain drops falling from a cloud 帀"}},"好":{"pt":[["女","left","r"],["子","right",""]],"ty":"C","rad":"女","og":{"t":"C","h":"A woman 女 with a son 子"}},"肉":{"ty":"P","rad":"肉","og":{"t":"P","h":"Meat on the ribs of an animal"}},"飲":{"pt":[["飠","left","r"],["欠","right",""]],"ty":"C","rad":"飠","og":{"t":"S","h":"food","sem":"飠","pho":"欠"}},"茶":{"pt":[["艹","top","r"],["人","bottom","p"],["木","bottom","p"]],"ty":"C","rad":"艹","og":{"t":"S","h":"plant","sem":"艹"}},"耳":{"ty":"P","rad":"耳","og":{"t":"P","h":"An ear"}},"晴":{"pt":[["日","left","r"],["青","right","p"]],"ty":"S","ph":"青","phR":["セイ","ショウ","ジョウ"],"rad":"日","og":{"t":"S","h":"sun","sem":"日","pho":"青"}},"森":{"pt":[["木","top","r"],["林","bottom",""]],"ty":"C","rad":"木","og":{"t":"C","h":"Many trees 木 forming a forest"}},"明":{"pt":[["日","left","r"],["月","right",""]],"ty":"C","rad":"日","og":{"t":"C","h":"The light of the sun 日 and moon 月"}}},"parts":{"日":["sun","ひ"],"一":["one","いち"],"囗":["enclosure","くに"],"玉":["jade","たま"],"人":["man","ひと"],"云":["say",""],"𠆢":["man","ひとやね"],"丿":["slash","の"],"干":["pestle","かん"],"大":["big","だい"],"十":["ten","じゅう"],"二":["two","に"],"木":["tree","き"],"口":["mouth","くち"],"丨":["line","ぼう"],"長":["long","ながい"],"山":["mountain","やま"],"凵":["container","かんにょう"],"寺":["Buddhist temple",""],"亅":["hook","はねぼう"],"自":["self","みずから"],"行":["go","ぎょう"],"礻":["sign","しめすへん"],"土":["earth","つち"],"目":["eye","め"],"儿":["legs","にんにょう"],"見":["see","みる"],"月":["moon","つき"],"八":["eight","はち"],"刀":["knife","かたな"],"彳":["step","ぎょうにんべん"],"幺":["short","いとがしら"],"夂":["go slowly","ちかんむり"],"刂":["knife","りっとう"],"生":["life","うむ"],"門":["gate","もん"],"卜":["divination","ぼく"],"也":["to be (classical)",""],"方":["square","ほう"],"立":["stand","たつ"],"斤":["axe","おの"],"亲":["parent",""],"昜":["open",""],"金":["metal","かね"],"乙":["second","おつ"],"入":["enter","いる"],"手":["hand","て"],"力":["power","ちから"],"⺍":["small","つ"],"冖":["cover","わかんむり"],"子":["child","こ"],"亠":["lid","けいさん"],"高":["tall","たかい"],"冂":["open country","けいがまえ"],"員":["employee",""],"重":["heavy",""],"小":["small","しょう"],"夕":["evening","ゆう"],"言":["speech","いう"],"亻":["man","にんべん"],"本":["book",""],"骨":["bone","ほね"],"豊":["bountiful",""],"田":["field","た"],"气":["steam","きがまえ"],"乂":["mow",""],"心":["heart","こころ"],"舌":["tongue","した"],"訁":["speech","ごんべん"],"吏":["officer",""],"史":["history",""],"女":["woman","おんな"],"匕":["spoon","さじ"],"首":["head","くび"],"辶":["walk","しんにょう"],"辶":["walk","しんにょう"],"白":["white","しろ"],"聿":["brush","ふで"],"曰":["say","ひらび"],"川":["river","かわ"],"水":["water","みず"],"丶":["dot","てん"],"禾":["grain","のぎ"],"厶":["private","む"],"西":["west","にし"],"雨":["rain","あめ"],"⻗":["rain","あめかんむり"],"交":["mingle",""],"吾":["I",""],"五":["five",""],"穴":["cave","あな"],"工":["work","こう"],"耳":["ear","みみ"],"食":["eat","しょく"],"車":["cart","くるま"],"可":["can",""],"足":["foot","あし"],"冫":["ice","にすい"],"毋":["mother","なし"],"母":["mother","はは"],"广":["house on cliff","まだれ"],"占":["fortune-telling",""],"罒":["net","あみがしら"],"貝":["shell","かい"],"火":["fire","ひ"],"艹":["grass","くさかんむり"],"化":["change",""],"売":["sell",""],"馬":["horse","うま"],"尺":["shaku",""],"父":["father","ちち"],"又":["right hand","また"],"肉":["meat","にく"],"飠":["eat","しょくへん"],"欠":["lack","あくび"],"青":["blue","あお"],"林":["grove",""]}};
@@ -1849,7 +1902,11 @@ const lvName = l => l === 'ANKI' ? 'My deck' : l === 'MY' ? 'My words' : l === '
 
 /* =====================================================================
    PROGRESS / SPACED REPETITION
-   box → interval in days. A word counts as "known" from box 4 (14-day interval).
+   Scheduling uses FSRS-5 (Free Spaced Repetition Scheduler, MIT licence,
+   github.com/open-spaced-repetition) with its published default parameters.
+   Each card keeps a stability s (days until recall drops to 90%) and a difficulty f (1–10).
+   The old "box" (0–8) is still kept for everything that shows progress:
+   it is derived from the current interval, and a card counts as "known" from box 4 (a 14-day interval).
    ===================================================================== */
 const IV = [0, 1, 3, 7, 14, 30, 60, 120, 240];
 const KNOWN_BOX = 4;
@@ -1869,29 +1926,90 @@ function streak() {
   for (;;) { const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; if (actLog[k] && actLog[k].r) { n++; d.setDate(d.getDate() - 1); } else if ((actLog[k] && actLog[k].vac) || (settings.vac && k >= new Date(settings.vac).toISOString().slice(0, 10))) d.setDate(d.getDate() - 1); else break; }   // vacation days keep the streak without adding to it
   return n;
 }
+/* ---------- FSRS-5 ---------- */
+const FSRS_W = [0.40255, 1.18385, 3.173, 15.69105, 7.1949, 0.5345, 1.4604, 0.0046, 1.54575, 0.1192, 1.01925, 1.9395, 0.11, 0.29605, 2.2698, 0.2315, 2.9898, 0.51655, 0.6621];
+const F_DECAY = -0.5, F_FACTOR = 19 / 81, F_MAX_IVL = 3650;
+const fRetention = () => Math.min(0.97, Math.max(0.75, +settings.retention || 0.9));
+/** probability of recall after t days with stability s */
+const fRetr = (t, s) => Math.pow(1 + F_FACTOR * t / s, F_DECAY);
+/** days until recall falls to the target retention r */
+const fIvlDays = (s, r) => s / F_FACTOR * (Math.pow(r, 1 / F_DECAY) - 1);
+const fClampD = d => Math.min(10, Math.max(1, d));
+const fClampS = s => Math.max(0.01, s);
+/** FSRS grade G: 1 again, 2 hard, 3 good, 4 easy */
+const fD0 = G => fClampD(FSRS_W[4] - Math.exp(FSRS_W[5] * (G - 1)) + 1);
+function fNextD(d, G) {
+  const W = FSRS_W, d1 = d - W[6] * (G - 3) * (10 - d) / 9;   // linear damping: harder cards move less
+  return fClampD(W[7] * fD0(4) + (1 - W[7]) * d1);              // mean reversion toward an easy card
+}
+function fRecallS(d, s, r, G) {
+  const W = FSRS_W, hard = G === 2 ? W[15] : 1, easy = G === 4 ? W[16] : 1;
+  return s * (1 + Math.exp(W[8]) * (11 - d) * Math.pow(s, -W[9]) * (Math.exp((1 - r) * W[10]) - 1) * hard * easy);
+}
+function fForgetS(d, s, r) {
+  const W = FSRS_W;
+  return Math.min(s, W[11] * Math.pow(d, -W[12]) * (Math.pow(s + 1, W[13]) - 1) * Math.exp((1 - r) * W[14]));
+}
+const fShortS = (s, G) => s * Math.exp(FSRS_W[17] * (G - 3 + FSRS_W[18]));   // a second review on the same day
+const boxOfDays = days => { let b = 0; for (let i = 0; i < IV.length; i++) if (days >= IV[i]) b = i; return b; };
+/** a card's FSRS memory state, or null when it has never really been learned.
+    Cards from before FSRS (box only) start from their box's interval. */
+function fState(p) {
+  if (!p) return null;
+  if (p.s > 0) return { s: p.s, f: fClampD(p.f || 5), t: p.lr || p.t || Date.now() };
+  const b = box(p); if (b <= 0) return null;
+  return { s: IV[b], f: fClampD((p.w || 0) > (p.c || 0) ? 7 : 5), t: p.lr || p.t || (p.d ? p.d - IV[b] * DAY : Date.now()) };
+}
+/** the four possible outcomes { s, f, days } for grades 1..4; days is 0 for "again" (seen again in a minute) */
+function fPreview(st, now) {
+  const out = {};
+  for (let G = 1; G <= 4; G++) {
+    let s, f;
+    if (!st) { s = FSRS_W[G - 1]; f = fD0(G); }
+    else {
+      const t = Math.max(0, (now - st.t) / DAY);
+      f = fNextD(st.f, G);
+      if (t < 1) s = fShortS(st.s, G);
+      else { const r = fRetr(t, st.s); s = G === 1 ? fForgetS(st.f, st.s, r) : fRecallS(st.f, st.s, r, G); }
+    }
+    s = fClampS(s);
+    out[G] = { s, f, days: G === 1 ? 0 : Math.min(F_MAX_IVL, Math.max(1, Math.round(fIvlDays(s, fRetention())))) };
+  }
+  // keep the buttons in order: hard ≤ good < easy
+  out[2].days = Math.min(out[2].days, out[3].days);
+  out[3].days = Math.max(out[3].days, out[2].days + (st ? 1 : 0));
+  out[4].days = Math.max(out[4].days, out[3].days + 1);
+  return out;
+}
+/** apply grade G to card p (mutates p) and return the due time */
+function fApply(p, G, now) {
+  const o = fPreview(fState(p), now)[G];
+  p.s = Math.round(o.s * 1000) / 1000; p.f = Math.round(o.f * 100) / 100; delete p.lr;
+  p.d = G === 1 ? now : now + o.days * DAY;
+  p.b = G === 1 ? Math.min(boxOfDays(o.s), Math.max(0, box(p) - 2)) : boxOfDays(o.days);
+  return p.d;
+}
 /** Quiz / test answers. Correct answers only advance the schedule when the item is due (or new). */
 function rec(item, ok) {
   const now = Date.now(), isNew = !progress[item.id];
   const p = progress[item.id] || { c: 0, w: 0, b: 0, d: 0 };
   p.b = box(p); p.l = item.lvl;
-  if (ok) { p.c++; if (isNew || now >= (p.d || 0)) { p.b = Math.min(IV.length - 1, p.b + 1); p.d = now + IV[p.b] * DAY; } }
-  else { p.w++; p.b = Math.max(0, p.b - 2); p.d = now + 10 * 60e3; }
+  if (ok) { p.c++; if (isNew || now >= (p.d || 0)) fApply(p, 3, now); }
+  else { p.w++; fApply(p, 1, now); p.d = now + 10 * 60e3; }
   p.t = now; progress[item.id] = p; save(); logAct(false, item.kind);
   if (!rec.silent) gameAnswer(ok);
 }
-/** Flashcard grades: 0 again, 1 hard, 2 good, 3 easy. */
+/** Flashcard grades: 0 again, 1 hard, 2 good, 3 easy. dry: return the interval in ms without changing anything. */
 function schedule(item, g, dry) {
-  const now = Date.now(), p0 = progress[item.id];
+  const now = Date.now(), p0 = progress[item.id], G = g + 1;
+  if (dry) { const o = fPreview(fState(p0), now)[G]; return G === 1 ? 60e3 : o.days * DAY; }
   const p = Object.assign({ c: 0, w: 0, b: 0, d: 0 }, p0 || {}); p.b = p0 ? box(p0) : 0;
-  let due;
-  if (g === 0) { p.w++; p.b = Math.max(0, p.b - 2); due = now + 60e3; }
-  else if (g === 1) { p.c++; p.b = Math.max(1, p.b); due = now + Math.max(0.5, IV[p.b] * 0.5) * DAY; }
-  else { p.c++; p.b = Math.min(IV.length - 1, p.b + (g === 3 ? 2 : 1)); due = now + IV[p.b] * DAY; }
-  if (dry) return due - now;
-  p.d = due; p.t = now; p.l = item.lvl; progress[item.id] = p; save(); logAct(!p0, item.kind);
+  if (G === 1) p.w++; else p.c++;
+  fApply(p, G, now); if (G === 1) p.d = now + 60e3;
+  p.t = now; p.l = item.lvl; progress[item.id] = p; save(); logAct(!p0, item.kind);
   if (!schedule.silent) gameAnswer(g >= 1);
 }
-const fmtIv = ms => ms < 3600e3 ? `${Math.max(1, Math.round(ms / 60e3))}m` : ms < DAY ? `${Math.round(ms / 3600e3)}h` : ms < 30 * DAY ? `${Math.round(ms / DAY)}d` : `${Math.round(ms / (30 * DAY))}mo`;
+const fmtIv = ms => ms < 3600e3 ? `${Math.max(1, Math.round(ms / 60e3))}m` : ms < DAY ? `${Math.round(ms / 3600e3)}h` : ms < 30 * DAY ? `${Math.round(ms / DAY)}d` : ms < 365 * DAY ? `${Math.round(ms / (30 * DAY))}mo` : `${Math.round(ms / (365 * DAY) * 10) / 10}y`;
 function levelStats(kind, l) {
   const pre = kind === 'vocab' ? 'v:' : kind === 'kanji' ? 'k:' : 'g:'; let k = 0, n = 0;
   for (const [id, p] of Object.entries(progress)) if (id.startsWith(pre) && p.l === l) { n++; if (box(p) >= KNOWN_BOX) k++; }
@@ -1994,7 +2112,7 @@ function weakestSituation() {
   return best;
 }
 function vLibrary() {
-  const tiles = [['kana', 'あ', 'Kana', 'Hiragana and katakana charts, stroke order and drills'], ['vocab', '語', 'Words', 'Flashcards, quizzes, word lists and everyday situations'], ['kanji', '字', 'Kanji', 'Every JLPT kanji with its story, parts and stroke order'], ['grammar', '文', 'Grammar', 'Grammar points N5–N1 with examples and drills'], ['books', '課', 'Textbooks', 'Genki I & II and Basic Kanji Book, lesson by lesson'], ['conj', '活', 'Conjugation', 'Verb and adjective forms, with the rule behind every answer'], ['vocab:sit', '場', 'Situations', 'Words grouped by where you’ll hear them'], ['search', '探', 'Search', 'Look up any word, kanji or grammar point']];
+  const tiles = [['kana', 'あ', 'Kana', 'Hiragana and katakana charts, stroke order and drills'], ['vocab', '語', 'Words', 'Flashcards, quizzes, word lists and everyday situations'], ['kanji', '字', 'Kanji', 'Every JLPT kanji with its story, parts and stroke order'], ['grammar', '文', 'Grammar', 'Grammar points N5–N1 with examples and drills'], ['books', '課', 'Textbooks', 'Genki I & II and Basic Kanji Book, lesson by lesson'], ['conj', '活', 'Conjugation', 'Verb and adjective forms, with the rule behind every answer'], ['read', '読', 'Reading', 'Short passages N5–N1 with exam-style questions'], ['vocab:sit', '場', 'Situations', 'Words grouped by where you’ll hear them'], ['search', '探', 'Search', 'Look up any word, kanji or grammar point']];
   return `<h1>Library</h1><p class="sub">Everything in the app, for looking things up or drilling a weak spot. Your lessons are on the Path.</p>
   <div class="libgrid">${tiles.map(([v, g, t, d]) => { const [view, tab] = v.split(':'); return `<button class="libtile" onclick="App.go('${view}'${tab ? `,'${tab}'` : ''})"><b class="jp">${g}</b><span class="lt-t">${t}</span><span class="lt-d">${d}</span></button>`; }).join('')}</div>`;
 }
@@ -2092,7 +2210,7 @@ function vVocab() {
   const fsum = `${lvL} · ${posL === 'All' ? 'all word types' : posL}`;
   const countNote = busy ? '<p class="note">Loading words…</p>' : '';
   const head = (title, sub) => `<h1>${title}</h1>${tabs}<p class="sub" style="margin-top:12px">${sub}</p>`;
-  const DIRS = [['jp2en', 'Word → meaning'], ['en2jp', 'Meaning → word'], ...(settings.pics && V.some(picAsk) ? [['p2w', 'Picture → word']] : []), ['type', '⌨︎ Type it'], ['mix', 'Mixed']];
+  const DIRS = [['jp2en', 'Word → meaning'], ['en2jp', 'Meaning → word'], ...(settings.pics && V.some(picAsk) ? [['p2w', 'Picture → word']] : []), ...(V.some(x => x.au) ? [['hear', '🔊 Listen'], ['dict', '🔊 Dictation']] : []), ['type', '⌨︎ Type it'], ['mix', 'Mixed']];
   if (S.vtab === 'cards') {
     const now = Date.now(), sel = vSel(), due = sel.filter(x => isDue(x.id, now)).length, fresh = sel.filter(x => !progress[x.id]).length, nl = Math.min(newLeft('vocab'), fresh);
     return `${head('Words', 'See the card, recall it, then rate how well you knew it.')}
@@ -2154,6 +2272,7 @@ function vKanji() {
   <div class="label">Quiz type</div>
   ${seg([['k2m', 'Meaning'], ['m2k', 'Pick kanji'], ['k2r', 'Reading'], ['type', '⌨︎ Type it'], ['mix', 'Mixed']], S.kf.qt, 'App.kQt')}`)}
   <div class="btnrow"><button class="btn" onclick="App.startCards('kanji')" ${sel.length ? '' : 'disabled'}>Flashcards${due ? ` · ${due} due` : ''}</button><button class="btn sec" onclick="App.startLearn('kanji')" ${sel.length > 1 ? '' : 'disabled'}>Quiz these ${fmtN(sel.length)}</button></div>
+  ${DATA.mode === 'full' && sel.length ? `<button class="btn line wr-set" onclick="App.writePick()">✍ Write 10 from memory or by tracing</button>` : ''}
   <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span></div>
   <div class="tiles">${sel.map(k => `<button class="tile" data-open="${esc(k.id)}"><i class="dot ${status(k.id)}"></i>${picHtml(k.pic, 'xs')}<span class="tk jp">${k.k}</span><span class="tm">${esc(k.mean[0] || '')}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>`;
 }
@@ -2211,7 +2330,8 @@ function vSettings() {
     { name: 'Kanji types, sound parts, look-alikes', by: 'Kanjium (mifunetoshiro), built on EDRDG data; parts from KanjiVG', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' },
     { name: 'More look-alike kanji', by: 'Lars Yencken, “Orthographic support for passing the reading hurdle in Japanese” (PhD thesis, University of Melbourne, 2010): radical and stroke-edit similarity, as packaged by the Niai project', license: 'CC BY 3.0', url: 'https://github.com/mwil/wanikani-userscripts/tree/master/wanikani-similar-kanji' },
     { name: 'Modern quotes', by: 'Short catchphrases by Shuzo Matsuoka and from anime and manga, quoted briefly with credit; © their creators and publishers (shown on each quote). Switch them off above.', license: '© owners', url: 'https://en.wikipedia.org/wiki/Shuzo_Matsuoka' },
-    { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' }];
+    { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },
+    { name: 'Pitch accent', by: 'Kanjium accents.txt, pitch accent notation by Uros O.', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' }];
   return `<h1>Settings</h1><p class="sub">Saved on this device.</p>
   <div class="card">
     <div class="set" style="display:block"><b>Design</b><span>Pick a template for the whole app</span>
@@ -2231,9 +2351,12 @@ function vSettings() {
     <div class="set"><div><b>Auto-play recordings</b><span>Play native-speaker audio automatically when a word has a recording</span></div>${sw('autoSpeak')}</div>
     <div class="set"><div><b>Audio speed</b><span>Slow recordings down to catch every sound</span></div>${seg([['1', 'Normal'], ['0.85', 'Slower'], ['0.7', 'Slow']], String(settings.audioRate || 1), 'App.audioRate')}</div>
     <div class="set"><div><b>Vacation mode</b><span>Pause reviews and keep your streak while you're away. When you come back, nothing has piled up</span></div><label class="sw"><input type="checkbox" ${settings.vac ? 'checked' : ''} onchange="App.vacation(this.checked)"><span></span></label></div>
+    <div class="set"><div><b>Pitch accent</b><span>Show where each word's pitch rises and falls (Tokyo Japanese)</span></div>${sw('pitch')}</div>
     <div class="set"><div><b>Stroke numbers</b><span>Number each stroke in kanji diagrams</span></div>${sw('strokeNums')}</div>
     <div class="set" style="display:block"><b>New flashcards per day</b>
       <div style="margin-top:10px">${chips([[5, '5'], [10, '10'], [20, '20'], [30, '30'], [50, '50']], settings.newPerDay, 'App.newPerDay')}</div></div>
+    <div class="set" style="display:block"><b>How much to remember</b><span style="display:block">Reviews are timed by FSRS so you still remember each card when it comes back. Higher means more reviews; 90% suits most learners</span>
+      <div style="margin-top:10px">${chips([['0.85', '85%'], ['0.9', '90%'], ['0.95', '95%']], String(settings.retention || 0.9), 'App.retention')}</div></div>
   </div>
   <div class="label">My words</div>
   <div class="card">
@@ -2260,7 +2383,12 @@ function vSettings() {
   </div>
   <div class="label">Credits &amp; licences</div>
   <div class="card credits">${credits.map(c => `<div><b>${esc(c.name)}</b> — ${esc(c.by)}. <a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.license)}</a></div>`).join('')}
-    <div>Example sentences come from the Tatoeba Project; each one links to its source. Dictionary-derived data in <code>data/</code> is shared under CC BY-SA 4.0.</div></div>`;
+    <div>Example sentences come from the Tatoeba Project; each one links to its source. Dictionary-derived data in <code>data/</code> is shared under CC BY-SA 4.0.</div>
+    <div><b>Review timing</b> — the FSRS-5 algorithm and its default parameters, open-spaced-repetition. <a href="https://github.com/open-spaced-repetition/fsrs4anki" target="_blank" rel="noopener">MIT</a></div>
+    <div><b>Reading passages, practice sentences, explanations</b> — written for this app.</div></div>
+  <div class="label">Help make it better</div>
+  <div class="card"><p style="margin:0 0 10px">Found a wrong reading, a bug or a confusing question? Kotoba Dojo is open source.</p>
+    <a class="btn sec" href="https://github.com/Themanmad/Kotoba-Dojo/issues/new/choose" target="_blank" rel="noopener">Report a problem or suggest an idea</a></div>`;
 }
 
 /* ---------- detail cards ---------- */
@@ -2364,6 +2492,7 @@ function vDetail(x) {
   const uk = x.senses.some(s => (s.x || []).includes('uk'));
   return `<div class="detail force">
     ${stationSign(x)}
+    ${pitchHtml(x)}
     ${x.alt ? `<div class="dread">Also written <span class="jp">${esc(x.alt)}</span></div>` : ''}
     <div class="tags"><span class="tag">${esc(POS_LABEL[x.pos] || x.pos)}</span>${x.common ? '<span class="tag cm">common word</span>' : ''}${uk ? '<span class="tag">usually kana</span>' : ''}${freqBadge(x.freq)}</div>
     ${x.senses.length > 1 ? `<ol class="senses">${x.senses.map((s, i) => `<li>${s.p && s.p.length && (i === 0 || s.p.join() !== x.senses[i - 1].p.join()) ? `<span class="pos">${esc(posLabel(s.p))}</span>` : ''}${esc(s.g.join('; '))}${s.i ? ` <span class="muted">(${esc(s.i)})</span>` : ''}</li>`).join('')}</ol>`
@@ -2670,6 +2799,18 @@ function makeQ(kind, item, dir) {
         opts: opts.map(x => ({ html: `<span class="jp cjp">${ruby(x.f)}</span>`, ok: x === item })) };
     }
     if (dir === 'p2w') dir = 'en2jp';
+    /* listening: only words with a native recording. Options never share the word's reading,
+       so a homophone (雨 / 飴) can't be a "wrong" answer that sounds exactly right. */
+    if ((dir === 'hear' || dir === 'dict') && item.au) {
+      const play = `<button class="listen big" data-audio="${esc(item.au)}" aria-label="Play the recording">🔊 Play</button><div class="proma">Tap to hear it again</div>`;
+      if (dir === 'dict') return { item, dir, type: 'read', dict: true, jp: false, say: '', au: item.au, autoplay: item.au, prompt: play, grid: false, opts: [], msg: '', hinted: false,
+        meta: `<span class="tag lv">${lvName(item.lvl)}</span><span class="tag">聴解 dictation</span>`, hint: 'Type the word you hear, in kana or romaji' };
+      const hpool = pool.filter(x => hiraNorm(x.r) !== hiraNorm(item.r)), opts = shuffle([item, ...distract(item, hpool.length >= 3 ? hpool : pool.filter(x => x.r !== item.r), x => x.w, x => x.pos === item.pos)]);
+      return { item, dir, jp: false, say: '', au: item.au, autoplay: item.au, hint: 'Which word do you hear?', prompt: play,
+        meta: `<span class="tag lv">${lvName(item.lvl)}</span><span class="tag">聴解</span>`, grid: true,
+        opts: opts.map(x => ({ html: `<span class="jp cjp">${ruby(x.f)}</span>`, ok: x === item })) };
+    }
+    if (dir === 'hear' || dir === 'dict') dir = 'jp2en';
     if (dir === 'jp2en') {
       const opts = shuffle([item, ...distract(item, pool, x => x.m, x => x.pos === item.pos)]);
       return { item, dir, jp: true, say: wordSay(item.r), au: item.au, hint: 'What does this mean?',
@@ -2749,10 +2890,11 @@ function nextQ() {
   if (s.idx >= list.length) { s.done = true; render(); window.scrollTo(0, 0); return; }
   item = list[s.idx];
   let dir = s.dir;
-  if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp', ...(picAsk(item) ? ['p2w'] : [])] : s.kind === 'grammar' ? ['gfill', 'gfill', 'g2m', 'm2g'] : s.kind === 'kana' ? ['k2r', 'r2k', 'pair'] : ['k2m', 'm2k', 'k2r', ...(item.pic && settings.pics ? ['p2k'] : [])]);
+  if (dir === 'mix') dir = pick(s.kind === 'vocab' ? ['jp2en', 'en2jp', ...(picAsk(item) ? ['p2w'] : []), ...(item.au ? ['hear'] : [])] : s.kind === 'grammar' ? ['gfill', 'gfill', 'g2m', 'm2g'] : s.kind === 'kana' ? ['k2r', 'r2k', 'pair'] : ['k2m', 'm2k', 'k2r', ...(item.pic && settings.pics ? ['p2k'] : [])]);
   s.q = makeQ(s.kind, item, dir); s.answered = false; s.chosen = -1; s.undo = null;
   render(); window.scrollTo(0, 0); if (s.q.type) typeFocus();
-  if (settings.autoSpeak && s.q.jp) playAudio(s.q.au);
+  if (s.q.autoplay) setTimeout(() => { if (S.session === s && !s.answered) playAudio(s.q.autoplay); }, 250);
+  else if (settings.autoSpeak && s.q.jp) playAudio(s.q.au);
 }
 function answer(i) {
   const s = S.session; if (!s || s.mode === 'cards' || s.mode === 'exam' || s.answered || s.done || !s.q.opts[i]) return;
@@ -3064,7 +3206,7 @@ function makeGrammarQ(item, dir) {
    Question types follow the JLPT papers; questions are generated from the
    app's own dictionary, grammar and Tatoeba data (official papers are the
    Japan Foundation's copyright). Pass marks are the official ones from
-   jlpt.jp; the score is an estimate because reading (読解) isn't included.
+   jlpt.jp. Reading (読解) uses the app's own graded passages (READ).
    ===================================================================== */
 const EXAM_SECTIONS = [
   { key: 'kr', sec: 'vocab', jp: '漢字読み', en: 'Kanji reading', instr: '＿＿の ことばは ひらがなで どう かきますか。', instrEn: 'How is the underlined word read?' },
@@ -3073,14 +3215,15 @@ const EXAM_SECTIONS = [
   { key: 'ik', sec: 'vocab', jp: '言い換え類義', en: 'Closest meaning', instr: '＿＿の ことばに いちばん ちかい いみは どれですか。', instrEn: 'Which meaning is closest to the underlined word?' },
   { key: 'gf', sec: 'grammar', jp: '文法形式の判断', en: 'Grammar form', instr: '（　　）に 何を 入れますか。', instrEn: 'Which grammar fits the blank?' },
   { key: 'ord', sec: 'grammar', jp: '文の組み立て', en: 'Sentence order', instr: '★ に 入る ものは どれですか。', instrEn: 'Put the four parts in order. Which one goes in ★?' },
+  { key: 'rd', sec: 'read', jp: '読解', en: 'Reading', instr: 'ぶんしょうを 読んで、しつもんに こたえて ください。', instrEn: 'Read the passage, then answer the question.' },
   { key: 'li', sec: 'listen', jp: '聴解', en: 'Listening', instr: '音声を 聞いて、正しい いみを えらんで ください。', instrEn: 'Listen, then choose the correct meaning.' }
 ];
 const EXAM_COUNTS = {
-  N5: { kr: 7, hy: 5, bm: 6, ik: 3, gf: 9, ord: 4, li: 8 },
-  N4: { kr: 7, hy: 5, bm: 7, ik: 4, gf: 10, ord: 4, li: 8 },
-  N3: { kr: 8, hy: 6, bm: 8, ik: 5, gf: 10, ord: 5, li: 9 },
-  N2: { kr: 5, hy: 5, bm: 7, ik: 5, gf: 10, ord: 5, li: 9 },
-  N1: { kr: 6, hy: 0, bm: 7, ik: 6, gf: 10, ord: 5, li: 9 }
+  N5: { kr: 7, hy: 5, bm: 6, ik: 3, gf: 9, ord: 4, rd: 4, li: 8 },
+  N4: { kr: 7, hy: 5, bm: 7, ik: 4, gf: 10, ord: 4, rd: 4, li: 8 },
+  N3: { kr: 8, hy: 6, bm: 8, ik: 5, gf: 10, ord: 5, rd: 5, li: 9 },
+  N2: { kr: 5, hy: 5, bm: 7, ik: 5, gf: 10, ord: 5, rd: 5, li: 9 },
+  N1: { kr: 6, hy: 0, bm: 7, ik: 6, gf: 10, ord: 5, rd: 4, li: 9 }
 };
 /* official pass marks (jlpt.jp): N4/N5 language knowledge+reading 0–120 & listening 0–60; N1–N3 three sections of 0–60 */
 const PASS = { N1: { total: 100, two: false }, N2: { total: 90, two: false }, N3: { total: 95, two: false }, N4: { total: 90, two: true }, N5: { total: 80, two: true } };
@@ -3231,7 +3374,7 @@ function examCounts(l, scope, n) {
 }
 function scopeLabel(scope) {
   if (!scope || scope.type === 'full') return 'Full exam';
-  if (scope.type === 'part') return { vocab: '文字・語彙 Vocabulary', grammar: '文法 Grammar', listen: '聴解 Listening' }[scope.id];
+  if (scope.type === 'part') return { vocab: '文字・語彙 Vocabulary', grammar: '文法 Grammar', read: '読解 Reading', listen: '聴解 Listening' }[scope.id];
   const sec = EXAM_SECTIONS.find(x => x.key === scope.id); return `${sec.jp} ${sec.en}`;
 }
 function buildExam(l, scope, n) {
@@ -3239,6 +3382,7 @@ function buildExam(l, scope, n) {
   const qs = [], used = new Set();
   EXAM_SECTIONS.forEach((sec, si) => {
     let k = counts[sec.key] || 0; if (!k) return;
+    if (sec.key === 'rd') { readExamQs(l, k).forEach(q => { q.key = 'rd'; q.si = si; qs.push(q); }); return; }
     const cands = sec.key === 'ord' ? freshFirst(gram, 'ord').concat(freshFirst(words, 'ord')) : freshFirst(sec.sec === 'grammar' ? gram : words, sec.key);
     const pool = sec.key === 'gf' ? (gram.length >= 6 ? gram : G) : words;
     for (const it of cands) {
@@ -3260,7 +3404,7 @@ async function startExam(scope) {
   const qs = buildExam(l, scope, S.examN);
   if ((scope.id === 'listen' || scope.id === 'li') && qs.length < 3) return toast(`No native ${l} sentence recordings yet — listening practice appears once the full data is built`);
   if (qs.length < (scope.type === 'full' ? 10 : 3)) return toast(`Not enough ${l} data for this ${scope.type === 'full' ? 'exam' : 'section'} yet`);
-  S.session = { mode: 'exam', level: l, scope, qs, idx: 0, ans: qs.map(() => -1), start: Date.now(), limit: qs.length * SEC_PER_Q * 1000, done: false,
+  S.session = { mode: 'exam', level: l, scope, qs, idx: 0, ans: qs.map(() => -1), start: Date.now(), limit: (qs.length * SEC_PER_Q + qs.filter(q => q.key === 'rd').length * 60) * 1000, done: false,
     skippedListening: scope.type === 'full' && !qs.some(q => q.key === 'li') };
   stopExamTimer();
   examTimer = setInterval(() => {
@@ -3286,7 +3430,7 @@ function finishExam(force) {
   if (!force && blank && !confirm(`${blank} question${blank === 1 ? ' is' : 's are'} unanswered. Finish anyway?`)) return;
   stopExamTimer();
   s.done = true; s.time = Date.now() - s.start;
-  rec.silent = true; s.qs.forEach((q, i) => rec(q.item, s.ans[i] === q.ans)); rec.silent = false;
+  rec.silent = true; s.qs.forEach((q, i) => { if (!q.noRec) rec(q.item, s.ans[i] === q.ans); }); rec.silent = false;   // reading questions aren't flashcards
   { const okN = s.qs.filter((q, i) => s.ans[i] === q.ans).length; addXP(okN * 5 + 100); checkBadges(); }
   const full = !s.scope || s.scope.type === 'full', ok = s.qs.filter((q, i) => s.ans[i] === q.ans).length;
   s.result = full ? scoreExam(s) : null;
@@ -3297,23 +3441,26 @@ function finishExam(force) {
   render(); window.scrollTo(0, 0);
 }
 function scoreExam(s) {
-  const by = { vocab: [0, 0], grammar: [0, 0], listen: [0, 0] };
+  const by = { vocab: [0, 0], grammar: [0, 0], read: [0, 0], listen: [0, 0] };
   s.qs.forEach((q, i) => { const sec = EXAM_SECTIONS[q.si].sec; by[sec][1]++; if (s.ans[i] === q.ans) by[sec][0]++; });
   const P = PASS[s.level], pct = ([a, b]) => b ? a / b : 0;
-  const lkRaw = [by.vocab[0] + by.grammar[0], by.vocab[1] + by.grammar[1]];
-  const hasLi = by.listen[1] > 0;
+  const hasLi = by.listen[1] > 0, hasRd = by.read[1] > 0;
   if (P.two) {
+    // N4/N5: language knowledge and reading are one section (0–120)
+    const lkRaw = [by.vocab[0] + by.grammar[0] + by.read[0], by.vocab[1] + by.grammar[1] + by.read[1]];
     const lk = Math.round(pct(lkRaw) * 120), li = hasLi ? Math.round(pct(by.listen) * 60) : null;
     const max = 120 + (hasLi ? 60 : 0), need = hasLi ? P.total : Math.round(P.total * 120 / 180);
     const total = lk + (li || 0);
-    return { by, rows: [['Language knowledge (vocab/grammar)・Reading', lk, 120, 38], ...(hasLi ? [['Listening', li, 60, 19]] : [])], total, max, need,
+    return { by, rows: [[hasRd ? 'Language knowledge (vocab/grammar)・Reading' : 'Language knowledge (vocab/grammar)', lk, 120, 38], ...(hasLi ? [['Listening', li, 60, 19]] : [])], total, max, need, readingSkipped: !hasRd,
       pass: total >= need && lk >= 38 && (!hasLi || li >= 19) };
   }
-  const lk = Math.round(pct(lkRaw) * 60), li = hasLi ? Math.round(pct(by.listen) * 60) : null;
-  const max = 60 + (hasLi ? 60 : 0), need = Math.round(P.total * max / 180);
-  const total = lk + (li || 0);
-  return { by, rows: [['Language knowledge (vocab/grammar)', lk, 60, 19], ...(hasLi ? [['Listening', li, 60, 19]] : [])], total, max, need, readingSkipped: true,
-    pass: total >= need && lk >= 19 && (!hasLi || li >= 19) };
+  // N1–N3: three sections of 0–60
+  const lkRaw = [by.vocab[0] + by.grammar[0], by.vocab[1] + by.grammar[1]];
+  const lk = Math.round(pct(lkRaw) * 60), rd = hasRd ? Math.round(pct(by.read) * 60) : null, li = hasLi ? Math.round(pct(by.listen) * 60) : null;
+  const max = 60 + (hasRd ? 60 : 0) + (hasLi ? 60 : 0), need = Math.round(P.total * max / 180);
+  const total = lk + (rd || 0) + (li || 0);
+  return { by, rows: [['Language knowledge (vocab/grammar)', lk, 60, 19], ...(hasRd ? [['Reading', rd, 60, 19]] : []), ...(hasLi ? [['Listening', li, 60, 19]] : [])], total, max, need, readingSkipped: !hasRd,
+    pass: total >= need && lk >= 19 && (!hasRd || rd >= 19) && (!hasLi || li >= 19) };
 }
 function vExam() {
   const lv = LV.filter(l => levelTotal('vocab', l) >= 30);
@@ -3321,7 +3468,7 @@ function vExam() {
   const c = EXAM_COUNTS[S.examLv], n = Object.values(c).reduce((a, b) => a + b, 0);
   const hist = store.get('exams', []).slice(0, 8);
   const secBtn = (type, id, title, sub, strong) => `<button class="secrow ${strong ? 'part' : ''}" onclick="App.examSection('${type}','${id}')"><span><b class="jp">${title}</b><span>${sub}</span></span><span class="go">Practise ›</span></button>`;
-  const parts = [['vocab', '文字・語彙', 'Vocabulary'], ['grammar', '文法', 'Grammar'], ['listen', '聴解', 'Listening']];
+  const parts = [['vocab', '文字・語彙', 'Vocabulary'], ['grammar', '文法', 'Grammar'], ['read', '読解', 'Reading'], ['listen', '聴解', 'Listening']];
   const body = S.examMode === 'full' ? `
   <div class="card" style="margin-top:14px">
     <div class="exparts">${EXAM_SECTIONS.filter(x => c[x.key]).map((x, i) => `<div><span class="jp">問題${i + 1} ${x.jp}</span><span class="muted">${x.en} · ${c[x.key]}</span></div>`).join('')}</div>
@@ -3337,7 +3484,7 @@ function vExam() {
   <div class="label">Level</div>${chips(lv.map(l => [l, l]), S.examLv, 'App.examLvSet')}
   <div style="margin-top:14px">${seg([['full', 'Full exam'], ['section', 'By section']], S.examMode, 'App.examModeSet')}</div>
   ${body}
-  <p class="note">Practice exam, not an official JLPT paper. Reading comprehension (読解) isn't included, so scores are estimates. Listening uses native-speaker recordings only.</p>
+  <p class="note">Practice exam, not an official JLPT paper, so scores are estimates. Reading (読解) uses short passages written for this app. Listening uses native-speaker recordings only.</p>
   ${hist.length ? `<div class="label">Recent attempts</div><div class="card lvrows">${hist.map(h => h.part
     ? `<div class="lvrow"><b>${h.l}</b><span class="muted jp">${esc(h.part)}</span><span>${h.ok}/${h.n} · ${Math.round(h.ok / h.n * 100)}%</span></div>`
     : `<div class="lvrow"><b>${h.l}</b><span class="muted">${esc(h.d)} · full exam</span><span class="${h.pass ? 'okc' : 'badc'}">${h.total}/${h.max} · ${h.pass ? '合格 pass' : 'not yet'}</span></div>`).join('')}</div>` : ''}`;
@@ -3353,7 +3500,7 @@ function renderExam() {
   <div class="exsec"><b class="jp">問題${secNo}　${sec.jp}</b><span>${sec.en} · question ${s.idx + 1} of ${s.qs.length}${s.scope && s.scope.type !== 'full' ? ' · section practice' : ''}</span></div>
   <div class="exinstr jp">${sec.instr}</div><div class="exinstr-en">${sec.instrEn}</div>
   <div class="card prompt">${q.prompt}</div>
-  <div class="choices ${q.key === 'li' || q.key === 'ik' ? '' : 'grid2'}">${opts}</div>
+  <div class="choices ${q.key === 'li' || q.key === 'ik' || q.key === 'rd' ? '' : 'grid2'}">${opts}</div>
   <div class="btnrow"><button class="btn sec" onclick="App.examGo(-1)" ${s.idx ? '' : 'disabled'}>‹ Previous</button>${last ? `<button class="btn" onclick="App.finishExam()">Finish exam</button>` : `<button class="btn" onclick="App.examGo(1)">Next ›</button>`}</div>
   <div class="exgrid">${s.qs.map((x, i) => `<button class="${i === s.idx ? 'cur' : ''} ${s.ans[i] >= 0 ? 'done' : ''}" onclick="App.examJump(${i})">${i + 1}</button>`).join('')}</div>
   ${!last ? `<button class="btn line" onclick="App.finishExam()">Finish exam now</button>` : ''}
@@ -3363,6 +3510,8 @@ function examReview(s) {
   const wrong = s.qs.map((q, i) => ({ q, i })).filter(o => s.ans[o.i] !== o.q.ans);
   if (!wrong.length) return '<p class="note" style="text-align:center">Every question right!</p>';
   return `<div class="label">Review (${wrong.length}) — tap to study</div><div class="list">${wrong.map(({ q, i }) => {
+    if (q.rd) return `<button class="row exrev force" onclick="App.endSession();App.go('read');App.rdOpen('${esc(q.item.id.slice(3))}')"><span class="rm"><b class="jp">読解</b> · <span class="jp">${ruby(q.rd.title)}</span>: <span class="jp">${ruby(q.rd.q)}</span><br>
+      <span class="badc">✗ ${s.ans[i] >= 0 ? `<span class="jp">${esc(q.raw[s.ans[i]])}</span>` : 'no answer'}</span> · <span class="okc">✓ <span class="jp">${esc(q.raw[q.ans])}</span></span><br><span class="muted">${esc(q.rd.why)}</span></span></button>`;
     const it = q.item, label = it.kind === 'grammar' ? esc(it.t) : esc(it.w || it.r);
     return `<button class="row exrev force" data-open="${esc(it.id)}"><span class="rm"><b class="jp">${EXAM_SECTIONS[q.si].jp}</b> · ${q.fullM ? `<span class="jp exs">${ruby(q.fullM, true)}</span>` : `<span class="jp">${label}</span>`}<br>
       <span class="badc">✗ ${s.ans[i] >= 0 ? `<span class="jp">${esc(q.raw[s.ans[i]])}</span>` : 'no answer'}</span> · <span class="okc">✓ <span class="jp">${esc(q.raw[q.ans])}</span></span></span></button>`; }).join('')}</div>`;
@@ -3710,14 +3859,15 @@ function navFoot(st) {
   <div class="nf-meta"><span>🔥 ${st} day${st === 1 ? '' : 's'}</span><span>${due ? `${due} due` : 'Nothing due'}</span></div></div>`;
 }
 function render() {
-  const navOf = v => v === 'anki' ? 'settings' : v === 'dquiz' ? 'path' : ['kana', 'vocab', 'kanji', 'grammar', 'library', 'books', 'conj'].includes(v) ? 'library' : ['path', 'lesson', 'place'].includes(v) ? 'path' : v;
+  const navOf = v => v === 'anki' ? 'settings' : v === 'dquiz' ? 'path' : ['kana', 'vocab', 'kanji', 'grammar', 'library', 'books', 'conj', 'read', 'write'].includes(v) ? 'library' : ['path', 'lesson', 'place'].includes(v) ? 'path' : v;
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === navOf(S.view) || b.dataset.v === S.view));
   const st = streak(); $('#streak').innerHTML = (st ? `🔥 ${st}` : '') + (gameOn() ? `<span class="hxp" title="${esc(beltOf(game.xp).name)}">⭐ ${fmtN(game.xp)}</span>` : '');
   const nf = $('#navfoot'); if (nf) nf.innerHTML = navFoot(st);
   const page = S.session ? 'session' : S.view;
   if (S.view === 'path' && DATA.mode === 'full' && !S.pathLoading && (LV.some(l => !isLoaded('vocab', l)) || LV.some(l => !isLoaded('grammar', l)))) { S.pathLoading = true; loadPathData().then(() => { S.pathLoading = false; if (S.view === 'path') render(); }); }
-  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj })[S.view]()}</div>`;
+  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite })[S.view]()}</div>`;
   hydrate($('#app')); paintLevels($('#app'));
+  if (S.view === 'write' && !S.session) writeHydrate();
   if (S.fromPlay && S.view !== 'play' && !S.session) $('#app').insertAdjacentHTML('afterbegin', `<button class="backtown" onclick="S.fromPlay=false;App.go('play')">🏯 Back to town</button>`);
   if (S.view === 'play' && !S.session) townMount();
 }
@@ -5022,7 +5172,7 @@ function ankiSeed(d) {
     const p0 = progress[x.id]; if (p0 && box(p0) >= b) continue;
     let due = note.ty === 2 && d.crt ? (d.crt + note.due * 86400) * 1000 + 4 * 3600e3 : note.due > 1e9 ? note.due * 1000 : now + note.ivl * DAY;
     if (!(due > 0) || due > now + 400 * DAY) due = now + note.ivl * DAY;
-    progress[x.id] = Object.assign({ c: 0, w: 0 }, p0 || {}, { b, d: Math.max(now - DAY, due), t: now, l: x.lvl, c: Math.max((p0 || {}).c || 0, note.reps || 1), w: Math.max((p0 || {}).w || 0, note.lapses || 0), ak: 1 });
+    progress[x.id] = Object.assign({ c: 0, w: 0 }, p0 || {}, { b, d: Math.max(now - DAY, due), t: now, s: Math.max(1, note.ivl), f: fClampD(5 + Math.min(3, note.lapses || 0)), lr: Math.min(now, due - Math.max(1, note.ivl) * DAY), l: x.lvl, c: Math.max((p0 || {}).c || 0, note.reps || 1), w: Math.max((p0 || {}).w || 0, note.lapses || 0), ak: 1 });
     n++;
   }
   save(); return n;
@@ -7171,7 +7321,7 @@ function troubleCard() {
 /* ---------- vacation mode ---------- */
 function vacEnd() {
   const gap = Date.now() - settings.vac;
-  if (gap > 0) for (const p of Object.values(progress)) if (p.d) p.d += gap;   // everything waits for you: nothing piles up
+  if (gap > 0) for (const p of Object.values(progress)) { if (p.d) p.d += gap; if (p.t) p.t += gap; if (p.lr) p.lr += gap; }   // everything waits for you: nothing piles up, and memory isn't counted as fading while away
   const d = new Date(settings.vac);
   for (let i = 0; i < 366; i++) { const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; if (k >= today()) break; if (!actLog[k]) actLog[k] = { r: 0, vac: 1 }; d.setDate(d.getDate() + 1); }
   store.set('log', actLog); save(); settings.vac = 0; saveSettings();
@@ -7188,7 +7338,7 @@ const extrasApp = {
     const s = S.session, q = s && s.q; if (!q || !q.type || s.answered) return;
     const r = raw == null ? { ok: false } : typeCheck(q, raw);
     if (r.hint && !(q.hinted && /Close/.test(r.hint))) { q.msg = r.hint; q.hinted = true; render(); const i = $('#typeIn'); if (i) { i.value = raw || ''; typeFocus(); } return; }
-    const right = q.type === 'read' ? (q.item.kind === 'kanji' ? esc(kRead(q.item)) : `<span class="jp">${esc(q.item.r)}</span>`) : esc(q.item.m);
+    const right = q.dict ? `<span class="jp">${ruby(q.item.f)}</span> · ${esc(q.item.m)}` : q.type === 'read' ? (q.item.kind === 'kanji' ? esc(kRead(q.item)) : `<span class="jp">${esc(q.item.r)}</span>`) : esc(q.item.m);
     if (r.ok) q.opts = [{ html: `${right}${r.typo ? ` <small class="ttypo">Accepted. Watch the spelling: you typed “${esc(raw)}”</small>` : ''}`, ok: true }];
     else q.opts = [{ html: right, ok: true }, { html: raw == null ? 'I didn’t know' : `<span${q.type === 'read' ? ' class="jp"' : ''}>${esc(q.type === 'read' ? romaToKana(raw, true) : raw)}</span>`, ok: false }];
     App.answer(r.ok ? 0 : 1);
@@ -7329,7 +7479,7 @@ function kDetail(k) {
   const simTab = sim.length ? `<div class="simlist">${sim.map(({ x }) => `<button class="simrow" data-open="k:${esc(x.k)}"><span class="sk jp">${x.k}</span><span class="sm"><b>${esc(x.mean.slice(0, 3).join('; '))}</b><span>${esc(kRead(x))}${x.ex[0] ? ` · e.g. <span class="jp">${esc(x.ex[0].w)}</span> ${esc(x.ex[0].m)}` : ''}</span></span><span class="lvl">${x.lvl}</span></button>`).join('')}</div>
       <p class="note" style="margin-top:6px">Different kanji with a similar meaning. Compare their example words to see how each one is used.</p>` : '';
   return `<div class="detail force kdet">${head}
-    ${kTabs(k, [['read', 'Readings & words', kReadings(k)], ['mem', 'Remember it', `${artStrip(k.k)}${kpdCard(k)}${kBuild(k)}${kRemember(k)}`], ['write', 'Writing', `<div class="frames kfr" data-frames="${esc(k.k)}"></div><p class="note">Stroke by stroke. Tap the big kanji at the top to watch it being written.</p>`], ['sim', 'Similar meaning', simTab]])}
+    ${kTabs(k, [['read', 'Readings & words', kReadings(k)], ['mem', 'Remember it', `${artStrip(k.k)}${kpdCard(k)}${kBuild(k)}${kRemember(k)}`], ['write', 'Writing', `<div class="frames kfr" data-frames="${esc(k.k)}"></div><p class="note">Stroke by stroke. Tap the big kanji at the top to watch it being written.</p>${DATA.mode === 'full' ? `<button class="btn wr-open" onclick="App.writeKanji('${esc(k.k)}')">✍ Practise writing it</button>` : ''}`], ['sim', 'Similar meaning', simTab]])}
     <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong · next review ${p.d > Date.now() ? 'in ' + fmtIv(p.d - Date.now()) : 'due now'}` : 'Not studied yet'}${DATA.mode === 'full' ? ' · Stroke order: KanjiVG' : ''}</div>
   </div>`;
 }
@@ -8339,7 +8489,7 @@ const App = {
   ...chatApp,
   kpPlay(b) { const s = b.closest('.kps'); if (!s) return; s.classList.remove('play'); void s.offsetWidth; s.classList.add('play'); },
   leaveExam() { const s = S.session; if (s && s.mode === 'exam' && !s.done && !confirm('Leave the exam? Your answers will be lost.')) return false; stopExamTimer(); return true; },
-  go(v, tab) { if (!App.leaveExam()) return; S.session = null; if (v === 'vocab' && tab === 'sit') { S.sit = null; if (DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) loadAllVocab().then(render, render); } if (v === 'grammar') { S.gp = null; S.gw = null; S.gtry = null; } if (v === 'books') { S.bk = null; S.gk = null; } if (v === 'conj') S.cj = null; S.view = v; if (tab) S.vtab = tab; App.closeSheet(); render(); window.scrollTo(0, 0); if (v === 'search') { const q = $('#q'); if (q && !S.search.q) q.focus(); } },
+  go(v, tab) { if (!App.leaveExam()) return; S.session = null; if (v === 'vocab' && tab === 'sit') { S.sit = null; if (DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) loadAllVocab().then(render, render); } if (v === 'grammar') { S.gp = null; S.gw = null; S.gtry = null; } if (v === 'books') { S.bk = null; S.gk = null; } if (v === 'conj') S.cj = null; if (v === 'read') S.rd = null; S.view = v; if (tab) S.vtab = tab; App.closeSheet(); render(); window.scrollTo(0, 0); if (v === 'search') { const q = $('#q'); if (q && !S.search.q) q.focus(); } },
   vtab(t) { S.vtab = t; S.browse.limit = 100; if (t !== 'sit') S.sit = null; render(); if (t === 'sit' && DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) loadAllVocab().then(render, render); },
   sitOpen(id) { S.sit = id; render(); window.scrollTo(0, 0); },
   sitStudy(how) {
@@ -8412,6 +8562,7 @@ const App = {
   skin(v) { App.set('skin', v); },
   toggleTheme() { App.set('theme', isDark() ? 'light' : 'dark'); },
   newPerDay(n) { App.set('newPerDay', +n); },
+  retention(r) { App.set('retention', +r); },
   addWords() {
     const t = $('#cw').value.trim(); if (!t) return;
     let added = 0;
@@ -8532,6 +8683,298 @@ document.addEventListener('keydown', e => {
 applySettings();
 boot().then(render, err => { console.error(err); render(); }).then(() => ankiBoot()).catch(e => console.error(e))
   .then(() => { if (DATA.mode === 'full') setTimeout(() => loadAllVocab().then(() => { FURIX = null; }).catch(() => {}), 4000); });   // every level's words, so furigana can cover any word in a sentence
+/* =====================================================================
+   PITCH ACCENT: Tokyo pitch for each word, from Kanjium (CC BY-SA 4.0,
+   pitch accent notation by Uros O.). Drawn as a line over the reading:
+   high sounds have the line on top, low ones underneath, and the line steps
+   where the pitch rises or falls. Shown only when the data has an exact match.
+   ===================================================================== */
+const PA_SMALL = 'ゃゅょぁぃぅぇぉゎャュョァィゥェォヮ';
+/** a reading split into morae: small kana join the sound before; っ and ー are morae of their own */
+function morae(r) { const out = []; for (const c of String(r)) { if (PA_SMALL.includes(c) && out.length) out[out.length - 1] += c; else out.push(c); } return out; }
+/** is mora i (0-based) high for accent n? */
+const paHigh = (n, i) => n === 0 ? i > 0 : n === 1 ? i === 0 : i > 0 && i < n;
+function paName(n, len) {
+  if (n === 0) return ['平板', 'Flat', 'starts low, rises, and stays high, even on a particle after it'];
+  if (n === 1) return ['頭高', 'Head-high', 'high on the first sound, then low'];
+  if (n === len) return ['尾高', 'Tail-high', 'rises and stays high to the end, then a particle after it drops'];
+  return ['中高', 'Middle-high', `rises, then drops after the ${['', '1st', '2nd', '3rd'][n] || n + 'th'} sound`];
+}
+/** x.pa: [n, …] or [[n, part of speech], …] */
+const paList = pa => (pa || []).map(a => Array.isArray(a) ? { n: a[0], q: a[1] || '' } : { n: a, q: '' });
+function pitchLine(r, n, particle) {
+  const ms = morae(r); if (!ms.length || n > ms.length) return '';
+  const hs = ms.map((_, i) => paHigh(n, i));
+  if (particle) { ms.push('が'); hs.push(n === 0); }   // what happens on the particle tells 平板 and 尾高 apart
+  return `<span class="pa-line" aria-hidden="true">${ms.map((m, i) => `<span class="pa-m ${hs[i] ? 'h' : 'l'}${i && hs[i] !== hs[i - 1] ? ' step' : ''}${particle && i === ms.length - 1 ? ' pa-p' : ''}">${esc(m)}</span>`).join('')}</span>`;
+}
+function pitchHtml(x) {
+  if (!settings.pitch) return '';
+  const list = paList(x.pa); if (!list.length) return '';
+  const len = morae(x.r).length, particle = x.pos === 'noun';
+  const rows = list.filter(a => a.n <= len).map((a, i) => {
+    const [jp, en, how] = paName(a.n, len);
+    return `<div class="pa-row">${pitchLine(x.r, a.n, particle)}<span class="pa-name"><b>${a.q ? esc(a.q) + ': ' : i ? 'Also: ' : ''}${en}</b> <span class="jp">${jp}</span> · ${how}</span></div>`;
+  });
+  if (!rows.length) return '';
+  return `<div class="pa" role="group" aria-label="Pitch accent">${rows.join('')}<div class="pa-src">Tokyo pitch accent · Kanjium (CC BY-SA 4.0)</div></div>`;
+}
+/* =====================================================================
+   READING PASSAGES (読解): short graded texts for N5–N1, written for this app.
+   Text uses {kanji|reading} furigana; glossary words are above the level.
+   q: [question (ja), question (en), [4 options], correct index, why]
+   ===================================================================== */
+const READ = [{"id":"n5-day","lv":"N5","t":"My day","jt":"わたしの{一日|いちにち}","j":"わたしは{毎朝|まいあさ}{六時|ろくじ}に{起|お}きます。{朝|あさ}ごはんはパンとコーヒーです。{七時|しちじ}{半|はん}に{家|いえ}を{出|で}て、{電車|でんしゃ}で{会社|かいしゃ}へ{行|い}きます。{会社|かいしゃ}まで{四十分|よんじゅっぷん}ぐらいかかります。\n{昼|ひる}は{会社|かいしゃ}の{近|ちか}くの{店|みせ}でそばを{食|た}べます。{仕事|しごと}は{六時|ろくじ}に{終|お}わります。{夜|よる}は{家|いえ}で{料理|りょうり}を{作|つく}って、テレビを{見|み}ます。{十一時|じゅういちじ}ごろ{寝|ね}ます。","e":"I get up at six every morning. Breakfast is bread and coffee. I leave home at seven thirty and go to the office by train. It takes about forty minutes to get there.\nFor lunch I eat soba at a shop near the office. Work finishes at six. In the evening I cook at home and watch TV. I go to bed around eleven.","g":[["正しい","ただしい","correct"]],"q":[["この{人|ひと}は{何|なに}で{会社|かいしゃ}へ{行|い}きますか。","How does this person get to work?",["バスで","{電車|でんしゃ}で","{車|くるま}で","{歩|ある}いて"],1,"電車で会社へ行きます: by train."],["この{人|ひと}は{昼|ひる}ごはんに{何|なに}を{食|た}べますか。","What does this person eat for lunch?",["パン","そば","すし","カレー"],1,"Lunch is soba at a shop near the office. Bread is breakfast."],["{正|ただ}しいのはどれですか。","Which is true?",["{朝|あさ}はコーヒーを{飲|の}みません。","{会社|かいしゃ}まで{一時間|いちじかん}かかります。","{夜|よる}は{家|いえ}で{料理|りょうり}を{作|つく}ります。","{十時|じゅうじ}に{寝|ね}ます。"],2,"They cook at home in the evening. Coffee is at breakfast, the trip is about 40 minutes, and bedtime is around eleven."]]},
+{"id":"n5-mountain","lv":"N5","t":"A day in the mountains","jt":"{山|やま}へ{行|い}きました","j":"{先週|せんしゅう}の{土曜日|どようび}、{友|とも}だちと{山|やま}へ{行|い}きました。{朝|あさ}{早|はや}く{駅|えき}で{会|あ}って、バスに{乗|の}りました。{山|やま}はとても{静|しず}かで、{空気|くうき}がきれいでした。\nお{昼|ひる}に{山|やま}の{上|うえ}でお{弁当|べんとう}を{食|た}べました。{友|とも}だちのお{弁当|べんとう}はおにぎりで、わたしのはサンドイッチでした。{帰|かえ}りは{雨|あめ}が{降|ふ}りましたから、{少|すこ}し{寒|さむ}かったです。でも、とても{楽|たの}しい{一日|いちにち}でした。","e":"Last Saturday I went to the mountains with a friend. We met at the station early in the morning and got on a bus. The mountains were very quiet and the air was clean.\nAt noon we ate our boxed lunches at the top. My friend had rice balls and I had sandwiches. On the way back it rained, so it was a little cold. But it was a really fun day.","g":[["空気","くうき","air"],["帰り","かえり","the way back"]],"q":[["{二人|ふたり}はどこで{会|あ}いましたか。","Where did the two of them meet?",["{山|やま}の{上|うえ}","{駅|えき}","バスの{中|なか}","{友|とも}だちの{家|いえ}"],1,"朝早く駅で会って: they met at the station."],["{帰|かえ}りの{天気|てんき}はどうでしたか。","What was the weather like on the way back?",["{晴|は}れでした。","{雪|ゆき}でした。","{雨|あめ}でした。","{暑|あつ}かったです。"],2,"帰りは雨が降りました: it rained, so it was a little cold."],["わたしのお{弁当|べんとう}は{何|なん}でしたか。","What was in the writer’s lunch?",["おにぎり","サンドイッチ","パン","そば"],1,"わたしのはサンドイッチでした. The rice balls were the friend’s."]]},
+{"id":"n5-note","lv":"N5","t":"A note on the desk","jt":"メモ","j":"{田中|たなか}さんへ\nきょうの{午後|ごご}、わたしは{病院|びょういん}へ{行|い}きますから、{会議|かいぎ}に{出|で}ません。すみません。{会議|かいぎ}の{資料|しりょう}はわたしの{机|つくえ}の{上|うえ}に{置|お}きました。{三時|さんじ}までに、{資料|しりょう}を{十枚|じゅうまい}コピーしてください。あしたの{朝|あさ}、{会議|かいぎ}のことを{教|おし}えてください。\n{山田|やまだ}","e":"To Mr. Tanaka\nThis afternoon I’m going to the hospital, so I won’t be at the meeting. Sorry. I put the meeting papers on my desk. Please make ten copies of them by three o’clock. Tomorrow morning, please tell me about the meeting.\nYamada","g":[["会議","かいぎ","meeting"],["資料","しりょう","documents, papers"]],"q":[["{山田|やまだ}さんはきょうの{午後|ごご}どこへ{行|い}きますか。","Where is Yamada going this afternoon?",["{会議|かいぎ}","{病院|びょういん}","{会社|かいしゃ}","{学校|がっこう}"],1,"病院へ行きますから: to the hospital, so Yamada will miss the meeting."],["{田中|たなか}さんは{三時|さんじ}までに{何|なに}をしますか。","What will Tanaka do by three o’clock?",["{病院|びょういん}へ{行|い}きます。","{資料|しりょう}を{机|つくえ}の{上|うえ}に{置|お}きます。","{資料|しりょう}をコピーします。","{山田|やまだ}さんに{電話|でんわ}します。"],2,"三時までに、資料を十枚コピーしてください: make ten copies by three."]]},
+{"id":"n5-family","lv":"N5","t":"My family","jt":"わたしの{家族|かぞく}","j":"わたしの{家族|かぞく}は{四人|よにん}です。{父|ちち}と{母|はは}と{妹|いもうと}とわたしです。{父|ちち}は{銀行|ぎんこう}で{働|はたら}いています。{毎日|まいにち}とても{忙|いそが}しいです。{母|はは}は{小学校|しょうがっこう}の{先生|せんせい}です。{妹|いもうと}は{高校生|こうこうせい}で、テニスが{上手|じょうず}です。\n{週末|しゅうまつ}、{家族|かぞく}でよく{公園|こうえん}へ{行|い}きます。{犬|いぬ}もいっしょに{行|い}きます。{犬|いぬ}の{名前|なまえ}はポチです。","e":"There are four people in my family: my father, my mother, my younger sister and me. My father works at a bank. He is very busy every day. My mother is an elementary school teacher. My sister is in high school and is good at tennis.\nOn weekends our family often goes to the park. The dog comes too. The dog’s name is Pochi.","g":[["小学校","しょうがっこう","elementary school"],["高校生","こうこうせい","high school student"]],"q":[["お{母|かあ}さんの{仕事|しごと}は{何|なん}ですか。","What is the mother’s job?",["{銀行員|ぎんこういん}","{先生|せんせい}","{医者|いしゃ}","{学生|がくせい}"],1,"母は小学校の先生です: an elementary school teacher. The father works at a bank."],["{妹|いもうと}さんは{何|なに}が{上手|じょうず}ですか。","What is the younger sister good at?",["{料理|りょうり}","テニス","サッカー","ピアノ"],1,"妹は…テニスが上手です."],["{週末|しゅうまつ}、{家族|かぞく}はよくどこへ{行|い}きますか。","Where does the family often go on weekends?",["{銀行|ぎんこう}","{学校|がっこう}","{公園|こうえん}","{病院|びょういん}"],2,"週末、家族でよく公園へ行きます."]]},
+{"id":"n5-bakery","lv":"N5","t":"Bakery notice","jt":"さくらパン","j":"さくらパン\n・{時間|じかん}：{午前|ごぜん}{七時|しちじ}～{午後|ごご}{八時|はちじ}\n・{休|やす}み：{毎週|まいしゅう}{水曜日|すいようび}\n・パンは{一|ひと}つ{百五十円|ひゃくごじゅうえん}です。{三|みっ}つで{四百|よんひゃく}{円|えん}です。\n・{店|みせ}の{中|なか}に、いすとテーブルがあります。コーヒーは{一|いっ}ぱい{二百|にひゃく}{円|えん}です。","e":"Sakura Bakery\n• Hours: 7 a.m. to 8 p.m.\n• Closed: every Wednesday\n• Bread is 150 yen each, or 400 yen for three.\n• There are chairs and tables inside. Coffee is 200 yen a cup.","g":[],"q":[["さくらパンは{何曜日|なんようび}が{休|やす}みですか。","Which day is Sakura Bakery closed?",["{月曜日|げつようび}","{水曜日|すいようび}","{金曜日|きんようび}","{日曜日|にちようび}"],1,"休み：毎週水曜日."],["パンを{三|みっ}つとコーヒーを{一|いっ}ぱい{買|か}います。いくらですか。","You buy three pieces of bread and one coffee. How much is it?",["{五|ご}{百五十円|ひゃくごじゅうえん}","{六百円|ろっぴゃくえん}","{六百五十円|ろっぴゃくごじゅうえん}","{四百|よんひゃく}{円|えん}"],1,"Three breads are 400 yen together, plus 200 yen for coffee: 600 yen."]]},
+{"id":"n5-kyoto","lv":"N5","t":"A letter from Kyoto","jt":"{京都|きょうと}から","j":"マリアさん、お{元気|げんき}ですか。わたしは{今|いま}、{京都|きょうと}にいます。{京都|きょうと}は{古|ふる}い{町|まち}で、お{寺|てら}がたくさんあります。\nきのうは{金閣寺|きんかくじ}へ{行|い}きました。とてもきれいでしたが、{人|ひと}が{多|おお}かったです。{京都|きょうと}の{食|た}べ{物|もの}はおいしいです。でも、{少|すこ}し{高|たか}いです。\n{来週|らいしゅう}、{東京|とうきょう}へ{帰|かえ}ります。{東京|とうきょう}で{会|あ}いましょう。\nアンナ","e":"Maria, how are you? I’m in Kyoto now. Kyoto is an old city with lots of temples.\nYesterday I went to Kinkakuji. It was very beautiful, but there were a lot of people. The food in Kyoto is delicious, but a little expensive.\nI’ll go back to Tokyo next week. Let’s meet in Tokyo.\nAnna","g":[["お寺","おてら","temple"],["金閣寺","きんかくじ","Kinkakuji (the Golden Pavilion), a temple in Kyoto"]],"q":[["アンナさんは{今|いま}どこにいますか。","Where is Anna now?",["{東京|とうきょう}","{京都|きょうと}","{大阪|おおさか}","マリアさんの{家|いえ}"],1,"わたしは今、京都にいます."],["{金閣寺|きんかくじ}はどうでしたか。","What was Kinkakuji like?",["{静|しず}かでした。","きれいでしたが、{人|ひと}が{多|おお}かったです。","{人|ひと}が{少|すく}なかったです。","{高|たか}かったです。"],1,"とてもきれいでしたが、人が多かったです. It was the food that was a little expensive."],["アンナさんは{来週|らいしゅう}{何|なに}をしますか。","What will Anna do next week?",["{京都|きょうと}へ{行|い}きます。","マリアさんと{金閣寺|きんかくじ}へ{行|い}きます。","{東京|とうきょう}へ{帰|かえ}ります。","お{寺|てら}で{働|はたら}きます。"],2,"来週、東京へ帰ります."]]},
+{"id":"n4-move","lv":"N4","t":"A new apartment","jt":"{新|あたら}しいアパート","j":"{先月|せんげつ}、{新|あたら}しいアパートに{引|ひ}っ{越|こ}しました。{前|まえ}のアパートは{駅|えき}から{遠|とお}くて、{毎朝|まいあさ}{二十分|にじっぷん}も{歩|ある}かなければなりませんでした。{今|いま}のアパートは{駅|えき}のすぐ{近|ちか}くなので、とても{便利|べんり}です。\nただ、{部屋|へや}は{前|まえ}より{少|すこ}し{狭|せま}くなりました。{家賃|やちん}も{一万円|いちまんえん}{高|たか}くなりましたが、{朝|あさ}の{時間|じかん}ができたので、{朝|あさ}ご{飯|はん}をゆっくり{食|た}べられるようになりました。","e":"Last month I moved into a new apartment. The old one was far from the station, and I had to walk a whole twenty minutes every morning. The new one is right next to the station, so it’s very convenient.\nThe room is a little smaller than before, though. The rent also went up by 10,000 yen, but now I have time in the mornings, so I can eat breakfast slowly.","g":[["家賃","やちん","rent"]],"q":[["{新|あたら}しいアパートについて、{正|ただ}しいものはどれですか。","Which is true about the new apartment?",["{前|まえ}の{部屋|へや}より{広|ひろ}い。","{駅|えき}まで{二十分|にじっぷん}{歩|ある}く。","{家賃|やちん}が{前|まえ}より{高|たか}い。","{駅|えき}から{遠|とお}い。"],2,"家賃も一万円高くなりました: the rent went up. The room is smaller, and it is right by the station."],["{引|ひ}っ{越|こ}してから、この{人|ひと}はどうなりましたか。","What changed for this person after moving?",["{朝|あさ}ご{飯|はん}をゆっくり{食|た}べられるようになった。","{毎朝|まいあさ}たくさん{歩|ある}くようになった。","{部屋|へや}が{広|ひろ}くなった。","{家賃|やちん}が{安|やす}くなった。"],0,"朝ご飯をゆっくり食べられるようになりました: they now have time for breakfast."]]},
+{"id":"n4-library","lv":"N4","t":"Library notice","jt":"{図書館|としょかん}からのお{知|し}らせ","j":"みどり{図書館|としょかん}からのお{知|し}らせ\n・{来月|らいげつ}{一日|いちにち}から{十日|とおか}まで、{図書館|としょかん}の{工事|こうじ}をするので、{休|やす}みます。\n・{休|やす}みの{間|あいだ}に{本|ほん}を{返|かえ}したい{人|ひと}は、{入口|いりぐち}の{横|よこ}の{返却|へんきゃく}ボックスに{入|い}れてください。\n・{借|か}りている{本|ほん}を{返|かえ}す{日|ひ}が{休|やす}みの{間|あいだ}になる{人|ひと}は、{十一日|じゅういちにち}までに{返|かえ}せば{大丈夫|だいじょうぶ}です。\n・{休|やす}みの{間|あいだ}も、インターネットで{本|ほん}の{予約|よやく}をすることはできます。","e":"Notice from Midori Library\n• From the 1st to the 10th of next month, the library will be closed for building work.\n• If you want to return books during this time, put them in the return box beside the entrance.\n• If a book you have borrowed is due while we are closed, it is fine to return it by the 11th.\n• Even while we are closed, you can reserve books online.","g":[["工事","こうじ","construction work"],["返却","へんきゃく","return (of something borrowed)"],["予約","よやく","reservation"]],"q":[["{来月|らいげつ}{五日|いつか}に{本|ほん}を{返|かえ}したいです。どうしますか。","You want to return a book on the 5th of next month. What do you do?",["カウンターで{返|かえ}す。","{入口|いりぐち}の{横|よこ}のボックスに{入|い}れる。","{十一日|じゅういちにち}まで{返|かえ}せない。","インターネットで{返|かえ}す。"],1,"休みの間に本を返したい人は、入口の横の返却ボックスに入れてください."],["{図書館|としょかん}が{休|やす}みの{間|あいだ}に、できることはどれですか。","What can you do while the library is closed?",["{本|ほん}を{借|か}りる。","インターネットで{本|ほん}を{予約|よやく}する。","カウンターで{質問|しつもん}する。","{図書館|としょかん}の{中|なか}で{本|ほん}を{読|よ}む。"],1,"休みの間も、インターネットで本の予約をすることはできます."],["{返|かえ}す{日|ひ}が{来月|らいげつ}{八日|ようか}の{本|ほん}は、いつまでに{返|かえ}せばいいですか。","A book is due on the 8th of next month. By when do you need to return it?",["{七日|なのか}","{八日|ようか}","{十日|とおか}","{十一日|じゅういちにち}"],3,"The 8th falls while the library is closed, so returning it by the 11th is fine."]]},
+{"id":"n4-email","lv":"N4","t":"About Saturday","jt":"{土曜日|どようび}のこと","j":"ケンさん\nメール、ありがとう。{土曜日|どようび}のバーベキュー、とても{行|い}きたいんですが、その{日|ひ}は{午後|ごご}から{妹|いもうと}の{結婚式|けっこんしき}の{準備|じゅんび}を{手伝|てつだ}うことになっています。\n{午前中|ごぜんちゅう}だけなら{行|い}けますが、{十二時|じゅうにじ}には{帰|かえ}らなければなりません。それでもよかったら、{行|い}きます。{何|なに}か{持|も}っていくものがあったら、{教|おし}えてください。\nゆい","e":"Ken,\nThanks for your email. I’d really like to come to the barbecue on Saturday, but that afternoon I’m helping get ready for my sister’s wedding.\nI can come in the morning only, but I’ll have to leave by twelve. If that’s still OK, I’ll come. If there’s anything I should bring, let me know.\nYui","g":[["準備","じゅんび","preparation"]],"q":[["ゆいさんは{土曜日|どようび}の{午後|ごご}、{何|なに}をしますか。","What will Yui do on Saturday afternoon?",["バーベキューに{行|い}く。","{結婚式|けっこんしき}に{出|で}る。","{妹|いもうと}の{結婚式|けっこんしき}の{準備|じゅんび}を{手伝|てつだ}う。","{買|か}い{物|もの}をする。"],2,"午後から妹の結婚式の準備を手伝うことになっています. The wedding itself is another day."],["ゆいさんがケンさんに{聞|き}きたいことは{何|なん}ですか。","What does Yui want Ken to tell her?",["バーベキューは{何時|なんじ}に{始|はじ}まるか。","{何|なに}か{持|も}っていくものがあるか。","{妹|いもうと}も{行|い}ってもいいか。","どこでするか。"],1,"何か持っていくものがあったら、教えてください."]]},
+{"id":"n4-cooking","lv":"N4","t":"My hobby","jt":"わたしのしゅみ","j":"わたしのしゅみは{料理|りょうり}です。{子|こ}どものころは{料理|りょうり}が{全然|ぜんぜん}できませんでしたが、{大学|だいがく}に{入|はい}って{一人|ひとり}で{住|す}むようになってから、{自分|じぶん}で{作|つく}るようになりました。\n{最初|さいしょ}は{簡単|かんたん}なものしか{作|つく}れませんでした。でも、インターネットでいろいろな{作|つく}り{方|かた}を{調|しら}べて、{毎日|まいにち}{練習|れんしゅう}しました。{今|いま}では{友|とも}だちを{家|いえ}に{呼|よ}んで、{料理|りょうり}を{作|つく}ってあげることもあります。{友|とも}だちが「おいしい」と{言|い}ってくれると、とてもうれしいです。","e":"My hobby is cooking. As a child I couldn’t cook at all, but after I started university and began living alone, I started making my own meals.\nAt first I could only make simple things. But I looked up all kinds of recipes online and practised every day. Now I sometimes invite friends over and cook for them. When they say “this is delicious”, I’m really happy.","g":[],"q":[["この{人|ひと}はいつから{料理|りょうり}をするようになりましたか。","When did this person start cooking?",["{子|こ}どものころから","{大学|だいがく}に{入|はい}って{一人|ひとり}で{住|す}むようになってから","インターネットを{始|はじ}めてから","{友|とも}だちを{家|いえ}に{呼|よ}んでから"],1,"大学に入って一人で住むようになってから、自分で作るようになりました."],["この{人|ひと}がうれしいのはどんな{時|とき}ですか。","When is this person happy?",["{新|あたら}しい{作|つく}り{方|かた}を{調|しら}べた{時|とき}","{友|とも}だちが{料理|りょうり}をおいしいと{言|い}ってくれた{時|とき}","{簡単|かんたん}なものを{作|つく}った{時|とき}","{友|とも}だちの{家|いえ}へ{行|い}った{時|とき}"],1,"友だちが「おいしい」と言ってくれると、とてもうれしいです."]]},
+{"id":"n4-umbrella","lv":"N4","t":"The lost umbrella","jt":"わすれたかさ","j":"きのう、{電車|でんしゃ}の{中|なか}にかさを{忘|わす}れてしまいました。{駅|えき}に{着|つ}いてから{気|き}がついて、すぐ{駅員|えきいん}さんに{話|はな}しました。{駅員|えきいん}さんは{電話|でんわ}でほかの{駅|えき}に{聞|き}いてくれましたが、かさはまだ{見|み}つかりませんでした。\n「{見|み}つかったら、{電話|でんわ}しますね」と{言|い}ってくれたので、{電話番号|でんわばんごう}を{書|か}いて{帰|かえ}りました。{夜|よる}、{駅|えき}から{電話|でんわ}があって、{終点|しゅうてん}の{駅|えき}でかさが{見|み}つかったと{言|い}われました。{今日|きょう}の{帰|かえ}りに{取|と}りに{行|い}くつもりです。","e":"Yesterday I left my umbrella on the train. I noticed after I got to the station and told a station attendant right away. The attendant phoned the other stations for me, but the umbrella hadn’t been found yet.\nThey said, “We’ll call you if it turns up,” so I wrote down my phone number and went home. In the evening the station called and told me the umbrella had been found at the last station on the line. I plan to go and get it on my way home today.","g":[["駅員","えきいん","station attendant"],["終点","しゅうてん","last stop on a line"]],"q":[["この{人|ひと}はいつ、かさを{忘|わす}れたことに{気|き}がつきましたか。","When did this person notice they had left the umbrella?",["{電車|でんしゃ}に{乗|の}る{前|まえ}","{電車|でんしゃ}の{中|なか}で","{駅|えき}に{着|つ}いてから","{夜|よる}、{家|いえ}で"],2,"駅に着いてから気がついて: after arriving at the station."],["かさはどこで{見|み}つかりましたか。","Where was the umbrella found?",["この{人|ひと}が{降|お}りた{駅|えき}","{終点|しゅうてん}の{駅|えき}","この{人|ひと}の{家|いえ}","{駅員|えきいん}さんの{家|いえ}"],1,"終点の駅でかさが見つかった."],["この{人|ひと}は{今日|きょう}、{何|なに}をするつもりですか。","What does this person plan to do today?",["{新|あたら}しいかさを{買|か}う。","かさを{取|と}りに{行|い}く。","{駅員|えきいん}さんに{電話|でんわ}する。","{電話番号|でんわばんごう}を{書|か}く。"],1,"今日の帰りに取りに行くつもりです."]]},
+{"id":"n3-walking","lv":"N3","t":"Ten thousand steps","jt":"{一日|いちにち}{一万歩|いちまんぽ}","j":"{最近|さいきん}、{健康|けんこう}のために{毎日|まいにち}{一万歩|いちまんぽ}{歩|ある}くようにしている。{始|はじ}めたきっかけは、{会社|かいしゃ}の{健康診断|けんこうしんだん}で「{運動不足|うんどうぶそく}です」と{言|い}われたことだった。\n{最初|さいしょ}は、{一万歩|いちまんぽ}がこんなに{大変|たいへん}だとは{思|おも}わなかった。{仕事|しごと}が{終|お}わってから{歩|ある}こうとしても、{疲|つか}れていてなかなか{続|つづ}かない。そこで、{通勤|つうきん}の{時|とき}に{一|ひと}つ{前|まえ}の{駅|えき}で{降|お}りて{歩|ある}くことにした。これなら、{特別|とくべつ}な{時間|じかん}を{作|つく}らなくてもいい。\n{三|さん}か{月|げつ}たった{今|いま}、{体|からだ}が{軽|かる}くなっただけでなく、{季節|きせつ}の{変化|へんか}にも{気|き}づくようになった。{道|みち}の{花|はな}や{空|そら}の{色|いろ}を{見|み}ながら{歩|ある}くのは、{思|おも}っていたより{楽|たの}しい。","e":"Lately I’ve been making a point of walking ten thousand steps a day for my health. What started it was being told “you don’t get enough exercise” at my company health check.\nAt first I didn’t realise ten thousand steps would be so hard. Even when I tried to walk after work, I was tired and couldn’t keep it up. So I decided to get off one station early on my commute and walk. That way I don’t need to make special time for it.\nNow, three months later, my body feels lighter, and I’ve also started noticing the seasons change. Walking while looking at the flowers by the road and the colour of the sky is more fun than I expected.","g":[["健康診断","けんこうしんだん","health check-up"],["通勤","つうきん","commuting to work"]],"q":[["この{人|ひと}が{歩|ある}き{始|はじ}めたのはどうしてですか。","Why did this person start walking?",["{季節|きせつ}の{変化|へんか}を{見|み}たかったから","{健康診断|けんこうしんだん}で{運動不足|うんどうぶそく}だと{言|い}われたから","{会社|かいしゃ}まで{遠|とお}かったから","{友|とも}だちにすすめられたから"],1,"始めたきっかけは、会社の健康診断で「運動不足です」と言われたことだった."],["「これなら」の「これ」は{何|なに}を{指|さ}していますか。","What does これ in これなら refer to?",["{仕事|しごと}が{終|お}わってから{歩|ある}くこと","{一|ひと}つ{前|まえ}の{駅|えき}で{降|お}りて{歩|ある}くこと","{一万歩|いちまんぽ}{歩|ある}くこと","{特別|とくべつ}な{時間|じかん}を{作|つく}ること"],1,"これ points back to the sentence before: getting off one station early and walking."],["{三|さん}か{月|げつ}たって、この{人|ひと}が{気|き}づいたことは{何|なん}ですか。","What has this person noticed after three months?",["{一万歩|いちまんぽ}は{簡単|かんたん}だということ","{仕事|しごと}の{後|あと}に{歩|ある}くのがいいということ","{歩|ある}くのは{思|おも}っていたより{楽|たの}しいということ","{電車|でんしゃ}に{乗|の}らないほうがいいということ"],2,"…歩くのは、思っていたより楽しい."]]},
+{"id":"n3-marathon","lv":"N3","t":"City marathon","jt":"{市民|しみん}マラソン","j":"{第十回|だいじっかい} みなと{市民|しみん}マラソン {参加者|さんかしゃ}{募集|ぼしゅう}\n{日時|にちじ}：{十月|じゅうがつ}{十二日|じゅうににち}（{日|にち}）{午前|ごぜん}{九時|くじ}スタート（{雨|あめ}でも{行|おこな}います）\nコース：５キロ（{小学生|しょうがくせい}{以上|いじょう}）／１０キロ（{中学生|ちゅうがくせい}{以上|いじょう}）\n{参加費|さんかひ}：５キロ {千円|せんえん}、１０キロ {二千円|にせんえん}（{中学生|ちゅうがくせい}{以下|いか}は{半額|はんがく}）\n{申|もう}し{込|こ}み：{九月|くがつ}{一日|いちにち}～{九月|くがつ}{二十日|はつか}、ホームページから。{定員|ていいん}になり{次第|しだい}、{締|し}め{切|き}ります。\n※{当日|とうじつ}の{申|もう}し{込|こ}みはできません。","e":"10th Minato City Marathon: runners wanted\nDate: Sunday, October 12, starting at 9 a.m. (held even if it rains)\nCourses: 5 km (elementary school age and up) / 10 km (junior high school age and up)\nEntry fee: 5 km 1,000 yen, 10 km 2,000 yen (half price for junior high students and younger)\nApply: September 1–20 on our website. Entries close as soon as the race is full.\n* You cannot sign up on the day.","g":[["日時","にちじ","date and time"],["申し込み","もうしこみ","application"],["参加費","さんかひ","entry fee"],["当日","とうじつ","on the day"],["募集","ぼしゅう","recruiting, inviting applications"],["定員","ていいん","maximum number of people"],["締め切る","しめきる","to close (applications)"]],"q":[["{中学生|ちゅうがくせい}の{兄|あに}が１０キロに、{小学生|しょうがくせい}の{弟|おとうと}が５キロに{出|で}ます。{参加費|さんかひ}は{全部|ぜんぶ}でいくらですか。","An older brother in junior high runs the 10 km and a younger brother in elementary school runs the 5 km. What is the total entry fee?",["{千五百円|せんごひゃくえん}","{二千円|にせんえん}","{三千円|さんぜんえん}","{千円|せんえん}"],0,"Both get half price: 10 km 2,000 → 1,000 yen and 5 km 1,000 → 500 yen, so 1,500 yen."],["{正|ただ}しいものはどれですか。","Which is true?",["{雨|あめ}の{日|ひ}は{中止|ちゅうし}になる。","{当日|とうじつ}でも{申|もう}し{込|こ}める。","{九月|くがつ}{二十日|はつか}より{前|まえ}に{締|し}め{切|き}ることもある。","{小学生|しょうがくせい}は１０キロに{出|で}られる。"],2,"定員になり次第、締め切ります: it closes as soon as it fills up, which can be before the 20th."]]},
+{"id":"n3-books","lv":"N3","t":"Paper or screen?","jt":"{紙|かみ}の{本|ほん}と{電子|でんし}{書籍|しょせき}","j":"{電子|でんし}{書籍|しょせき}が{広|ひろ}まり、{紙|かみ}の{本|ほん}を{読|よ}む{人|ひと}は{減|へ}っていると{言|い}われる。{確|たし}かに{電子|でんし}{書籍|しょせき}は{便利|べんり}だ。{何冊|なんさつ}でも{持|も}ち{歩|ある}けるし、{夜中|よなか}でもすぐに{買|か}える。\nしかし、わたしはやはり{紙|かみ}の{本|ほん}が{好|す}きだ。ページをめくる{感|かん}じや、{読|よ}み{終|お}わった{本|ほん}が{本棚|ほんだな}に{並|なら}んでいくうれしさは、{電子|でんし}{書籍|しょせき}では{味|あじ}わえない。また、{紙|かみ}の{本|ほん}なら、どこまで{読|よ}んだかが{厚|あつ}さですぐにわかる。\nもちろん、{旅行|りょこう}の{時|とき}などは{電子|でんし}{書籍|しょせき}を{使|つか}うこともある。{大切|たいせつ}なのは、どちらか{一|ひと}つに{決|き}めることではなく、{場面|ばめん}に{合|あ}わせて{選|えら}ぶことではないだろうか。","e":"They say that as e-books spread, fewer people read paper books. E-books certainly are convenient. You can carry as many as you like, and you can buy one instantly even in the middle of the night.\nStill, I prefer paper books. The feel of turning a page, or the pleasure of seeing finished books line up on the shelf, is something e-books can’t give you. And with a paper book, you can tell at a glance from its thickness how far you’ve read.\nOf course, I sometimes use e-books, for example when travelling. Isn’t what matters not deciding on one or the other, but choosing to suit the situation?","g":[["筆者","ひっしゃ","the writer"],["広まる","ひろまる","to spread"],["電子書籍","でんししょせき","e-book"],["めくる","めくる","to turn (a page)"],["味わう","あじわう","to experience, to enjoy"]],"q":[["{筆者|ひっしゃ}が{紙|かみ}の{本|ほん}を{好|す}きな{理由|りゆう}として、{合|あ}っていないものはどれですか。","Which is NOT a reason the writer gives for liking paper books?",["ページをめくる{感|かん}じがいい。","{本棚|ほんだな}に{並|なら}ぶのがうれしい。","{夜中|よなか}でもすぐに{買|か}える。","どこまで{読|よ}んだかすぐわかる。"],2,"Buying instantly at night is a point the writer makes for e-books."],["{筆者|ひっしゃ}の{考|かんが}えに{合|あ}うものはどれですか。","Which matches the writer’s view?",["{紙|かみ}の{本|ほん}だけを{読|よ}むべきだ。","{電子|でんし}{書籍|しょせき}のほうが{便利|べんり}だ。","{場面|ばめん}によって{選|えら}べばいい。","{旅行|りょこう}には{紙|かみ}の{本|ほん}がいい。"],2,"大切なのは…場面に合わせて選ぶことではないだろうか."]]},
+{"id":"n2-failure","lv":"N2","t":"Letting children fail","jt":"{失敗|しっぱい}する{機会|きかい}","j":"{子|こ}どもが{失敗|しっぱい}しそうになると、つい{先|さき}に{手|て}を{出|だ}してしまう{親|おや}は{少|すく}なくない。{危|あぶ}ないことは{避|さ}けさせたいという{気持|きも}ちは{理解|りかい}できる。だが、{失敗|しっぱい}する{機会|きかい}を{奪|うば}われた{子|こ}どもは、{自分|じぶん}で{考|かんが}えて{立|た}ち{直|なお}る{力|ちから}を{身|み}につけにくい。\n{小|ちい}さな{失敗|しっぱい}を{繰|く}り{返|かえ}し、そのたびに{原因|げんいん}を{考|かんが}えることで、{子|こ}どもは{次|つぎ}にどうすればよいかを{学|まな}んでいくのである。もちろん、{命|いのち}にかかわるような{危険|きけん}まで{見守|みまも}れというのではない。{大人|おとな}に{求|もと}められているのは、{失敗|しっぱい}させないことではなく、{失敗|しっぱい}した{後|あと}に{一緒|いっしょ}に{振|ふ}り{返|かえ}る{時間|じかん}を{持|も}つことだろう。","e":"Many parents can’t help stepping in first when their child looks about to fail. The wish to keep them away from danger is understandable. But children who are robbed of chances to fail find it hard to develop the ability to think for themselves and bounce back.\nBy failing in small ways again and again, and thinking about the cause each time, children learn what to do next. Of course, this doesn’t mean standing by in the face of life-threatening danger. What is asked of adults is probably not to stop children from failing, but to take time afterwards to look back on it together.","g":[["立ち直る","たちなおる","to recover, to bounce back"],["振り返る","ふりかえる","to look back on"]],"q":[["{筆者|ひっしゃ}によると、{失敗|しっぱい}する{機会|きかい}を{奪|うば}われた{子|こ}どもはどうなるか。","According to the writer, what happens to children denied chances to fail?",["{危|あぶ}ないことをしなくなる。","{自分|じぶん}で{考|かんが}えて{立|た}ち{直|なお}る{力|ちから}がつきにくい。","{親|おや}の{言|い}うことを{聞|き}かなくなる。","{小|ちい}さな{失敗|しっぱい}を{繰|く}り{返|かえ}す。"],1,"…自分で考えて立ち直る力を身につけにくい."],["{筆者|ひっしゃ}が{大人|おとな}に{求|もと}めていることは{何|なに}か。","What does the writer ask of adults?",["{子|こ}どもに{失敗|しっぱい}させないこと","{命|いのち}にかかわる{危険|きけん}も{見守|みまも}ること","{失敗|しっぱい}した{後|あと}に{一緒|いっしょ}に{振|ふ}り{返|かえ}ること","{先|さき}に{手|て}を{出|だ}すこと"],2,"大人に求められているのは…失敗した後に一緒に振り返る時間を持つことだろう. The writer rules out the second option."]]},
+{"id":"n2-remote","lv":"N2","t":"Working from home: new rules","jt":"{在宅|ざいたく}{勤務|きんむ}{制度|せいど}の{変更|へんこう}","j":"{件名|けんめい}：{在宅|ざいたく}{勤務|きんむ}の{申請|しんせい}{方法|ほうほう}の{変更|へんこう}について\n{社員|しゃいん}{各位|かくい}\n{来月|らいげつ}より、{在宅|ざいたく}{勤務|きんむ}の{申請|しんせい}{方法|ほうほう}が{変|か}わりますので、お{知|し}らせします。これまでは{前日|ぜんじつ}までに{上司|じょうし}へメールで{申請|しんせい}していましたが、{来月|らいげつ}からは{社内|しゃない}システムで{申請|しんせい}することになります。{申請|しんせい}の{締|し}め{切|き}りは、{利用日|りようび}の{二営業日|にえいぎょうび}{前|まえ}です。\nなお、{急|きゅう}な{体調|たいちょう}{不良|ふりょう}などやむを{得|え}ない{場合|ばあい}に{限|かぎ}り、{当日|とうじつ}の{朝|あさ}{九時|くじ}までに{上司|じょうし}へ{電話|でんわ}で{連絡|れんらく}すれば、{在宅|ざいたく}{勤務|きんむ}を{認|みと}めます。その{場合|ばあい}も、{後日|ごじつ}システムで{申請|しんせい}してください。\n{人事部|じんじぶ}","e":"Subject: Change to how you apply to work from home\nTo all staff\nFrom next month, the way to apply for working from home will change. Until now you applied by emailing your manager by the day before; from next month you will apply through the company system. The deadline is two business days before the day you want to work from home.\nHowever, only when it can’t be helped, such as sudden illness, working from home will be allowed if you phone your manager by 9 a.m. that day. In that case too, please apply through the system afterwards.\nHuman Resources","g":[["在宅勤務","ざいたくきんむ","working from home"],["締め切り","しめきり","deadline"],["上司","じょうし","your boss"],["体調不良","たいちょうふりょう","feeling unwell"],["各位","かくい","to all (formal greeting to a group)"],["営業日","えいぎょうび","business day"],["やむを得ない","やむをえない","unavoidable"]],"q":[["{来月|らいげつ}から、{水曜日|すいようび}に{在宅|ざいたく}{勤務|きんむ}をしたい{場合|ばあい}、ふつうはいつまでに{申請|しんせい}しなければならないか。（{土日|どにち}は{休|やす}み）","From next month, if you want to work from home on a Wednesday, by when must you normally apply? (Weekends are days off.)",["{前|まえ}の{日|ひ}の{火曜日|かようび}","{月曜日|げつようび}","{前|まえ}の{週|しゅう}の{金曜日|きんようび}","{当日|とうじつ}の{朝|あさ}{九時|くじ}"],1,"Two business days before Wednesday is Monday."],["{当日|とうじつ}の{朝|あさ}、{急|きゅう}に{熱|ねつ}が{出|で}た{場合|ばあい}、どうすればよいか。","You suddenly get a fever on the morning itself. What should you do?",["システムで{申請|しんせい}するだけでいい。","{九時|くじ}までに{上司|じょうし}に{電話|でんわ}し、{後|あと}でシステムで{申請|しんせい}する。","{上司|じょうし}にメールで{申請|しんせい}する。","{在宅|ざいたく}{勤務|きんむ}はできない。"],1,"Phone your manager by 9, and apply in the system later: その場合も、後日システムで申請してください."]]},
+{"id":"n2-dialect","lv":"N2","t":"Dialects","jt":"{方言|ほうげん}を{守|まも}る","j":"{旅先|たびさき}で{地元|じもと}の{人|ひと}の{方言|ほうげん}を{耳|みみ}にすると、その{土地|とち}に{来|き}たのだという{実感|じっかん}がわく。かつて{方言|ほうげん}は「{直|なお}すべきもの」とされ、{学校|がっこう}で{標準語|ひょうじゅんご}を{話|はな}すよう{指導|しどう}された{時代|じだい}もあった。\nしかし{近年|きんねん}は、{方言|ほうげん}を{地域|ちいき}の{文化|ぶんか}として{見直|みなお}す{動|うご}きが{広|ひろ}がっている。{方言|ほうげん}にしかない{言|い}い{回|まわ}しには、その{土地|とち}の{暮|く}らしや{人々|ひとびと}の{気持|きも}ちが{込|こ}められているからだ。\n{一方|いっぽう}で、{若|わか}い{世代|せだい}が{日常的|にちじょうてき}に{使|つか}う{方言|ほうげん}の{数|かず}は{確実|かくじつ}に{減|へ}っている。{方言|ほうげん}を{守|まも}るためには、{記録|きろく}に{残|のこ}すだけでなく、{実際|じっさい}に{使|つか}う{場|ば}を{増|ふ}やしていくことが{欠|か}かせないだろう。","e":"When you hear local people speaking dialect on a trip, it really sinks in that you have come somewhere new. Dialects were once seen as “something to correct”, and there was a time when schools taught children to speak standard Japanese.\nIn recent years, though, there has been a growing movement to value dialects again as part of local culture, because expressions found only in a dialect carry the life of that place and the feelings of its people.\nOn the other hand, the number of dialect words young people use day to day is steadily falling. To protect dialects, it will be essential not only to record them but to create more places where they are actually used.","g":[["地元","じもと","local"],["欠かせない","かかせない","essential"],["世代","せだい","generation"],["込める","こめる","to put into"],["言い回し","いいまわし","expression, turn of phrase"]],"q":[["{昔|むかし}の{方言|ほうげん}についての{説明|せつめい}として、{正|ただ}しいものはどれか。","Which is true about how dialects were seen in the past?",["{地域|ちいき}の{文化|ぶんか}として{大切|たいせつ}にされた。","{直|なお}すべきものと{考|かんが}えられたことがある。","{若|わか}い{世代|せだい}がよく{使|つか}った。","{記録|きろく}にたくさん{残|のこ}された。"],1,"かつて方言は「直すべきもの」とされ…"],["{筆者|ひっしゃ}は、{方言|ほうげん}を{守|まも}るために{何|なに}が{必要|ひつよう}だと{述|の}べているか。","What does the writer say is needed to protect dialects?",["{標準語|ひょうじゅんご}を{使|つか}わないこと","{記録|きろく}に{残|のこ}すことだけ","{実際|じっさい}に{使|つか}う{場|ば}を{増|ふ}やすこと","{学校|がっこう}で{方言|ほうげん}を{教|おし}えること"],2,"記録に残すだけでなく、実際に使う場を増やしていくことが欠かせない."]]},
+{"id":"n1-search","lv":"N1","t":"Answers and understanding","jt":"{答|こた}えと{理解|りかい}","j":"{検索|けんさく}すれば{大抵|たいてい}の{答|こた}えが{瞬時|しゅんじ}に{手|て}に{入|はい}る{時代|じだい}になった。わからないことをそのままにしておかずに{済|す}むのは、{紛|まぎ}れもなく{技術|ぎじゅつ}の{恩恵|おんけい}である。\nだが、{答|こた}えに{素早|すばや}くたどり{着|つ}けることと、{物事|ものごと}を{理解|りかい}することとは{必|かなら}ずしも{同|おな}じではない。{理解|りかい}とは、{得|え}た{情報|じょうほう}を{自分|じぶん}の{知識|ちしき}と{結|むす}びつけ、なぜそうなるのかを{納得|なっとく}するまで{考|かんが}え{抜|ぬ}く{過程|かてい}の{中|なか}で{生|う}まれるものだ。{答|こた}えがすぐに{見|み}つかる{環境|かんきょう}では、その{過程|かてい}そのものが{省|はぶ}かれがちになる。\n{便利|べんり}さを{手放|てばな}す{必要|ひつよう}はない。ただ、{答|こた}えを{得|え}た{後|あと}にこそ、{立|た}ち{止|ど}まって{問|と}い{直|なお}す{習慣|しゅうかん}を{意識的|いしきてき}に{持|も}つべきではないか。","e":"We now live in an age when a search brings almost any answer instantly. Not having to leave things you don’t know unresolved is unquestionably a gift of technology.\nBut being able to reach an answer quickly is not necessarily the same as understanding something. Understanding is born in the process of linking what you have learned to what you already know and thinking it through until you are convinced of why it is so. Where answers are found at once, that very process tends to be skipped.\nThere is no need to give up convenience. But shouldn’t we consciously make a habit of stopping and questioning again, precisely after we have the answer?","g":[["恩恵","おんけい","benefit, blessing"],["省く","はぶく","to omit, to skip"]],"q":[["{筆者|ひっしゃ}によれば、「{理解|りかい}」とはどのようなものか。","According to the writer, what is “understanding”?",["{答|こた}えに{素早|すばや}くたどり{着|つ}くこと","{得|え}た{情報|じょうほう}を{自分|じぶん}の{知識|ちしき}と{結|むす}びつけ、{納得|なっとく}するまで{考|かんが}える{中|なか}で{生|う}まれるもの","わからないことをそのままにしないこと","{技術|ぎじゅつ}の{恩恵|おんけい}を{受|う}けること"],1,"理解とは、得た情報を自分の知識と結びつけ…考え抜く過程の中で生まれるものだ."],["{筆者|ひっしゃ}の{主張|しゅちょう}に{最|もっと}も{近|ちか}いものはどれか。","Which is closest to the writer’s argument?",["{検索|けんさく}に{頼|たの}らず、{自分|じぶん}で{調|しら}べるべきだ。","{便利|べんり}さは{理解|りかい}の{妨|さまた}げになるので、{避|さ}けるべきだ。","{答|こた}えを{得|え}た{後|あと}に{問|と}い{直|なお}す{習慣|しゅうかん}を{持|も}つべきだ。","{答|こた}えはなるべく{早|はや}く{見|み}つけるべきだ。"],2,"答えを得た後にこそ、立ち止まって問い直す習慣を意識的に持つべきではないか. The writer says there is no need to give up convenience."]]},
+{"id":"n1-tools","lv":"N1","t":"Tools that grow with you","jt":"{道具|どうぐ}との{付|つ}き{合|あ}い","j":"{長年|ながねん}{使|つか}い{込|こ}まれた{道具|どうぐ}には、{使|つか}い{手|て}の{癖|くせ}が{刻|きざ}まれている。ある{包丁|ほうちょう}{職人|しょくにん}によれば、{研|と}ぎに{持|も}ち{込|こ}まれた{包丁|ほうちょう}を{見|み}れば、その{持|も}ち{主|ぬし}がどのような{料理|りょうり}を{好|この}み、どれほど{丁寧|ていねい}に{手入|てい}れをしてきたかがおおよそわかるという。\n{新品|しんぴん}の{道具|どうぐ}は{誰|だれ}が{使|つか}っても{同|おな}じだが、{使|つか}い{続|つづ}けるうちに{少|すこ}しずつ{持|も}ち{主|ぬし}の{手|て}に{馴染|なじ}み、やがて{代|か}わりのきかない{一本|いっぽん}になる。\n{大量|たいりょう}{生産|せいさん}された{安価|あんか}な{品|しな}を{気軽|きがる}に{買|か}い{替|か}えられる{今日|きょう}、{壊|こわ}れたら{捨|す}てるという{習慣|しゅうかん}はもはや{当|あ}たり{前|まえ}になった。しかし、{手|て}をかけて{長|なが}く{付|つ}き{合|あ}うことでしか{得|え}られない{価値|かち}もある。{物|もの}との{関係|かんけい}を{見直|みなお}すことは、{自|みずか}らの{暮|く}らし{方|かた}を{見直|みなお}すことにほかならない。","e":"A tool used for many years bears the marks of its user’s habits. According to one knife maker, when a knife is brought in for sharpening, he can roughly tell what kind of cooking its owner likes and how carefully it has been looked after.\nA new tool is the same whoever uses it, but as you keep using it, it gradually fits your hand until it becomes one that nothing could replace.\nToday, when cheap mass-produced goods can be replaced without a second thought, throwing things away when they break has become normal. Yet some value can only be gained by caring for something and keeping it for a long time. Rethinking our relationship with things is nothing other than rethinking how we live.","g":[["包丁","ほうちょう","kitchen knife"],["職人","しょくにん","craftsman"],["研ぐ","とぐ","to sharpen"],["馴染む","なじむ","to become familiar, to fit"]],"q":[["{包丁|ほうちょう}{職人|しょくにん}の{話|はな}から、どのようなことがわかるか。","What does the knife maker’s story show?",["{新品|しんぴん}の{包丁|ほうちょう}はよく{切|き}れる。","{道具|どうぐ}を{見|み}ると、{持|も}ち{主|ぬし}の{使|つか}い{方|かた}がわかる。","{安|やす}い{包丁|ほうちょう}はすぐに{壊|こわ}れる。","{研|と}ぎは{職人|しょくにん}に{任|まか}せるべきだ。"],1,"…包丁を見れば、その持ち主がどのような料理を好み、どれほど丁寧に手入れをしてきたかがおおよそわかる."],["{筆者|ひっしゃ}の{考|かんが}えに{合|あ}うものはどれか。","Which matches the writer’s view?",["{壊|こわ}れた{道具|どうぐ}はすぐに{買|か}い{替|か}えるべきだ。","{大量|たいりょう}{生産|せいさん}の{品|しな}には{何|なん}の{価値|かち}もない。","{手|て}をかけて{長|なが}く{使|つか}うことで{得|え}られる{価値|かち}がある。","{新品|しんぴん}の{道具|どうぐ}は{誰|だれ}にでも{合|あ}う。"],2,"手をかけて長く付き合うことでしか得られない価値もある. The writer never says mass-produced goods are worthless."]]}];
+/* =====================================================================
+   READING (読解): graded passages with JLPT-style questions. Each answer
+   shows why it's right; the English translation opens once you've answered.
+   The same passages give the mock exam its reading section.
+   ===================================================================== */
+const readStats = () => store.get('reading', {});
+const readOf = id => READ.find(p => p.id === id);
+/** a passage's text as paragraphs, with furigana by the user's setting */
+const readParas = j => j.split('\n').map(l => `<p class="jp">${ruby(l)}</p>`).join('');
+
+function vRead() {
+  if (S.rd) { const p = readOf(S.rd); if (p) return vReadPassage(p); S.rd = null; }
+  const lvs = LV.filter(l => READ.some(p => p.lv === l));
+  if (!lvs.includes(S.rdLv)) S.rdLv = lvs.includes(userLevel()) ? userLevel() : lvs[0];
+  const st = readStats(), list = READ.filter(p => p.lv === S.rdLv);
+  return `<h1>Reading</h1><p class="sub">Short passages at each JLPT level, with questions like the exam's reading section. Every answer comes with the reason, and the translation opens when you're done.</p>
+  <div class="label">Level</div>${chips(lvs.map(l => [l, `${l}<small>${READ.filter(p => p.lv === l).length}</small>`]), S.rdLv, 'App.rdLv')}
+  <div class="rd-list">${list.map(p => { const r = st[p.id];
+    return `<button class="rd-row" onclick="App.rdOpen('${p.id}')"><span class="rd-t"><b class="jp">${ruby(p.jt)}</b><small>${esc(p.t)} · ${p.q.length} questions</small></span>${r ? `<span class="rd-score ${r.best === p.q.length ? 'okc' : ''}">${r.best}/${p.q.length}</span>` : '<span class="rd-go">Read ›</span>'}</button>`; }).join('')}</div>
+  <p class="note">Written for this app, not taken from JLPT papers or textbooks. Words above the level are explained under each passage.</p>`;
+}
+function vReadPassage(p) {
+  const ans = S.rdAns || [], done = ans.length === p.q.length && ans.every(a => a != null), ok = p.q.filter((q, i) => ans[i] === q[3]).length;
+  const list = READ.filter(x => x.lv === p.lv), nx = list[list.indexOf(p) + 1];
+  const qHtml = p.q.map((q, qi) => {
+    const a = ans[qi], answered = a != null;
+    return `<div class="rd-q"><div class="rd-qq"><span class="rd-qn">${qi + 1}</span><span><span class="jp">${ruby(q[0])}</span><small>${esc(q[1])}</small></span></div>
+      <div class="choices">${q[2].map((o, oi) => { let c = 'choice'; if (answered) c += oi === q[3] ? ' ok' : oi === a ? ' bad' : ' dim'; if (answered && oi === a) c += ' picked';
+        return `<button class="${c}" onclick="App.rdAns(${qi},${oi})"${answered ? ' tabindex="-1"' : ''}><span class="n">${oi + 1}</span><span class="jp">${ruby(o)}</span></button>`; }).join('')}</div>
+      ${answered ? `<div class="rd-why ${a === q[3] ? 'ok' : 'no'}" role="status"><b>${a === q[3] ? 'Right.' : 'Not quite.'}</b> ${esc(q[4])}</div>` : ''}</div>`;
+  }).join('');
+  return `<button class="ghost backbtn" onclick="App.rdOpen(null)">‹ Reading</button>
+  <div class="rd-head"><span class="tag lv" style="background:${lcVar(p.lv)}">${p.lv}</span><h1 class="jp">${ruby(p.jt)}</h1><div class="muted">${esc(p.t)}</div></div>
+  <div class="card rd-text">${readParas(p.j)}</div>
+  ${p.g.length ? `<div class="rd-gl"><div class="mini">Words to know</div>${p.g.map(([w, r, m]) => `<span class="rd-gw"><b class="jp">${esc(w)}</b> <span class="jp muted">${esc(r)}</span> ${esc(m)}</span>`).join('')}</div>` : ''}
+  <div class="label">Questions</div>${qHtml}
+  ${done ? `<div class="card rd-done"><b>${ok} of ${p.q.length}</b> ${ok === p.q.length ? 'Every one right.' : 'Read the reasons above, then try the passage again later.'}
+    <details class="rd-en"><summary>Show the English translation</summary>${p.e.split('\n').map(l => `<p>${esc(l)}</p>`).join('')}</details>
+    <div class="btnrow">${nx ? `<button class="btn" onclick="App.rdOpen('${nx.id}')">Next passage</button>` : ''}<button class="btn line" onclick="App.rdOpen('${p.id}')">Try again</button></div></div>` : ''}`;
+}
+const readApp = {
+  rdLv(l) { S.rdLv = l; render(); },
+  rdOpen(id) { S.rd = id; S.rdAns = []; render(); window.scrollTo(0, 0); },
+  rdAns(qi, oi) {
+    const p = readOf(S.rd); if (!p) return; const ans = S.rdAns = S.rdAns || [];
+    if (ans[qi] != null) return;
+    ans[qi] = oi; logAct(false, 'grammar');
+    if (p.q.every((q, i) => ans[i] != null)) {
+      const ok = p.q.filter((q, i) => ans[i] === q[3]).length, st = readStats(), o = st[p.id] || { best: 0, n: 0 };
+      o.best = Math.max(o.best, ok); o.last = ok; o.n++; st[p.id] = o; store.set('reading', st);
+      if (typeof addXP === 'function') addXP(ok * 5);
+    }
+    render();
+  }
+};
+Object.assign(App, readApp);
+
+/* ---------- reading in the mock exam ---------- */
+/** up to n questions, whole passages at a time, ones you haven't seen recently first */
+function readExamQs(l, n) {
+  const ps = freshFirst(READ.filter(p => p.lv === l).map(p => Object.assign({ id: 'rd:' + p.id }, { p })), 'rd'), out = [];
+  for (const { p } of ps) {
+    if (out.length >= n) break;
+    p.q.forEach((q, qi) => {
+      if (out.length >= n) return;
+      const item = { id: 'rd:' + p.id, kind: 'reading', lvl: l, w: p.t };
+      out.push({ item, noRec: true, ans: q[3], raw: q[2].map(plain), opts: q[2].map(o => `<span class="jp">${ruby(o)}</span>`),
+        prompt: `<div class="rd-ex-pass jp">${readParas(p.j)}</div>${p.g.length ? `<div class="rd-ex-gl">${p.g.map(([w, r, m]) => `<span><b class="jp">${esc(w)}</b> <span class="jp">${esc(r)}</span> ${esc(m)}</span>`).join('')}</div>` : ''}<div class="rd-ex-q jp">${ruby(q[0])}</div>`,
+        rd: { title: p.jt, q: q[0], why: q[4] } });
+    });
+  }
+  return out;
+}
+/* =====================================================================
+   WRITING PRACTICE: draw a kanji stroke by stroke. Each stroke is checked
+   against KanjiVG (CC BY-SA 3.0): it has to start and end in the right
+   places, go the right way, and come in the right order. Trace over a
+   faint outline, or write from memory with hints after a few misses.
+   ===================================================================== */
+/* ---------- geometry (pure, no DOM: tested in tests/writing.test.mjs) ---------- */
+/** an SVG path (KanjiVG uses M, C, S and their relative forms; L, H, V, Z handled too) → points */
+function pathPoints(d) {
+  const tok = String(d).match(/[MmCcSsLlHhVvZz]|-?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?/g) || [];
+  const pts = []; let i = 0, cmd = '', x = 0, y = 0, sx = 0, sy = 0, cx2 = null, cy2 = null;
+  const num = () => +tok[i++];
+  const cubic = (x1, y1, x2, y2, x3, y3) => {
+    for (let k = 1; k <= 16; k++) { const t = k / 16, u = 1 - t;
+      pts.push([u * u * u * x + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x3, u * u * u * y + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y3]); }
+    cx2 = x2; cy2 = y2; x = x3; y = y3;
+  };
+  while (i < tok.length) {
+    if (/[A-Za-z]/.test(tok[i])) cmd = tok[i++];
+    const rel = cmd === cmd.toLowerCase(), C = cmd.toUpperCase(), ox = rel ? x : 0, oy = rel ? y : 0;
+    if (C === 'M') { x = ox + num(); y = oy + num(); sx = x; sy = y; pts.push([x, y]); cmd = rel ? 'l' : 'L'; cx2 = null; }
+    else if (C === 'L') { x = ox + num(); y = oy + num(); pts.push([x, y]); cx2 = null; }
+    else if (C === 'H') { x = ox + num(); pts.push([x, y]); cx2 = null; }
+    else if (C === 'V') { y = oy + num(); pts.push([x, y]); cx2 = null; }
+    else if (C === 'C') { const a = [num(), num(), num(), num(), num(), num()]; cubic(ox + a[0], oy + a[1], ox + a[2], oy + a[3], ox + a[4], oy + a[5]); }
+    else if (C === 'S') { const a = [num(), num(), num(), num()]; const x1 = cx2 == null ? x : 2 * x - cx2, y1 = cy2 == null ? y : 2 * y - cy2; cubic(x1, y1, ox + a[0], oy + a[1], ox + a[2], oy + a[3]); }
+    else if (C === 'Z') { x = sx; y = sy; pts.push([x, y]); cx2 = null; }
+    else i++;   // unknown token: skip it
+  }
+  return pts.filter(p => isFinite(p[0]) && isFinite(p[1]));
+}
+const wDist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const wLen = pts => { let L = 0; for (let k = 1; k < pts.length; k++) L += wDist(pts[k - 1], pts[k]); return L; };
+/** n points evenly spaced along the line */
+function resample(pts, n = 32) {
+  if (!pts.length) return [];
+  const L = wLen(pts); if (!L) return Array.from({ length: n }, () => pts[0].slice());
+  const out = [pts[0].slice()], step = L / (n - 1); let acc = 0, k = 1, prev = pts[0];
+  while (out.length < n - 1 && k < pts.length) {
+    const d = wDist(prev, pts[k]);
+    if (acc + d >= step) { const t = (step - acc) / d, p = [prev[0] + (pts[k][0] - prev[0]) * t, prev[1] + (pts[k][1] - prev[1]) * t]; out.push(p); prev = p; acc = 0; }
+    else { acc += d; prev = pts[k]; k++; }
+  }
+  while (out.length < n) out.push(pts[pts.length - 1].slice());
+  return out;
+}
+/** how far a drawn line is from a KanjiVG stroke (in the 109×109 box), or Infinity when it can't be that stroke */
+function strokeScore(user, target) {
+  const lu = wLen(user), lt = wLen(target);
+  if (lu < Math.min(4, lt * 0.5)) return Infinity;                              // a tap, not a stroke
+  if (lu > Math.max(lt * 2.2, lt + 22) || lu < lt * 0.35) return Infinity;      // far too long or short
+  const U = resample(user), T = resample(target);
+  const s = wDist(U[0], T[0]), e = wDist(U[U.length - 1], T[T.length - 1]);
+  const tol = Math.max(14, Math.min(24, lt * 0.35));
+  if (s > tol + 6 || e > tol + 6) return Infinity;                              // wrong place or wrong way round
+  // direction: the drawn line must head the same way as the stroke, overall and over its first half
+  const cosOf = (a0, a1, b0, b1) => { const ux = a1[0] - a0[0], uy = a1[1] - a0[1], tx = b1[0] - b0[0], ty = b1[1] - b0[1], m = Math.hypot(ux, uy) * Math.hypot(tx, ty); return m ? (ux * tx + uy * ty) / m : 1; };
+  const h = U.length >> 1;
+  if (wDist(T[0], T[T.length - 1]) > 3 && cosOf(U[0], U[U.length - 1], T[0], T[T.length - 1]) < 0.5) return Infinity;
+  if (cosOf(U[0], U[h], T[0], T[h]) < 0.3) return Infinity;
+  const avg = U.reduce((a, p, k) => a + wDist(p, T[k]), 0) / U.length;
+  return avg <= tol ? avg : Infinity;
+}
+/** is `user` stroke number `i` of `strokes` (point lists)? Rejected when it fits a later stroke better. */
+function strokeOk(user, strokes, i) {
+  const sc = strokeScore(user, strokes[i]); if (!isFinite(sc)) return false;
+  for (let j = i + 1; j < strokes.length; j++) if (strokeScore(user, strokes[j]) < sc * 0.6) return false;
+  return true;
+}
+
+/* ---------- the practice screen ---------- */
+const WRITE_HINT_AFTER = 2;
+const writeStats = () => store.get('write', {});
+async function writeStart(chars, title) {
+  const ks = chars.map(c => KMAP[c]).filter(Boolean);
+  if (DATA.mode !== 'full') return toast('Writing practice needs the full data (stroke order)');
+  const lv = [...new Set(ks.map(k => k.lvl))];
+  try { await Promise.all(lv.map(l => load('strokes', l))); } catch (e) { return toast('Could not load stroke order'); }
+  const items = ks.map(k => ({ k, sd: (DATA.strokes[k.lvl] || {})[k.k] })).filter(x => x.sd && x.sd.d.length);
+  if (!items.length) return toast('No stroke data for these kanji yet');
+  S.wr = { title, items, i: 0, mode: settings.writeMode || 'trace', results: [] };
+  writeBegin(); S.view = 'write'; render(); window.scrollTo(0, 0);
+}
+function writeBegin() {
+  const W = S.wr, it = W.items[W.i];
+  W.pts = it.sd.d.map(pathPoints); W.done = 0; W.miss = 0; W.hints = 0; W.strokeMiss = 0; W.flash = -1; W.finished = false;
+}
+function vWrite() {
+  const W = S.wr; if (!W) { S.view = 'kanji'; return vKanji(); }
+  if (W.i >= W.items.length) return vWriteDone();
+  const it = W.items[W.i], k = it.k, n = it.sd.d.length;
+  const ghost = W.mode === 'trace' || W.finished;
+  const svg = `<svg id="wpad" class="wpad" viewBox="0 0 109 109" aria-label="Writing pad: draw stroke ${Math.min(W.done + 1, n)} of ${n}">
+    <g class="grid"><line x1="54.5" y1="0" x2="54.5" y2="109"/><line x1="0" y1="54.5" x2="109" y2="54.5"/></g>
+    ${ghost ? `<g class="wghost">${it.sd.d.map(d => `<path d="${esc(d)}"/>`).join('')}</g>` : ''}
+    <g class="wdone">${it.sd.d.slice(0, W.done).map(d => `<path d="${esc(d)}"/>`).join('')}</g>
+    ${W.flash >= 0 ? `<path class="wflash" d="${esc(it.sd.d[W.flash])}"/>` : ''}
+    <path id="wink" class="wink" d=""/></svg>`;
+  return `<div class="qtop"><button class="ghost" onclick="App.writeEnd()">✕ End</button><span class="muted">${W.i + 1} of ${W.items.length}</span></div>
+  <div class="wr-head"><div><b class="jp">${W.finished || W.mode === 'trace' ? esc(k.k) : '？'}</b></div><div class="wr-meta"><span>${esc(k.m || (k.mean || []).slice(0, 3).join(', '))}</span><span class="jp muted">${esc(kRead(k))}</span></div></div>
+  <div class="wr-pad">${svg}</div>
+  <div class="wr-status" role="status">${W.finished ? (W.miss ? `Done, with ${W.miss} miss${W.miss === 1 ? '' : 'es'}${W.hints ? ` and ${W.hints} hint${W.hints === 1 ? '' : 's'}` : ''}.` : 'Perfect: every stroke right first time.')
+    : W.msg ? esc(W.msg) : `Stroke ${W.done + 1} of ${n}`}</div>
+  <div class="btnrow">${W.finished ? `<button class="btn" onclick="App.writeNext()">${W.i + 1 < W.items.length ? 'Next kanji' : 'See results'}</button><button class="btn line" onclick="App.writeRetry()">Write it again</button>`
+    : `<button class="btn sec" onclick="App.writeHint()">Show the next stroke</button>`}</div>
+  <div class="wr-mode">${seg([['trace', 'Trace'], ['memory', 'From memory']], W.mode, 'App.writeMode')}</div>
+  <p class="note">Strokes are checked for position, direction and order against KanjiVG.</p>`;
+}
+function vWriteDone() {
+  const W = S.wr, perfect = W.results.filter(r => !r.miss && !r.hints).length;
+  return `<h1>${perfect} of ${W.results.length} perfect</h1><p class="sub">${esc(W.title)}</p>
+  <div class="card">${W.results.map(r => `<div class="wr-res"><b class="jp">${esc(r.k)}</b><span class="${!r.miss && !r.hints ? 'okc' : r.hints ? 'badc' : ''}">${!r.miss && !r.hints ? 'perfect' : `${r.miss} miss${r.miss === 1 ? '' : 'es'}${r.hints ? `, ${r.hints} hint${r.hints === 1 ? '' : 's'}` : ''}`}</span></div>`).join('')}</div>
+  <div class="btnrow"><button class="btn" onclick="App.writeAgain()">Practise these again</button><button class="btn line" onclick="App.writeEnd()">Done</button></div>`;
+}
+/* drawing: pointer events on the pad, in the pad's own 109×109 units */
+function writeHydrate() {
+  const pad = $('#wpad'), W = S.wr; if (!pad || !W || W.finished) return;
+  let cur = null;
+  const at = e => { const r = pad.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 109, (e.clientY - r.top) / r.height * 109]; };
+  const ink = () => { const p = $('#wink'); if (p && cur) p.setAttribute('d', 'M' + cur.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join('L')); };
+  pad.onpointerdown = e => { e.preventDefault(); pad.setPointerCapture(e.pointerId); cur = [at(e)]; ink(); };
+  pad.onpointermove = e => { if (!cur) return; const p = at(e), q = cur[cur.length - 1]; if (wDist(p, q) > 0.8) { cur.push(p); ink(); } };
+  pad.onpointerup = pad.onpointercancel = () => { if (!cur) return; const pts = cur; cur = null; writeStroke(pts); };
+}
+function writeStroke(pts) {
+  const W = S.wr, it = W.items[W.i];
+  if (strokeOk(pts, W.pts, W.done)) {
+    W.done++; W.strokeMiss = 0; W.flash = -1; W.msg = '';
+    if (W.done >= W.pts.length) writeFinish();
+  } else {
+    W.miss++; W.strokeMiss++;
+    W.msg = W.strokeMiss >= WRITE_HINT_AFTER ? 'Here’s that stroke: follow it from the start.' : 'Not quite: check where it starts, which way it goes, and the stroke order.';
+    if (W.strokeMiss >= WRITE_HINT_AFTER) { W.flash = W.done; W.hints++; }
+  }
+  render();
+}
+function writeFinish() {
+  const W = S.wr, k = W.items[W.i].k; W.finished = true;
+  W.results.push({ k: k.k, miss: W.miss, hints: W.hints });
+  const st = writeStats(), o = st[k.k] || { n: 0, p: 0 }; o.n++; if (!W.miss && !W.hints) o.p++; o.t = Date.now(); st[k.k] = o; store.set('write', st);
+  logAct(false, 'kanji');
+}
+const writeApp = {
+  writeKanji(c) { S.wrBack = S.view === 'write' ? (S.wrBack || 'kanji') : S.view; App.closeSheet(); writeStart([c], `Writing ${c}`); },
+  /** ten kanji from the Kanji page's selection: ones you're learning first, least recently written first */
+  writePick() {
+    const st = writeStats(), sel = kSelection(), mine = sel.filter(k => progress[k.id]), pool = (mine.length >= 5 ? mine : sel).slice();
+    pool.sort((a, b) => ((st[a.k] || {}).t || 0) - ((st[b.k] || {}).t || 0));
+    S.wrBack = 'kanji'; writeStart(pool.slice(0, 10).map(k => k.k), 'Kanji writing practice');
+  },
+  writeSet(chars, title) { writeStart(chars, title); },
+  writeMode(m) { settings.writeMode = m; saveSettings(); if (S.wr) { S.wr.mode = m; if (!S.wr.finished) writeBegin(); } render(); },
+  writeHint() { const W = S.wr; if (!W || W.finished) return; W.flash = W.done; W.hints++; W.msg = 'Follow the red stroke from its start.'; render(); },
+  writeNext() { const W = S.wr; W.i++; if (W.i < W.items.length) writeBegin(); render(); window.scrollTo(0, 0); },
+  writeRetry() { const W = S.wr; W.results.pop(); writeBegin(); render(); },
+  writeAgain() { const W = S.wr; W.i = 0; W.results = []; writeBegin(); render(); window.scrollTo(0, 0); },
+  writeEnd() { const back = S.wrBack || 'kanji'; S.wr = null; S.view = back; render(); window.scrollTo(0, 0); }
+};
+Object.assign(App, writeApp);
 </script>
 </body>
 </html>

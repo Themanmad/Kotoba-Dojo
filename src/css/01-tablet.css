@@ -1,0 +1,6 @@
+/* ---------- tablet ---------- */
+@media (min-width:600px){
+  main{padding:20px 24px}
+  .pword{font-size:48px}
+  .choices:not(.grid2){grid-template-columns:1fr 1fr}
+}

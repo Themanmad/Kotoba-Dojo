@@ -1,0 +1,31 @@
+/* ---------- Home: today's line ---------- */
+.hello{font-size:30px;margin-bottom:2px}
+.hello small{display:block;font-family:var(--ff);font-weight:500;font-size:15px;color:var(--muted);letter-spacing:0;margin-top:2px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);background:var(--card);border:1px solid var(--line);padding:6px 12px;font-weight:600;font-size:14px}
+.badge b{font-size:16px}
+.route{position:relative;margin:18px 0 6px;padding-left:4px}
+.route::before{content:"";position:absolute;left:19px;top:22px;bottom:22px;width:6px;border-radius:3px;background:var(--line)}
+.route .run{position:absolute;left:19px;top:22px;width:6px;border-radius:3px;background:var(--accent);transform-origin:top;height:var(--run,0)}
+.route.draw .run{animation:kd-run .9s cubic-bezier(.2,.7,.2,1) both}
+@keyframes kd-run{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.stop{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:none;border:0;padding:8px 0;cursor:pointer;color:var(--ink)}
+.stop .pin{flex:none;width:36px;height:36px;border-radius:50%;background:var(--card);border:4px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:13px;z-index:1;color:var(--muted)}
+.stop.done .pin{background:var(--accent);border-color:var(--accent);color:#fff}
+.stop.next .pin{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.stop .sb{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r-tile);padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow)}
+.stop.next .sb{border-color:var(--accent);box-shadow:var(--lift)}
+.stop .sb .t{flex:1;min-width:0}
+.stop .sb b{display:block;font-size:16px}
+.stop .sb span{display:block;font-size:13px;color:var(--muted)}
+.stop .go{font-weight:700;font-size:14px;color:var(--accent);flex:none}
+.stop.done .sb{opacity:.75}
+.lines{display:grid;gap:12px}
+.lines h3{font-size:14px;margin:0 0 6px;font-weight:700}
+.lnrow{display:grid;grid-template-columns:40px 1fr 74px;align-items:center;gap:10px;font-size:13px;margin:6px 0}
+.lnrow .tag.lv{text-align:center}
+.lnrow span:last-child{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.elsewhere{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.elsewhere button{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600;font-size:14px;color:var(--ink);text-align:left}
+.elsewhere button b{font-family:var(--ffj);font-size:18px;color:var(--accent);width:22px;text-align:center}
+

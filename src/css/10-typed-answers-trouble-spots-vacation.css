@@ -1,0 +1,18 @@
+/* ---------- typed answers, trouble spots, vacation ---------- */
+.tform{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.tform input{font:inherit;font-size:22px;padding:14px 16px;border-radius:var(--r-tile);border:2px solid var(--line);background:var(--card);color:var(--ink);text-align:center;width:100%}
+.tform input:focus{outline:none;border-color:var(--accent)}
+.tform input[lang=ja]{font-family:var(--ffj)}
+.trow{display:flex;gap:8px}.trow .btn{flex:1;margin:0}
+.tmsg{background:var(--warn-soft);color:var(--ink);border-left:4px solid var(--warn);border-radius:10px;padding:10px 12px;font-size:14px;animation:kd-rise .2s ease-out}
+.ttypo{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:2px}
+.feedback .undo{background:none;border:1.5px solid rgba(255,255,255,.7);color:#fff;font:inherit;font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px;margin-top:6px;cursor:pointer;display:block}
+.knowit{font-size:12px;font-weight:700;color:var(--accent);margin-left:8px;padding:2px 8px}
+.trouble{margin-bottom:16px}.tr-h{display:flex;flex-direction:column;gap:2px}.tr-h span{font-size:13px;color:var(--muted)}
+.tr-items{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tr-i{border:1.5px solid color-mix(in srgb,var(--bad) 40%,var(--line));background:var(--bad-soft);color:var(--ink);border-radius:10px;padding:4px 10px;font-size:16px;cursor:pointer}
+.tr-more{align-self:center;font-size:13px;color:var(--muted)}
+.trouble .btnrow{margin-top:0}.trouble .btn{width:auto}
+.banner.vac{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.banner.vac .btn{width:auto;margin:0 0 0 auto}
+.tprev{text-align:center;font-size:22px;min-height:1.5em;color:var(--accent);margin-top:-4px}
+
