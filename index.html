@@ -1381,6 +1381,34 @@ details.opts .ob>.label:first-child{margin-top:12px}
 .wr-status{text-align:center;margin:10px 0 4px;font-weight:600;min-height:1.5em}
 .wr-mode{display:flex;justify-content:center;margin-top:12px}
 .wr-res{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.wr-res:last-child{border-bottom:0}.wr-res b{font-size:26px}
+/* ---------- shadowing ---------- */
+.sh-card{text-align:center;padding:16px 16px 12px}
+.sh-steps{display:flex;justify-content:center;gap:6px;margin-bottom:12px;font-size:12.5px;font-weight:700}
+.sh-steps span{padding:4px 10px;border-radius:var(--r-pill);background:var(--chip);color:var(--muted)}
+.sh-steps span.on{background:var(--accent);color:#fff}.sh-steps span.done{color:var(--ok)}
+.sh-j{font-size:22px;line-height:2;margin:4px 0;overflow-wrap:anywhere}
+.sh-en{color:var(--muted);font-size:14.5px;margin:2px 0 6px}.sh-en-btn{font-size:13.5px;margin:2px 0 6px}
+.sh-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin-top:12px}
+.sh-row .btn{width:auto;margin:0;padding-left:16px;padding-right:16px}
+.sh-mic{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:14px}
+.sh-rec{width:auto;min-width:200px;margin:0}
+.sh-rec.on{background:var(--bad,#d64545);border-color:var(--bad,#d64545);color:#fff}
+.sh-live{font-size:13.5px;font-weight:700;color:var(--bad,#d64545)}
+@media (prefers-reduced-motion:no-preference){.sh-live{animation:shpulse 1.2s ease-in-out infinite}}
+@keyframes shpulse{50%{opacity:.45}}
+.sh-err{font-size:13.5px;color:var(--muted);margin:10px auto 0;max-width:34em;line-height:1.5}
+.sh-env{margin:14px auto 0;max-width:360px}
+.sh-env svg{width:100%;height:auto;display:block}
+.sh-env .nat rect{fill:var(--accent)}.sh-env .mine rect{fill:var(--ok)}
+.sh-leg{display:flex;justify-content:center;gap:14px;font-size:12.5px;color:var(--muted);margin-top:4px}
+.sh-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.sh-leg i.nat{background:var(--accent)}.sh-leg i.mine{background:var(--ok)}
+.sh-pace{font-size:13.5px;margin:6px 0 0}
+.sh-src{font-size:11.5px;color:var(--muted);margin-top:12px}
+.sh-rate{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:16px}.sh-rate>span{font-weight:700;font-size:14px}
+.sh-rate .btnrow{width:100%;max-width:360px}
+.sh-res{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.sh-res:last-child{border-bottom:0}
+.nav-extra[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -1401,6 +1429,7 @@ details.opts .ob>.label:first-child{margin-top:12px}
   <button class="nav-extra lib" data-v="books" onclick="App.go('books')"><b>課</b>Textbooks</button>
   <button class="nav-extra lib" data-v="conj" onclick="App.go('conj')"><b>活</b>Conjugation</button>
   <button class="nav-extra lib" data-v="read" onclick="App.go('read')"><b>読</b>Reading</button>
+  <button class="nav-extra lib" data-v="shadow" onclick="App.shadowStart()"><b>声</b>Shadowing</button>
   <button class="nav-extra" data-v="search" onclick="App.go('search')"><b>探</b>Search</button>
   <button class="nav-extra" data-v="settings" onclick="App.go('settings')"><b>設</b>Settings</button>
 </div><div class="nav-foot" id="navfoot"></div></nav>
@@ -2112,7 +2141,7 @@ function weakestSituation() {
   return best;
 }
 function vLibrary() {
-  const tiles = [['kana', 'あ', 'Kana', 'Hiragana and katakana charts, stroke order and drills'], ['vocab', '語', 'Words', 'Flashcards, quizzes, word lists and everyday situations'], ['kanji', '字', 'Kanji', 'Every JLPT kanji with its story, parts and stroke order'], ['grammar', '文', 'Grammar', 'Grammar points N5–N1 with examples and drills'], ['books', '課', 'Textbooks', 'Genki I & II and Basic Kanji Book, lesson by lesson'], ['conj', '活', 'Conjugation', 'Verb and adjective forms, with the rule behind every answer'], ['read', '読', 'Reading', 'Short passages N5–N1 with exam-style questions'], ['vocab:sit', '場', 'Situations', 'Words grouped by where you’ll hear them'], ['search', '探', 'Search', 'Look up any word, kanji or grammar point']];
+  const tiles = [['kana', 'あ', 'Kana', 'Hiragana and katakana charts, stroke order and drills'], ['vocab', '語', 'Words', 'Flashcards, quizzes, word lists and everyday situations'], ['kanji', '字', 'Kanji', 'Every JLPT kanji with its story, parts and stroke order'], ['grammar', '文', 'Grammar', 'Grammar points N5–N1 with examples and drills'], ['books', '課', 'Textbooks', 'Genki I & II and Basic Kanji Book, lesson by lesson'], ['conj', '活', 'Conjugation', 'Verb and adjective forms, with the rule behind every answer'], ['read', '読', 'Reading', 'Short passages N5–N1 with exam-style questions'], ...(shAvailable() ? [['shadow', '声', 'Shadowing', 'Say sentences after native speakers and compare your rhythm']] : []), ['vocab:sit', '場', 'Situations', 'Words grouped by where you’ll hear them'], ['search', '探', 'Search', 'Look up any word, kanji or grammar point']];
   return `<h1>Library</h1><p class="sub">Everything in the app, for looking things up or drilling a weak spot. Your lessons are on the Path.</p>
   <div class="libgrid">${tiles.map(([v, g, t, d]) => { const [view, tab] = v.split(':'); return `<button class="libtile" onclick="App.go('${view}'${tab ? `,'${tab}'` : ''})"><b class="jp">${g}</b><span class="lt-t">${t}</span><span class="lt-d">${d}</span></button>`; }).join('')}</div>`;
 }
@@ -2129,6 +2158,7 @@ function vHome() {
       : { title: 'Find your starting point', sub: '5-minute placement check', done: false, go: 'Start', act: 'App.placeStart()' },
     ...(settings.book && settings.book.id ? [{ title: `${settings.book.id === 'bkb' ? 'Basic Kanji Book' : 'Genki'} lesson ${settings.book.L}`, sub: settings.book.id === 'bkb' ? esc(BOOKDATA.bkb[settings.book.L - 1][0]) : esc(BK_THEME(settings.book.L)), done: false, go: 'Open', act: `App.bkOpen('${settings.book.id}',${settings.book.L})` }] : []),
     { title: due ? `Review ${fmtN(due)} card${due === 1 ? '' : 's'}` : 'Reviews', sub: due ? 'Words and kanji from your lessons, due today' : 'Nothing due. New words arrive with each lesson', done: !due, go: 'Review', act: "App.go('vocab','cards')" },
+    ...(() => { const t = todayStop(); return t ? [t] : []; })(),
     ...(ANKI.decks.length && ankiUnits().length ? (() => { const au = nextUnit('anki'); return [{ title: `Deck extras: ${esc(au.t)}`, sub: `${esc(unitLabel(au))} · words from ${esc(au.deck)}`, done: unitDone(au) && flagged('lesson'), go: 'Start', act: `App.lesson('${au.id}')` }]; })() : []),
     { title: `Travel: ${tu.t}`, sub: tu.s, done: !!pathSt.done[tu.id] && flagged('lesson'), go: 'Open', act: `App.lesson('${tu.id}')` },
     { title: 'Mock exam', sub: examToday ? 'Taken today' : `${lvl} · JLPT-style, timed`, done: examToday, go: 'Sit it', act: "App.go('exam')" }
@@ -2899,6 +2929,7 @@ function nextQ() {
 function answer(i) {
   const s = S.session; if (!s || s.mode === 'cards' || s.mode === 'exam' || s.answered || s.done || !s.q.opts[i]) return;
   s.answered = true; s.chosen = i; const ok = s.q.opts[i].ok;
+  if (s.q.dir === 'hear' || s.q.dir === 'dict') skillTick('listen', 8);
   { const id = s.q.item.id; s.undo = { prev: progress[id] ? { ...progress[id] } : null, game: { ...game }, streak: s.streak, seen: s.seen, correct: s.correct, hadFirst: !!(s.first && s.first.has(id)), firstVal: s.first && s.first.get(id), retries: s.retries ? s.retries.get(id) || 0 : 0, deckLen: s.deck ? s.deck.length : 0, resLen: s.results ? s.results.length : 0 }; }
   rec(s.q.item, ok);
   // a correct answer plays the native recording of the word (tests & quizzes; not the mock exam)
@@ -3859,14 +3890,15 @@ function navFoot(st) {
   <div class="nf-meta"><span>🔥 ${st} day${st === 1 ? '' : 's'}</span><span>${due ? `${due} due` : 'Nothing due'}</span></div></div>`;
 }
 function render() {
-  const navOf = v => v === 'anki' ? 'settings' : v === 'dquiz' ? 'path' : ['kana', 'vocab', 'kanji', 'grammar', 'library', 'books', 'conj', 'read', 'write'].includes(v) ? 'library' : ['path', 'lesson', 'place'].includes(v) ? 'path' : v;
+  const navOf = v => v === 'anki' ? 'settings' : v === 'dquiz' ? 'path' : ['kana', 'vocab', 'kanji', 'grammar', 'library', 'books', 'conj', 'read', 'write', 'shadow'].includes(v) ? 'library' : ['path', 'lesson', 'place'].includes(v) ? 'path' : v;
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === navOf(S.view) || b.dataset.v === S.view));
   const st = streak(); $('#streak').innerHTML = (st ? `🔥 ${st}` : '') + (gameOn() ? `<span class="hxp" title="${esc(beltOf(game.xp).name)}">⭐ ${fmtN(game.xp)}</span>` : '');
   const nf = $('#navfoot'); if (nf) nf.innerHTML = navFoot(st);
   const page = S.session ? 'session' : S.view;
   if (S.view === 'path' && DATA.mode === 'full' && !S.pathLoading && (LV.some(l => !isLoaded('vocab', l)) || LV.some(l => !isLoaded('grammar', l)))) { S.pathLoading = true; loadPathData().then(() => { S.pathLoading = false; if (S.view === 'path') render(); }); }
-  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite })[S.view]()}</div>`;
+  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite, shadow: vShadow })[S.view]()}</div>`;
   hydrate($('#app')); paintLevels($('#app'));
+  { const nb = document.querySelector('.nav-extra[data-v="shadow"]'); if (nb) nb.hidden = !shAvailable(); }   // needs sentence recordings (full data)
   if (S.view === 'write' && !S.session) writeHydrate();
   if (S.fromPlay && S.view !== 'play' && !S.session) $('#app').insertAdjacentHTML('afterbegin', `<button class="backtown" onclick="S.fromPlay=false;App.go('play')">🏯 Back to town</button>`);
   if (S.view === 'play' && !S.session) townMount();
@@ -8302,6 +8334,7 @@ const booksApp = {
   cjEnd() { S.cj = null; render(); }
 };
 function cjLog(q, ok) {
+  skillTick('conj', 10);
   const C = S.cj; if (ok) C.right++;
   C.log.push({ x: q.x, f: q.form, ok, w: q.x.w + (q.x.vc === 'vs' ? 'する' : ''), a: q.res.w });
   const st = cjStats(), v = st[q.form] || [0, 0]; v[0] += ok ? 1 : 0; v[1]++; st[q.form] = v; store.set('conj', st);
@@ -8489,7 +8522,7 @@ const App = {
   ...chatApp,
   kpPlay(b) { const s = b.closest('.kps'); if (!s) return; s.classList.remove('play'); void s.offsetWidth; s.classList.add('play'); },
   leaveExam() { const s = S.session; if (s && s.mode === 'exam' && !s.done && !confirm('Leave the exam? Your answers will be lost.')) return false; stopExamTimer(); return true; },
-  go(v, tab) { if (!App.leaveExam()) return; S.session = null; if (v === 'vocab' && tab === 'sit') { S.sit = null; if (DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) loadAllVocab().then(render, render); } if (v === 'grammar') { S.gp = null; S.gw = null; S.gtry = null; } if (v === 'books') { S.bk = null; S.gk = null; } if (v === 'conj') S.cj = null; if (v === 'read') S.rd = null; S.view = v; if (tab) S.vtab = tab; App.closeSheet(); render(); window.scrollTo(0, 0); if (v === 'search') { const q = $('#q'); if (q && !S.search.q) q.focus(); } },
+  go(v, tab) { if (!App.leaveExam()) return; S.session = null; if (v === 'vocab' && tab === 'sit') { S.sit = null; if (DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) loadAllVocab().then(render, render); } if (v === 'grammar') { S.gp = null; S.gw = null; S.gtry = null; } if (v === 'books') { S.bk = null; S.gk = null; } if (v === 'conj') S.cj = null; if (v === 'read') S.rd = null; if (v === 'shadow' && !S.sh) return shStart(); S.view = v; if (tab) S.vtab = tab; App.closeSheet(); render(); window.scrollTo(0, 0); if (v === 'search') { const q = $('#q'); if (q && !S.search.q) q.focus(); } },
   vtab(t) { S.vtab = t; S.browse.limit = 100; if (t !== 'sit') S.sit = null; render(); if (t === 'sit' && DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) loadAllVocab().then(render, render); },
   sitOpen(id) { S.sit = id; render(); window.scrollTo(0, 0); },
   sitStudy(how) {
@@ -8792,7 +8825,7 @@ const readApp = {
     ans[qi] = oi; logAct(false, 'grammar');
     if (p.q.every((q, i) => ans[i] != null)) {
       const ok = p.q.filter((q, i) => ans[i] === q[3]).length, st = readStats(), o = st[p.id] || { best: 0, n: 0 };
-      o.best = Math.max(o.best, ok); o.last = ok; o.n++; st[p.id] = o; store.set('reading', st);
+      o.best = Math.max(o.best, ok); o.last = ok; o.n++; st[p.id] = o; store.set('reading', st); skillTick('read', 1);
       if (typeof addXP === 'function') addXP(ok * 5);
     }
     render();
@@ -8956,7 +8989,7 @@ function writeFinish() {
   const W = S.wr, k = W.items[W.i].k; W.finished = true;
   W.results.push({ k: k.k, miss: W.miss, hints: W.hints });
   const st = writeStats(), o = st[k.k] || { n: 0, p: 0 }; o.n++; if (!W.miss && !W.hints) o.p++; o.t = Date.now(); st[k.k] = o; store.set('write', st);
-  logAct(false, 'kanji');
+  logAct(false, 'kanji'); skillTick('write', 3);
 }
 const writeApp = {
   writeKanji(c) { S.wrBack = S.view === 'write' ? (S.wrBack || 'kanji') : S.view; App.closeSheet(); writeStart([c], `Writing ${c}`); },
@@ -8975,6 +9008,232 @@ const writeApp = {
   writeEnd() { const back = S.wrBack || 'kanji'; S.wr = null; S.view = back; render(); window.scrollTo(0, 0); }
 };
 Object.assign(App, writeApp);
+/* =====================================================================
+   SHADOWING: hear a native speaker say a sentence, say it yourself into the
+   microphone, then play the two back to back and compare their rhythm on a
+   simple loudness line. Recordings stay in memory on this device: nothing is
+   saved or sent anywhere. Without a microphone it still works: listen, repeat
+   aloud, and mark how it went.
+   ===================================================================== */
+const SH_N = 8;
+const shStats = () => store.get('shadow', {});
+/** sentences with a native recording, at your level and below; words you're learning first */
+function shPool() {
+  const lv = LV.indexOf(userLevel()), seen = new Set(), out = [];
+  for (const x of V) {
+    if (LV.indexOf(x.lvl) > lv) continue;
+    for (const e of x.ex || []) {
+      if (!e.au || seen.has(e.au)) continue;
+      const len = plain(e.j).length; if (len < 4 || len > 30) continue;
+      seen.add(e.au); out.push({ x, e, mine: !!progress[x.id], len });
+    }
+  }
+  return out;
+}
+const shAvailable = () => DATA.mode === 'full' && V.some(x => (x.ex || []).some(e => e.au));
+function shStart() {
+  const st = shStats(), pool = shPool();
+  if (!pool.length) return toast('No sentence recordings at your level yet');
+  // ones you've shadowed least, then words you're learning, then shorter sentences
+  pool.sort((a, b) => ((st[a.e.au] || {}).n || 0) - ((st[b.e.au] || {}).n || 0) || (b.mine - a.mine) || a.len - b.len);
+  const head = pool.slice(0, Math.max(SH_N * 3, SH_N));
+  S.sh = { items: shuffle(head).slice(0, SH_N), i: 0, rec: null, url: null, rating: [], stage: 'listen', showEn: false, slow: false, micErr: '' };
+  S.view = 'shadow'; render(); window.scrollTo(0, 0);
+  setTimeout(() => shPlayNative(), 300);
+}
+function shCur() { const H = S.sh; return H && H.items[H.i]; }
+function shPlayNative() {
+  const c = shCur(); if (!c) return;
+  const keep = settings.audioRate; settings.audioRate = S.sh.slow ? 0.75 : 1; playAudio('s' + c.e.au, true); settings.audioRate = keep;
+  if (S.sh.stage === 'listen') { S.sh.stage = 'speak'; render(); }
+}
+function shPlayMine(after) {
+  const H = S.sh; if (!H || !H.url) return;
+  if (curAudio) { try { curAudio.pause(); } catch (e) {} }
+  const a = new Audio(H.url); a.dataset.id = 'mine'; curAudio = a; const p = a.play(); if (p && p.catch) p.catch(() => {});
+  if (after) a.onended = after;
+}
+/* ---------- recording ---------- */
+async function shRecord() {
+  const H = S.sh; if (!H || H.rec) return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') { H.micErr = 'This browser can’t record. Say the sentence aloud after the speaker, then mark how it went.'; render(); return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
+  catch (e) { H.micErr = e && e.name === 'NotAllowedError' ? 'Microphone access is off. Allow it in your browser’s site settings to record, or just say the sentence aloud and mark how it went.' : 'No microphone found. Say the sentence aloud after the speaker, then mark how it went.'; render(); return; }
+  if (curAudio) { try { curAudio.pause(); } catch (e) {} }
+  const chunks = [], mr = new MediaRecorder(stream);
+  H.rec = { mr, stream, t0: Date.now() }; H.micErr = '';
+  mr.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+  mr.onstop = () => {
+    stream.getTracks().forEach(t => t.stop());
+    if (H.url) URL.revokeObjectURL(H.url);
+    const blob = new Blob(chunks, { type: mr.mimeType || 'audio/webm' });
+    H.blob = blob; H.url = URL.createObjectURL(blob); H.rec = null; H.stage = 'compare'; H.env = null;
+    render(); shEnvelopes();
+  };
+  mr.start();
+  H.recTimer = setTimeout(() => { if (H.rec) shStop(); }, 15000);   // a sentence never needs more than 15 seconds
+  render();
+}
+function shStop() { const H = S.sh; if (!H || !H.rec) return; clearTimeout(H.recTimer); try { H.rec.mr.stop(); } catch (e) { H.rec = null; render(); } }
+/* ---------- loudness lines (rhythm and length, not pronunciation scoring) ---------- */
+/** loudness of the sound over time, in n steps, with the silence at each end trimmed */
+function envelope(samples, rate, n = 60) {
+  const win = Math.max(1, Math.round(rate * 0.02)), rms = [];
+  for (let i = 0; i + win <= samples.length; i += win) { let s = 0; for (let k = i; k < i + win; k++) s += samples[k] * samples[k]; rms.push(Math.sqrt(s / win)); }
+  if (!rms.length) return { v: [], sec: 0 };
+  const peak = Math.max(...rms) || 1, th = peak * 0.12;
+  let a = rms.findIndex(v => v > th), b = rms.length - 1; while (b > a && rms[b] <= th) b--;
+  if (a < 0) return { v: [], sec: 0 };
+  const seg = rms.slice(a, b + 1), out = [];
+  for (let i = 0; i < n; i++) { const lo = Math.floor(i * seg.length / n), hi = Math.max(lo + 1, Math.floor((i + 1) * seg.length / n)); out.push(Math.max(...seg.slice(lo, hi)) / peak); }
+  return { v: out, sec: seg.length * 0.02 };
+}
+async function shEnvelopes() {
+  const H = S.sh, c = shCur(); if (!H || !c || !H.blob) return;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    const ac = new AC(), dec = buf => new Promise((res, rej) => { const p = ac.decodeAudioData(buf, res, rej); if (p && p.then) p.then(res, rej); });
+    const nat = await fetch(`data/saudio/${c.e.au}.mp3`).then(r => r.arrayBuffer()).then(dec);
+    const mine = await H.blob.arrayBuffer().then(dec);
+    const en = envelope(nat.getChannelData(0), nat.sampleRate), em = envelope(mine.getChannelData(0), mine.sampleRate);
+    if (ac.close) ac.close();
+    if (S.sh !== H || shCur() !== c) return;
+    H.env = { nat: en, mine: em }; render();
+  } catch (e) { /* the comparison line is a bonus: playback still works without it */ }
+}
+function shEnvSvg(env) {
+  const W = 300, Hh = 34, bar = (v, i, n, y0, up) => { const w = W / n, h = Math.max(1, v * (Hh - 4)); return `<rect x="${(i * w).toFixed(1)}" y="${(up ? y0 - h : y0).toFixed(1)}" width="${Math.max(1, w - 1).toFixed(1)}" height="${h.toFixed(1)}" rx="1"/>`; };
+  const longest = Math.max(env.nat.sec, env.mine.sec) || 1, scale = s => (s / longest);
+  const row = (e, y0, up, cls) => `<g class="${cls}" transform="scale(${scale(e.sec).toFixed(3)},1)">${e.v.map((v, i) => bar(v, i, e.v.length, y0, up)).join('')}</g>`;
+  const ratio = env.nat.sec ? env.mine.sec / env.nat.sec : 1;
+  const pace = ratio > 1.35 ? 'You took noticeably longer: try keeping up with the speaker.' : ratio < 0.75 ? 'You were quicker than the speaker: slow down a little.' : 'Your pace is close to the speaker’s.';
+  return `<div class="sh-env"><svg viewBox="0 0 ${W} ${Hh * 2 + 4}" role="img" aria-label="Loudness over time: speaker on top, you below. ${pace}">${row(env.nat, Hh, true, 'nat')}${row(env.mine, Hh + 4, false, 'mine')}</svg>
+    <div class="sh-leg"><span><i class="nat"></i>Speaker ${env.nat.sec.toFixed(1)}s</span><span><i class="mine"></i>You ${env.mine.sec.toFixed(1)}s</span></div><p class="sh-pace">${pace}</p></div>`;
+}
+/* ---------- screens ---------- */
+function vShadow() {
+  const H = S.sh; if (!H) { S.view = 'home'; return vHome(); }
+  if (H.i >= H.items.length) return vShadowDone();
+  const c = shCur(), recording = !!H.rec;
+  const credit = c.e.by ? `Recording: ${esc(c.e.by)}${c.e.lic ? ` (${esc(c.e.lic)})` : ''}, Tatoeba` : 'Recording from Tatoeba';
+  return `<div class="qtop"><button class="ghost" onclick="App.shEnd()">✕ End</button><span class="muted">${H.i + 1} of ${H.items.length}</span></div>
+  <div class="track" aria-hidden="true">${H.items.map((z, k) => `<i class="${k < H.i ? (H.rating[k] ? 'ok' : 'bad') : k === H.i ? 'cur' : ''}"></i>`).join('')}</div>
+  <div class="card sh-card">
+    <div class="sh-steps"><span class="${H.stage === 'listen' ? 'on' : 'done'}">1 Listen</span><span class="${H.stage === 'speak' ? 'on' : H.stage === 'compare' ? 'done' : ''}">2 Say it</span><span class="${H.stage === 'compare' ? 'on' : ''}">3 Compare</span></div>
+    <div class="sh-j jp">${ruby(c.e.j)}</div>
+    ${H.showEn ? `<div class="sh-en">${esc(c.e.e)}</div>` : `<button class="linkbtn sh-en-btn" onclick="App.shEn()">Show the English</button>`}
+    <div class="sh-row"><button class="btn sec" onclick="App.shNative()">🔊 Speaker</button><button class="chip ${H.slow ? 'on' : ''}" onclick="App.shSlow()" aria-pressed="${H.slow}">Slower</button></div>
+    <div class="sh-mic">${recording ? `<button class="btn sh-rec on" onclick="App.shStop()">■ Stop</button><span class="sh-live" role="status">Recording… say the sentence</span>`
+      : `<button class="btn sh-rec" onclick="App.shRecord()">● ${H.url ? 'Record again' : 'Record yourself'}</button>`}</div>
+    ${H.micErr ? `<p class="sh-err" role="status">${esc(H.micErr)}</p>` : ''}
+    ${H.url && !recording ? `<div class="sh-row"><button class="btn sec" onclick="App.shMine()">▶ You</button><button class="btn sec" onclick="App.shBoth()">▶ Speaker, then you</button></div>${H.env ? shEnvSvg(H.env) : ''}` : ''}
+    <div class="sh-src">${credit}</div>
+  </div>
+  <div class="sh-rate"><span>How close were you?</span><div class="btnrow"><button class="btn line" onclick="App.shRate(0)">Not yet</button><button class="btn" onclick="App.shRate(1)">Close</button></div></div>
+  <p class="note">Shadowing: listen, then say it at the same speed and with the same rise and fall. Your recordings stay on this device and are deleted when you move on.</p>`;
+}
+function vShadowDone() {
+  const H = S.sh, ok = H.rating.filter(Boolean).length;
+  return `<h1>${ok} of ${H.items.length} close</h1><p class="sub">Shadowing works best a little every day. Sentences marked “Not yet” come back sooner.</p>
+  <div class="card">${H.items.map((c, k) => `<div class="sh-res"><span class="jp">${ruby(c.e.j)}</span><span class="${H.rating[k] ? 'okc' : 'badc'}">${H.rating[k] ? 'close' : 'not yet'}</span></div>`).join('')}</div>
+  <div class="btnrow"><button class="btn" onclick="App.shAgain()">Another ${SH_N}</button><button class="btn line" onclick="App.shEnd()">Done</button></div>`;
+}
+function shClear() { const H = S.sh; if (!H) return; if (H.rec) shStop(); if (H.url) URL.revokeObjectURL(H.url); H.url = null; H.blob = null; H.env = null; }
+const shadowApp = {
+  shadowStart() { shStart(); },
+  shNative() { shPlayNative(); },
+  shSlow() { S.sh.slow = !S.sh.slow; render(); },
+  shEn() { S.sh.showEn = true; render(); },
+  shRecord() { shRecord(); },
+  shStop() { shStop(); },
+  shMine() { shPlayMine(); },
+  shBoth() {
+    const c = shCur(); if (!c) return;
+    playAudio('s' + c.e.au, true);
+    const a = curAudio; if (a) a.onended = () => { if (S.sh) shPlayMine(); };
+  },
+  shRate(ok) {
+    const H = S.sh, c = shCur(); if (!H || !c) return;
+    shClear(); H.rating[H.i] = ok ? 1 : 0;
+    const st = shStats(), o = st[c.e.au] || { n: 0, ok: 0 }; o.n += ok ? 1 : 0.5; if (ok) o.ok++; o.t = Date.now(); st[c.e.au] = o; store.set('shadow', st);   // "not yet" counts half, so it comes back sooner
+    logAct(false, 'vocab'); skillTick('shadow', 3);
+    H.i++; H.stage = 'listen'; H.showEn = false; H.micErr = '';
+    render(); window.scrollTo(0, 0);
+    if (H.i < H.items.length) setTimeout(() => shPlayNative(), 300);
+  },
+  shAgain() { shClear(); shStart(); },
+  shEnd() { shClear(); if (curAudio) { try { curAudio.pause(); } catch (e) {} } S.sh = null; S.view = 'home'; render(); window.scrollTo(0, 0); }
+};
+Object.assign(App, shadowApp);
+/* =====================================================================
+   TODAY'S PRACTICE: one extra stop on Home's daily line that rotates through
+   the skills the lessons don't drill every day (reading, listening, writing,
+   conjugation, shadowing). It picks the skill you've practised least recently,
+   keeps it for the whole day, and ticks off once you've done enough of it.
+   ===================================================================== */
+/** count practice of a skill today; when it reaches `need`, the skill is done for today */
+function skillTick(id, need = 1) {
+  const d = today(), s = store.get('skillday', {});
+  if (s.d !== d) { s.d = d; s.c = {}; }
+  s.c[id] = (s.c[id] || 0) + 1; store.set('skillday', s);
+  if (s.c[id] >= need && !flagged('skill:' + id)) {
+    dayFlag('skill:' + id);
+    const last = store.get('skillLast', {}); last[id] = d; store.set('skillLast', last);
+  }
+}
+const skillCount = id => { const s = store.get('skillday', {}); return s.d === today() ? (s.c || {})[id] || 0 : 0; };
+/** words you've started that have a native recording */
+const listenWords = () => V.filter(x => x.au && progress[x.id]);
+const SKILLS = [
+  { id: 'read', need: 1, title: 'Reading', jp: '読', sub: () => 'One short passage at your level, with questions',
+    ok: () => READ.some(p => p.lv === userLevel()), act: "App.todayRead()" },
+  { id: 'listen', need: 8, title: 'Listening', jp: '聴', sub: () => 'Hear words you’ve learned and pick or type them',
+    ok: () => DATA.mode === 'full' && listenWords().length >= 8, act: "App.todayListen()" },
+  { id: 'shadow', need: 3, title: 'Shadowing', jp: '声', sub: () => 'Say sentences after a native speaker and compare',
+    ok: () => shAvailable(), act: "App.shadowStart()" },
+  { id: 'write', need: 3, title: 'Writing', jp: '書', sub: () => 'Write three kanji you’re learning, stroke by stroke',
+    ok: () => DATA.mode === 'full' && K.filter(k => progress[k.id]).length >= 3, act: "App.todayWrite()" },
+  { id: 'conj', need: 10, title: 'Conjugation', jp: '活', sub: () => 'Ten quick verb and adjective forms',
+    ok: () => V.filter(x => x.pos === 'verb' && progress[x.id]).length >= 5, act: "App.go('conj')" }
+];
+/** today's skill: the one practised least recently (never first), the same all day */
+function todaySkill() {
+  const d = today(), av = SKILLS.filter(s => s.ok()); if (!av.length) return null;
+  const saved = store.get('todaySkill', null);
+  if (saved && saved.d === d) { const s = av.find(x => x.id === saved.id); if (s) return s; }
+  const last = store.get('skillLast', {}), start = hashStr(d) % av.length;
+  const order = av.map((s, i) => ({ s, k: last[s.id] || '', r: (i - start + av.length) % av.length }))
+    .sort((a, b) => a.k < b.k ? -1 : a.k > b.k ? 1 : a.r - b.r);
+  const pickS = order[0].s; store.set('todaySkill', { d, id: pickS.id });
+  return pickS;
+}
+/** the stop for Home's daily line */
+function todayStop() {
+  const s = todaySkill(); if (!s) return null;
+  const done = flagged('skill:' + s.id), n = Math.min(skillCount(s.id), s.need);
+  return { title: `Practice: ${s.title}`, sub: done ? 'Done for today' : s.need > 1 && n ? `${s.sub()} · ${n} of ${s.need} done` : s.sub(), done, go: 'Start', act: s.act };
+}
+const todayApp = {
+  todayRead() {
+    const lv = userLevel(), st = readStats(), list = READ.filter(p => p.lv === lv);
+    const p = list.find(x => !st[x.id]) || list.slice().sort((a, b) => ((st[a.id] || {}).best || 0) / a.q.length - ((st[b.id] || {}).best || 0) / b.q.length)[0];
+    App.go('read'); if (p) App.rdOpen(p.id);
+  },
+  todayListen() {
+    const ws = shuffle(listenWords()).slice(0, 10), lv = LV.indexOf(userLevel());
+    // wrong options come from all words up to your level, so there are always enough that sound different
+    const pool = V.filter(x => LV.indexOf(x.lvl) <= lv);
+    S.session = { mode: 'test', kind: 'vocab', pool, queue: ws, idx: 0, dir: 'hear', results: [], back: { view: 'home' } };
+    nextQ();
+  },
+  todayWrite() {
+    const st = writeStats(), mine = K.filter(k => progress[k.id]);
+    mine.sort((a, b) => ((st[a.k] || {}).t || 0) - ((st[b.k] || {}).t || 0));
+    S.wrBack = 'home'; writeStart(mine.slice(0, 3).map(k => k.k), 'Today’s writing');
+  }
+};
+Object.assign(App, todayApp);
 </script>
 </body>
 </html>

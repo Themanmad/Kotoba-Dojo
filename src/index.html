@@ -35,6 +35,7 @@ try { var st = JSON.parse(localStorage.getItem('kd_settings') || '{}'), t = st.t
 @@include css/16-pitch-accent.css
 @@include css/17-reading.css
 @@include css/18-writing.css
+@@include css/19-shadowing.css
 </style>
 </head>
 <body>
@@ -55,6 +56,7 @@ try { var st = JSON.parse(localStorage.getItem('kd_settings') || '{}'), t = st.t
   <button class="nav-extra lib" data-v="books" onclick="App.go('books')"><b>課</b>Textbooks</button>
   <button class="nav-extra lib" data-v="conj" onclick="App.go('conj')"><b>活</b>Conjugation</button>
   <button class="nav-extra lib" data-v="read" onclick="App.go('read')"><b>読</b>Reading</button>
+  <button class="nav-extra lib" data-v="shadow" onclick="App.shadowStart()"><b>声</b>Shadowing</button>
   <button class="nav-extra" data-v="search" onclick="App.go('search')"><b>探</b>Search</button>
   <button class="nav-extra" data-v="settings" onclick="App.go('settings')"><b>設</b>Settings</button>
 </div><div class="nav-foot" id="navfoot"></div></nav>
@@ -97,6 +99,8 @@ try { var st = JSON.parse(localStorage.getItem('kd_settings') || '{}'), t = st.t
 @@include js/32-reading-data.js
 @@include js/33-reading.js
 @@include js/34-writing.js
+@@include js/35-shadowing.js
+@@include js/36-today.js
 </script>
 </body>
 </html>

@@ -1,0 +1,28 @@
+/* ---------- shadowing ---------- */
+.sh-card{text-align:center;padding:16px 16px 12px}
+.sh-steps{display:flex;justify-content:center;gap:6px;margin-bottom:12px;font-size:12.5px;font-weight:700}
+.sh-steps span{padding:4px 10px;border-radius:var(--r-pill);background:var(--chip);color:var(--muted)}
+.sh-steps span.on{background:var(--accent);color:#fff}.sh-steps span.done{color:var(--ok)}
+.sh-j{font-size:22px;line-height:2;margin:4px 0;overflow-wrap:anywhere}
+.sh-en{color:var(--muted);font-size:14.5px;margin:2px 0 6px}.sh-en-btn{font-size:13.5px;margin:2px 0 6px}
+.sh-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin-top:12px}
+.sh-row .btn{width:auto;margin:0;padding-left:16px;padding-right:16px}
+.sh-mic{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:14px}
+.sh-rec{width:auto;min-width:200px;margin:0}
+.sh-rec.on{background:var(--bad,#d64545);border-color:var(--bad,#d64545);color:#fff}
+.sh-live{font-size:13.5px;font-weight:700;color:var(--bad,#d64545)}
+@media (prefers-reduced-motion:no-preference){.sh-live{animation:shpulse 1.2s ease-in-out infinite}}
+@keyframes shpulse{50%{opacity:.45}}
+.sh-err{font-size:13.5px;color:var(--muted);margin:10px auto 0;max-width:34em;line-height:1.5}
+.sh-env{margin:14px auto 0;max-width:360px}
+.sh-env svg{width:100%;height:auto;display:block}
+.sh-env .nat rect{fill:var(--accent)}.sh-env .mine rect{fill:var(--ok)}
+.sh-leg{display:flex;justify-content:center;gap:14px;font-size:12.5px;color:var(--muted);margin-top:4px}
+.sh-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.sh-leg i.nat{background:var(--accent)}.sh-leg i.mine{background:var(--ok)}
+.sh-pace{font-size:13.5px;margin:6px 0 0}
+.sh-src{font-size:11.5px;color:var(--muted);margin-top:12px}
+.sh-rate{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:16px}.sh-rate>span{font-weight:700;font-size:14px}
+.sh-rate .btnrow{width:100%;max-width:360px}
+.sh-res{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.sh-res:last-child{border-bottom:0}
+.nav-extra[hidden]{display:none!important}

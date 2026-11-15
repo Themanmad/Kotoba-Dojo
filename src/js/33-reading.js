@@ -47,7 +47,7 @@ const readApp = {
     ans[qi] = oi; logAct(false, 'grammar');
     if (p.q.every((q, i) => ans[i] != null)) {
       const ok = p.q.filter((q, i) => ans[i] === q[3]).length, st = readStats(), o = st[p.id] || { best: 0, n: 0 };
-      o.best = Math.max(o.best, ok); o.last = ok; o.n++; st[p.id] = o; store.set('reading', st);
+      o.best = Math.max(o.best, ok); o.last = ok; o.n++; st[p.id] = o; store.set('reading', st); skillTick('read', 1);
       if (typeof addXP === 'function') addXP(ok * 5);
     }
     render();

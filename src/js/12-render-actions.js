@@ -10,14 +10,15 @@ function navFoot(st) {
   <div class="nf-meta"><span>🔥 ${st} day${st === 1 ? '' : 's'}</span><span>${due ? `${due} due` : 'Nothing due'}</span></div></div>`;
 }
 function render() {
-  const navOf = v => v === 'anki' ? 'settings' : v === 'dquiz' ? 'path' : ['kana', 'vocab', 'kanji', 'grammar', 'library', 'books', 'conj', 'read', 'write'].includes(v) ? 'library' : ['path', 'lesson', 'place'].includes(v) ? 'path' : v;
+  const navOf = v => v === 'anki' ? 'settings' : v === 'dquiz' ? 'path' : ['kana', 'vocab', 'kanji', 'grammar', 'library', 'books', 'conj', 'read', 'write', 'shadow'].includes(v) ? 'library' : ['path', 'lesson', 'place'].includes(v) ? 'path' : v;
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === navOf(S.view) || b.dataset.v === S.view));
   const st = streak(); $('#streak').innerHTML = (st ? `🔥 ${st}` : '') + (gameOn() ? `<span class="hxp" title="${esc(beltOf(game.xp).name)}">⭐ ${fmtN(game.xp)}</span>` : '');
   const nf = $('#navfoot'); if (nf) nf.innerHTML = navFoot(st);
   const page = S.session ? 'session' : S.view;
   if (S.view === 'path' && DATA.mode === 'full' && !S.pathLoading && (LV.some(l => !isLoaded('vocab', l)) || LV.some(l => !isLoaded('grammar', l)))) { S.pathLoading = true; loadPathData().then(() => { S.pathLoading = false; if (S.view === 'path') render(); }); }
-  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite })[S.view]()}</div>`;
+  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite, shadow: vShadow })[S.view]()}</div>`;
   hydrate($('#app')); paintLevels($('#app'));
+  { const nb = document.querySelector('.nav-extra[data-v="shadow"]'); if (nb) nb.hidden = !shAvailable(); }   // needs sentence recordings (full data)
   if (S.view === 'write' && !S.session) writeHydrate();
   if (S.fromPlay && S.view !== 'play' && !S.session) $('#app').insertAdjacentHTML('afterbegin', `<button class="backtown" onclick="S.fromPlay=false;App.go('play')">🏯 Back to town</button>`);
   if (S.view === 'play' && !S.session) townMount();

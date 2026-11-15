@@ -123,6 +123,7 @@ function nextQ() {
 function answer(i) {
   const s = S.session; if (!s || s.mode === 'cards' || s.mode === 'exam' || s.answered || s.done || !s.q.opts[i]) return;
   s.answered = true; s.chosen = i; const ok = s.q.opts[i].ok;
+  if (s.q.dir === 'hear' || s.q.dir === 'dict') skillTick('listen', 8);
   { const id = s.q.item.id; s.undo = { prev: progress[id] ? { ...progress[id] } : null, game: { ...game }, streak: s.streak, seen: s.seen, correct: s.correct, hadFirst: !!(s.first && s.first.has(id)), firstVal: s.first && s.first.get(id), retries: s.retries ? s.retries.get(id) || 0 : 0, deckLen: s.deck ? s.deck.length : 0, resLen: s.results ? s.results.length : 0 }; }
   rec(s.q.item, ok);
   // a correct answer plays the native recording of the word (tests & quizzes; not the mock exam)

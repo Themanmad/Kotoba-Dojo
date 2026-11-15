@@ -138,7 +138,7 @@ function writeFinish() {
   const W = S.wr, k = W.items[W.i].k; W.finished = true;
   W.results.push({ k: k.k, miss: W.miss, hints: W.hints });
   const st = writeStats(), o = st[k.k] || { n: 0, p: 0 }; o.n++; if (!W.miss && !W.hints) o.p++; o.t = Date.now(); st[k.k] = o; store.set('write', st);
-  logAct(false, 'kanji');
+  logAct(false, 'kanji'); skillTick('write', 3);
 }
 const writeApp = {
   writeKanji(c) { S.wrBack = S.view === 'write' ? (S.wrBack || 'kanji') : S.view; App.closeSheet(); writeStart([c], `Writing ${c}`); },
