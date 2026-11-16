@@ -242,17 +242,21 @@ function vGPoint(g) {
     : `<div class="card gp-hero"><div class="gp-pat">${gPat(g)}</div>${gRomaji(g) ? `<div class="gp-rom">${esc(gRomaji(g))}</div>` : ''}
         <div class="gp-purp">${esc(gPurpose(g))}</div>${gGloss(g).length ? `<div class="gglos">${gGloss(g).map(t => `<span>${esc(t)}</span>`).join('')}</div>` : ''}</div>`;
   if (rev) return back + top;
-  const build = g.fm ? `<section class="gsec"><h3><span>1</span>How to build it</h3><div class="gbuild">${gBlocks(g.fm)}</div>
+  /* the lesson always runs in the same order: what it means (the card above), how to form it,
+     how it's used, examples, similar patterns, then practice. Sections without content are left out and the rest renumbered. */
+  let n = 0; const num = () => ++n;
+  const build = g.fm ? `<section class="gsec"><h3><span>${num()}</span>How to form it</h3><div class="gbuild">${gBlocks(g.fm)}</div>
       <div class="gkey"><span class="gb gb-n">Noun</span><span class="gb gb-v">Verb</span><span class="gb gb-a">Adjective</span><span class="gb gb-s">Sentence</span><span class="gb gb-g jp">grammar</span></div></section>` : '';
-  const see = ex.length ? `<section class="gsec"><h3><span>${g.fm ? 2 : 1}</span>See it in action</h3>${ex.map(e => gExample(e, g)).join('')}</section>` : '';
-  const mix = sim.length ? `<section class="gsec"><h3><span>⚠︎</span>Don’t mix it up with</h3><div class="gsim">${sim.map(x => `<button class="gsim-b" onclick="App.gOpen('${esc(x.id)}')"><span class="gr-p">${gPat(x)}</span><small>${esc(gGloss(x).join(' · ') || gPurpose(x))}</small></button>`).join('')}</div></section>` : '';
-  const more = g.x ? `<details class="gsec gmore"><summary>The full explanation</summary><div class="gexpl">${gExplHtml(g.x)}</div>${g.fm ? `<div class="gform"><b>Formation, as written</b>${gFormHtml(g.fm)}</div>` : ''}</details>` : '';
+  const more = g.x ? `<details class="gsec gmore"${String(g.x).length < 500 ? ' open' : ''}><summary><span class="gnum">${num()}</span>How it’s used</summary><div class="gexpl">${gExplHtml(g.x)}</div>${g.fm ? `<div class="gform"><b>Formation, as written</b>${gFormHtml(g.fm)}</div>` : ''}</details>` : '';
+  const gk = gkpForGrammar(g);
+  const see = ex.length || gk ? `<section class="gsec"><h3><span>${num()}</span>Examples</h3>${ex.map(e => gExample(e, g)).join('')}${gk}</section>` : '';
+  const mix = sim.length ? `<section class="gsec"><h3><span>${num()}</span>Compare with similar patterns</h3><div class="gsim">${sim.map(x => `<button class="gsim-b" onclick="App.gOpen('${esc(x.id)}')"><span class="gr-p">${gPat(x)}</span><small>${esc(gGloss(x).join(' · ') || gPurpose(x))}</small></button>`).join('')}</div></section>` : '';
   const T2 = S.gtry && S.gtry.id === g.id ? S.gtry : null;
-  const tryIt = `<section class="gsec gtry" id="gtry"><h3><span>✍︎</span>Try it</h3>${T2 ? gTryHtml(T2) : `<p class="muted">Three quick questions on this pattern: one of them is a sentence to build.</p><button class="btn" onclick="App.gTry('${esc(g.id)}')">Start</button>`}</section>`;
+  const tryIt = `<section class="gsec gtry" id="gtry"><h3><span>${num()}</span>Practice</h3>${T2 ? gTryHtml(T2) : `<p class="muted">Three quick questions on this pattern: one of them is a sentence to build.</p><button class="btn" onclick="App.gTry('${esc(g.id)}')">Start</button>`}</section>`;
   const nx = gNextAfter(g);
   const foot = `<div class="gp-foot"><span class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong` : 'Not studied yet'}${grammarFull() ? ' · from <a href="https://hanabira.org/" target="_blank" rel="noopener">hanabira.org</a>' : ''}</span>
     ${nx ? `<button class="btn sec sm" onclick="App.gOpen('${esc(nx.id)}', 1)">Next: ${gRev() ? esc(gGloss(nx)[0] || 'next point') : `<span class="jp">${esc(gPatText(nx))}</span>`} ›</button>` : ''}</div>`;
-  return back + top + build + see + tryIt + mix + more + foot;
+  return back + top + build + more + see + mix + tryIt + foot;
 }
 function gNextAfter(g) { const all = gOrder(g.lvl).flatMap(c => c.pts), i = all.indexOf(g); return all.slice(i + 1).find(x => !progress[x.id]) || all[i + 1] || null; }
 

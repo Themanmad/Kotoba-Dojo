@@ -171,8 +171,6 @@ const App = {
   ...kreadApp,
   ...extrasApp,
   ...grammarApp,
-  ...townApp,
-  ...chatApp,
   kpPlay(b) { const s = b.closest('.kps'); if (!s) return; s.classList.remove('play'); void s.offsetWidth; s.classList.add('play'); },
   leaveExam() { const s = S.session; if (s && s.mode === 'exam' && !s.done && !confirm('Leave the exam? Your answers will be lost.')) return false; stopExamTimer(); return true; },
   go(v, tab) { if (!App.leaveExam()) return; S.session = null; if (v === 'vocab' && tab === 'sit') { S.sit = null; if (DATA.mode === 'full' && LV.some(l => !isLoaded('vocab', l))) loadAllVocab().then(render, render); } if (v === 'grammar') { S.gp = null; S.gw = null; S.gtry = null; } if (v === 'books') { S.bk = null; S.gk = null; } if (v === 'conj') S.cj = null; if (v === 'read') S.rd = null; if (v === 'shadow' && !S.sh) return shStart(); S.view = v; if (tab) S.vtab = tab; App.closeSheet(); render(); window.scrollTo(0, 0); if (v === 'search') { const q = $('#q'); if (q && !S.search.q) q.focus(); } },
@@ -367,5 +365,5 @@ document.addEventListener('keydown', e => {
 });
 
 applySettings();
-boot().then(render, err => { console.error(err); render(); }).then(() => ankiBoot()).catch(e => console.error(e))
+boot().then(render, err => { console.error(err); render(); }).then(() => { loadLate(); return ankiBoot(); }).catch(e => console.error(e))
   .then(() => { if (DATA.mode === 'full') setTimeout(() => loadAllVocab().then(() => { FURIX = null; }).catch(() => {}), 4000); });   // every level's words, so furigana can cover any word in a sentence

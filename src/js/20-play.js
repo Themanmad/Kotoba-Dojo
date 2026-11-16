@@ -440,4 +440,4 @@ const townApp = {
   townKanji(k) { App.townClose(); openSheet('k:' + k); },
   townWord(id) { App.townClose(); openSheet(id); }
 };
-
+Object.assign(App, townApp);   // this file loads after the main script

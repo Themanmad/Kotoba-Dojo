@@ -46,6 +46,7 @@ function vReadPassage(p) {
   return `<button class="ghost backbtn" onclick="App.rdOpen(null)">‹ Reading</button>
   <div class="rd-head"><span class="tag lv" style="background:${lcVar(p.lv)}">${p.lv}</span><h1 class="jp">${ruby(p.jt)}</h1><div class="muted">${esc(p.t)}</div></div>
   ${readBar()}
+  <p class="rd-tip">Tap any kanji to look up its word.</p>
   <div class="card rd-text" style="--rd:${rdSize()}px">${readParas(p.j)}</div>
   ${p.g.length ? `<div class="rd-gl"><div class="mini">Words to know</div>${p.g.map(([w, r, m]) => `<span class="rd-gw"><b class="jp">${esc(w)}</b> <span class="jp muted">${esc(r)}</span> ${esc(m)}</span>`).join('')}</div>` : ''}
   <div class="label">Questions</div>${qHtml}
@@ -56,7 +57,15 @@ function vReadPassage(p) {
 const readApp = {
   rdLv(l) { S.rdLv = l; render(); },
   rdSize(dir) { const i = settings.readSize == null ? 2 : settings.readSize; settings.readSize = Math.min(RD_SIZES.length - 1, Math.max(0, i + dir)); saveSettings(); render(); },
-  rdOpen(id) { S.rd = id; S.rdAns = []; render(); window.scrollTo(0, 0); },
+  rdOpen(id) {
+    S.rd = id; S.rdAns = []; render(); window.scrollTo(0, 0);
+    // word lookup needs the words and kanji up to this passage's level
+    const p = readOf(id);
+    if (p && DATA.mode === 'full') {
+      const need = LV.slice(0, LV.indexOf(p.lv) + 1).flatMap(l => [['vocab', l], ['kanji', l]]).filter(([k, l]) => !isLoaded(k, l));
+      if (need.length) Promise.all(need.map(([k, l]) => load(k, l))).then(() => { if (S.rd === id && S.view === 'read') render(); }, () => {});
+    }
+  },
   rdAns(qi, oi) {
     const p = readOf(S.rd); if (!p) return; const ans = S.rdAns = S.rdAns || [];
     if (ans[qi] != null) return;

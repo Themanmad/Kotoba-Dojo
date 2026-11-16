@@ -139,3 +139,13 @@ function profileCard() {
   return `<section class="card prof" style="--lc:${lcVar(s.level)}"><div class="prof-top"><span class="prof-av">${ICON.user}</span><div><b>Your dojo</b><span>Working on <span class="tag lv">${esc(s.level)}</span> · ${s.overall}% of this level</span></div></div>
     <div class="prof-stats"><span><b>${st}</b>day streak</span><span><b>${fmtN(s.words)}</b>words</span><span><b>${fmtN(s.kanji)}</b>kanji</span><span><b>${fmtMin(wkMin)}</b>this week</span></div></section>`;
 }
+
+/* ---------- Home customisation: which sections the dashboard shows ---------- */
+const DASH_PARTS = [['stats', 'Statistics', 'Streak, words, kanji and study time'], ['plan', 'Today’s plan', 'The list of things to do today'], ['quick', 'Quick access', 'Shortcut buttons'], ['week', 'This week', 'The chart of your study time'],
+  ['trouble', 'Trouble spots', 'Items you keep missing'], ['wotd', 'Word of the day', ''], ['levels', 'Progress by level', 'Bars for every JLPT level'], ['quote', 'Quote of the day', '']];
+const dashOn = k => !(settings.dash && settings.dash[k] === false);
+function dashCard() {
+  return `<div class="label">Home screen</div><div class="card"><p class="dash-note">Choose what Home shows. The next lesson always stays at the top.</p>
+    ${DASH_PARTS.map(([k, t, dsc]) => `<div class="set"><div><b>${t}</b>${dsc ? `<span>${dsc}</span>` : ''}</div><label class="sw"><input type="checkbox" ${dashOn(k) ? 'checked' : ''} onchange="App.dash('${k}',this.checked)" aria-label="Show ${t}"><span></span></label></div>`).join('')}</div>`;
+}
+Object.assign(App, { dash(k, on) { settings.dash = Object.assign({}, settings.dash, { [k]: !!on }); saveSettings(); render(); } });

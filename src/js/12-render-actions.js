@@ -9,6 +9,20 @@ function navFoot(st) {
   return `<div style="--lc:${lcVar(l)}"><div class="nf-head"><i></i>${esc(lvName(l))} line</div>${row('Words', 'vocab')}${row('Kanji', 'kanji')}${row('Grammar', 'grammar')}
   <div class="nf-meta"><span>🔥 ${st} day${st === 1 ? '' : 's'}</span><span>${due ? `${due} due` : 'Nothing due'}</span></div></div>`;
 }
+/* ---------- the late bundle: Chat and Play load right after the first screen, from late.js ---------- */
+const LATE = { ready: false, failed: false };
+const LATE_VIEWS = ['chat', 'play'];
+function loadLate() {
+  if (LATE.ready || LATE.loading) return; LATE.loading = true; LATE.failed = false;
+  const sc = document.createElement('script'); sc.src = 'late.js?v=__LATE_V__'; sc.async = true;
+  sc.onload = () => { LATE.loading = false; LATE.ready = true; if (LATE_VIEWS.includes(S.view) && !S.session) render(); };
+  sc.onerror = () => { LATE.loading = false; LATE.failed = true; sc.remove(); if (LATE_VIEWS.includes(S.view) && !S.session) render(); };
+  document.head.appendChild(sc);
+}
+function lateWait() {
+  if (LATE.failed) return `<div class="card empty-state"><b>This part didn’t load</b><p>Chat and Play need one more file, and it couldn’t be fetched. Check your connection and try again.</p><button class="btn" onclick="loadLate();render()">Try again</button></div>`;
+  loadLate(); return `<div class="loading" role="status">読み込み中… loading</div>`;
+}
 function render() {
   const navOf = v => ['path', 'lesson', 'place', 'books', 'learn'].includes(v) ? 'learn' : ['exam', 'conj', 'write', 'shadow', 'dquiz', 'practice'].includes(v) ? 'practice' : ['kana', 'vocab', 'kanji', 'grammar', 'read', 'library'].includes(v) ? 'library' : ['chat', 'play', 'explore'].includes(v) ? 'explore' : v === 'anki' ? 'settings' : v;
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === navOf(S.view) || b.dataset.v === S.view));
@@ -16,13 +30,14 @@ function render() {
   const nf = $('#navfoot'); if (nf) nf.innerHTML = navFoot(st);
   const pb = $('#profbtn'); if (pb) pb.innerHTML = `<span class="pf-lv">${esc(userLevel())}</span>${ICON.user}`;
   const page = S.session ? 'session' : S.view;
+  document.body.classList.toggle('in-session', !!S.session);   // phones hide the bottom bar while you're answering
   if (S.view === 'path' && DATA.mode === 'full' && !S.pathLoading && (LV.some(l => !isLoaded('vocab', l)) || LV.some(l => !isLoaded('grammar', l)))) { S.pathLoading = true; loadPathData().then(() => { S.pathLoading = false; if (S.view === 'path') render(); }); }
-  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite, shadow: vShadow, learn: vLearn, practice: vPractice, explore: vExplore })[S.view]()}</div>`;
+  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: () => LATE.ready ? vChat() : lateWait(), play: () => LATE.ready ? vPlay() : lateWait(), exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite, shadow: vShadow, learn: vLearn, practice: vPractice, explore: vExplore })[S.view]()}</div>`;
   hydrate($('#app')); paintLevels($('#app')); comfortHydrate();
   { const nb = document.querySelector('.nav-extra[data-v="shadow"]'); if (nb) nb.hidden = !shAvailable(); }   // needs sentence recordings (full data)
   if (S.view === 'write' && !S.session) writeHydrate();
   if (S.fromPlay && S.view !== 'play' && !S.session) $('#app').insertAdjacentHTML('afterbegin', `<button class="backtown" onclick="S.fromPlay=false;App.go('play')">🏯 Back to town</button>`);
-  if (S.view === 'play' && !S.session) townMount();
+  if (S.view === 'play' && !S.session && LATE.ready) townMount();
 }
 const SKINS = [
   { id: 'dojo', name: 'Dojo', desc: 'Warm ivory, charcoal and vermilion', bg: '#F7F3EC', ink: '#2A2724', accent: '#B4472F', line: '#E6DFD3', font: 'Inter', sample: '道 Aa', glow: 'none', meta: ['#F7F3EC', '#1B1A18'] },

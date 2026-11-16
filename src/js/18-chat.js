@@ -76,39 +76,6 @@ async function chatSend(text, hidden) {
 const chatScroll = () => setTimeout(() => { const el = $('#chatlog'); if (el) el.scrollTop = el.scrollHeight; window.scrollTo(0, document.body.scrollHeight); }, 30);
 
 /* ---------- typing in romaji: ka → か, KA → カ, kka → っか, nn → ん ---------- */
-const ROMA_K = (() => {
-  const t = {}, add = (r, k) => { t[r] = k; };
-  const base = { a: 'あ', i: 'い', u: 'う', e: 'え', o: 'お' };
-  Object.entries(base).forEach(([r, k]) => add(r, k));
-  const rows = { k: 'かきくけこ', s: 'さしすせそ', t: 'たちつてと', n: 'なにぬねの', h: 'はひふへほ', m: 'まみむめも', y: 'や_ゆ_よ', r: 'らりるれろ', w: 'わ__を', g: 'がぎぐげご', z: 'ざじずぜぞ', d: 'だぢづでど', b: 'ばびぶべぼ', p: 'ぱぴぷぺぽ' };
-  Object.entries(rows).forEach(([c, ks]) => 'aiueo'.split('').forEach((v, i) => { if (ks[i] !== '_') add(c + v, ks[i]); }));
-  Object.assign(t, { shi: 'し', chi: 'ち', tsu: 'つ', fu: 'ふ', ji: 'じ', wo: 'を', la: 'ぁ', li: 'ぃ', lu: 'ぅ', le: 'ぇ', lo: 'ぉ', xa: 'ぁ', xi: 'ぃ', xu: 'ぅ', xe: 'ぇ', xo: 'ぉ', ltu: 'っ', xtu: 'っ', lya: 'ゃ', lyu: 'ゅ', lyo: 'ょ', fa: 'ふぁ', fi: 'ふぃ', fe: 'ふぇ', fo: 'ふぉ', ti: 'てぃ', di: 'でぃ', tu: 'つ', si: 'し', zi: 'じ', 'n\'': 'ん', ja: 'じゃ', ju: 'じゅ', jo: 'じょ', je: 'じぇ', sha: 'しゃ', shu: 'しゅ', sho: 'しょ', she: 'しぇ', cha: 'ちゃ', chu: 'ちゅ', cho: 'ちょ', che: 'ちぇ', va: 'ゔぁ', vi: 'ゔぃ', vu: 'ゔ', ve: 'ゔぇ', vo: 'ゔぉ', '-': 'ー', '.': '。', ',': '、', '?': '？', '!': '！', '~': '〜' });
-  ['k', 'g', 'n', 'h', 'b', 'p', 'm', 'r'].forEach(c => { const i = rows[c][1]; add(c + 'ya', i + 'ゃ'); add(c + 'yu', i + 'ゅ'); add(c + 'yo', i + 'ょ'); });
-  Object.assign(t, { sya: 'しゃ', syu: 'しゅ', syo: 'しょ', tya: 'ちゃ', tyu: 'ちゅ', tyo: 'ちょ', zya: 'じゃ', zyu: 'じゅ', zyo: 'じょ', jya: 'じゃ', jyu: 'じゅ', jyo: 'じょ', dya: 'ぢゃ', dyu: 'ぢゅ', dyo: 'ぢょ' });
-  return t;
-})();
-function romaToKana(s, final) {
-  let out = '', i = 0;
-  while (i < s.length) {
-    const ch = s[i];
-    if (!/[A-Za-z\-.,?!~']/.test(ch)) { out += ch; i++; continue; }
-    const up = /[A-Z]/.test(ch), low = s.slice(i).toLowerCase();
-    // double consonant → っ
-    if (/^([bcdfghjklmpqrstvwxyz])\1/.test(low) && low[0] !== 'n') { out += up ? 'ッ' : 'っ'; i++; continue; }
-    let hit = null;
-    if (low[0] === 'n' && !/^n[aiueoy']/.test(low)) {   // ん: "nn" before a consonant or at the end, a lone n before a consonant ("konnichiha", "kouenni", "shinbun")
-      if (low === 'nn' && !final) { out += s.slice(i); break; }   // wait for the next key: nn+i is んに, nn+k is んk
-      if (low[1] === 'n' && !/^nn[aiueoy]/.test(low)) hit = ['nn', 'ん'];
-      else if (low.length > 1) hit = ['n', 'ん'];
-      else if (final) hit = ['n', 'ん'];
-    }
-    if (!hit) for (const n of [4, 3, 2, 1]) { const k = low.slice(0, n); if (ROMA_K[k]) { hit = [k, ROMA_K[k]]; break; } }
-    if (!hit) { out += s.slice(i); break; }   // an unfinished syllable: leave it for the next key
-    out += up && /[ぁ-ゖ]/.test(hit[1]) ? hit[1].replace(/[ぁ-ゖ]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60)) : hit[1];
-    i += hit[0].length;
-  }
-  return out;
-}
 
 /* ---------- the page ---------- */
 function vChat() {
@@ -176,5 +143,4 @@ const chatApp = {
     toast(`Added ${x.w} to My words`);
   }
 };
-
-
+Object.assign(App, chatApp);   // this file loads after the main script

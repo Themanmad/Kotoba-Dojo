@@ -10,9 +10,9 @@ Open an issue (Settings → Help make it better links straight to it). Please in
 
 ## Changing the app
 1. Edit files in `src/` (never `index.html` directly). `src/index.html` lists every CSS and JS file in load order.
-2. Run `node build.mjs` to rebuild `index.html`, and `node --test tests/*.test.mjs` to run the tests. Node 20 or newer, no install step.
+2. Run `node build.mjs` to rebuild `index.html` and `late.js`, and `node --test tests/*.test.mjs` to run the tests. Node 20 or newer, no install step.
 3. Open `index.html` through a local server (`python3 -m http.server`) and try your change in light and dark mode and at phone width.
-4. Commit `src/` and the rebuilt `index.html` together. CI fails if they don't match.
+4. Commit `src/`, the rebuilt `index.html` and `late.js` together. CI fails if they don't match.
 
 ## Content rules
 - Everything shipped must be free to share. Data from outside the project needs an open licence that allows it, credited in `LICENSES.md` and in Settings → Credits.

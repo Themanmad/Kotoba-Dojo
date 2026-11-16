@@ -112,22 +112,22 @@ function vHome() {
   ${vacBanner()}
   <header class="dash-hello"><div><h1 class="hello">${gj}<small>${ge}. ${allDone ? 'Everything on today’s plan is done. Nice work!' : left === stops.length ? 'Here’s your plan for today.' : `${left} thing${left === 1 ? '' : 's'} left on today’s plan.`}</small></h1></div><span class="tag lv dash-lv" style="--lc:${lcVar(lvl)}">${esc(lvl)}</span></header>
   ${comfortIntro()}
-  ${statTiles()}
+  ${dashOn('stats') ? statTiles() : ''}
   <div class="home-grid"><div class="home-main">
     ${continueCard()}
-    <section class="hub-sec"><div class="sec-head"><h2>Today’s plan</h2><span>${stops.filter(x => x.done).length} of ${stops.length} done</span></div>
+    ${dashOn('plan') ? `<section class="hub-sec"><div class="sec-head"><h2>Today’s plan</h2><span>${stops.filter(x => x.done).length} of ${stops.length} done</span></div>
     <div class="route${draw ? ' draw' : ''}" style="--run:calc((100% - 44px) * ${frac})"><span class="run"></span>
       ${stops.map((x, i) => `<button class="stop ${x.done ? 'done' : i === nextI && !allDone ? 'next' : ''}" onclick="${x.act}"><span class="pin">${x.done ? '✓' : i + 1}</span><span class="sb"><span class="t"><b>${x.title}</b><span>${x.sub}</span></span>${x.done ? '' : `<span class="go">${x.go}</span>`}</span></button>`).join('')}
-    </div></section>
-    ${quickAccess()}
+    </div></section>` : ''}
+    ${dashOn('quick') ? quickAccess() : ''}
   </div><div class="home-side">
     ${gameCard()}
-    ${weekChart()}
-    ${troubleCard()}${wotdCard()}
-    <div class="label">Your progress by level</div>
+    ${dashOn('week') ? weekChart() : ''}
+    ${dashOn('trouble') ? troubleCard() : ''}${dashOn('wotd') ? wotdCard() : ''}
+    ${dashOn('levels') ? `<div class="label">Your progress by level</div>
     <div class="card lines">${lineRows('vocab', 'Words')}${lineRows('kanji', 'Kanji')}<div><h3>Kana</h3>${kanaRows}</div>${lineRows('grammar', 'Grammar')}</div>
-    <div class="legend"><span><i class="dot known"></i>Known: reviewed at 2+ week intervals</span><span><i class="dot learning"></i>Learning</span></div>
-    ${quoteCard()}
+    <div class="legend"><span><i class="dot known"></i>Known: reviewed at 2+ week intervals</span><span><i class="dot learning"></i>Learning</span></div>` : ''}
+    ${dashOn('quote') ? quoteCard() : ''}
   </div></div>`;
 }
 
@@ -303,6 +303,7 @@ function vSettings() {
   return `<h1>Profile &amp; settings</h1><p class="sub">Your progress and preferences. Everything is saved on this device.</p>
   ${profileCard()}
   ${comfortCard()}
+  ${dashCard()}
   <div class="label">Look and study</div>
   <div class="card">
     <div class="set" style="display:block"><b>Design</b><span>Pick a template for the whole app</span>
@@ -463,12 +464,12 @@ function vDetail(x) {
   const uk = x.senses.some(s => (s.x || []).includes('uk'));
   return `<div class="detail force">
     ${stationSign(x)}
-    ${pitchHtml(x)}
     ${x.alt ? `<div class="dread">Also written <span class="jp">${esc(x.alt)}</span></div>` : ''}
     <div class="tags"><span class="tag">${esc(POS_LABEL[x.pos] || x.pos)}</span>${x.common ? '<span class="tag cm">common word</span>' : ''}${uk ? '<span class="tag">usually kana</span>' : ''}${freqBadge(x.freq)}</div>
     ${x.senses.length > 1 ? `<ol class="senses">${x.senses.map((s, i) => `<li>${s.p && s.p.length && (i === 0 || s.p.join() !== x.senses[i - 1].p.join()) ? `<span class="pos">${esc(posLabel(s.p))}</span>` : ''}${esc(s.g.join('; '))}${s.i ? ` <span class="muted">(${esc(s.i)})</span>` : ''}</li>`).join('')}</ol>`
       : `<div class="dmean">${esc(x.senses[0].g.join('; '))}</div>${x.senses[0].p && x.senses[0].p.length && DATA.meta ? `<div class="muted" style="font-size:13px">${esc(posLabel(x.senses[0].p))}</div>` : ''}`}
     ${x.dk ? `<div class="dnote"><b>In your deck${(x.dks || []).length > 1 ? 's' : ''}</b> ${esc((x.dks || []).map(id => (ANKI.decks.find(d => d.id === id) || {}).name).filter(Boolean).join(', ') || x.dk)}${x.dnote ? `<span>${esc(x.dnote)}</span>` : ''}</div>` : ''}
+    ${pitchHtml(x)}
     ${x.ex.length ? `<div class="kc-hint">Tap an underlined kanji to look up its word or the kanji.</div>` : ''}${x.ex.map(exHtml).join('')}
     ${ks.length ? `<div class="mini">Kanji in this word</div><div class="kchips">${ks.map(c => `<button class="kchip" data-open="k:${esc(c)}"><b>${c}</b>${esc(KMAP[c].mean[0] || '')}<span class="muted">${KMAP[c].lvl}</span></button>`).join('')}</div>` : ''}
     <div class="mini">${p ? `Your record: ${p.c} right · ${p.w} wrong · next review ${p.d > Date.now() ? 'in ' + fmtIv(p.d - Date.now()) : 'due now'}` : 'Not studied yet'}</div>
@@ -626,7 +627,7 @@ function animate(el) {
 /* tap a kanji in a sentence to open its details: example sentences, grammar examples, the quote of the day
    and the big word on a word card. Only kanji the app has data for are tappable; text inside buttons,
    links and furigana is left alone. */
-const KANJI_ZONES = '.ex .jp, .qj, .sign-word, .lpts li';
+const KANJI_ZONES = '.ex .jp, .qj, .sign-word, .lpts li, .rd-text p, .rd-pair p.jp, .sh-j';
 function linkKanji(root) {
   root.querySelectorAll(KANJI_ZONES).forEach(zone => {
     if (zone.dataset.kl) return; zone.dataset.kl = 1;

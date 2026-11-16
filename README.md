@@ -43,6 +43,7 @@ every Monday.
 - **Shadowing** — hear a native speaker say a sentence (slower if you like), record yourself, then play the two back to back. A loudness line compares your rhythm and length with the speaker's. Recordings stay in memory on your device and are deleted when you move on; without a microphone you can still listen and repeat aloud.
 - **Five places** — Home (your dashboard: streak, words and kanji studied, study time, the next lesson, today's plan and a chart of the week), Learn (the JLPT course, Travel Japanese, textbooks, situations, kana), Practice (reviews, quizzes, writing, grammar, conjugation, reading, listening, shadowing, mock exams), Library (kana, vocabulary, kanji, grammar, reading, textbooks, Anki decks, search) and Explore (chat and the town). A sidebar on desktop, a bottom bar on phones; profile and settings sit behind the level badge.
 - **Dojo design** — the default look: warm ivory, charcoal and muted vermilion in light mode; deep charcoal, warm white and soft red with gold in dark mode. The earlier designs (Station, Terminal, Sakura, Ocean) are still in Settings.
+- **Make Home yours** — Settings → Home screen switches each dashboard section on or off. In reading passages, tap any kanji to look up its word. Grammar lessons always run in the same order: meaning, how to form it, how it's used, examples, similar patterns, practice.
 - **Comfort for every age** — Settings → Comfort: text size (Normal, Large, Extra large) scales the whole app; a short vibration on answers; Calm screen switches off animations. Home asks once whether the text is easy to read and has one big Continue button for the next thing to do. On flashcards, swipe right for Good and left for Again.
 - **Search** — Japanese, romaji or English across all levels: words, kanji and grammar.
 - **Native audio** — word recordings by native speakers from Tofugu & WaniKani, with Kanji alive filling gaps, and native recordings of example sentences from Tatoeba (each one credited to its recorder). Every recording gets a little silence added before and after it, so phones and Bluetooth headphones don't cut off the first syllable. The build prefers example sentences that have a recording, and the mock exam's listening section uses them. There's no synthetic voice: items without a recording simply have no play button, and the listening section uses recorded sentences only.
@@ -105,7 +106,8 @@ Other flags: `--no-tatoeba`, `--no-freq`, `--no-kuromoji`, `--no-grammar`, `--no
 ## Development
 The app is one file, `index.html`, built from `src/`:
 - `src/index.html` is the page skeleton; each `@@include` line pulls in a file from `src/css/` or `src/js/`.
-- Edit files in `src/`, then run `node build.mjs` to rebuild `index.html` (no dependencies). Commit both.
+- Edit files in `src/`, then run `node build.mjs` to rebuild `index.html` and `late.js` (no dependencies). Commit all three.
+- Lines marked `@@late` in `src/index.html` (Chat and Play) go into `late.js`, which the page fetches after the first screen is up.
 - `node --test tests/*.test.mjs` runs the tests (scheduling, pitch accent, writing checks). CI runs them, and checks that `index.html` matches `src/`, on every push.
 - `build-data.mjs` builds the dictionary data in `data/` (see above); `lib/` holds its helpers.
 - Licences and credits are in [LICENSES.md](LICENSES.md) and on the app's Settings page.

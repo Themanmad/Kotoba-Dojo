@@ -137,7 +137,7 @@ function offMatchOpt(t, opts) {
 
 /* ---------- friendly corrections (the textbook → chat version) ---------- */
 const GODAN_RU = new Set(['帰る', '入る', '走る', '知る', '切る', '要る', '減る', '喋る', '蹴る', '滑る', '握る', '参る', '限る', '焦る', '混じる', 'かえる', 'はいる', 'はしる', 'しる', 'きる', 'いる']);
-function verbClass(x) {
+function chatVerbClass(x) {
   const tags = (x.senses || []).flatMap(s => s.p || []);
   const t = tags.find(g => /^v(1|5|k|s|z)/.test(g));
   if (t) return t.startsWith('v1') ? 'v1' : t === 'vk' ? 'vk' : /^vs/.test(t) ? 'vs' : t;
@@ -152,7 +152,7 @@ function masuIndex() {
   if (MASU) return MASU; MASU = new Map();
   for (const x of V) {
     if (x.pos !== 'verb' || !/[うくぐすつぬぶむる]$/.test(x.w)) continue;
-    const c = verbClass(x), base = x.w.slice(0, -1), last = x.w.slice(-1);
+    const c = chatVerbClass(x), base = x.w.slice(0, -1), last = x.w.slice(-1);
     let forms;
     if (c === 'vs' || /する$/.test(x.w)) { const b = x.w.replace(/する$/, ''); forms = { stem: b + 'し', ta: b + 'した', nai: b + 'しない', nakatta: b + 'しなかった' }; }
     else if (c === 'vk' || /^(来る|くる)$/.test(x.w)) { const k = x.w === 'くる' ? '' : '来'; forms = { stem: k ? '来' : 'き', ta: k ? '来た' : 'きた', nai: k ? '来ない' : 'こない', nakatta: k ? '来なかった' : 'こなかった' }; }
@@ -181,7 +181,7 @@ function offCasual(t) {
     if (!hit) return { better: '', note: 'Friends usually drop です/ます in chats: use the plain form (行きます → 行く, 行きました → 行った).' };
     const [L, f] = hit, head = before.slice(0, -L);
     out = head + (end === 'ます' ? f.dict : end === 'ました' ? f.ta : end === 'ません' ? f.nai : end === 'ませんでした' ? f.nakatta : f.stem + 'よう');
-    if (end === 'ましょう') out = head + (f.dict.endsWith('る') && verbClass({ w: f.dict, r: f.dict, senses: [] }) === 'v1' ? f.dict.slice(0, -1) + 'よう' : f.dict.slice(0, -1) + ({ う: 'お', く: 'こ', ぐ: 'ご', す: 'そ', つ: 'と', ぬ: 'の', ぶ: 'ぼ', む: 'も', る: 'ろ' }[f.dict.slice(-1)] || 'ろ') + 'う');
+    if (end === 'ましょう') out = head + (f.dict.endsWith('る') && chatVerbClass({ w: f.dict, r: f.dict, senses: [] }) === 'v1' ? f.dict.slice(0, -1) + 'よう' : f.dict.slice(0, -1) + ({ う: 'お', く: 'こ', ぐ: 'ご', す: 'そ', つ: 'と', ぬ: 'の', ぶ: 'ぼ', む: 'も', る: 'ろ' }[f.dict.slice(-1)] || 'ろ') + 'う');
   }
   const q = ka || /[？?]/.test(punct);
   return { better: out + (q ? '？' : punct.replace(/。$/, '') || ''), note: ka ? 'With friends, drop です/ます and the question か: just raise the tone with ？.' : 'With friends, drop です/ます: plain forms sound natural in chats.' };
