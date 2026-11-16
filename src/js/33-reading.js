@@ -7,6 +7,20 @@ const readStats = () => store.get('reading', {});
 const readOf = id => READ.find(p => p.id === id);
 /** a passage's text as paragraphs, with furigana by the user's setting */
 const readParas = j => j.split('\n').map(l => `<p class="jp">${ruby(l)}</p>`).join('');
+const RD_SIZES = [15, 17, 19, 22, 25];
+const rdSize = () => RD_SIZES[Math.min(RD_SIZES.length - 1, Math.max(0, settings.readSize == null ? 2 : settings.readSize))];
+/** reader controls: text size and furigana, kept between visits */
+function readBar() {
+  const i = settings.readSize == null ? 2 : settings.readSize, f = settings.furigana;
+  return `<div class="rd-bar" role="group" aria-label="Reading display"><span class="rd-bar-g"><button onclick="App.rdSize(-1)" ${i <= 0 ? 'disabled' : ''} aria-label="Smaller text">A−</button><button onclick="App.rdSize(1)" ${i >= RD_SIZES.length - 1 ? 'disabled' : ''} aria-label="Larger text">A+</button></span>
+    <span class="rd-bar-g">${[['on', 'Furigana'], ['tap', 'Tap to show'], ['off', 'None']].map(([v, l]) => `<button class="${f === v ? 'on' : ''}" aria-pressed="${f === v}" onclick="App.furi('${v}')">${l}</button>`).join('')}</span></div>`;
+}
+/** after answering: each paragraph with its translation underneath (when the two line up) */
+function readPairs(p) {
+  const js = p.j.split('\n'), es = p.e.split('\n');
+  if (js.length !== es.length) return `<details class="rd-en"><summary>Show the English translation</summary>${es.map(l => `<p>${esc(l)}</p>`).join('')}</details>`;
+  return `<details class="rd-en"><summary>Show the translation, paragraph by paragraph</summary>${js.map((l, i) => `<div class="rd-pair"><p class="jp">${ruby(l)}</p><p>${esc(es[i])}</p></div>`).join('')}</details>`;
+}
 
 function vRead() {
   if (S.rd) { const p = readOf(S.rd); if (p) return vReadPassage(p); S.rd = null; }
@@ -31,15 +45,17 @@ function vReadPassage(p) {
   }).join('');
   return `<button class="ghost backbtn" onclick="App.rdOpen(null)">‹ Reading</button>
   <div class="rd-head"><span class="tag lv" style="background:${lcVar(p.lv)}">${p.lv}</span><h1 class="jp">${ruby(p.jt)}</h1><div class="muted">${esc(p.t)}</div></div>
-  <div class="card rd-text">${readParas(p.j)}</div>
+  ${readBar()}
+  <div class="card rd-text" style="--rd:${rdSize()}px">${readParas(p.j)}</div>
   ${p.g.length ? `<div class="rd-gl"><div class="mini">Words to know</div>${p.g.map(([w, r, m]) => `<span class="rd-gw"><b class="jp">${esc(w)}</b> <span class="jp muted">${esc(r)}</span> ${esc(m)}</span>`).join('')}</div>` : ''}
   <div class="label">Questions</div>${qHtml}
   ${done ? `<div class="card rd-done"><b>${ok} of ${p.q.length}</b> ${ok === p.q.length ? 'Every one right.' : 'Read the reasons above, then try the passage again later.'}
-    <details class="rd-en"><summary>Show the English translation</summary>${p.e.split('\n').map(l => `<p>${esc(l)}</p>`).join('')}</details>
+    ${readPairs(p)}
     <div class="btnrow">${nx ? `<button class="btn" onclick="App.rdOpen('${nx.id}')">Next passage</button>` : ''}<button class="btn line" onclick="App.rdOpen('${p.id}')">Try again</button></div></div>` : ''}`;
 }
 const readApp = {
   rdLv(l) { S.rdLv = l; render(); },
+  rdSize(dir) { const i = settings.readSize == null ? 2 : settings.readSize; settings.readSize = Math.min(RD_SIZES.length - 1, Math.max(0, i + dir)); saveSettings(); render(); },
   rdOpen(id) { S.rd = id; S.rdAns = []; render(); window.scrollTo(0, 0); },
   rdAns(qi, oi) {
     const p = readOf(S.rd); if (!p) return; const ans = S.rdAns = S.rdAns || [];

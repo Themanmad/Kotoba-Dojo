@@ -111,9 +111,9 @@ function vShadow() {
   <div class="track" aria-hidden="true">${H.items.map((z, k) => `<i class="${k < H.i ? (H.rating[k] ? 'ok' : 'bad') : k === H.i ? 'cur' : ''}"></i>`).join('')}</div>
   <div class="card sh-card">
     <div class="sh-steps"><span class="${H.stage === 'listen' ? 'on' : 'done'}">1 Listen</span><span class="${H.stage === 'speak' ? 'on' : H.stage === 'compare' ? 'done' : ''}">2 Say it</span><span class="${H.stage === 'compare' ? 'on' : ''}">3 Compare</span></div>
-    <div class="sh-j jp">${ruby(c.e.j)}</div>
+    ${H.hide ? `<button class="sh-hidden" onclick="App.shHide()">Text hidden: listen first. Tap to show it.</button>` : `<div class="sh-j jp">${ruby(c.e.j)}</div>`}
     ${H.showEn ? `<div class="sh-en">${esc(c.e.e)}</div>` : `<button class="linkbtn sh-en-btn" onclick="App.shEn()">Show the English</button>`}
-    <div class="sh-row"><button class="btn sec" onclick="App.shNative()">🔊 Speaker</button><button class="chip ${H.slow ? 'on' : ''}" onclick="App.shSlow()" aria-pressed="${H.slow}">Slower</button></div>
+    <div class="sh-row"><button class="btn sec" onclick="App.shNative()">🔊 Speaker</button><button class="chip ${H.slow ? 'on' : ''}" onclick="App.shSlow()" aria-pressed="${H.slow}">Slower</button><button class="chip ${H.hideAll ? 'on' : ''}" onclick="App.shHideAll()" aria-pressed="${!!H.hideAll}">Hide text</button></div>
     <div class="sh-mic">${recording ? `<button class="btn sh-rec on" onclick="App.shStop()">■ Stop</button><span class="sh-live" role="status">Recording… say the sentence</span>`
       : `<button class="btn sh-rec" onclick="App.shRecord()">● ${H.url ? 'Record again' : 'Record yourself'}</button>`}</div>
     ${H.micErr ? `<p class="sh-err" role="status">${esc(H.micErr)}</p>` : ''}
@@ -135,6 +135,8 @@ const shadowApp = {
   shNative() { shPlayNative(); },
   shSlow() { S.sh.slow = !S.sh.slow; render(); },
   shEn() { S.sh.showEn = true; render(); },
+  shHide() { S.sh.hide = false; render(); },
+  shHideAll() { const H = S.sh; H.hideAll = !H.hideAll; H.hide = H.hideAll; render(); },
   shRecord() { shRecord(); },
   shStop() { shStop(); },
   shMine() { shPlayMine(); },
@@ -148,7 +150,7 @@ const shadowApp = {
     shClear(); H.rating[H.i] = ok ? 1 : 0;
     const st = shStats(), o = st[c.e.au] || { n: 0, ok: 0 }; o.n += ok ? 1 : 0.5; if (ok) o.ok++; o.t = Date.now(); st[c.e.au] = o; store.set('shadow', st);   // "not yet" counts half, so it comes back sooner
     logAct(false, 'vocab'); skillTick('shadow', 3);
-    H.i++; H.stage = 'listen'; H.showEn = false; H.micErr = '';
+    H.i++; H.stage = 'listen'; H.showEn = false; H.micErr = ''; H.hide = !!H.hideAll;
     render(); window.scrollTo(0, 0);
     if (H.i < H.items.length) setTimeout(() => shPlayNative(), 300);
   },

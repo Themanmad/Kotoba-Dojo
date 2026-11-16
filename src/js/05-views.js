@@ -61,9 +61,22 @@ function weakestSituation() {
   return best;
 }
 function vLibrary() {
-  const tiles = [['kana', 'あ', 'Kana', 'Hiragana and katakana charts, stroke order and drills'], ['vocab', '語', 'Words', 'Flashcards, quizzes, word lists and everyday situations'], ['kanji', '字', 'Kanji', 'Every JLPT kanji with its story, parts and stroke order'], ['grammar', '文', 'Grammar', 'Grammar points N5–N1 with examples and drills'], ['books', '課', 'Textbooks', 'Genki I & II and Basic Kanji Book, lesson by lesson'], ['conj', '活', 'Conjugation', 'Verb and adjective forms, with the rule behind every answer'], ['read', '読', 'Reading', 'Short passages N5–N1 with exam-style questions'], ...(shAvailable() ? [['shadow', '声', 'Shadowing', 'Say sentences after native speakers and compare your rhythm']] : []), ['vocab:sit', '場', 'Situations', 'Words grouped by where you’ll hear them'], ['search', '探', 'Search', 'Look up any word, kanji or grammar point']];
-  return `<h1>Library</h1><p class="sub">Everything in the app, for looking things up or drilling a weak spot. Your lessons are on the Path.</p>
-  <div class="libgrid">${tiles.map(([v, g, t, d]) => { const [view, tab] = v.split(':'); return `<button class="libtile" onclick="App.go('${view}'${tab ? `,'${tab}'` : ''})"><b class="jp">${g}</b><span class="lt-t">${t}</span><span class="lt-d">${d}</span></button>`; }).join('')}</div>`;
+  const hk = KANA.filter(x => status(x.id) === 'known').length, cnt = kind => { const n = LV.reduce((a, l) => a + levelTotal(kind, l), 0); return n ? fmtN(n) : ''; };
+  const ref = [
+    { ic: 'forms', t: 'Kana', d: 'Hiragana and katakana charts, stroke order and drills', act: "App.go('kana')", meta: `${hk} / ${KANA.length}` },
+    { ic: 'cards', t: 'Vocabulary', d: 'Every JLPT word with readings, pitch accent, audio and examples', act: "App.go('vocab','browse')", meta: cnt('vocab') },
+    { ic: 'pen', t: 'Kanji', d: 'Readings, meaning, parts, stroke order and look-alikes', act: "App.go('kanji')", meta: cnt('kanji') },
+    { ic: 'forms', t: 'Grammar', d: 'Grammar points N5–N1: how to form them, examples and comparisons', act: "App.go('grammar')", meta: cnt('grammar') }
+  ];
+  const mat = [
+    { ic: 'book', t: 'Reading', d: 'Graded passages N5–N1 with questions', act: "App.go('read')", meta: String(READ.length) },
+    { ic: 'book', t: 'Textbooks', d: 'Genki I & II and Basic Kanji Book, lesson by lesson', act: "App.go('books')" },
+    { ic: 'chat', t: 'Everyday situations', d: 'Phrases for shops, stations, restaurants and more', act: "App.go('vocab','sit')" },
+    { ic: 'deck', t: 'Anki decks', d: ANKI.decks.length ? 'Your imported decks and their words' : 'Import your own .apkg decks to study them here', act: "App.go('anki')", meta: ANKI.decks.length ? String(ANKI.decks.length) : '' }
+  ];
+  return `<h1>Library</h1><p class="sub">Look anything up. Everything the courses teach is here to browse.</p>
+  <button class="lib-search" onclick="App.go('search')">${ICON.search}<span>Search words, kanji and grammar in Japanese, romaji or English</span></button>
+  ${hubSection('Reference', ref)}${hubSection('Materials', mat)}`;
 }
 function vHome() {
   const due = dueCount(), tl = todayLog(), nl = newLeft('vocab'), fresh = vSel().filter(x => !progress[x.id]).length;
@@ -94,24 +107,27 @@ function vHome() {
   };
   const kanaRows = [['h', 'あ', 'Hiragana'], ['k', 'ア', 'Katakana']].map(([sc, lab]) => { const all = KANA.filter(x => x.script === sc), k = all.filter(x => status(x.id) === 'known').length, l2 = all.filter(x => status(x.id) === 'learning').length;
     return `<div class="lnrow"><span class="tag lv jp" style="--lc:var(--accent)">${lab}</span><div class="pbar"><i style="width:${k / all.length * 100}%"></i><i class="l" style="width:${l2 / all.length * 100}%"></i></div><span>${k} / ${all.length}</span></div>`; }).join('');
+  const [gj, ge] = dojoGreeting(), left = stops.length - stops.filter(x => x.done).length;
   return `${DATA.mode === 'starter' ? `<div class="banner"><b>Starter set.</b> The full dictionaries haven't been built yet, so you're seeing ${V.length} built-in words. Once the GitHub Action has run, all JLPT levels load automatically.</div>` : ''}
-  ${vacBanner()}<div class="home-grid"><div class="home-main">
-    <h1 class="hello">おかえり<small>${allDone ? 'Welcome back. Every stop is done today. Nice work!' : `Welcome back. Today's line has ${stops.length - stops.filter(x => x.done).length} stop${stops.length - stops.filter(x => x.done).length === 1 ? '' : 's'} left.`}</small></h1>
-    ${comfortIntro()}
-    <div class="badges"><span class="badge">🔥 <b>${streak()}</b> day streak</span><span class="badge"><b>${tl.r}</b> answers today</span></div>
-    ${gameCard()}
-    ${allDone ? '' : `<button class="btn home-go" onclick="${stops[nextI].act}"><i aria-hidden="true">▶</i><span><small>Continue</small><b>${stops[nextI].title}</b></span></button>`}
+  ${vacBanner()}
+  <header class="dash-hello"><div><h1 class="hello">${gj}<small>${ge}. ${allDone ? 'Everything on today’s plan is done. Nice work!' : left === stops.length ? 'Here’s your plan for today.' : `${left} thing${left === 1 ? '' : 's'} left on today’s plan.`}</small></h1></div><span class="tag lv dash-lv" style="--lc:${lcVar(lvl)}">${esc(lvl)}</span></header>
+  ${comfortIntro()}
+  ${statTiles()}
+  <div class="home-grid"><div class="home-main">
+    ${continueCard()}
+    <section class="hub-sec"><div class="sec-head"><h2>Today’s plan</h2><span>${stops.filter(x => x.done).length} of ${stops.length} done</span></div>
     <div class="route${draw ? ' draw' : ''}" style="--run:calc((100% - 44px) * ${frac})"><span class="run"></span>
       ${stops.map((x, i) => `<button class="stop ${x.done ? 'done' : i === nextI && !allDone ? 'next' : ''}" onclick="${x.act}"><span class="pin">${x.done ? '✓' : i + 1}</span><span class="sb"><span class="t"><b>${x.title}</b><span>${x.sub}</span></span>${x.done ? '' : `<span class="go">${x.go}</span>`}</span></button>`).join('')}
-    </div>
-    <div class="label">Jump to</div>
-    <div class="elsewhere"><button onclick="App.go('kanji')"><b>字</b>Kanji</button><button onclick="App.go('grammar')"><b>文</b>Grammar</button><button onclick="App.go('vocab','browse')"><b>一</b>Word list</button><button onclick="App.go('search')"><b>探</b>Search</button><button onclick="App.go('chat')"><b>話</b>Chat</button>${ANKI.decks.length ? `<button onclick="App.dquiz()"><b>問</b>Deck quiz</button>` : ''}</div>
+    </div></section>
+    ${quickAccess()}
   </div><div class="home-side">
+    ${gameCard()}
+    ${weekChart()}
     ${troubleCard()}${wotdCard()}
-    ${quoteCard()}
-    <div class="label">Your lines</div>
+    <div class="label">Your progress by level</div>
     <div class="card lines">${lineRows('vocab', 'Words')}${lineRows('kanji', 'Kanji')}<div><h3>Kana</h3>${kanaRows}</div>${lineRows('grammar', 'Grammar')}</div>
     <div class="legend"><span><i class="dot known"></i>Known: reviewed at 2+ week intervals</span><span><i class="dot learning"></i>Learning</span></div>
+    ${quoteCard()}
   </div></div>`;
 }
 
@@ -284,7 +300,8 @@ function vSettings() {
     { name: 'Modern quotes', by: 'Short catchphrases by Shuzo Matsuoka and from anime and manga, quoted briefly with credit; © their creators and publishers (shown on each quote). Switch them off above.', license: '© owners', url: 'https://en.wikipedia.org/wiki/Shuzo_Matsuoka' },
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },
     { name: 'Pitch accent', by: 'Kanjium accents.txt, pitch accent notation by Uros O.', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' }];
-  return `<h1>Settings</h1><p class="sub">Saved on this device.</p>
+  return `<h1>Profile &amp; settings</h1><p class="sub">Your progress and preferences. Everything is saved on this device.</p>
+  ${profileCard()}
   ${comfortCard()}
   <div class="label">Look and study</div>
   <div class="card">

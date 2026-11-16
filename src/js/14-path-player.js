@@ -146,6 +146,12 @@ function levelCoverage(l) {
 
 /* ---------- Path view ---------- */
 const LEVEL_NAME = { N5: 'Foundations', N4: 'Everyday Japanese', N3: 'Bridging to real Japanese', N2: 'Newspapers and work', N1: 'Fluent reading' };
+/** which skills a lesson covers, from what it actually contains */
+function unitSkills(u) {
+  if (u.exam || u.cp) return '';
+  const sk = [(u.core || (u.g || []).length) && 'Grammar', (u.items || []).length && 'Words', (u.kan || []).length && 'Kanji', (u.tk || []).length && 'Speaking'].filter(Boolean);
+  return sk.length ? `<span class="usk">${sk.map(s => `<i>${s}</i>`).join('')}</span>` : '';
+}
 function vPath() {
   const tr = S.ptab === 'anki' && !ANKI.decks.length ? 'jlpt' : S.ptab || 'jlpt', us = trackUnits(tr), cur = us.length ? nextUnit(tr) : null;
   const pl = pathSt.place;
@@ -156,7 +162,7 @@ function vPath() {
     const d = pathSt.done[u.id], ok = unitDone(u), isCur = u === cur, kn = !ok && !isCur && unitKnown(u);
     const mark = u.exam ? '試' : u.cp ? (ok ? '✓' : '★') : ok || kn ? '✓' : u.n;
     const right = isCur ? 'Start' : kn ? 'Known' : u.exam ? (bestExam(u.lvl) >= 0 ? `Best ${bestExam(u.lvl)}%` : '') : d ? (gameOn() ? starHtml(game.stars[u.id] || starsFor(d.sc)) : `${d.sc}%`) : '';
-    return `<button class="unit${ok ? ' done' : ''}${kn ? ' known' : ''}${isCur ? ' cur' : ''}${u.cp ? ' cp' : ''}${u.exam ? ' exam' : ''}" onclick="App.lesson('${u.id}')" style="--lc:${lcVar(u.lvl)}"><span class="un">${mark}</span><span class="ut"><b>${esc(u.t)}</b><span>${esc(u.s)}</span></span><span class="ugo">${right}</span></button>`;
+    return `<button class="unit${ok ? ' done' : ''}${kn ? ' known' : ''}${isCur ? ' cur' : ''}${u.cp ? ' cp' : ''}${u.exam ? ' exam' : ''}" onclick="App.lesson('${u.id}')" style="--lc:${lcVar(u.lvl)}"><span class="un">${mark}</span><span class="ut"><b>${esc(u.t)}</b><span>${esc(u.s)}</span>${unitSkills(u)}</span><span class="ugo">${right}</span></button>`;
   };
   let body;
   if (tr === 'travel') body = `<div class="ulist boxed">${us.map(row).join('')}</div>`;
@@ -169,12 +175,12 @@ function vPath() {
     const empty = !lu.length ? `<p class="note">${DATA.mode === 'full' ? 'Loading this level…' : `${l} lessons are built from the full word, kanji and grammar data, which loads once the GitHub Action has run.`}</p>` : '';
     const bar = (lab, a, b) => `<div class="cov"><span>${lab}</span><div class="pbar"><i style="width:${b ? a / b * 100 : 0}%"></i></div><b>${a} / ${b}</b></div>`;
     const stages = [...new Set(lu.filter(u => u.stage).map(u => u.stage))];
-    return `<details class="plevel" style="--lc:${lcVar(l)}"${open ? ' open' : ''} ontoggle="(S.popen=S.popen||{})['${l}']=this.open"><summary><span class="tag lv">${l}</span><b>${LEVEL_NAME[l]}</b><span class="pl-n">${c ? `${c.lessonsDone} / ${c.lessons} lessons` : ''}</span></summary>${empty}
+    return `<details class="plevel" style="--lc:${lcVar(l)}"${open ? ' open' : ''} ontoggle="(S.popen=S.popen||{})['${l}']=this.open"><summary><span class="tag lv">${l}</span><b>${LEVEL_NAME[l]}</b><span class="pl-n">${c ? `${c.lessonsDone} / ${c.lessons} lessons · ${c.lessons ? Math.round(100 * c.lessonsDone / c.lessons) : 0}%` : ''}</span></summary>${empty}
       ${c ? `<div class="pl-plan"><p>Covers every ${l} word, kanji and grammar point: ${c.lessons} lessons in ${stages.length} stage${stages.length === 1 ? '' : 's'}, a checkpoint after each stage, then a full mock exam. About ${Math.round(c.lessons * 15 / 60)} hours at 15 minutes a lesson.</p>${bar('Words', c.w, c.words)}${bar('Kanji', c.k, c.kanji)}${c.known || c.deckFirst ? `<p class="note ak-note"><b>Planned around your Anki deck.</b> ${c.known ? `${fmtN(c.known)} words you already know there count as covered and aren’t taught again${c.saved ? `, so this level is ${fmtN(c.saved)} lesson${c.saved === 1 ? '' : 's'} shorter` : ''}. ` : ''}${c.deckFirst ? `The coming lessons teach your deck’s other ${l} words first, in your deck’s order.` : ''} Lessons you’ve finished stay as they were.</p>` : ''}</div>` : ''}
       ${stages.map(s => `<div class="stage-h">Stage ${s}</div><div class="ulist">${lu.filter(u => u.stage === s).map(row).join('')}</div>`).join('')}
       ${lu.filter(u => u.exam).map(u => `<div class="ulist">${row(u)}</div>`).join('')}</details>`;
   }).join('');
-  return `<h1>Path</h1><p class="sub">Short lessons that teach one pattern, the words that go with it and their kanji, then let you read them together. Finish a level’s Path and you’re ready for that JLPT exam.</p>
+  return `<button class="ghost backbtn" onclick="App.go('learn')">‹ Learn</button><h1>Path</h1><p class="sub">Short lessons that teach one pattern, the words that go with it and their kanji, then let you read them together. Finish a level’s Path and you’re ready for that JLPT exam.</p>
   ${placeCard}
   <div class="seg ptabs"><button class="${tr === 'jlpt' ? 'on' : ''}" onclick="App.ptab('jlpt')">JLPT course</button><button class="${tr === 'travel' ? 'on' : ''}" onclick="App.ptab('travel')">Travel Japanese</button>${ANKI.decks.length ? `<button class="${tr === 'anki' ? 'on' : ''}" onclick="App.ptab('anki')">My decks</button>` : ''}</div>
   ${cur ? `<div class="card pnext" style="--lc:${lcVar(cur.lvl)}"><div class="pn-k">${unitDone(cur) ? 'Review' : 'Up next'} · ${esc(unitLabel(cur))}</div><div class="pn-t">${esc(cur.t)}</div><div class="pn-s">${esc(cur.s)}</div><button class="btn" onclick="App.lesson('${cur.id}')">${cur.exam ? 'Start the mock exam' : cur.cp ? 'Start the checkpoint' : 'Start lesson · about 15 min'}</button></div>` : ''}

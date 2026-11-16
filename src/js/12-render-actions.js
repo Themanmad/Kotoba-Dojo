@@ -10,13 +10,14 @@ function navFoot(st) {
   <div class="nf-meta"><span>🔥 ${st} day${st === 1 ? '' : 's'}</span><span>${due ? `${due} due` : 'Nothing due'}</span></div></div>`;
 }
 function render() {
-  const navOf = v => v === 'anki' ? 'settings' : v === 'dquiz' ? 'path' : ['kana', 'vocab', 'kanji', 'grammar', 'library', 'books', 'conj', 'read', 'write', 'shadow'].includes(v) ? 'library' : ['path', 'lesson', 'place'].includes(v) ? 'path' : v;
+  const navOf = v => ['path', 'lesson', 'place', 'books', 'learn'].includes(v) ? 'learn' : ['exam', 'conj', 'write', 'shadow', 'dquiz', 'practice'].includes(v) ? 'practice' : ['kana', 'vocab', 'kanji', 'grammar', 'read', 'library'].includes(v) ? 'library' : ['chat', 'play', 'explore'].includes(v) ? 'explore' : v === 'anki' ? 'settings' : v;
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === navOf(S.view) || b.dataset.v === S.view));
-  const st = streak(); $('#streak').innerHTML = (st ? `🔥 ${st}` : '') + (gameOn() ? `<span class="hxp" title="${esc(beltOf(game.xp).name)}">⭐ ${fmtN(game.xp)}</span>` : '');
+  const st = streak(); $('#streak').innerHTML = (st ? `<span class="hst">${ICON.flame}${st}</span>` : '') + (gameOn() ? `<span class="hxp" title="${esc(beltOf(game.xp).name)}">⭐ ${fmtN(game.xp)}</span>` : '');
   const nf = $('#navfoot'); if (nf) nf.innerHTML = navFoot(st);
+  const pb = $('#profbtn'); if (pb) pb.innerHTML = `<span class="pf-lv">${esc(userLevel())}</span>${ICON.user}`;
   const page = S.session ? 'session' : S.view;
   if (S.view === 'path' && DATA.mode === 'full' && !S.pathLoading && (LV.some(l => !isLoaded('vocab', l)) || LV.some(l => !isLoaded('grammar', l)))) { S.pathLoading = true; loadPathData().then(() => { S.pathLoading = false; if (S.view === 'path') render(); }); }
-  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite, shadow: vShadow })[S.view]()}</div>`;
+  $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite, shadow: vShadow, learn: vLearn, practice: vPractice, explore: vExplore })[S.view]()}</div>`;
   hydrate($('#app')); paintLevels($('#app')); comfortHydrate();
   { const nb = document.querySelector('.nav-extra[data-v="shadow"]'); if (nb) nb.hidden = !shAvailable(); }   // needs sentence recordings (full data)
   if (S.view === 'write' && !S.session) writeHydrate();
@@ -24,6 +25,7 @@ function render() {
   if (S.view === 'play' && !S.session) townMount();
 }
 const SKINS = [
+  { id: 'dojo', name: 'Dojo', desc: 'Warm ivory, charcoal and vermilion', bg: '#F7F3EC', ink: '#2A2724', accent: '#B4472F', line: '#E6DFD3', font: 'Inter', sample: '道 Aa', glow: 'none', meta: ['#F7F3EC', '#1B1A18'] },
   { id: 'washi', name: 'Station', desc: 'Platform white, line colours', bg: '#F5F7F6', ink: '#1C2127', accent: '#22408F', line: '#4DAF4A', font: 'Zen Kaku Gothic New', sample: '駅 Aa', glow: 'none', meta: ['#F5F7F6', '#0F1317'] },
   { id: 'terminal', name: 'Terminal', desc: 'Green hacker console', bg: '#010b05', ink: '#3dff7a', accent: '#39ff14', line: '#0d4020', font: 'JetBrains Mono, monospace', sample: '> 語_', glow: '0 0 8px #39ff14', meta: ['#010b05', '#010b05'] },
   { id: 'sakura', name: 'Sakura', desc: 'Soft cherry-blossom pink', bg: '#fdf6f8', ink: '#2a1d22', accent: '#d6336c', line: '#f1dde4', font: 'Noto Sans JP', sample: '桜 Aa', glow: 'none', meta: ['#fdf6f8', '#1a1216'] },
@@ -38,7 +40,7 @@ function applyTheme() {
   const sk = SKINS.find(k => k.id === settings.skin) || SKINS[0];
   const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = isDark() ? sk.meta[1] : sk.meta[0];
   const b = $('#themebtn');
-  if (b) { b.style.display = settings.skin === 'terminal' ? 'none' : ''; b.textContent = isDark() ? '☀️' : '🌙'; b.title = isDark() ? 'Switch to light mode' : 'Switch to dark mode'; }
+  if (b) { b.style.display = settings.skin === 'terminal' ? 'none' : ''; b.innerHTML = isDark() ? ICON.sun : ICON.moon; b.title = isDark() ? 'Switch to light mode' : 'Switch to dark mode'; }
 }
 if (darkQuery.addEventListener) darkQuery.addEventListener('change', () => { if (settings.theme === 'system') applyTheme(); });
 function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); applyTheme(); if (typeof applyComfort === 'function') applyComfort(); }
