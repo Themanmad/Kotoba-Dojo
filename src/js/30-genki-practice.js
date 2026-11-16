@@ -336,6 +336,7 @@ document.addEventListener('click', e => {
   const rb = e.target.closest('ruby');
   if (e.target.closest('.kcx') && rb && document.body.classList.contains('furi-tap') && !rb.classList.contains('show')) { rb.classList.add('show'); e.stopPropagation(); return; }   // tap-to-reveal furigana: first tap shows the reading
   const kc = e.target.closest('.kcx'); if (kc) { e.stopPropagation(); showWordPop(kc); return; }
+  const kw = e.target.closest('.kwx'); if (kw) { e.stopPropagation(); showKanaPop(kw); return; }
   if (document.querySelector('.kpop') && !e.target.closest('.kpop')) { closeWordPop(); e.stopPropagation(); e.preventDefault(); return; }   // first tap outside only dismisses the pop-up
   const op = e.target.closest('[data-open]'); if (op) { const inPop = !!op.closest('.kpop'); if (inPop) { e.stopPropagation(); closeWordPop(); } openSheet(op.dataset.open); return; }
   if (rb && document.body.classList.contains('furi-tap') && !e.target.closest('.choice')) { rb.classList.toggle('show'); e.stopPropagation(); }
@@ -343,6 +344,7 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', e => {
   if (e.target.matches('input, textarea')) return;
   if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('kcx')) { e.preventDefault(); showWordPop(e.target); return; }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('kwx')) { e.preventDefault(); showKanaPop(e.target); return; }
   if (e.key === 'Escape' && document.querySelector('.kpop')) { e.preventDefault(); e.stopPropagation(); closeWordPop(); return; }
   if ($('#sheet').classList.contains('open')) {
     if (e.key === 'Escape') return App.closeSheet();

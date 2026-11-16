@@ -730,7 +730,7 @@ async function showWordPop(kc) {
 window.addEventListener('resize', closeWordPop);
 document.addEventListener('scroll', closeWordPop, true);
 function hydrate(root = document) {
-  linkKanji(root); kpdHydrate(root);
+  linkKanji(root); linkKana(root); kpdHydrate(root);
   root.querySelectorAll('img[data-dpic]:not([src])').forEach(img => ankiMediaUrl(img.dataset.dpic).then(u => { if (u) img.src = u; else img.remove(); }));
   root.querySelectorAll('.strokes[data-k]:not([data-done])').forEach(el => {
     const c = el.dataset.k, k = KMAP[c] || (KANAMAP[c] && { lvl: 'KANA' }); el.dataset.done = 1;

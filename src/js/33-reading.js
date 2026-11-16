@@ -46,13 +46,81 @@ function vReadPassage(p) {
   return `<button class="ghost backbtn" onclick="App.rdOpen(null)">‹ Reading</button>
   <div class="rd-head"><span class="tag lv" style="background:${lcVar(p.lv)}">${p.lv}</span><h1 class="jp">${ruby(p.jt)}</h1><div class="muted">${esc(p.t)}</div></div>
   ${readBar()}
-  <p class="rd-tip">Tap any kanji to look up its word.</p>
+  <p class="rd-tip">Tap an underlined word to look it up.</p>
   <div class="card rd-text" style="--rd:${rdSize()}px">${readParas(p.j)}</div>
   ${p.g.length ? `<div class="rd-gl"><div class="mini">Words to know</div>${p.g.map(([w, r, m]) => `<span class="rd-gw"><b class="jp">${esc(w)}</b> <span class="jp muted">${esc(r)}</span> ${esc(m)}</span>`).join('')}</div>` : ''}
   <div class="label">Questions</div>${qHtml}
   ${done ? `<div class="card rd-done"><b>${ok} of ${p.q.length}</b> ${ok === p.q.length ? 'Every one right.' : 'Read the reasons above, then try the passage again later.'}
     ${readPairs(p)}
     <div class="btnrow">${nx ? `<button class="btn" onclick="App.rdOpen('${nx.id}')">Next passage</button>` : ''}<button class="btn line" onclick="App.rdOpen('${p.id}')">Try again</button></div></div>` : ''}`;
+}
+/* ---------- words written in kana: tap to look up ----------
+   Kanji words are found from the tapped kanji (see findWord). Kana has no such anchor, so only
+   matches that are safe without a tokenizer are linked: a whole katakana run that is a word
+   (テレビ, not the バー in バーベキュー), and hiragana words of three or more kana that start where a
+   word can start: after kanji or punctuation, after a particle, or right after another match. */
+const KANA_ZONES = '.rd-text p, .rd-pair p.jp';
+const KW_STOP = new Set(['すると', 'たった']);   // にすると is usually する + と; たった is as often 経った or 立った as "only"
+const isKata = c => /[ァ-ヺー]/.test(c || '');
+let KWIDX = null, KWIDXn = -1;
+function kanaIndex() {
+  if (KWIDX && KWIDXn === V.length) return KWIDX;
+  const m = new Map(), rank = x => { const i = LV.indexOf(x.lvl); return i < 0 ? 9 : i; };
+  for (const x of V) for (const w of [x.w, x.alt]) {
+    if (!w || KW_STOP.has(w) || !/^(?:[ぁ-ゟ]{3,}|[ァ-ヺー]{2,})$/.test(w)) continue;
+    const o = m.get(w);
+    if (!o || rank(x) < rank(o) || (rank(x) === rank(o) && (x.freq || 0) > (o.freq || 0))) m.set(w, x);
+  }
+  KWIDXn = V.length; return KWIDX = m;
+}
+/** kana words in a stretch of text as [start, end, word]; `before` is the character just ahead of it */
+function kanaHits(text, before = '') {
+  const idx = kanaIndex(), out = []; let i = 0, lastEnd = -1;
+  while (i < text.length) {
+    const c = text[i], prev = i ? text[i - 1] : before;
+    if (isKata(c)) {
+      let e = i; while (e < text.length && isKata(text[e])) e++;
+      const x = !isKata(prev) && idx.get(text.slice(i, e)); if (x) { out.push([i, e, x]); lastEnd = e; }
+      i = e; continue;
+    }
+    if (isHira(c)) {
+      let hit = null;
+      for (let e = Math.min(text.length, i + 8); e >= i + 3 && !hit; e--) { const x = idx.get(text.slice(i, e)); if (x) hit = [i, e, x]; }
+      const starts = !prev || !isHira(prev) || i === lastEnd || 'はがをにでともへ'.includes(prev) || (prev === 'て' && hit && text.slice(hit[0], hit[1]) === 'ください');
+      if (hit && starts) { out.push(hit); i = lastEnd = hit[1]; continue; }
+    }
+    i++;
+  }
+  return out;
+}
+function linkKana(root) {
+  if (!V.length) return;
+  root.querySelectorAll(KANA_ZONES).forEach(zone => {
+    if (zone.dataset.kw) return; zone.dataset.kw = 1;
+    const walker = document.createTreeWalker(zone, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement.closest('rt, rp') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    const nodes = []; let text = ''; while (walker.nextNode()) { nodes.push([walker.currentNode, text.length]); text += walker.currentNode.nodeValue; }
+    for (const [n, off] of nodes) {
+      if (n.parentElement.closest('button, a, .kcx, ruby')) continue;
+      const s = n.nodeValue, hits = kanaHits(s, text[off - 1] || ''); if (!hits.length) continue;
+      const frag = document.createDocumentFragment(); let at = 0;
+      for (const [a, b, x] of hits) {
+        if (a > at) frag.appendChild(document.createTextNode(s.slice(at, a)));
+        const sp = document.createElement('span'); sp.className = 'kwx'; sp.dataset.w = x.id; sp.tabIndex = 0; sp.setAttribute('role', 'button');
+        sp.setAttribute('aria-label', `${s.slice(a, b)}: ${String(x.m || '').split(';').slice(0, 2).join(',')}`); sp.textContent = s.slice(a, b); frag.appendChild(sp); at = b;
+      }
+      if (at < s.length) frag.appendChild(document.createTextNode(s.slice(at)));
+      n.replaceWith(frag);
+    }
+  });
+}
+function showKanaPop(el) {
+  closeWordPop();
+  const x = VMAP[el.dataset.w]; if (!x) return;
+  el.classList.add('kc-sel');
+  const pop = document.createElement('div'); pop.className = 'kpop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', 'Look up');
+  pop.innerHTML = `<button class="kp-word" data-open="${esc(x.id)}"><span class="kp-w jp">${ruby(x.f || (x.r && x.r !== x.w ? `{${x.w}|${x.r}}` : x.w), true)}</span><span class="kp-m">${esc(x.m || '')}</span><span class="kp-go">Word ›</span></button>`;
+  document.body.appendChild(pop); placePop(pop, el);
+  pop.querySelector('button').focus({ preventScroll: true });
 }
 const readApp = {
   rdLv(l) { S.rdLv = l; render(); },
