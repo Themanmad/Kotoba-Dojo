@@ -81,7 +81,7 @@ function vHome() {
     ...(() => { const t = todayStop(); return t ? [t] : []; })(),
     ...(ANKI.decks.length && ankiUnits().length ? (() => { const au = nextUnit('anki'); return [{ title: `Deck extras: ${esc(au.t)}`, sub: `${esc(unitLabel(au))} · words from ${esc(au.deck)}`, done: unitDone(au) && flagged('lesson'), go: 'Start', act: `App.lesson('${au.id}')` }]; })() : []),
     { title: `Travel: ${tu.t}`, sub: tu.s, done: !!pathSt.done[tu.id] && flagged('lesson'), go: 'Open', act: `App.lesson('${tu.id}')` },
-    { title: 'Mock exam', sub: examToday ? 'Taken today' : `${lvl} · JLPT-style, timed`, done: examToday, go: 'Sit it', act: "App.go('exam')" }
+    { title: 'Mock exam', sub: examToday ? 'Taken today' : `${lvl} · JLPT-style, timed`, done: examToday, go: 'Start', act: "App.go('exam')" }
   ];
   const nextI = Math.max(0, stops.findIndex(x => !x.done)), allDone = stops.every(x => x.done);
   let lastDone = -1; stops.forEach((x, i) => { if (x.done) lastDone = i; });
@@ -96,9 +96,11 @@ function vHome() {
     return `<div class="lnrow"><span class="tag lv jp" style="--lc:var(--accent)">${lab}</span><div class="pbar"><i style="width:${k / all.length * 100}%"></i><i class="l" style="width:${l2 / all.length * 100}%"></i></div><span>${k} / ${all.length}</span></div>`; }).join('');
   return `${DATA.mode === 'starter' ? `<div class="banner"><b>Starter set.</b> The full dictionaries haven't been built yet, so you're seeing ${V.length} built-in words. Once the GitHub Action has run, all JLPT levels load automatically.</div>` : ''}
   ${vacBanner()}<div class="home-grid"><div class="home-main">
-    <h1 class="hello">おかえり<small>${allDone ? 'Every stop done today. Nice work.' : `Today's line has ${stops.length - stops.filter(x => x.done).length} stops left.`}</small></h1>
+    <h1 class="hello">おかえり<small>${allDone ? 'Welcome back. Every stop is done today. Nice work!' : `Welcome back. Today's line has ${stops.length - stops.filter(x => x.done).length} stop${stops.length - stops.filter(x => x.done).length === 1 ? '' : 's'} left.`}</small></h1>
+    ${comfortIntro()}
     <div class="badges"><span class="badge">🔥 <b>${streak()}</b> day streak</span><span class="badge"><b>${tl.r}</b> answers today</span></div>
     ${gameCard()}
+    ${allDone ? '' : `<button class="btn home-go" onclick="${stops[nextI].act}"><i aria-hidden="true">▶</i><span><small>Continue</small><b>${stops[nextI].title}</b></span></button>`}
     <div class="route${draw ? ' draw' : ''}" style="--run:calc((100% - 44px) * ${frac})"><span class="run"></span>
       ${stops.map((x, i) => `<button class="stop ${x.done ? 'done' : i === nextI && !allDone ? 'next' : ''}" onclick="${x.act}"><span class="pin">${x.done ? '✓' : i + 1}</span><span class="sb"><span class="t"><b>${x.title}</b><span>${x.sub}</span></span>${x.done ? '' : `<span class="go">${x.go}</span>`}</span></button>`).join('')}
     </div>
@@ -283,6 +285,8 @@ function vSettings() {
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },
     { name: 'Pitch accent', by: 'Kanjium accents.txt, pitch accent notation by Uros O.', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' }];
   return `<h1>Settings</h1><p class="sub">Saved on this device.</p>
+  ${comfortCard()}
+  <div class="label">Look and study</div>
   <div class="card">
     <div class="set" style="display:block"><b>Design</b><span>Pick a template for the whole app</span>
       <div class="skins">${SKINS.map(k => `<button class="skin ${settings.skin === k.id ? 'on' : ''}" onclick="App.skin('${k.id}')">

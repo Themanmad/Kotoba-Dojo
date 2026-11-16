@@ -31,7 +31,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('kd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('kd_' + k, JSON.stringify(v)); } catch (e) {} }
 };
-let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, style: 'normal', goalMin: 15, deckVoice: true, cardFront: 'jp', newPerDay: 10, strokeNums: true, pitch: true, writeMode: 'trace', levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
+let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, style: 'normal', goalMin: 15, deckVoice: true, cardFront: 'jp', newPerDay: 10, textSize: 'm', vibrate: true, calm: false, strokeNums: true, pitch: true, writeMode: 'trace', levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
 let progress = store.get('progress', {});
 let custom = store.get('custom', []);
 let actLog = store.get('log', {});

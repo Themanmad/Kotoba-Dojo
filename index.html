@@ -1409,6 +1409,30 @@ details.opts .ob>.label:first-child{margin-top:12px}
 .sh-rate .btnrow{width:100%;max-width:360px}
 .sh-res{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.sh-res:last-child{border-bottom:0}
 .nav-extra[hidden]{display:none!important}
+/* ---------- comfort ---------- */
+html.calm *,html.calm *::before,html.calm *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html.calm .confetti{display:none!important}
+.cf-intro{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.cf-intro small{color:var(--muted);font-size:12.5px}
+.cf-intro .btn{width:auto;align-self:flex-start;margin:0}
+.cf-sizes{display:flex;gap:8px}
+.cf-size{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;min-height:76px;padding:8px 4px;border:2px solid var(--line);border-radius:14px;background:var(--card);font:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
+.cf-size.on{border-color:var(--accent);background:var(--accent-soft)}
+.cf-size .jp{line-height:1;color:var(--accent)}.cf-m{font-size:22px}.cf-l{font-size:28px}.cf-xl{font-size:34px}
+/* Home: one obvious button */
+.home-go{display:flex;align-items:center;gap:12px;text-align:left;margin:14px 0 4px;padding:14px 18px;min-height:64px}
+.home-go i{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.2);font-style:normal;font-size:16px}
+.home-go span{display:flex;flex-direction:column;min-width:0}.home-go small{font-weight:600;opacity:.85;font-size:12.5px}.home-go b{font-size:17px;overflow-wrap:anywhere}
+/* swipe on flashcards */
+.swipeable{touch-action:pan-y;position:relative;will-change:transform}
+.swl{position:absolute;top:14px;padding:5px 12px;border-radius:10px;font-weight:800;font-size:15px;color:#fff;opacity:0;pointer-events:none;z-index:2}
+.swl.good{left:14px;background:var(--ok)}.swl.again{right:14px;background:var(--bad,#d64545)}
+.sw-r .swl.good,.sw-l .swl.again{opacity:var(--sw,0)}
+.sw-tip{text-align:center;margin-top:10px}
+/* roomier touch targets on phones */
+@media (pointer:coarse){.rate{min-height:58px}.chip{min-height:40px}.seg button{min-height:42px}}
+.grev{flex-wrap:wrap;max-width:100%}
+@media (max-width:520px){html.ts-big .brand small{display:none}html.ts-big .brand{white-space:nowrap}}
 </style>
 </head>
 <body>
@@ -1760,7 +1784,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('kd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('kd_' + k, JSON.stringify(v)); } catch (e) {} }
 };
-let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, style: 'normal', goalMin: 15, deckVoice: true, cardFront: 'jp', newPerDay: 10, strokeNums: true, pitch: true, writeMode: 'trace', levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
+let settings = Object.assign({ skin: 'washi', theme: 'system', furigana: 'on', romaji: false, autoSpeak: false, playOnCorrect: true, pics: true, picStyle: '3d', modernQuotes: true, style: 'normal', goalMin: 15, deckVoice: true, cardFront: 'jp', newPerDay: 10, textSize: 'm', vibrate: true, calm: false, strokeNums: true, pitch: true, writeMode: 'trace', levels: ['N5'], glevels: ['N5'], kanaScript: 'h', kanaGroups: ['basic'] }, store.get('settings', {}));
 let progress = store.get('progress', {});
 let custom = store.get('custom', []);
 let actLog = store.get('log', {});
@@ -2161,7 +2185,7 @@ function vHome() {
     ...(() => { const t = todayStop(); return t ? [t] : []; })(),
     ...(ANKI.decks.length && ankiUnits().length ? (() => { const au = nextUnit('anki'); return [{ title: `Deck extras: ${esc(au.t)}`, sub: `${esc(unitLabel(au))} · words from ${esc(au.deck)}`, done: unitDone(au) && flagged('lesson'), go: 'Start', act: `App.lesson('${au.id}')` }]; })() : []),
     { title: `Travel: ${tu.t}`, sub: tu.s, done: !!pathSt.done[tu.id] && flagged('lesson'), go: 'Open', act: `App.lesson('${tu.id}')` },
-    { title: 'Mock exam', sub: examToday ? 'Taken today' : `${lvl} · JLPT-style, timed`, done: examToday, go: 'Sit it', act: "App.go('exam')" }
+    { title: 'Mock exam', sub: examToday ? 'Taken today' : `${lvl} · JLPT-style, timed`, done: examToday, go: 'Start', act: "App.go('exam')" }
   ];
   const nextI = Math.max(0, stops.findIndex(x => !x.done)), allDone = stops.every(x => x.done);
   let lastDone = -1; stops.forEach((x, i) => { if (x.done) lastDone = i; });
@@ -2176,9 +2200,11 @@ function vHome() {
     return `<div class="lnrow"><span class="tag lv jp" style="--lc:var(--accent)">${lab}</span><div class="pbar"><i style="width:${k / all.length * 100}%"></i><i class="l" style="width:${l2 / all.length * 100}%"></i></div><span>${k} / ${all.length}</span></div>`; }).join('');
   return `${DATA.mode === 'starter' ? `<div class="banner"><b>Starter set.</b> The full dictionaries haven't been built yet, so you're seeing ${V.length} built-in words. Once the GitHub Action has run, all JLPT levels load automatically.</div>` : ''}
   ${vacBanner()}<div class="home-grid"><div class="home-main">
-    <h1 class="hello">おかえり<small>${allDone ? 'Every stop done today. Nice work.' : `Today's line has ${stops.length - stops.filter(x => x.done).length} stops left.`}</small></h1>
+    <h1 class="hello">おかえり<small>${allDone ? 'Welcome back. Every stop is done today. Nice work!' : `Welcome back. Today's line has ${stops.length - stops.filter(x => x.done).length} stop${stops.length - stops.filter(x => x.done).length === 1 ? '' : 's'} left.`}</small></h1>
+    ${comfortIntro()}
     <div class="badges"><span class="badge">🔥 <b>${streak()}</b> day streak</span><span class="badge"><b>${tl.r}</b> answers today</span></div>
     ${gameCard()}
+    ${allDone ? '' : `<button class="btn home-go" onclick="${stops[nextI].act}"><i aria-hidden="true">▶</i><span><small>Continue</small><b>${stops[nextI].title}</b></span></button>`}
     <div class="route${draw ? ' draw' : ''}" style="--run:calc((100% - 44px) * ${frac})"><span class="run"></span>
       ${stops.map((x, i) => `<button class="stop ${x.done ? 'done' : i === nextI && !allDone ? 'next' : ''}" onclick="${x.act}"><span class="pin">${x.done ? '✓' : i + 1}</span><span class="sb"><span class="t"><b>${x.title}</b><span>${x.sub}</span></span>${x.done ? '' : `<span class="go">${x.go}</span>`}</span></button>`).join('')}
     </div>
@@ -2363,6 +2389,8 @@ function vSettings() {
     { name: 'JLPT vocabulary lists', by: 'Jonathan Waller (tanos.co.uk)', license: 'CC BY', url: 'https://www.tanos.co.uk/jlpt/' },
     { name: 'Pitch accent', by: 'Kanjium accents.txt, pitch accent notation by Uros O.', license: 'CC BY-SA 4.0', url: 'https://github.com/mifunetoshiro/kanjium' }];
   return `<h1>Settings</h1><p class="sub">Saved on this device.</p>
+  ${comfortCard()}
+  <div class="label">Look and study</div>
   <div class="card">
     <div class="set" style="display:block"><b>Design</b><span>Pick a template for the whole app</span>
       <div class="skins">${SKINS.map(k => `<button class="skin ${settings.skin === k.id ? 'on' : ''}" onclick="App.skin('${k.id}')">
@@ -2930,6 +2958,7 @@ function answer(i) {
   const s = S.session; if (!s || s.mode === 'cards' || s.mode === 'exam' || s.answered || s.done || !s.q.opts[i]) return;
   s.answered = true; s.chosen = i; const ok = s.q.opts[i].ok;
   if (s.q.dir === 'hear' || s.q.dir === 'dict') skillTick('listen', 8);
+  buzz(ok);
   { const id = s.q.item.id; s.undo = { prev: progress[id] ? { ...progress[id] } : null, game: { ...game }, streak: s.streak, seen: s.seen, correct: s.correct, hadFirst: !!(s.first && s.first.has(id)), firstVal: s.first && s.first.get(id), retries: s.retries ? s.retries.get(id) || 0 : 0, deckLen: s.deck ? s.deck.length : 0, resLen: s.results ? s.results.length : 0 }; }
   rec(s.q.item, ok);
   // a correct answer plays the native recording of the word (tests & quizzes; not the mock exam)
@@ -2967,6 +2996,7 @@ function flip() { const s = S.session; if (!s || s.mode !== 'cards' || s.flipped
 function rate(g) {
   const s = S.session; if (!s || s.mode !== 'cards' || !s.flipped) return;
   const item = s.queue[s.idx], day = today();
+  buzz(g > 0); store.set('swipeTip', store.get('swipeTip', 0) + 1);
   // remember everything this rating changes, so "Back" can undo it exactly
   const h = { idx: s.idx, id: item.id, g, day, prev: progress[item.id] ? { ...progress[item.id] } : null, log: actLog[day] ? { ...actLog[day] } : null, inserted: -1 };
   schedule(item, g); s.counts[g]++;
@@ -3013,7 +3043,7 @@ function renderCards() {
     <button class="rate" onclick="App.rate(1)">Hard<small>${lab(1)}</small></button>
     <button class="rate good" onclick="App.rate(2)">Good<small>${lab(2)}</small></button>
     <button class="rate easy" onclick="App.rate(3)">Easy<small>${lab(3)}</small></button>
-  </div><p class="note kbd" style="text-align:center">Keys: space to flip · 1–4 to rate · ← back</p>`;
+  </div>${swipeTip()}<p class="note kbd" style="text-align:center">Keys: space to flip · 1–4 to rate · ← back</p>`;
 }
 function renderSession() {
   const s = S.session;
@@ -3897,7 +3927,7 @@ function render() {
   const page = S.session ? 'session' : S.view;
   if (S.view === 'path' && DATA.mode === 'full' && !S.pathLoading && (LV.some(l => !isLoaded('vocab', l)) || LV.some(l => !isLoaded('grammar', l)))) { S.pathLoading = true; loadPathData().then(() => { S.pathLoading = false; if (S.view === 'path') render(); }); }
   $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite, shadow: vShadow })[S.view]()}</div>`;
-  hydrate($('#app')); paintLevels($('#app'));
+  hydrate($('#app')); paintLevels($('#app')); comfortHydrate();
   { const nb = document.querySelector('.nav-extra[data-v="shadow"]'); if (nb) nb.hidden = !shAvailable(); }   // needs sentence recordings (full data)
   if (S.view === 'write' && !S.session) writeHydrate();
   if (S.fromPlay && S.view !== 'play' && !S.session) $('#app').insertAdjacentHTML('afterbegin', `<button class="backtown" onclick="S.fromPlay=false;App.go('play')">🏯 Back to town</button>`);
@@ -3921,7 +3951,7 @@ function applyTheme() {
   if (b) { b.style.display = settings.skin === 'terminal' ? 'none' : ''; b.textContent = isDark() ? '☀️' : '🌙'; b.title = isDark() ? 'Switch to light mode' : 'Switch to dark mode'; }
 }
 if (darkQuery.addEventListener) darkQuery.addEventListener('change', () => { if (settings.theme === 'system') applyTheme(); });
-function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); applyTheme(); }
+function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); applyTheme(); if (typeof applyComfort === 'function') applyComfort(); }
 const saveSettings = () => store.set('settings', settings);
 /* ---------- detail panel with history ----------
    Opening a word / kanji / grammar point from inside the panel stacks it, so
@@ -8334,7 +8364,7 @@ const booksApp = {
   cjEnd() { S.cj = null; render(); }
 };
 function cjLog(q, ok) {
-  skillTick('conj', 10);
+  skillTick('conj', 10); buzz(ok);
   const C = S.cj; if (ok) C.right++;
   C.log.push({ x: q.x, f: q.form, ok, w: q.x.w + (q.x.vc === 'vs' ? 'する' : ''), a: q.res.w });
   const st = cjStats(), v = st[q.form] || [0, 0]; v[0] += ok ? 1 : 0; v[1]++; st[q.form] = v; store.set('conj', st);
@@ -8483,7 +8513,7 @@ const gkpApp = {
   },
   gkpAns(i) {
     const G = S.gk, q = G && G.qs[G.i]; if (!q || q.ans != null) return;
-    q.ans = i; const ok = !!q.opts[i].ok; if (ok) G.right++;
+    q.ans = i; const ok = !!q.opts[i].ok; if (ok) G.right++; buzz(ok);
     if (q.k === 'f') { const st = cjStats(), v = st[q.form] || [0, 0]; v[0] += ok ? 1 : 0; v[1]++; st[q.form] = v; store.set('conj', st); }
     if (q.k === 'w' && q.x.id) gradeQuiet(q.x, ok);
     logAct(false, q.k === 'w' ? 'vocab' : 'grammar');
@@ -8822,7 +8852,7 @@ const readApp = {
   rdAns(qi, oi) {
     const p = readOf(S.rd); if (!p) return; const ans = S.rdAns = S.rdAns || [];
     if (ans[qi] != null) return;
-    ans[qi] = oi; logAct(false, 'grammar');
+    ans[qi] = oi; logAct(false, 'grammar'); buzz(oi === p.q[qi][3]);
     if (p.q.every((q, i) => ans[i] != null)) {
       const ok = p.q.filter((q, i) => ans[i] === q[3]).length, st = readStats(), o = st[p.id] || { best: 0, n: 0 };
       o.best = Math.max(o.best, ok); o.last = ok; o.n++; st[p.id] = o; store.set('reading', st); skillTick('read', 1);
@@ -8979,7 +9009,7 @@ function writeStroke(pts) {
     W.done++; W.strokeMiss = 0; W.flash = -1; W.msg = '';
     if (W.done >= W.pts.length) writeFinish();
   } else {
-    W.miss++; W.strokeMiss++;
+    W.miss++; W.strokeMiss++; buzz(false);
     W.msg = W.strokeMiss >= WRITE_HINT_AFTER ? 'Here’s that stroke: follow it from the start.' : 'Not quite: check where it starts, which way it goes, and the stroke order.';
     if (W.strokeMiss >= WRITE_HINT_AFTER) { W.flash = W.done; W.hints++; }
   }
@@ -9234,6 +9264,73 @@ const todayApp = {
   }
 };
 Object.assign(App, todayApp);
+/* =====================================================================
+   COMFORT: things that make the app easier to use at any age.
+   - Text size: the whole app scales (Normal / Large / Extra large).
+   - Vibration: a short buzz for right, a double buzz for wrong (phones only).
+   - Calm screen: switches off animations.
+   - Swipe on flashcards: right for Good, left for Again; swipe the front to turn it over.
+   ===================================================================== */
+const TEXT_SIZES = [['m', 'Normal', 1], ['l', 'Large', 1.12], ['xl', 'Extra large', 1.25]];
+/** safe to call during start-up, before this file has run (function declarations are hoisted, constants are not) */
+function applyComfort() {
+  const z = { l: 1.12, xl: 1.25 }[settings.textSize] || 1, el = document.documentElement;
+  el.style.zoom = z === 1 ? '' : String(z);
+  el.classList.toggle('calm', !!settings.calm);
+  el.classList.toggle('ts-big', z > 1);
+}
+/** a short buzz on phones that support it; silent everywhere else */
+function buzz(ok) {
+  if (!settings.vibrate || typeof navigator === 'undefined' || !navigator.vibrate) return;
+  try { navigator.vibrate(ok ? 18 : [28, 50, 28]); } catch (e) {}
+}
+function comfortCard() {
+  return `<div class="label">Comfort</div>
+  <div class="card">
+    <div class="set" style="display:block"><b>Text size</b><span>Makes everything bigger: words, buttons and menus</span>
+      <div style="margin-top:10px">${seg(TEXT_SIZES.map(t => [t[0], t[1]]), settings.textSize || 'm', 'App.textSize')}</div></div>
+    <div class="set"><div><b>Vibration</b><span>A short buzz when you answer, on phones that support it</span></div><label class="sw"><input type="checkbox" ${settings.vibrate ? 'checked' : ''} onchange="App.set('vibrate',this.checked)"><span></span></label></div>
+    <div class="set"><div><b>Calm screen</b><span>No animations or moving effects</span></div><label class="sw"><input type="checkbox" ${settings.calm ? 'checked' : ''} onchange="App.set('calm',this.checked)"><span></span></label></div>
+  </div>`;
+}
+/** shown on Home until dismissed, so nobody has to hunt through Settings to read comfortably */
+function comfortIntro() {
+  if (settings.comfortSeen) return '';
+  return `<div class="card cf-intro"><b>Is the text easy to read?</b>
+    <div class="cf-sizes">${TEXT_SIZES.map(t => `<button class="cf-size ${(settings.textSize || 'm') === t[0] ? 'on' : ''}" onclick="App.textSize('${t[0]}')" aria-pressed="${(settings.textSize || 'm') === t[0]}"><span class="jp cf-${t[0]}">あ</span>${t[1]}</button>`).join('')}</div>
+    <button class="btn sec sm" onclick="App.set('comfortSeen',true)">Looks good</button><small>You can change this any time in Settings.</small></div>`;
+}
+/* ---------- swipe on flashcards (touch and pen) ---------- */
+const SWIPE_MIN = 80;
+function comfortHydrate() {
+  const s = S.session; if (!s || s.mode !== 'cards' || s.done) return;
+  const card = document.querySelector('#app .card'); if (!card || card.dataset.swipe) return;
+  card.dataset.swipe = '1'; card.classList.add('swipeable');
+  if (s.flipped) card.insertAdjacentHTML('beforeend', '<span class="swl good" aria-hidden="true">Good</span><span class="swl again" aria-hidden="true">Again</span>');
+  let st = null;
+  const reset = () => { card.style.transition = 'transform .18s'; card.style.transform = ''; card.classList.remove('sw-r', 'sw-l'); card.style.removeProperty('--sw'); st = null; };
+  card.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; st = { x: e.clientX, y: e.clientY, h: null }; card.style.transition = ''; });
+  card.addEventListener('pointermove', e => {
+    if (!st) return; const dx = e.clientX - st.x, dy = e.clientY - st.y;
+    if (st.h == null) { if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return; st.h = Math.abs(dx) > Math.abs(dy) * 1.4; if (!st.h) { st = null; return; } }
+    st.dx = dx; card.style.transform = `translateX(${dx}px) rotate(${(dx / 45).toFixed(2)}deg)`;
+    card.classList.toggle('sw-r', dx > 0); card.classList.toggle('sw-l', dx < 0); card.style.setProperty('--sw', Math.min(1, Math.abs(dx) / SWIPE_MIN).toFixed(2));
+  });
+  const end = () => {
+    if (!st) return; const dx = st.dx || 0, was = st.h; if (!was || Math.abs(dx) < SWIPE_MIN) return reset();
+    st = null;
+    // the click that follows a swipe mustn't also press what was under the finger
+    const stop = ev => { ev.stopPropagation(); ev.preventDefault(); }; window.addEventListener('click', stop, { capture: true, once: true }); setTimeout(() => window.removeEventListener('click', stop, true), 350);
+    if (!S.session.flipped) App.flip(); else App.rate(dx > 0 ? 2 : 0);
+  };
+  card.addEventListener('pointerup', end); card.addEventListener('pointercancel', reset);
+}
+const swipeTip = () => { const n = store.get('swipeTip', 0); if (n >= 6 || !('ontouchstart' in window)) return ''; return '<p class="hint sw-tip">Tip: swipe the card right for Good, left for Again.</p>'; };
+const comfortApp = {
+  textSize(t) { settings.textSize = t; saveSettings(); applyComfort(); render(); }
+};
+Object.assign(App, comfortApp);
+applyComfort();
 </script>
 </body>
 </html>

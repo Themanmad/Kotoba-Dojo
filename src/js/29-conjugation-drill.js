@@ -171,7 +171,7 @@ const booksApp = {
   cjEnd() { S.cj = null; render(); }
 };
 function cjLog(q, ok) {
-  skillTick('conj', 10);
+  skillTick('conj', 10); buzz(ok);
   const C = S.cj; if (ok) C.right++;
   C.log.push({ x: q.x, f: q.form, ok, w: q.x.w + (q.x.vc === 'vs' ? 'する' : ''), a: q.res.w });
   const st = cjStats(), v = st[q.form] || [0, 0]; v[0] += ok ? 1 : 0; v[1]++; st[q.form] = v; store.set('conj', st);

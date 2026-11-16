@@ -44,7 +44,7 @@ const readApp = {
   rdAns(qi, oi) {
     const p = readOf(S.rd); if (!p) return; const ans = S.rdAns = S.rdAns || [];
     if (ans[qi] != null) return;
-    ans[qi] = oi; logAct(false, 'grammar');
+    ans[qi] = oi; logAct(false, 'grammar'); buzz(oi === p.q[qi][3]);
     if (p.q.every((q, i) => ans[i] != null)) {
       const ok = p.q.filter((q, i) => ans[i] === q[3]).length, st = readStats(), o = st[p.id] || { best: 0, n: 0 };
       o.best = Math.max(o.best, ok); o.last = ok; o.n++; st[p.id] = o; store.set('reading', st); skillTick('read', 1);

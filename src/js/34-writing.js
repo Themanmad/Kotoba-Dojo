@@ -128,7 +128,7 @@ function writeStroke(pts) {
     W.done++; W.strokeMiss = 0; W.flash = -1; W.msg = '';
     if (W.done >= W.pts.length) writeFinish();
   } else {
-    W.miss++; W.strokeMiss++;
+    W.miss++; W.strokeMiss++; buzz(false);
     W.msg = W.strokeMiss >= WRITE_HINT_AFTER ? 'Here’s that stroke: follow it from the start.' : 'Not quite: check where it starts, which way it goes, and the stroke order.';
     if (W.strokeMiss >= WRITE_HINT_AFTER) { W.flash = W.done; W.hints++; }
   }

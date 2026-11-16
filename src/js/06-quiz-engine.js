@@ -124,6 +124,7 @@ function answer(i) {
   const s = S.session; if (!s || s.mode === 'cards' || s.mode === 'exam' || s.answered || s.done || !s.q.opts[i]) return;
   s.answered = true; s.chosen = i; const ok = s.q.opts[i].ok;
   if (s.q.dir === 'hear' || s.q.dir === 'dict') skillTick('listen', 8);
+  buzz(ok);
   { const id = s.q.item.id; s.undo = { prev: progress[id] ? { ...progress[id] } : null, game: { ...game }, streak: s.streak, seen: s.seen, correct: s.correct, hadFirst: !!(s.first && s.first.has(id)), firstVal: s.first && s.first.get(id), retries: s.retries ? s.retries.get(id) || 0 : 0, deckLen: s.deck ? s.deck.length : 0, resLen: s.results ? s.results.length : 0 }; }
   rec(s.q.item, ok);
   // a correct answer plays the native recording of the word (tests & quizzes; not the mock exam)
@@ -161,6 +162,7 @@ function flip() { const s = S.session; if (!s || s.mode !== 'cards' || s.flipped
 function rate(g) {
   const s = S.session; if (!s || s.mode !== 'cards' || !s.flipped) return;
   const item = s.queue[s.idx], day = today();
+  buzz(g > 0); store.set('swipeTip', store.get('swipeTip', 0) + 1);
   // remember everything this rating changes, so "Back" can undo it exactly
   const h = { idx: s.idx, id: item.id, g, day, prev: progress[item.id] ? { ...progress[item.id] } : null, log: actLog[day] ? { ...actLog[day] } : null, inserted: -1 };
   schedule(item, g); s.counts[g]++;
@@ -207,7 +209,7 @@ function renderCards() {
     <button class="rate" onclick="App.rate(1)">Hard<small>${lab(1)}</small></button>
     <button class="rate good" onclick="App.rate(2)">Good<small>${lab(2)}</small></button>
     <button class="rate easy" onclick="App.rate(3)">Easy<small>${lab(3)}</small></button>
-  </div><p class="note kbd" style="text-align:center">Keys: space to flip · 1–4 to rate · ← back</p>`;
+  </div>${swipeTip()}<p class="note kbd" style="text-align:center">Keys: space to flip · 1–4 to rate · ← back</p>`;
 }
 function renderSession() {
   const s = S.session;

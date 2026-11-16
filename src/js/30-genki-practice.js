@@ -136,7 +136,7 @@ const gkpApp = {
   },
   gkpAns(i) {
     const G = S.gk, q = G && G.qs[G.i]; if (!q || q.ans != null) return;
-    q.ans = i; const ok = !!q.opts[i].ok; if (ok) G.right++;
+    q.ans = i; const ok = !!q.opts[i].ok; if (ok) G.right++; buzz(ok);
     if (q.k === 'f') { const st = cjStats(), v = st[q.form] || [0, 0]; v[0] += ok ? 1 : 0; v[1]++; st[q.form] = v; store.set('conj', st); }
     if (q.k === 'w' && q.x.id) gradeQuiet(q.x, ok);
     logAct(false, q.k === 'w' ? 'vocab' : 'grammar');

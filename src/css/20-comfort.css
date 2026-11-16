@@ -1,0 +1,24 @@
+/* ---------- comfort ---------- */
+html.calm *,html.calm *::before,html.calm *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html.calm .confetti{display:none!important}
+.cf-intro{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.cf-intro small{color:var(--muted);font-size:12.5px}
+.cf-intro .btn{width:auto;align-self:flex-start;margin:0}
+.cf-sizes{display:flex;gap:8px}
+.cf-size{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;min-height:76px;padding:8px 4px;border:2px solid var(--line);border-radius:14px;background:var(--card);font:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
+.cf-size.on{border-color:var(--accent);background:var(--accent-soft)}
+.cf-size .jp{line-height:1;color:var(--accent)}.cf-m{font-size:22px}.cf-l{font-size:28px}.cf-xl{font-size:34px}
+/* Home: one obvious button */
+.home-go{display:flex;align-items:center;gap:12px;text-align:left;margin:14px 0 4px;padding:14px 18px;min-height:64px}
+.home-go i{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.2);font-style:normal;font-size:16px}
+.home-go span{display:flex;flex-direction:column;min-width:0}.home-go small{font-weight:600;opacity:.85;font-size:12.5px}.home-go b{font-size:17px;overflow-wrap:anywhere}
+/* swipe on flashcards */
+.swipeable{touch-action:pan-y;position:relative;will-change:transform}
+.swl{position:absolute;top:14px;padding:5px 12px;border-radius:10px;font-weight:800;font-size:15px;color:#fff;opacity:0;pointer-events:none;z-index:2}
+.swl.good{left:14px;background:var(--ok)}.swl.again{right:14px;background:var(--bad,#d64545)}
+.sw-r .swl.good,.sw-l .swl.again{opacity:var(--sw,0)}
+.sw-tip{text-align:center;margin-top:10px}
+/* roomier touch targets on phones */
+@media (pointer:coarse){.rate{min-height:58px}.chip{min-height:40px}.seg button{min-height:42px}}
+.grev{flex-wrap:wrap;max-width:100%}
+@media (max-width:520px){html.ts-big .brand small{display:none}html.ts-big .brand{white-space:nowrap}}

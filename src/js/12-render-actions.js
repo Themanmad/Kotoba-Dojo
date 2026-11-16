@@ -17,7 +17,7 @@ function render() {
   const page = S.session ? 'session' : S.view;
   if (S.view === 'path' && DATA.mode === 'full' && !S.pathLoading && (LV.some(l => !isLoaded('vocab', l)) || LV.some(l => !isLoaded('grammar', l)))) { S.pathLoading = true; loadPathData().then(() => { S.pathLoading = false; if (S.view === 'path') render(); }); }
   $('#app').innerHTML = `<div class="page page-${page}">${S.session ? renderSession() : ({ home: vHome, path: vPath, lesson: vLesson, place: vPlace, library: vLibrary, kana: vKana, vocab: vVocab, kanji: vKanji, grammar: vGrammar, anki: vAnki, dquiz: vDquiz, chat: vChat, play: vPlay, exam: vExam, search: vSearch, settings: vSettings, books: vBooks, conj: vConj, read: vRead, write: vWrite, shadow: vShadow })[S.view]()}</div>`;
-  hydrate($('#app')); paintLevels($('#app'));
+  hydrate($('#app')); paintLevels($('#app')); comfortHydrate();
   { const nb = document.querySelector('.nav-extra[data-v="shadow"]'); if (nb) nb.hidden = !shAvailable(); }   // needs sentence recordings (full data)
   if (S.view === 'write' && !S.session) writeHydrate();
   if (S.fromPlay && S.view !== 'play' && !S.session) $('#app').insertAdjacentHTML('afterbegin', `<button class="backtown" onclick="S.fromPlay=false;App.go('play')">🏯 Back to town</button>`);
@@ -41,7 +41,7 @@ function applyTheme() {
   if (b) { b.style.display = settings.skin === 'terminal' ? 'none' : ''; b.textContent = isDark() ? '☀️' : '🌙'; b.title = isDark() ? 'Switch to light mode' : 'Switch to dark mode'; }
 }
 if (darkQuery.addEventListener) darkQuery.addEventListener('change', () => { if (settings.theme === 'system') applyTheme(); });
-function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); applyTheme(); }
+function applySettings() { document.body.classList.toggle('furi-tap', settings.furigana === 'tap'); applyTheme(); if (typeof applyComfort === 'function') applyComfort(); }
 const saveSettings = () => store.set('settings', settings);
 /* ---------- detail panel with history ----------
    Opening a word / kanji / grammar point from inside the panel stacks it, so
