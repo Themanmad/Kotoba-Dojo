@@ -26,11 +26,11 @@ function starterData() {
   const vocab = Object.fromEntries(LV.map(l => [l, []])), kanji = Object.fromEntries(LV.map(l => [l, []]));
   for (const a of STARTER_VOCAB) {
     const l = LV.includes(a[4]) ? a[4] : 'N5';
-    vocab[l].push({ i: null, pic: STARTER_PICS.v[plain(a[0])] || null, w: plain(a[0]), r: a[1], f: a[0], m: a[2], s: [{ p: [], g: a[2].split('; ') }], g: posMap[a[3]] || 'other', q: a[5], ex: a[7] ? [{ j: a[7], e: a[8], t: null }] : [] });
+    vocab[l].push({ i: null, w: plain(a[0]), r: a[1], f: a[0], m: a[2], s: [{ p: [], g: a[2].split('; ') }], g: posMap[a[3]] || 'other', q: a[5], ex: a[7] ? [{ j: a[7], e: a[8], t: null }] : [] });
   }
   for (const a of STARTER_KANJI) {
     const l = LV.includes(a[4]) ? a[4] : 'N5';
-    kanji[l].push({ k: a[0], pic: STARTER_PICS.k[a[0]] || null, m: a[1].split('; '), on: a[2].split('、'), kun: a[3] ? a[3].split('、') : [], s: a[6], r: a[5], q: kq(a[5]),
+    kanji[l].push({ k: a[0], m: a[1].split('; '), on: a[2].split('、'), kun: a[3] ? a[3].split('、') : [], s: a[6], r: a[5], q: kq(a[5]),
       ex: (a[7] || '').split(';').filter(Boolean).map(e => { const [w, r, m] = e.split('|'); return { w, r, m, l: '' }; }) });
   }
   return { vocab, kanji };
@@ -39,7 +39,7 @@ async function boot() {
   try {
     const r = await fetch('data/meta.json', { cache: 'no-cache' });
     if (!r.ok) throw new Error(r.status);
-    DATA.meta = await r.json(); DATA.mode = 'full'; PIC3D = new Set(DATA.meta.pics3d || []);
+    DATA.meta = await r.json(); DATA.mode = 'full';
     await Promise.all([...LV.map(l => load('kanji', l).catch(() => [])),
       fetch('data/parts.json').then(r => r.ok ? r.json() : null).then(j => { if (j) PARTS = Object.assign({}, STARTER_KSTRUCT.parts, j); }).catch(() => {})]);
   } catch (e) {

@@ -214,7 +214,6 @@ const App = {
   },
   styleSet(v) { App.set('style', v); if (v === 'game') { checkBadges(); toast('Game mode on: earn XP and belts as you learn'); } },
   goalSet(v) { App.set('goalMin', +v); },
-  picStyle(v) { settings.picStyle = v; App.set('picStyle', v); },
   quoteNext() { S.quoteOff = ((S.quoteOff || 0) + 1) % quotePool().length; const el = document.querySelector('.quote'); if (el) { el.outerHTML = quoteCard().replace(/^[\s\S]*?<figure/, '<figure'); const q = document.querySelector('.quote'); if (q) hydrate(q.parentElement); } },
   wotdAdd() {
     const w = wordOfDay(); if (!w || progress[w.x.id]) return;

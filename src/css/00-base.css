@@ -284,7 +284,6 @@ code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:13px}
 .kpic{margin-bottom:4px}
 .ppic{display:flex;justify-content:center;margin-bottom:6px}
 .pic.icon{padding:.12em;box-sizing:border-box;background:linear-gradient(150deg,#F2F5FD,#D3DCF4);border-radius:24%;box-shadow:inset 0 -.04em 0 rgba(34,64,143,.18),0 .03em .08em rgba(20,30,60,.18)}
-img.pic.p3d{filter:drop-shadow(0 .03em .05em rgba(0,0,0,.18))}
 .kcx{cursor:pointer;border-radius:4px;text-decoration:underline dotted color-mix(in srgb,var(--accent) 45%,transparent);text-underline-offset:.22em;text-decoration-thickness:1.5px;transition:background-color .12s,color .12s}
 .kcx:hover,.kcx:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
 .kcx:active{background:var(--accent);color:#fff}
@@ -627,8 +626,8 @@ body > main .ulist:not(.plevel .ulist){border:1px solid var(--line);border-radiu
 .pic-credit{font-size:11px;color:var(--muted);text-align:center;margin-top:2px}
 .kpic .pic-credit{display:block;text-align:left}
 /* dark mode: pictures sit on a light tile so their black outlines and ink-coloured icons stay visible */
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) img.pic:not(.p3d):not(.icon){background:#EDF0F5;border-radius:22%;padding:.1em;box-sizing:border-box} }
-:root[data-theme="dark"] img.pic:not(.p3d):not(.icon){background:#EDF0F5;border-radius:22%;padding:.1em;box-sizing:border-box}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) img.pic:not(.icon){background:#EDF0F5;border-radius:22%;padding:.1em;box-sizing:border-box} }
+:root[data-theme="dark"] img.pic:not(.icon){background:#EDF0F5;border-radius:22%;padding:.1em;box-sizing:border-box}
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) img.pic:is(.xs,.sm){padding:1px;border-radius:6px} }
 :root[data-theme="dark"] img.pic:is(.xs,.sm){padding:1px;border-radius:6px}
 .page-home .pic-credit{display:none}

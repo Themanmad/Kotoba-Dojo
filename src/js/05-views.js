@@ -4,21 +4,18 @@
 /* pictures: OpenMoji SVGs (hex ids), Tabler Icons ("t.name") and game-icons.net ("g.artist.name") once built;
    the device's emoji before that (or if an OpenMoji file is missing) */
 const picChar = hex => String(hex || '').split('-').map(h => String.fromCodePoint(parseInt(h, 16))).join('');
-let PIC3D = new Set();
 const isHexPic = id => /^[0-9A-F]{2,}(-[0-9A-F]+)*$/i.test(String(id || ''));
 const hanOf = w => [...new Set(String(w).match(/\p{Script=Han}/gu) || [])];
 function picHtml(hex, cls = '') {
   if (!hex || !settings.pics) return '';
   const kind = isHexPic(hex) ? 'emoji' : 'icon';
   if (DATA.mode === 'full') {
-    const p3 = kind === 'emoji' && settings.picStyle !== 'flat' && PIC3D.has(hex);
-    return `<img class="pic ${kind}${p3 ? ' p3d' : ''} ${cls}" src="data/img/${esc(hex)}.${p3 ? 'png' : 'svg'}" alt="" loading="lazy" decoding="async" data-hex="${esc(hex)}" onerror="picFail(this)">`;
+    return `<img class="pic ${kind} ${cls}" src="data/img/${esc(hex)}.svg" alt="""" loading="lazy" decoding="async" data-hex="${esc(hex)}" onerror="picFail(this)">`;
   }
   return isHexPic(hex) ? `<span class="pic emo ${cls}" aria-hidden="true">${picChar(hex)}</span>` : '';
 }
 function picFail(img) {
   if (!isHexPic(img.dataset.hex)) { img.remove(); return; }
-  if (/\.png$/.test(img.getAttribute('src'))) { img.classList.remove('p3d'); img.src = `data/img/${img.dataset.hex}.svg`; return; }   // no 3D file: flat picture
   const sp = document.createElement('span'); sp.className = img.className.replace(/\b(emoji|icon)\b/g, '') + ' emo'; sp.setAttribute('aria-hidden', 'true'); sp.textContent = picChar(img.dataset.hex); img.replaceWith(sp);
 }
 /* credit line for icons whose licence asks for the artist's name */
