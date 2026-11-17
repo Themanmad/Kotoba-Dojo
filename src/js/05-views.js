@@ -1,8 +1,8 @@
 /* =====================================================================
    VIEWS
    ===================================================================== */
-/* pictures: OpenMoji SVGs (hex ids), Tabler Icons ("t.name") and game-icons.net ("g.artist.name") once built;
-   the device's emoji before that (or if an OpenMoji file is missing) */
+/* built-in pictures: OpenMoji SVGs (hex ids), only where the picture shows the word itself (see build-data.mjs);
+   the device's emoji if an OpenMoji file is missing. A picture from the learner's Anki deck always wins. */
 const picChar = hex => String(hex || '').split('-').map(h => String.fromCodePoint(parseInt(h, 16))).join('');
 const isHexPic = id => /^[0-9A-F]{2,}(-[0-9A-F]+)*$/i.test(String(id || ''));
 const hanOf = w => [...new Set(String(w).match(/\p{Script=Han}/gu) || [])];
@@ -239,7 +239,7 @@ function vKanji() {
   <div class="btnrow"><button class="btn" onclick="App.startCards('kanji')" ${sel.length ? '' : 'disabled'}>Flashcards${due ? ` · ${due} due` : ''}</button><button class="btn sec" onclick="App.startLearn('kanji')" ${sel.length > 1 ? '' : 'disabled'}>Quiz these ${fmtN(sel.length)}</button></div>
   ${DATA.mode === 'full' && sel.length ? `<button class="btn line wr-set" onclick="App.writePick()">✍ Write 10 from memory or by tracing</button>` : ''}
   <div class="legend"><span><i class="dot"></i>New</span><span><i class="dot learning"></i>Learning</span><span><i class="dot known"></i>Known</span></div>
-  <div class="tiles">${sel.map(k => `<button class="tile" data-open="${esc(k.id)}"><i class="dot ${status(k.id)}"></i>${picHtml(k.pic, 'xs')}<span class="tk jp">${k.k}</span><span class="tm">${esc(k.mean[0] || '')}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>`;
+  <div class="tiles">${sel.map(k => `<button class="tile" data-open="${esc(k.id)}"><i class="dot ${status(k.id)}"></i><span class="tk jp">${k.k}</span><span class="tm">${esc(k.mean[0] || '')}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>`;
 }
 
 function vSearch() {
@@ -278,7 +278,7 @@ function searchResults() {
   else if (q.length >= 2) kan = K.filter(k => k.mean.some(m => m.toLowerCase() === q)).slice(0, 12);
   const rows = scored.slice(0, 60).map(([, x]) => vRow(x)).join('');
   const gram = G.filter(g => jp ? g.t.includes(q0) || plain(g.t).includes(q0) : (q.length >= 3 && g.m.toLowerCase().includes(q))).slice(0, 8);
-  return `${kan.length ? `<div class="label">Kanji</div><div class="tiles" style="margin-top:0">${kan.map(k => `<button class="tile" data-open="${esc(k.id)}"><i class="dot ${status(k.id)}"></i>${picHtml(k.pic, 'xs')}<span class="tk jp">${k.k}</span><span class="tm">${esc(k.mean[0] || '')}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>` : ''}
+  return `${kan.length ? `<div class="label">Kanji</div><div class="tiles" style="margin-top:0">${kan.map(k => `<button class="tile" data-open="${esc(k.id)}"><i class="dot ${status(k.id)}"></i><span class="tk jp">${k.k}</span><span class="tm">${esc(k.mean[0] || '')}</span>${freqBadge(k.freq, true)}</button>`).join('')}</div>` : ''}
   ${gram.length ? `<div class="label">Grammar</div><div class="list" style="margin-top:0">${gram.map(gRow).join('')}</div>` : ''}
   <div class="label">Words ${scored.length ? `· ${scored.length > 60 ? 'top 60 of ' : ''}${fmtN(scored.length)}` : ''}</div>
   ${rows ? `<div class="list" style="margin-top:0">${rows}</div>` : '<p class="muted">No words found.</p>'}`;
@@ -309,7 +309,7 @@ function vSettings() {
         <span>${k.name}<br><small>${k.desc}</small></span></button>`).join('')}</div></div>
     <div class="set" style="display:block"><b>Appearance</b><span>${settings.skin === 'terminal' ? 'The Terminal design is always dark' : 'System follows your phone or computer setting'}</span>
       ${settings.skin === 'terminal' ? '' : `<div style="margin-top:10px">${seg([['system', 'System'], ['light', '☀️ Light'], ['dark', '🌙 Dark']], settings.theme, 'App.theme')}</div>`}</div>
-    <div class="set"><div><b>Pictures</b><span>Show the pictures from your imported Anki decks</span></div><label class="sw"><input type="checkbox" ${settings.pics ? 'checked' : ''} onchange="App.set('pics',this.checked)"><span></span></label></div>
+    <div class="set"><div><b>Pictures</b><span>Show pictures on words and kanji. Pictures from your Anki decks come first</span></div><label class="sw"><input type="checkbox" ${settings.pics ? 'checked' : ''} onchange="App.set('pics',this.checked)"><span></span></label></div>
     <div class="set"><div><b>Learning style</b><span>Game adds belts, XP, stars, badges and celebrations. Normal keeps it calm.</span></div>${seg([['normal', 'Normal'], ['game', 'Game']], settings.style === 'game' ? 'game' : 'normal', 'App.styleSet')}</div>
     <div class="set"><div><b>Daily goal</b><span>Minutes of study a day. Counts time in lessons, quizzes and reviews</span></div>${seg([['15', '15 min'], ['20', '20 min'], ['30', '30 min']], String(settings.goalMin || 15), 'App.goalSet')}</div>
     <div class="set"><div><b>Modern quotes</b><span>Include Shuzo Matsuoka and anime catchphrases in Quote of the day</span></div><label class="sw"><input type="checkbox" ${settings.modernQuotes !== false ? 'checked' : ''} onchange="App.set('modernQuotes',this.checked)"><span></span></label></div>

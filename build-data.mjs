@@ -211,7 +211,7 @@ const PIC_NOUN = 'water:💧|tree:🌳|wood:🪵|person:🧑|people:👥|human:�
 /* emoji names that are the wrong sense of a common meaning, never matched by name */
 const PIC_NAME_SKIP = new Set(['fly', 'bat', 'pen', 'fork', 'rose', 'jack', 'mail', 'can', 'bow', 'match', 'nail', 'seal', 'pound', 'bar', 'trunk', 'kite', 'spring', 'pitcher', 'tie', 'organ', 'palm', 'chip', 'chips', 'bill', 'jam', 'bank', 'date', 'trip', 'ring', 'cold', 'light', 'right', 'left', 'top', 'cut', 'drill', 'saw', 'file', 'rule', 'scale', 'sheet', 'net', 'ward', 'arms', 'lead', 'mine', 'rock']);
 /* pictographic kanji: the picture the character grew out of */
-const KANJI_PICS = new Map([...'日☀️月🌙山⛰️川🏞️木🌳林🌳森🌲火🔥水💧土🌱金💰人🧑口👄目👁️耳👂手✋足🦶田🌾雨🌧️女👩男👨子🧒車🚗門🚪犬🐕魚🐟鳥🐦馬🐎牛🐄竹🎋花🌸草🌿石🪨米🍚糸🧵貝🐚虫🐛雪❄️電⚡本📕力💪王👑玉💎刀🔪弓🏹矢🏹舟⛵船🚢心❤️羊🐑豚🐖象🐘竜🐉亀🐢皿🍽️箱📦傘☂️桜🌸梅🌸菊🌼星⭐空🌤️海🌊池🪷島🏝️橋🌉家🏠店🏪駅🚉'.matchAll(/(\p{Script=Han})([^\p{Script=Han}]+)/gu)].map(m => [m[1], m[2]]));
+const KANJI_PICS = new Map([...'日☀️月🌙山⛰️川🏞️木🌳林🌳森🌲火🔥水💧人🧑口👄目👁️耳👂手✋足🦶田🌾雨🌧️女👩男👨子🧒車🚗門🚪犬🐕魚🐟鳥🐦馬🐎牛🐄竹🎋花🌸草🌿石🪨米🍚糸🧵貝🐚虫🐛雪❄️電⚡本📕力💪王👑玉💎刀🗡️弓🏹矢🏹舟⛵船🚢心❤️羊🐑豚🐖象🐘竜🐉亀🐢皿🍽️箱📦傘☂️桜🌸菊🌼星⭐空🌤️海🌊島🏝️橋🌉家🏠店🏪駅🚉'.matchAll(/(\p{Script=Han})([^\p{Script=Han}]+)/gu)].map(m => [m[1], m[2]]));
 const parsePics = str => new Map(str.split('|').map(p => { const i = p.lastIndexOf(':'); return [p.slice(0, i), p.slice(i + 1)]; }));
 /* more hand-picked pictures for common N5–N4 words (these win where both list a meaning) */
 const PIC_NOUN_MORE = `university:🎓|college:🎓|graduation:🎓|classroom:🏫|junior high school:🏫|high school:🏫|elementary school:🏫|café:☕|cafe:☕|coffee shop:☕|tearoom:☕|cafeteria:🍽️|dining hall:🍽️|restaurant:🍽️|embassy:🏛️|museum:🏛️|art museum:🖼️|art gallery:🖼️|intersection:🚦|crossing:🚸|vase:🏺|flower vase:🏺|postage stamp:📮|postage stamps:📮|postal stamps:📮|postcard:📮|ashtray:🚬|refrigerator:🧊|fridge:🧊|greengrocer:🥬|vegetable store:🥬|barber:💈|barber's:💈|barbershop:💈|barber's shop:💈|zoo:🦁|doll:🪆|futon:🛏️|glove:🧤|gloves:🧤|comic:📖|comic book:📖|judo:🥋|diary:📔|journal:📔|injection:💉|drawer:🗄️|scenery:🏞️|landscape:🏞️|coast:🏖️|seashore:🏖️|inn:🏨|japanese inn:🏨|vehicle:🚗|express train:🚄|limited express:🚄|parking lot:🅿️|parking:🅿️|weather forecast:🌦️|broadcasting:📡|broadcast:📡|television program:📺|tv program:📺|countryside:🌾|rural area:🌾|population:👥|science:🔬|mathematics:➗|math:➗|literature:📚|geography:🗺️|industry:🏭|telegram:📨|air:💨|cherry-blossom viewing:🌸|cherry blossom viewing:🌸|sightseeing:📸|hot water:♨️|dance:💃|dancing:💃|uncooked rice:🌾|husband:👨|wife:👩|daughter:👧|son:👦|uncle:👨|aunt:👩|adult:🧑|shopping:🛍️|food:🍽️|drink:🥤|beverage:🥤|animal:🐾|animals:🐾|chicken meat:🍗|illness:🤒|sickness:🤒|disease:🤒|laundry:🧺|washing:🧺|cleaning:🧹|sweeping:🧹|suit:👔|men's suit:👔|business suit:👔|western-style clothes:👗|eye glasses:👓|spectacles:👓|black tea:🫖|rice bowl:🍚|zero:0️⃣|monday:🌙|tuesday:🔥|wednesday:💧|thursday:🌳|friday:💰|saturday:🌱|sunday:☀️|study:📚|practice:🏋️|practise:🏋️|homework:📝|shrine:⛩️|new year:🎆|new year's day:🎆|summer vacation:🏖️|summer holiday:🏖️|lunch break:🍱|zoo animal:🦁|science laboratory:🔬|laboratory:🔬|teacher's office:🏫|newspaper company:📰|driver:🚗|chauffeur:🚗|clerk:🧑‍💼|shop assistant:🧑‍💼|receptionist:🛎️|reception desk:🛎️|government worker:🧑‍💼|citizen:🧑|section manager:🧑‍💼|company president:🧑‍💼|principal:🧑‍🏫|headmaster:🧑‍🏫|girlfriend:👩|boyfriend:👨|rich person:💰|exhibition:🖼️|graduation ceremony:🎓|invitation:✉️|explanation:💬|opinion:💬|conversation:💬|consultation:💬|meeting:👥|conference:👥|conference room:👥|heating:🌡️|electric light:💡|light bulb:💡|water supply:🚰|water service:🚰|tap water:🚰|rule:📏|regulation:📏|plan:📋|schedule:📅|education:🧑‍🏫|culture:🎭|society:👥|experience:🧗|safety:🦺|security:🛡️|traffic:🚗|transportation:🚌|departure:🛫|attendance:🙋|pronunciation:🗣️|preparation:📋|review:📝|diary entry:📔|cotton:🧵|doll festival:🎎|camera:📷|tea ceremony:🍵`;
@@ -222,17 +222,17 @@ const PICS = { verb: mergePics(PIC_VERB_MORE, PIC_VERB), adj: mergePics(PIC_ADJ_
 const stripFE = s => String(s).replace(/️/g, '');
 /** index OpenMoji by name and by emoji character */
 function buildPicIndex(list) {
-  const byName = new Map(), byChar = new Map();
+  const byName = new Map(), byChar = new Map(), ann = new Map();
   for (const x of list) {
     if (x.skintone || x.group === 'component') continue;
-    byChar.set(stripFE(x.emoji), x.hexcode);
+    byChar.set(stripFE(x.emoji), x.hexcode); ann.set(x.hexcode, String(x.annotation || ''));
     if (x.group === 'flags' || x.group === 'extras-openmoji' || x.group === 'extras-unicode') continue;
     const a = String(x.annotation || '').toLowerCase().trim(); if (!a) continue;
     if (!byName.has(a)) byName.set(a, x.hexcode);
     const bare = a.replace(/ face$/, '');                       // "dog face" also answers "dog" (face drawings read best)
     if (bare !== a) byName.set(bare, x.hexcode);
   }
-  return { byName, byChar };
+  return { byName, byChar, ann };
 }
 // glosses that must stay picture-less: the only emoji is wrong (🛕 is a Hindu temple, 🍢 is oden) or a Japan-only sign (🈵 🈳)
 const PIC_BLOCK = new Set(['tofu', 'bean curd', 'temple', 'buddhist temple', 'buddha', 'full', 'empty', 'thin', 'vacant']);
@@ -249,8 +249,10 @@ const glossKeys = gs => {
 /** pos: 'verb' | 'i-adj' | 'na-adj' | 'noun' | other; kanji: true for kanji meanings */
 /* per-word fixes where the first meaning picks the wrong picture (null = no picture) */
 const WORD_PICS = { '明かり': '💡', '灯': '💡', '明い': "☀️", '明るい': "☀️", '消える': null, '預ける': null, '残す': null, '組む': null, '汲む': "🪣", '苦手': null, '親しい': null, '濃い': null, '跳ぶ': null, '営む': null, '公然': null, '高尚': null, '帯びる': null, '煙る': "💨", '折る': null, '折れる': null, '切れる': null, '壊す': null, '壊れる': null, '割れる': null, '砕く': null, '砕ける': null, 
-  '甘い': "🍬", 'お菓子': "🍬", '菓子': "🍬", '女': "👩", '靴': "👟", '曇り': "☁️", '曇': "☁️", '答える': "💬", '閉まる': "🔒", '食堂': "🍽️", '生徒': "🧑‍🎓", 'たばこ': "🚬", '煙草': "🚬", 'ネクタイ': "👔", '初め': "🏁", '始め': "🏁", '冒頭': "🏁", 'やり遂げる': "🏁", '医学': "💊", '一杯': "🥤", '思い出す': "💭", '親': "👪", '父母': "👪", '高校': "🏫", '高等学校': "🏫", '小学校': "🏫", '心': "❤️", '恋する': "❤️", '探す': "🔍", '捜す': "🔍", '見つける': "🔍", '見付ける': "🔍", '店員': "🧑‍💼", '上司': "🧑‍💼", '鳴る': "🔔", 'チャイム': "🔔", '恥ずかしい': "😳", '飛行場': "🛫", '太る': "⚖️", '痩せる': "⚖️", '漫画': "📖", '物語': "📖", '図鑑': "📖", '召し上がる': "🍽️", '優しい': "😇", 'レポート': "📄", 'リポート': "📄", '沸く': "🍲", '合図': "🚦", '十字路': "🚦", '集まり': "👥", '群れ': "👥", '泉': "⛲", '牛': "🐄", '画家': "🧑‍🎨", '額': "🖼️", '学問': "📚", '火災': "🔥", '岸': "🏖️", '貴重': "💎", '尊い': "💎", '貴い': "💎", '疑問': "❓", '強力': "💪", '力強い': "💪", '逞しい': "💪", '健やか': "💪", '臭い': "🦨", '鎖': "⛓️", '高価': "💰", '資金': "💰", '小包': "📦", '包み': "📦", '桜': "🌸", '札': "💴", '給与': "💴", '覚める': "⏰", '思想': "💡", '点ける': "💡", '芝生': "🌿", '停留所': "🚏", '日光': "☀️", '干す': "☀️", '人間': "🧑", '願う': "🙏", '筆': "🖌️", '豆': "🫘", '虫歯': "🦷", '宿': "🏨", '愉快': "😊", '欠伸': "🥱", '乾電池': "🔋", '休息': "😌", '芸能': "🎭", '四角': "🟥", '時間割': "📅", '時刻表': "📅", '失恋': "💔", '住居': "🏠", '住まい': "🏠", '新幹線': "🚅", '針路': "🧭", '寸法': "📏", '面積': "📏", '繋がり': "🔗", 'なぐる': "🥊", '殴る': "🥊", '掃く': "🧹", '蒔く': "🌱", '窓口': "🪟", 'マフラー': "🧣", '呼び出す': "📞", '映像': "📺", '看護': "🧑‍⚕️", '正解': "✅", '船舶': "🚢", '助け': "🆘", '忠告': "⚠️", '告げる': "📢", '伝言': "💬", '壷': "🏺", '田園': "🌾", '荷': "🧳", '値引き': "🏷️", '配偶者': "💍", '褒美': "🏆", '闇': "🌑", 'レバー': "🕹️", 'ゴール': "🥅", 'コップ': "🥛", '引っ張る': null, 
-  'かわいそう': '🥺', '可哀想': '🥺', '可哀相': '🥺', '気の毒': '🥺', '貧しい': '🪙', '貧乏': '🪙', '弾く': '🎸', '丁度': null, 'ちょうど': null, '賑やか': '🎉', 'にぎやか': '🎉', '外': null, '他': null, '程': null };
+  '甘い': "🍬", 'お菓子': "🍬", '菓子': "🍬", '女': "👩", '靴': "👟", '曇り': "☁️", '曇': "☁️", '答える': "💬", '閉まる': "🔒", '食堂': "🍽️", '生徒': "🧑‍🎓", 'たばこ': "🚬", '煙草': "🚬", 'ネクタイ': "👔", '初め': "🏁", '始め': "🏁", '冒頭': "🏁", 'やり遂げる': "🏁", '医学': null, '一杯': null, '思い出す': "💭", '親': "👪", '父母': "👪", '高校': "🏫", '高等学校': "🏫", '小学校': "🏫", '心': "❤️", '恋する': "❤️", '探す': "🔍", '捜す': "🔍", '見つける': "🔍", '見付ける': "🔍", '店員': "🧑‍💼", '上司': "🧑‍💼", '鳴る': "🔔", 'チャイム': "🔔", '恥ずかしい': "😳", '飛行場': "🛫", '太る': "⚖️", '痩せる': "⚖️", '漫画': "📖", '物語': "📖", '図鑑': "📖", '召し上がる': "🍽️", '優しい': "😇", 'レポート': "📄", 'リポート': "📄", '沸く': "🍲", '合図': "🚦", '十字路': "🚦", '集まり': "👥", '群れ': "👥", '泉': "⛲", '牛': "🐄", '画家': "🧑‍🎨", '額': "🖼️", '学問': "📚", '火災': "🔥", '岸': "🏖️", '貴重': "💎", '尊い': "💎", '貴い': "💎", '疑問': "❓", '強力': "💪", '力強い': "💪", '逞しい': "💪", '健やか': "💪", '臭い': "🦨", '鎖': "⛓️", '高価': "💰", '資金': "💰", '小包': "📦", '包み': "📦", '桜': "🌸", '札': "💴", '給与': "💴", '覚める': "⏰", '思想': "💡", '点ける': "💡", '芝生': "🌿", '停留所': "🚏", '日光': "☀️", '干す': "☀️", '人間': "🧑", '願う': "🙏", '筆': "🖌️", '豆': "🫘", '虫歯': "🦷", '宿': "🏨", '愉快': "😊", '欠伸': "🥱", '乾電池': "🔋", '休息': "😌", '芸能': "🎭", '四角': "🟥", '時間割': "📅", '時刻表': "📅", '失恋': "💔", '住居': "🏠", '住まい': "🏠", '新幹線': "🚅", '針路': "🧭", '寸法': "📏", '面積': "📏", '繋がり': "🔗", 'なぐる': "🥊", '殴る': "🥊", '掃く': "🧹", '蒔く': "🌱", '窓口': null, 'マフラー': "🧣", '呼び出す': "📞", '映像': "📺", '看護': "🧑‍⚕️", '正解': "✅", '船舶': "🚢", '助け': "🆘", '忠告': null, '告げる': "📢", '伝言': "💬", '壷': "🏺", '田園': "🌾", '荷': "🧳", '値引き': "🏷️", '配偶者': "💍", '褒美': "🏆", '闇': "🌑", 'レバー': null, 'ゴール': "🥅", 'コップ': "🥛", '引っ張る': null, 
+  'かわいそう': '🥺', '可哀想': '🥺', '可哀相': '🥺', '気の毒': '🥺', '貧しい': '🪙', '貧乏': '🪙', '弾く': '🎸', '丁度': null, 'ちょうど': null, '賑やか': '🎉', 'にぎやか': '🎉', '外': null, '他': null, '程': null,
+  /* the emoji's name matches but it shows something else: ガラス is window glass, 権利 is a right you hold, 癌 is not the zodiac sign */
+  'ガラス': null, '林': null, '光': null, '議長': null, '競技': null, '権利': null, '権': null, '党': null, '弾': null, '面': null, '番': null, '輪': null, '土俵': null, '麓': null, '頂': null, '癌': null, '三日月': null, '点線': null, '動揺': null, '身なり': null, '館': null, '発': null, '発車': null, '横断': null, '交差': null, '横切る': null, '交差点': null, '高める': null, '衛星': null, 'スター': null, '中指': null, '平方': null, 'フィルム': null, '一方': null, '他方': null, 'カード': null, '世間': null, '世': null, '地': null, '土': null, '文字': null, '袋': null, '承る': null, '打ち切る': null, '途絶える': null, '呼び止める': null, 'クリーニング': null, 'めでたい': null, '愛でたい': null, '核': null, '強烈': null, '囀る': null, '認める': null, '床': null, '無事': null, '安全': null, '悠々': null };
 /* A gloss with more than one sense only gets its picture when the other meanings confirm that sense:
    現 "present; existing; actual" is now, not a gift; 落 "fall" is dropping, not autumn; 産 "bear" is giving birth. */
 const PIC_SENSE = {
@@ -267,17 +269,17 @@ const PIC_SENSE = {
   draw: /\bpaint|sketch|picture|illustrat|pencil|crayon/, light: /\bweight|heavy|feather/, run: /\bjog|sprint|\bdash|\brace\b|on foot|\bhurry/,
   'go out': /excursion|outing|\bhome\b|\bexit|\bleave/, leave: /\bexit|go out|depart|go away|\bdoor/, poor: /needy|money|poverty|impoverish|\bbroke\b/,
   close: /\bshut|\bdoor|\block|\bopen/, break: /smash|shatter|\bsnap|fractur|destroy|pieces/, cross: /\broad|street|travers|\bover\b|\bbridge/,
-    fat: /\bfood|greas|\boil\b|\bobese/, oil: /\bfood|\bfry|cook|petrol|\bfuel/, eat: /\bfood|\bmeal|\bdine/, table: /\bdesk|furniture|\bdine|\bmeal/
+    company: /\bfirm\b|business|corporat|\boffice/, fat: /\bfood|greas|\boil\b|\bobese/, oil: /\bfood|\bfry|cook|petrol|\bfuel/, eat: /\bfood|\bmeal|\bdine/, table: /\bdesk|furniture|\bdine|\bmeal/
 };
 const senseOk = (key, glosses) => { const re = PIC_SENSE[key]; if (!re) return true; const all = glosses.map(g => String(g).toLowerCase()); return all.length <= 1 || all.every(g => g.replace(/\(.*?\)/g, '').trim() === key) || re.test(all.join('; ')); };
 /* kanji whose meaning list still sends them to the wrong picture (null = no picture) */
-const KANJI_PIC_FIX = { 光: '✨', 駆: '🏃', 葉: '🍃', 校: '🏫', 寒: '🥶', 凜: '🥶', 泉: '⛲', 掃: '🧹', 表: null, 局: null, 役: null, 番: null, 当: null, 合: null, 返: null, 応: null, 叶: null, 様: null, 産: null, 忍: null, 板: null, 載: null, 賄: null, 隊: null, 党: null, 種: null, 類: null, 削: null,
+const KANJI_PIC_FIX = { 光: '✨', 駆: '🏃', 葉: '🍃', 校: '🏫', 寒: '🥶', 凜: null, 泉: '⛲', 掃: '🧹', 表: null, 局: null, 役: null, 番: null, 当: null, 合: null, 返: null, 応: null, 叶: null, 様: null, 産: null, 忍: null, 板: null, 載: null, 賄: null, 隊: null, 党: null, 種: null, 類: null, 削: null,
   穂: null, 眺: null, 陸: null, 参: null, 某: null, 伯: null, 諸: null, 堤: null, 俗: null, 侍: null, 堅: null, 硬: null, 間: null, 宙: null, 鳴: null, 喚: null, 落: null, 倒: null, 墜: null, 片: null, 圧: null,
   振: null, 揮: null, 飼: null, 蓄: null, 頂: null, 享: null, 召: null, 呉: null, 施: null, 妥: null, 康: null, 臨: null, 冒: null, 顧: null, 順: null, 志: null, 規: null, 則: null, 綜: null, 儀: null,
   掌: null, 永: null, 只: null, 敦: null, 酉: null, 冶: null, 奥: null, 精: null, 折: null, 創: null, 貯: null, 印: null, 採: null, 摘: null, 劇: null, 砕: null, 如: null, 拓: null, 繊: null, 啓: null,
   屯: null, 汰: null, 尾: null, 始: null, 台: null, 字: null, 回: null, 次: null, 詰: null, 抵: null, 般: null, 厚: null, 努: null, 卓: null, 甲: null, 単: null, 易: null, 朴: null, 公: null, 安: null,
-  仕: null, 担: null, 膚: null, 油: null, 脂: null, 肪: null, 壊: null, 亮: null, 伸: null, 暢: null, 焦: null, 秩: null, 罷: null, 黎: null, 迪: null, 捷: null, 晏: null, 遭: null };
-function pictureFor(idx, glosses, pos, kanji, word) {
+  仕: null, 担: null, 膚: null, 油: null, 脂: null, 肪: null, 壊: null, 亮: null, 伸: null, 暢: null, 焦: null, 秩: null, 罷: null, 黎: null, 迪: null, 捷: null, 晏: null, 遭: null, 発: null, 環: null, 郵: null, 閣: null, 床: null, 揚: null, 剖: null, 俵: null, 錯: null, 晶: null, 曹: null, 奎: null, 注: null, 為: null, 殖: null, 泰: null, 和: null, 割: null, 面: null, 世: null, 翔: null, 索: null, 呂: null, 判: null, 審: null, 裁: null, 騎: null };
+function pictureGuess(idx, glosses, pos, kanji, word) {
   if (kanji && kanji in KANJI_PIC_FIX) { const w = KANJI_PIC_FIX[kanji]; return w ? idx.byChar.get(stripFE(w)) || null : null; }
   if (word && word in WORD_PICS) { const w = WORD_PICS[word]; return w ? idx.byChar.get(stripFE(w)) || null : null; }
   const kind = pos === 'verb' ? 'verb' : (pos === 'i-adj' || pos === 'na-adj') ? 'adj' : 'noun';
@@ -296,6 +298,42 @@ function pictureFor(idx, glosses, pos, kanji, word) {
   }
   for (const k of keys) { if (PIC_NAME_SKIP.has(k) || k.length < 3 || !senseOk(k, glosses)) continue; const h = idx.byName.get(k); if (h) return h; }
   return null;
+}
+
+/* ---- a picture is only kept when it shows the word itself ----
+   pictureGuess finds the nearest emoji, and "nearest" is often only an association: 机 "desk" → file cabinet,
+   遠い "far" → telescope, 北 "north" → compass. A learner reads the picture as the meaning, so those teach
+   the wrong thing. A guess is kept only if the emoji's own name says the same as one of the word's first
+   three meanings ("bicycle" for 自転車, "person swimming" for 泳ぐ), or the pair is listed by hand in SHOWS. */
+const SHOWS = new Map(Object.entries({
+  '1️⃣': 'one', '2️⃣': 'two', '3️⃣': 'three', '4️⃣': 'four', '5️⃣': 'five', '6️⃣': 'six', '7️⃣': 'seven', '8️⃣': 'eight', '9️⃣': 'nine', '🔟': 'ten', '0️⃣': 'zero',
+  '🚉': 'station|railway station|train station', '🧑‍⚕️': 'doctor|physician', '💴': 'money', '🍵': 'tea|green tea', '☕': 'coffee', '🛁': 'bath', '👴': 'grandfather', '👵': 'grandmother',
+  '🍗': 'chicken meat|chicken', '💊': 'medicine', '❄️': 'snow', '💧': 'water', '📄': 'paper', '✉️': 'letter', '📦': 'box', '🚃': 'train|electric train', '🧑‍🤝‍🧑': 'friend', '👜': 'bag|handbag',
+  '🧍': 'body', '🎬': 'movie|film', '🎵': 'music|song', '🤧': 'cold|common cold', '🤒': 'illness|sickness|disease', '🏢': 'company|office', '🏘️': 'town|village', '🛣️': 'road',
+  '⚡': 'electricity', '🥦': 'vegetable', '🍎': 'fruit', '⚽': 'sport|sports', '🧹': 'cleaning|sweeping', '🪨': 'stone', '🍰': 'cake', '💻': 'computer', '🎹': 'piano', '🛫': 'airport',
+  '🌲': 'forest', '🌀': 'typhoon', '💉': 'injection', '🅿️': 'parking lot|car park|parking', '🌍': 'world', '🥋': 'judo|karate', '🧳': 'suitcase', '☝️': 'finger', '💪': 'arm|strong',
+  '🧱': 'wall', '🔧': 'tool', '💡': 'electric light|light bulb', '🏙️': 'city', '🔊': 'sound',
+  '😂': 'laugh', '😠': 'get angry|angry', '😲': 'be surprised|surprised', '😢': 'sad', '😊': 'happy|glad', '😱': 'scary|frightening', '😳': 'embarrassed|embarrassing|shy', '😩': 'get tired|tired',
+  '😋': 'delicious|tasty', '🙏': 'pray', '✂️': 'cut', '📖': 'read', '👀': 'see|look|watch', '👂': 'hear|listen', '🛒': 'buy', '🎤': 'sing', '🧼': 'wash', '⏳': 'wait',
+  '✈️': 'fly', '🏆': 'win', '🔍': 'search|search for|look for', '💳': 'pay', '🔥': 'burn', '🔔': 'ring', '🌱': 'plant', '➕': 'add', '⚠️': 'dangerous|danger', '🤫': 'quiet|silent',
+  '⚪': 'round', '🍬': 'sweet|sweets|candy', '🥤': 'drink', '🍽️': 'meal'
+}).map(([e, v]) => [stripFE(e), new Set(v.split('|'))]));
+const picStem = w => { w = w.toLowerCase(); if (w.length > 5 && w.endsWith('ing')) w = w.slice(0, -3); else if (w.length > 3 && w.endsWith('s') && !w.endsWith('ss')) w = w.slice(0, -1); if (w.length > 3 && w.endsWith('e')) w = w.slice(0, -1); return w.replace(/([b-df-hj-np-tv-z])\1$/, '$1'); };
+const picWords = s => String(s).toLowerCase().replace(/\(.*?\)/g, ' ').replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter(w => w && !['to', 'a', 'an', 'the', 'of'].includes(w));
+let SHOWS_HEX = null;
+/** does the emoji `hex` show what one of these meanings says? */
+function picShows(idx, hex, glosses) {
+  const name = idx.ann && idx.ann.get(hex); if (!name) return false;
+  const A = new Set(picWords(name).map(picStem)), gs = glosses.slice(0, 3);
+  if (gs.some(g => { const k = picWords(g); return k.length > 0 && k.length <= 3 && k.every(w => A.has(picStem(w))); })) return true;
+  if (!SHOWS_HEX || SHOWS_HEX.idx !== idx) { SHOWS_HEX = new Map(); SHOWS_HEX.idx = idx; for (const [e, set] of SHOWS) { const h = idx.byChar.get(e); if (h) SHOWS_HEX.set(h, set); } }
+  const ok = SHOWS_HEX.get(hex); return !!ok && gs.some(g => ok.has(picWords(g).join(' ')));
+}
+function pictureFor(idx, glosses, pos, kanji, word) {
+  const h = pictureGuess(idx, glosses, pos, kanji, word); if (!h) return null;
+  if (kanji && (kanji in KANJI_PIC_FIX || KANJI_PICS.has(kanji))) return h;   // chosen by hand, or a pictograph: the character is a drawing of the thing
+  // a kanji carries several loosely related meanings, so only its first one may pick the picture
+  return picShows(idx, h, kanji ? glosses.slice(0, 1) : glosses) ? h : null;
 }
 
 const OPENMOJI_REPO = 'https://github.com/hfg-gmuend/openmoji';
@@ -1321,55 +1359,36 @@ async function main() {
   if (!audioTotal) meta.notes.push('No native word audio in this build; words use the device voice.');
 
   /* ---- 8e. Pictures (OpenMoji) */
-  // built-in word and kanji pictures are off: the app shows only the pictures from your own Anki decks.
-  // --pictures turns the old OpenMoji pictures back on in the data (the app no longer displays them).
-  if (flag('pictures')) {
+  // A word or kanji gets a built-in picture only when the picture shows the word itself (see picShows).
+  // In the app a picture from the learner's own Anki deck always wins over these. --no-pictures leaves them out.
+  if (!flag('no-pictures')) {
     log('Pictures (OpenMoji)');
     const om = getOpenMoji();
     if (om) {
       const idx = buildPicIndex(JSON.parse(fs.readFileSync(om.json, 'utf8')));
-      const ext = buildExtIndex(getIconSets());
-      log(`  ${ext.size} extra icons (Tabler Icons, game-icons.net)`);
-      const used = new Set(); let nv = 0, nk = 0, nx = 0;
+      const used = new Set(); let nv = 0, nk = 0;
       for (const l of LEVELS) for (const k of kanji[l]) {
-        const h = pictureFor(idx, k.m, 'noun', k.k) || extPictureFor(idx, ext, k.m, 'noun');
+        const h = pictureFor(idx, k.m, 'noun', k.k);
         if (h) { k.pic = h; used.add(h); nk++; }
       }
       for (const l of LEVELS) for (const e of vocab[l]) {
         const gl = (e.s[0] && e.s[0].g) || [e.m];
-        let h = pictureFor(idx, gl, e.g, false, e.w);
-        if (!h && !(e.w in WORD_PICS)) { h = extPictureFor(idx, ext, gl.slice(0, 1), e.g); if (h) nx++; }
+        const h = pictureFor(idx, gl, e.g, false, e.w);
         if (h) { e.pic = h; used.add(h); nv++; }
       }
-      // pictures for the app's own Situations phrases (listed in index.html as SIT_PICS)
-      try {
-        const html = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), 'index.html'), 'utf8');
-        const m = /const SIT_PICS = (\{[^;]*\});/.exec(html); if (m) Object.values(JSON.parse(m[1])).forEach(h => used.add(h));
-      } catch (e) {}
       fs.mkdirSync(path.join(OUT, 'img'), { recursive: true });
-      const extFile = new Map([...ext.values()].map(v => [v.id, v.file]));
       let bytes = 0; const missing = new Set();
       for (const h of used) {
-        const dest = path.join(OUT, 'img', h + '.svg');
-        if (h.startsWith('t.') || h.startsWith('g.')) { const f = extFile.get(h); if (!f) { missing.add(h); continue; } const t = iconSvg(h, f); fs.writeFileSync(dest, t); bytes += t.length; continue; }
-        const f = path.join(om.svg, h + '.svg'); if (fs.existsSync(f)) { fs.copyFileSync(f, dest); bytes += fs.statSync(f).size; } else missing.add(h);
+        const f = path.join(om.svg, h + '.svg');
+        if (fs.existsSync(f)) { fs.copyFileSync(f, path.join(OUT, 'img', h + '.svg')); bytes += fs.statSync(f).size; } else missing.add(h);
       }
       if (missing.size) for (const l of LEVELS) {
-        for (const e of vocab[l]) if (missing.has(e.pic)) delete e.pic;
-        for (const k of kanji[l]) if (missing.has(k.pic)) delete k.pic;
+        for (const e of vocab[l]) if (missing.has(e.pic)) { delete e.pic; nv--; }
+        for (const k of kanji[l]) if (missing.has(k.pic)) { delete k.pic; nk--; }
       }
-      // 3D versions of the emoji pictures (Fluent Emoji); the app falls back to the flat SVG where there's none
-      const fl = getFluent3D(); const pics3d = [];
-      if (fl) for (const h of used) {
-        if (missing.has(h) || /^[tg]\./.test(h)) continue;
-        const f = fl.get(normHex(h)); if (!f) continue;
-        fs.copyFileSync(f, path.join(OUT, 'img', h + '.png')); bytes += fs.statSync(f).size; pics3d.push(h);
-      }
-      meta.pics3d = pics3d;
-      if (fl) log(`  ${pics3d.length} pictures also in 3D (Fluent Emoji)`);
-      meta.counts.pictures = { words: nv, wordsFromIcons: nx, kanji: nk, files: used.size - missing.size, in3d: pics3d.length };
-      meta.sources.pictures = 'Fluent Emoji 3D, OpenMoji (colour SVG), Tabler Icons, game-icons.net';
-      log(`  pictures for ${nv} words (${nx} from icon sets), ${nk} kanji (${used.size - missing.size} files, ${(bytes / 1e6).toFixed(1)} MB)`);
+      meta.counts.pictures = { words: nv, kanji: nk, files: used.size - missing.size };
+      meta.sources.pictures = 'OpenMoji (colour SVG)';
+      log(`  pictures for ${nv} words and ${nk} kanji (${used.size - missing.size} files, ${(bytes / 1e6).toFixed(1)} MB)`);
     } else meta.notes.push('OpenMoji unavailable: no pictures in this build.');
   }
 
@@ -1401,9 +1420,6 @@ async function main() {
     { name: 'Word pronunciation audio', by: 'Tofugu & WaniKani', license: 'CC BY-SA 4.0', url: 'https://github.com/tofugu/japanese-vocabulary-pronunciation-audio' },
     { name: 'Example-word audio', by: 'Kanji alive', license: 'CC BY 4.0', url: 'https://github.com/kanjialive/kanji-data-media' },
     { name: 'Pictures', by: 'OpenMoji – the open-source emoji and icon project', license: 'CC BY-SA 4.0', url: 'https://openmoji.org/' },
-    { name: '3D pictures', by: 'Fluent Emoji (Microsoft)', license: 'MIT', url: 'https://github.com/microsoft/fluentui-emoji' },
-    { name: 'Icons', by: 'Tabler Icons (Paweł Kuna)', license: 'MIT', url: 'https://tabler.io/icons' },
-    { name: 'Icons', by: 'game-icons.net (Lorc, Delapouite and contributors; each icon credits its artist)', license: 'CC BY 3.0', url: 'https://game-icons.net/' },
     { name: 'Sentence audio', by: 'Tatoeba contributors (credited on each sentence)', license: 'per recording', url: 'https://tatoeba.org/en/downloads' }
   ];
   if (Object.keys(partsDict).length) total += write('parts.json', partsDict);

@@ -358,9 +358,9 @@ async function padWav(blob) {
 const hasPic = x => settings.pics && !!(x.dpic || x.pic);
 /** a picture can stand in for the word only when the word is a thing: 犬 is a dog, but a picture for 引っ張る "to pull"
     or こらえる "to endure" fits a dozen words. Pictures from your own deck were chosen for that word, so they always count. */
-/** any deck pictures at all? if not, lists drop the empty picture column */
+/** any pictures at all? if not, lists drop the empty picture column */
 let _anyPic = [-1, false];
-const anyPic = () => { if (!settings.pics) return false; if (_anyPic[0] !== V.length) _anyPic = [V.length, V.some(x => x.dpic)]; return _anyPic[1]; };
+const anyPic = () => { if (!settings.pics) return false; if (_anyPic[0] !== V.length) _anyPic = [V.length, V.some(x => x.dpic || x.pic)]; return _anyPic[1]; };
 const picAsk = x => hasPic(x) && (!!x.dpic || x.pos === 'noun');
 const picKey = x => x.dpic || x.pic || '';   // the deck's picture wins over the dojo's
 const dpicHtml = (x, cls) => `<img class="pic dpic ${cls}" data-dpic="${esc(x.dpic)}" alt="">`;
